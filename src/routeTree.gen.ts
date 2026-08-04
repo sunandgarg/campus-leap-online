@@ -10,33 +10,156 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
+import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
+import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
+import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
+import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
+  id: '/programs/',
+  path: '/programs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsProgramSlugRoute = ProgramsProgramSlugRouteImport.update({
+  id: '/programs/$programSlug',
+  path: '/programs/$programSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversitiesIndexRoute = UniversitiesIndexRouteImport.update({
+  id: '/universities/',
+  path: '/universities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UniversitiesUniversitySlugIndexRoute =
+  UniversitiesUniversitySlugIndexRouteImport.update({
+    id: '/universities/$universitySlug/',
+    path: '/universities/$universitySlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const UniversitiesUniversitySlugProgramSlugRoute =
+  UniversitiesUniversitySlugProgramSlugRouteImport.update({
+    id: '/universities/$universitySlug/$programSlug',
+    path: '/universities/$universitySlug/$programSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs/': typeof ProgramsIndexRoute
+  '/universities/': typeof UniversitiesIndexRoute
+  '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs': typeof ProgramsIndexRoute
+  '/universities': typeof UniversitiesIndexRoute
+  '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/universities/$universitySlug': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs/': typeof ProgramsIndexRoute
+  '/universities/': typeof UniversitiesIndexRoute
+  '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/sitemap.xml'
+    | '/programs/$programSlug'
+    | '/programs/'
+    | '/universities/'
+    | '/universities/$universitySlug/$programSlug'
+    | '/universities/$universitySlug/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/sitemap.xml'
+    | '/programs/$programSlug'
+    | '/programs'
+    | '/universities'
+    | '/universities/$universitySlug/$programSlug'
+    | '/universities/$universitySlug'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/sitemap.xml'
+    | '/programs/$programSlug'
+    | '/programs/'
+    | '/universities/'
+    | '/universities/$universitySlug/$programSlug'
+    | '/universities/$universitySlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  CompareRoute: typeof CompareRoute
+  ContactRoute: typeof ContactRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
+  ProgramsIndexRoute: typeof ProgramsIndexRoute
+  UniversitiesIndexRoute: typeof UniversitiesIndexRoute
+  UniversitiesUniversitySlugProgramSlugRoute: typeof UniversitiesUniversitySlugProgramSlugRoute
+  UniversitiesUniversitySlugIndexRoute: typeof UniversitiesUniversitySlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +171,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/': {
+      id: '/programs/'
+      path: '/programs'
+      fullPath: '/programs/'
+      preLoaderRoute: typeof ProgramsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/$programSlug': {
+      id: '/programs/$programSlug'
+      path: '/programs/$programSlug'
+      fullPath: '/programs/$programSlug'
+      preLoaderRoute: typeof ProgramsProgramSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities/': {
+      id: '/universities/'
+      path: '/universities'
+      fullPath: '/universities/'
+      preLoaderRoute: typeof UniversitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities/$universitySlug/': {
+      id: '/universities/$universitySlug/'
+      path: '/universities/$universitySlug'
+      fullPath: '/universities/$universitySlug/'
+      preLoaderRoute: typeof UniversitiesUniversitySlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/universities/$universitySlug/$programSlug': {
+      id: '/universities/$universitySlug/$programSlug'
+      path: '/universities/$universitySlug/$programSlug'
+      fullPath: '/universities/$universitySlug/$programSlug'
+      preLoaderRoute: typeof UniversitiesUniversitySlugProgramSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  CompareRoute: CompareRoute,
+  ContactRoute: ContactRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
+  ProgramsIndexRoute: ProgramsIndexRoute,
+  UniversitiesIndexRoute: UniversitiesIndexRoute,
+  UniversitiesUniversitySlugProgramSlugRoute:
+    UniversitiesUniversitySlugProgramSlugRoute,
+  UniversitiesUniversitySlugIndexRoute: UniversitiesUniversitySlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
