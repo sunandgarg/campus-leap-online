@@ -13,10 +13,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
-import { formatINR, getUniversity, getUniversityPrograms } from "@/data/universities";
+import {
+  formatINR,
+  getUniversity,
+  getUniversityPrograms,
+  type University,
+  type UniversityProgram,
+} from "@/data/universities";
 
 export const Route = createFileRoute("/universities/$universitySlug/")({
-  loader: ({ params }) => {
+  loader: ({ params }): { university: University; programs: UniversityProgram[] } => {
     const university = getUniversity(params.universitySlug);
     if (!university) throw notFound();
     return { university, programs: getUniversityPrograms(university) };
@@ -63,7 +69,10 @@ export const Route = createFileRoute("/universities/$universitySlug/")({
 });
 
 function UniversityPage() {
-  const { university: u, programs } = Route.useLoaderData();
+  const { university: u, programs } = Route.useLoaderData() as {
+    university: University;
+    programs: UniversityProgram[];
+  };
 
   return (
     <>

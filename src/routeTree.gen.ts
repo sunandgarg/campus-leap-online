@@ -10,6 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
+import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
 import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
 import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
@@ -17,6 +22,31 @@ import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './rou
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
+  id: '/programs/',
+  path: '/programs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsProgramSlugRoute = ProgramsProgramSlugRouteImport.update({
+  id: '/programs/$programSlug',
+  path: '/programs/$programSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UniversitiesIndexRoute = UniversitiesIndexRouteImport.update({
@@ -39,12 +69,22 @@ const UniversitiesUniversitySlugProgramSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs': typeof ProgramsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/universities/$universitySlug': typeof UniversitiesUniversitySlugIndexRoute
@@ -52,6 +92,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/compare': typeof CompareRoute
+  '/contact': typeof ContactRoute
+  '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
@@ -60,18 +105,33 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/programs/$programSlug'
+    | '/programs/'
     | '/universities/'
     | '/universities/$universitySlug/$programSlug'
     | '/universities/$universitySlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/programs/$programSlug'
+    | '/programs'
     | '/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/universities/$universitySlug'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/compare'
+    | '/contact'
+    | '/programs/$programSlug'
+    | '/programs/'
     | '/universities/'
     | '/universities/$universitySlug/$programSlug'
     | '/universities/$universitySlug/'
@@ -79,6 +139,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  CompareRoute: typeof CompareRoute
+  ContactRoute: typeof ContactRoute
+  ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
+  ProgramsIndexRoute: typeof ProgramsIndexRoute
   UniversitiesIndexRoute: typeof UniversitiesIndexRoute
   UniversitiesUniversitySlugProgramSlugRoute: typeof UniversitiesUniversitySlugProgramSlugRoute
   UniversitiesUniversitySlugIndexRoute: typeof UniversitiesUniversitySlugIndexRoute
@@ -91,6 +156,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/': {
+      id: '/programs/'
+      path: '/programs'
+      fullPath: '/programs/'
+      preLoaderRoute: typeof ProgramsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/$programSlug': {
+      id: '/programs/$programSlug'
+      path: '/programs/$programSlug'
+      fullPath: '/programs/$programSlug'
+      preLoaderRoute: typeof ProgramsProgramSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/universities/': {
@@ -119,6 +219,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  CompareRoute: CompareRoute,
+  ContactRoute: ContactRoute,
+  ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
+  ProgramsIndexRoute: ProgramsIndexRoute,
   UniversitiesIndexRoute: UniversitiesIndexRoute,
   UniversitiesUniversitySlugProgramSlugRoute:
     UniversitiesUniversitySlugProgramSlugRoute,

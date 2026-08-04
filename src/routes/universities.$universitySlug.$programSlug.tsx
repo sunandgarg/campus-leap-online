@@ -25,10 +25,18 @@ import {
   formatINR,
   getUniversityProgram,
   universitiesOfferingProgram,
+  type University,
+  type UniversityProgram,
 } from "@/data/universities";
 
+interface ProgramPageData {
+  university: University;
+  program: UniversityProgram;
+  alternatives: { university: University; program: UniversityProgram }[];
+}
+
 export const Route = createFileRoute("/universities/$universitySlug/$programSlug")({
-  loader: ({ params }) => {
+  loader: ({ params }): ProgramPageData => {
     const match = getUniversityProgram(params.universitySlug, params.programSlug);
     if (!match) throw notFound();
     return {
@@ -82,7 +90,11 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
 });
 
 function ProgramPage() {
-  const { university: u, program: p, alternatives } = Route.useLoaderData();
+  const {
+    university: u,
+    program: p,
+    alternatives,
+  } = Route.useLoaderData() as ProgramPageData;
 
   const jsonLd = {
     "@context": "https://schema.org",

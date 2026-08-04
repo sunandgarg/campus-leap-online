@@ -30,7 +30,7 @@ export const Route = createFileRoute("/compare")({
 });
 
 function ComparePage() {
-  const [programSlug, setProgramSlug] = useState(programCatalog[0].slug);
+  const [programSlug, setProgramSlug] = useState(programCatalog[0]!.slug);
   const offers = useMemo(() => universitiesOfferingProgram(programSlug), [programSlug]);
   const program = programCatalog.find((p) => p.slug === programSlug)!;
 

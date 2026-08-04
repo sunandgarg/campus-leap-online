@@ -14,10 +14,18 @@ import {
   formatINR,
   getProgramTemplate,
   universitiesOfferingProgram,
+  type ProgramTemplate,
+  type University,
+  type UniversityProgram,
 } from "@/data/universities";
 
+interface ProgramComparePageData {
+  program: ProgramTemplate;
+  offers: { university: University; program: UniversityProgram }[];
+}
+
 export const Route = createFileRoute("/programs/$programSlug")({
-  loader: ({ params }) => {
+  loader: ({ params }): ProgramComparePageData => {
     const program = getProgramTemplate(params.programSlug);
     if (!program) throw notFound();
     return { program, offers: universitiesOfferingProgram(params.programSlug) };
@@ -60,7 +68,7 @@ export const Route = createFileRoute("/programs/$programSlug")({
 });
 
 function ProgramComparePage() {
-  const { program: p, offers } = Route.useLoaderData();
+  const { program: p, offers } = Route.useLoaderData() as ProgramComparePageData;
 
   return (
     <>
