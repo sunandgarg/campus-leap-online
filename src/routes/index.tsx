@@ -187,31 +187,40 @@ function HomePage() {
       </section>
 
       {/* Logo wall */}
-      <section className="border-b border-border bg-surface py-12">
+      <section className="border-b border-border bg-surface py-14">
         <div className="container-page">
           <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             Universities on our platform
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <h2 className="mt-3 text-center font-display text-2xl font-bold md:text-3xl">
+            Pick a university to see its online courses
+          </h2>
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {universities.map((u) => (
               <Link
                 key={u.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: u.slug }}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3.5 transition-all hover:-translate-y-0.5 hover:shadow-card"
+                className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-card px-4 py-6 text-center transition-all hover:-translate-y-0.5 hover:shadow-lift"
               >
-                <UniversityLogo university={u} size="sm" />
+                <UniversityLogo university={u} size="md" />
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-semibold">{u.shortName}</span>
                   <span className="block text-[11px] text-muted-foreground">
-                    NAAC {u.naacGrade}
+                    NAAC {u.naacGrade} · {u.city}
                   </span>
                 </span>
               </Link>
             ))}
           </div>
+          <div className="mt-8 text-center">
+            <Button asChild variant="outline">
+              <Link to="/universities">View all universities</Link>
+            </Button>
+          </div>
         </div>
       </section>
+
 
       {/* Programs */}
       <section className="container-page py-20">
