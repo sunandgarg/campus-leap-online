@@ -3,7 +3,7 @@ import { universities, programCatalog } from "@/data/universities";
 
 const ORIGIN = "https://online.dekhocampus.in";
 
-export const Route = createFileRoute("/sitemap[.]xml")({
+export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {

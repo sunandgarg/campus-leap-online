@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
@@ -37,6 +38,11 @@ const CompareRoute = CompareRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs': typeof ProgramsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compare'
     | '/contact'
+    | '/sitemap.xml'
     | '/programs/$programSlug'
     | '/programs/'
     | '/universities/'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compare'
     | '/contact'
+    | '/sitemap.xml'
     | '/programs/$programSlug'
     | '/programs'
     | '/universities'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compare'
     | '/contact'
+    | '/sitemap.xml'
     | '/programs/$programSlug'
     | '/programs/'
     | '/universities/'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   UniversitiesIndexRoute: typeof UniversitiesIndexRoute
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/programs/': {
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   UniversitiesIndexRoute: UniversitiesIndexRoute,
@@ -232,3 +253,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
