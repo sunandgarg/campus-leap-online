@@ -127,14 +127,17 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               <span className="text-xs font-bold uppercase tracking-wide text-ink">
                 Accreditations
               </span>
-              {u.approvals.slice(0, 4).map((a) => (
-                <span
-                  key={a}
-                  className="rounded-full bg-ink/10 px-2.5 py-1 text-xs font-bold text-ink"
-                >
-                  {a}
-                </span>
-              ))}
+              {u.approvals
+                .filter((a) => !a.startsWith("NAAC"))
+                .slice(0, 4)
+                .map((a) => (
+                  <span
+                    key={a}
+                    className="rounded-full bg-ink/10 px-2.5 py-1 text-xs font-bold text-ink"
+                  >
+                    {a}
+                  </span>
+                ))}
               <span className="rounded-full bg-ink/10 px-2.5 py-1 text-xs font-bold text-ink">
                 NAAC {u.naacGrade}
               </span>
