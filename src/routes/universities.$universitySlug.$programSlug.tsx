@@ -19,8 +19,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LeadForm } from "@/components/site/lead-form";
+import { ProgramHero, ProgramSectionNav } from "@/components/site/program-hero";
 import { UniversityLogo } from "@/components/site/university-logo";
+
 import {
   formatINR,
   getUniversityProgram,
@@ -49,7 +50,10 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Program not found | DekhoCampus Online" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Program not found | DekhoCampus Online" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const { university, program } = loaderData;
@@ -90,11 +94,7 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
 });
 
 function ProgramPage() {
-  const {
-    university: u,
-    program: p,
-    alternatives,
-  } = Route.useLoaderData() as ProgramPageData;
+  const { university: u, program: p, alternatives } = Route.useLoaderData() as ProgramPageData;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -123,103 +123,43 @@ function ProgramPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <section className="hero-ink text-ink-foreground">
-        <div className="container-page py-12">
-          <nav className="text-xs text-ink-foreground/60">
-            <Link to="/universities" className="hover:text-gold">
-              Universities
-            </Link>
-            <span className="mx-2">/</span>
-            <Link
-              to="/universities/$universitySlug"
-              params={{ universitySlug: u.slug }}
-              className="hover:text-gold"
-            >
-              {u.shortName}
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-ink-foreground/85">{p.code}</span>
-          </nav>
+      <ProgramHero university={u} program={p} />
+      <ProgramSectionNav />
 
-          <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_380px]">
-            <div>
-              <div className="flex items-center gap-3">
-                <UniversityLogo university={u} size="sm" className="bg-card" />
-                <span className="text-sm font-semibold text-ink-foreground/80">{u.name}</span>
+      {/* Program overview + key facts */}
+      <section id="overview" className="scroll-mt-32 border-b border-border bg-surface py-10">
+        <div className="container-page">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">
+            Become an industry leader with a UGC-entitled online {p.code} degree
+          </h2>
+          <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">{p.overview}</p>
+          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {facts.map((f) => (
+              <div
+                key={f.k}
+                className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
+              >
+                <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">{f.k}</p>
+                  <p className="mt-0.5 text-sm font-semibold">{f.v}</p>
+                </div>
               </div>
-              <h1 className="mt-5 font-display text-3xl font-extrabold leading-tight md:text-[2.6rem]">
-                {p.name} <span className="text-gradient-gold">Online</span>
-              </h1>
-              <p className="mt-4 max-w-2xl leading-relaxed text-ink-foreground/75">{p.overview}</p>
-
-              <div className="mt-6 flex flex-wrap gap-1.5">
-                <Badge className="border-gold/30 bg-gold/15 text-gold hover:bg-gold/15">
-                  {p.level}
-                </Badge>
-                {u.approvals.slice(0, 3).map((a) => (
-                  <Badge
-                    key={a}
-                    className="border-ink-foreground/20 bg-ink-foreground/10 text-ink-foreground hover:bg-ink-foreground/10"
-                  >
-                    {a}
-                  </Badge>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg" className="bg-gold text-gold-foreground hover:bg-gold/90">
-                  <a href="#apply">
-                    Apply now <ArrowRight className="ml-1.5 h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-ink-foreground/25 bg-transparent text-ink-foreground hover:bg-ink-foreground/10 hover:text-ink-foreground"
-                >
-                  <Link to="/programs/$programSlug" params={{ programSlug: p.slug }}>
-                    Compare universities
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            <div id="apply" className="scroll-mt-24">
-              <LeadForm
-                compact
-                defaultProgram={p.name}
-                defaultUniversity={u.name}
-                className="text-card-foreground"
-                title="Download brochure & fee details"
-                description="A counsellor will share the fee structure, EMI plan and admission deadlines."
-              />
-            </div>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* Key facts */}
-      <section className="border-b border-border bg-surface py-8">
-        <div className="container-page grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {facts.map((f) => (
-            <div key={f.k} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
-              <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-              <div>
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">{f.k}</p>
-                <p className="mt-0.5 text-sm font-semibold">{f.v}</p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
       <section className="container-page grid gap-12 py-14 lg:grid-cols-[1fr_340px]">
         <div className="space-y-14">
-          <div>
+          <div id="specialisations" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Specialisations offered</h2>
+
             <p className="mt-2 text-sm text-muted-foreground">
               Pick a specialisation in your third semester (or second year for bachelor's).
             </p>
@@ -236,9 +176,15 @@ function ProgramPage() {
             </div>
           </div>
 
-          <div>
+          <div id="curriculum" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Curriculum & syllabus</h2>
-            <Accordion type="single" collapsible className="mt-5" defaultValue={p.curriculum[0]!.semester}>
+
+            <Accordion
+              type="single"
+              collapsible
+              className="mt-5"
+              defaultValue={p.curriculum[0]!.semester}
+            >
               {p.curriculum.map((c) => (
                 <AccordionItem key={c.semester} value={c.semester}>
                   <AccordionTrigger className="font-display text-base font-semibold">
@@ -247,7 +193,10 @@ function ProgramPage() {
                   <AccordionContent>
                     <ul className="grid gap-2 sm:grid-cols-2">
                       {c.subjects.map((s) => (
-                        <li key={s} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <li
+                          key={s}
+                          className="flex items-start gap-2 text-sm text-muted-foreground"
+                        >
                           <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                           {s}
                         </li>
@@ -259,8 +208,9 @@ function ProgramPage() {
             </Accordion>
           </div>
 
-          <div>
+          <div id="eligibility" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Eligibility & admission process</h2>
+
             <div className="mt-5 rounded-2xl border border-border bg-card p-6">
               <p className="text-sm leading-relaxed">{p.eligibility}</p>
               <ol className="mt-6 space-y-4">
@@ -282,8 +232,9 @@ function ProgramPage() {
             </div>
           </div>
 
-          <div>
+          <div id="fees" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Fee structure</h2>
+
             <div className="mt-5 overflow-hidden rounded-2xl border border-border">
               <table className="w-full text-sm">
                 <tbody>
@@ -295,7 +246,10 @@ function ProgramPage() {
                     ["Exam mode", "Online proctored"],
                   ].map(([k, v], i) => (
                     <tr key={k} className={i % 2 ? "bg-surface" : "bg-card"}>
-                      <th scope="row" className="px-5 py-3.5 text-left font-medium text-muted-foreground">
+                      <th
+                        scope="row"
+                        className="px-5 py-3.5 text-left font-medium text-muted-foreground"
+                      >
                         {k}
                       </th>
                       <td className="px-5 py-3.5 text-right font-semibold">{v}</td>
@@ -310,10 +264,12 @@ function ProgramPage() {
             </p>
           </div>
 
-          <div>
+          <div id="careers" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Career outcomes</h2>
+
             <p className="mt-2 text-sm text-muted-foreground">
-              Average salary range: <span className="font-semibold text-foreground">{p.averageSalaryLpa}</span>
+              Average salary range:{" "}
+              <span className="font-semibold text-foreground">{p.averageSalaryLpa}</span>
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {p.careers.map((c) => (
@@ -336,7 +292,7 @@ function ProgramPage() {
           </div>
 
           {alternatives.length > 0 && (
-            <div>
+            <div id="compare" className="scroll-mt-32">
               <h2 className="font-display text-2xl font-bold">
                 Other universities offering {p.code} online
               </h2>
