@@ -50,7 +50,10 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Program not found | DekhoCampus Online" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Program not found | DekhoCampus Online" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const { university, program } = loaderData;
@@ -91,11 +94,7 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
 });
 
 function ProgramPage() {
-  const {
-    university: u,
-    program: p,
-    alternatives,
-  } = Route.useLoaderData() as ProgramPageData;
+  const { university: u, program: p, alternatives } = Route.useLoaderData() as ProgramPageData;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -124,7 +123,10 @@ function ProgramPage() {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <ProgramHero university={u} program={p} />
       <ProgramSectionNav />
@@ -153,7 +155,6 @@ function ProgramPage() {
         </div>
       </section>
 
-
       <section className="container-page grid gap-12 py-14 lg:grid-cols-[1fr_340px]">
         <div className="space-y-14">
           <div id="specialisations" className="scroll-mt-32">
@@ -178,7 +179,12 @@ function ProgramPage() {
           <div id="curriculum" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">Curriculum & syllabus</h2>
 
-            <Accordion type="single" collapsible className="mt-5" defaultValue={p.curriculum[0]!.semester}>
+            <Accordion
+              type="single"
+              collapsible
+              className="mt-5"
+              defaultValue={p.curriculum[0]!.semester}
+            >
               {p.curriculum.map((c) => (
                 <AccordionItem key={c.semester} value={c.semester}>
                   <AccordionTrigger className="font-display text-base font-semibold">
@@ -187,7 +193,10 @@ function ProgramPage() {
                   <AccordionContent>
                     <ul className="grid gap-2 sm:grid-cols-2">
                       {c.subjects.map((s) => (
-                        <li key={s} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <li
+                          key={s}
+                          className="flex items-start gap-2 text-sm text-muted-foreground"
+                        >
                           <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                           {s}
                         </li>
@@ -237,7 +246,10 @@ function ProgramPage() {
                     ["Exam mode", "Online proctored"],
                   ].map(([k, v], i) => (
                     <tr key={k} className={i % 2 ? "bg-surface" : "bg-card"}>
-                      <th scope="row" className="px-5 py-3.5 text-left font-medium text-muted-foreground">
+                      <th
+                        scope="row"
+                        className="px-5 py-3.5 text-left font-medium text-muted-foreground"
+                      >
                         {k}
                       </th>
                       <td className="px-5 py-3.5 text-right font-semibold">{v}</td>
@@ -256,7 +268,8 @@ function ProgramPage() {
             <h2 className="font-display text-2xl font-bold">Career outcomes</h2>
 
             <p className="mt-2 text-sm text-muted-foreground">
-              Average salary range: <span className="font-semibold text-foreground">{p.averageSalaryLpa}</span>
+              Average salary range:{" "}
+              <span className="font-semibold text-foreground">{p.averageSalaryLpa}</span>
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {p.careers.map((c) => (
@@ -281,7 +294,6 @@ function ProgramPage() {
           {alternatives.length > 0 && (
             <div id="compare" className="scroll-mt-32">
               <h2 className="font-display text-2xl font-bold">
-
                 Other universities offering {p.code} online
               </h2>
               <div className="mt-5 space-y-3">
