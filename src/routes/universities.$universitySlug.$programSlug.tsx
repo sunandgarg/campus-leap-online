@@ -238,7 +238,7 @@ function ProgramPage() {
 
           <div>
             <h2 className="font-display text-2xl font-bold">Curriculum & syllabus</h2>
-            <Accordion type="single" collapsible className="mt-5" defaultValue={p.curriculum[0]?.semester}>
+            <Accordion type="single" collapsible className="mt-5" defaultValue={p.curriculum[0]!.semester}>
               {p.curriculum.map((c) => (
                 <AccordionItem key={c.semester} value={c.semester}>
                   <AccordionTrigger className="font-display text-base font-semibold">
