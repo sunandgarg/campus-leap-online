@@ -1,10 +1,29 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { University } from "@/data/universities";
 
+const SIZES = {
+  sm: { box: "h-9 w-9 rounded-lg", text: "text-xs", px: 64 },
+  md: { box: "h-14 w-14 rounded-xl", text: "text-base", px: 128 },
+  lg: { box: "h-20 w-20 rounded-2xl", text: "text-2xl", px: 192 },
+} as const;
+
+function initialsOf(name: string) {
+  return name
+    .replace(/Online|University|Jaipur/g, "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("");
+}
+
 /**
- * University mark: initials monogram rendered from university data, tinted with
- * the university's accent colour. Fully data-driven — a new university in
- * universities.ts automatically gets a consistent logo tile.
+ * University mark: renders the university's real brand logo (resolved from its
+ * official domain) with an initials monogram fallback tinted with the
+ * university's accent colour. Fully data-driven — adding a university to
+ * universities.ts automatically gets a logo tile.
  */
 export function UniversityLogo({
   university,
@@ -15,36 +34,46 @@ export function UniversityLogo({
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
-  const initials = university.name
-    .replace(/Online|University|Jaipur/g, "")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("");
+  const [failed, setFailed] = useState(false);
+  const s = SIZES[size];
 
-  const sizes = {
-    sm: "h-9 w-9 text-xs rounded-lg",
-    md: "h-14 w-14 text-base rounded-xl",
-    lg: "h-20 w-20 text-2xl rounded-2xl",
-  } as const;
+  const tile = cn(
+    "inline-flex shrink-0 items-center justify-center overflow-hidden border font-display font-bold tracking-tight",
+    s.box,
+    className,
+  );
+
+  if (failed) {
+    return (
+      <span
+        aria-hidden="true"
+        className={cn(tile, s.text)}
+        style={{
+          color: university.accentColor,
+          backgroundColor: `color-mix(in oklab, ${university.accentColor} 12%, white)`,
+          borderColor: `color-mix(in oklab, ${university.accentColor} 25%, transparent)`,
+        }}
+      >
+        {initialsOf(university.name)}
+      </span>
+    );
+  }
 
   return (
     <span
-      aria-hidden="true"
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center border font-display font-bold tracking-tight",
-        sizes[size],
-        className,
-      )}
-      style={{
-        color: university.accentColor,
-        backgroundColor: `color-mix(in oklab, ${university.accentColor} 12%, white)`,
-        borderColor: `color-mix(in oklab, ${university.accentColor} 25%, transparent)`,
-      }}
+      className={cn(tile, "border-border bg-white")}
+      style={{ borderColor: `color-mix(in oklab, ${university.accentColor} 20%, transparent)` }}
     >
-      {initials}
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${university.domain}&sz=${s.px}`}
+        alt={`${university.name} logo`}
+        width={s.px}
+        height={s.px}
+        loading="lazy"
+        decoding="async"
+        className="h-[70%] w-[70%] object-contain"
+        onError={() => setFailed(true)}
+      />
     </span>
   );
 }
