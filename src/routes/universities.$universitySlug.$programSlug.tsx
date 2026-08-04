@@ -19,8 +19,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LeadForm } from "@/components/site/lead-form";
+import { ProgramHero, ProgramSectionNav } from "@/components/site/program-hero";
 import { UniversityLogo } from "@/components/site/university-logo";
+
 import {
   formatINR,
   getUniversityProgram,
@@ -136,18 +137,22 @@ function ProgramPage() {
           </h2>
           <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">{p.overview}</p>
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-          {facts.map((f) => (
-            <div key={f.k} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
-              <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-              <div>
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">{f.k}</p>
-                <p className="mt-0.5 text-sm font-semibold">{f.v}</p>
+            {facts.map((f) => (
+              <div
+                key={f.k}
+                className="flex items-start gap-3 rounded-xl border border-border bg-card p-4"
+              >
+                <f.icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">{f.k}</p>
+                  <p className="mt-0.5 text-sm font-semibold">{f.v}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
+
 
       <section className="container-page grid gap-12 py-14 lg:grid-cols-[1fr_340px]">
         <div className="space-y-14">
