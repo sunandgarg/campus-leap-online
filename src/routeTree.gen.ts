@@ -20,6 +20,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
 import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
 
@@ -77,6 +78,11 @@ const UniversitiesIndexRoute = UniversitiesIndexRouteImport.update({
   path: '/universities/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const UniversitiesUniversitySlugIndexRoute =
   UniversitiesUniversitySlugIndexRouteImport.update({
     id: '/universities/$universitySlug/',
@@ -97,11 +103,12 @@ export interface FileRoutesByFullPath {
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRoutesByTo {
@@ -111,11 +118,11 @@ export interface FileRoutesByTo {
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs': typeof ProgramsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRoutesById {
@@ -127,11 +134,12 @@ export interface FileRoutesById {
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
 }
 export interface FileRouteTypes {
@@ -148,6 +156,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/universities/'
     | '/universities/$universitySlug/$programSlug'
+    | '/admin/'
     | '/universities/$universitySlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -157,11 +166,11 @@ export interface FileRouteTypes {
     | '/compare'
     | '/contact'
     | '/sitemap.xml'
-    | '/admin'
     | '/programs/$programSlug'
     | '/programs'
     | '/universities'
     | '/universities/$universitySlug/$programSlug'
+    | '/admin'
     | '/universities/$universitySlug'
   id:
     | '__root__'
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/universities/'
     | '/universities/$universitySlug/$programSlug'
+    | '/_authenticated/admin/'
     | '/universities/$universitySlug/'
   fileRoutesById: FileRoutesById
 }
@@ -274,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UniversitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/universities/$universitySlug/': {
       id: '/universities/$universitySlug/'
       path: '/universities/$universitySlug'
@@ -291,12 +308,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
