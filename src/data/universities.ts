@@ -49,9 +49,33 @@ export interface University {
   placementPartners: string[];
   highlights: string[];
   about: string;
-  /** program slugs offered, mapped to a fee multiplier over the base fee */
-  programs: { slug: string; feeMultiplier: number }[];
+  logoUrl?: string;
+  heroImageUrl?: string;
+  hiringPartnerCount?: string;
+  /**
+   * Programs offered. Either a fee multiplier over the base fee (static
+   * fallback data) or explicit fees coming from the admin-managed database.
+   */
+  programs: {
+    slug: string;
+    feeMultiplier?: number;
+    totalFee?: number;
+    perSemesterFee?: number;
+    emiPerMonth?: number;
+    seatsFilledPercent?: number;
+  }[];
 }
+
+export interface SiteSettings {
+  [key: string]: unknown;
+}
+
+export interface Catalog {
+  universities: University[];
+  programs: ProgramTemplate[];
+  settings: SiteSettings;
+}
+
 
 const programTemplates: ProgramTemplate[] = [
   {
