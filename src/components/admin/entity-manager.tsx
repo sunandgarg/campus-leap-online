@@ -38,6 +38,8 @@ interface EntityManagerProps {
   orderBy?: string;
   /** extra select options loaded for select fields, e.g. slugs */
   selectSources?: Record<string, string[]>;
+  /** primary key column, defaults to "id" */
+  idColumn?: string;
 }
 
 function emptyDraft(fields: FieldDef[]): Row {
@@ -73,6 +75,7 @@ export function EntityManager({
   listColumns,
   orderBy = "sort_order",
   selectSources,
+  idColumn = "id",
 }: EntityManagerProps) {
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<Row | null>(null);
@@ -91,7 +94,7 @@ export function EntityManager({
   const save = useMutation({
     mutationFn: async (payload: Row) => {
       if (editingId) {
-        const { error } = await db.from(table).update(payload).eq("id", editingId);
+        const { error } = await db.from(table).update(payload).eq(idColumn, editingId);
         if (error) throw error;
       } else {
         const { error } = await db.from(table).insert(payload);
@@ -111,7 +114,7 @@ export function EntityManager({
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await db.from(table).delete().eq("id", id);
+      const { error } = await db.from(table).delete().eq(idColumn, id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -136,7 +139,7 @@ export function EntityManager({
     const next: Row = {};
     for (const f of fields) next[f.name] = row[f.name];
     setDraft(next);
-    setEditingId(String(row["id"]));
+    setEditingId(String(row[idColumn]));
   }
 
   function updateField(field: FieldDef, raw: string | boolean) {
@@ -314,7 +317,7 @@ export function EntityManager({
               </tr>
             )}
             {rows.map((row) => (
-              <tr key={String(row["id"])} className="border-t border-border bg-card">
+              <tr key={String(row[idColumn])} className="border-t border-border bg-card">
                 {listColumns.map((c) => (
                   <td key={c.name} className="px-4 py-3">
                     {typeof row[c.name] === "boolean"
@@ -332,7 +335,7 @@ export function EntityManager({
                     variant="ghost"
                     size="sm"
                     onClick={() => {
-                      if (window.confirm("Delete this record?")) remove.mutate(String(row["id"]));
+                      if (window.confirm("Delete this record?")) remove.mutate(String(row[idColumn]));
                     }}
                   >
                     <Trash2 className="h-3.5 w-3.5 text-destructive" />

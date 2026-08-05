@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { programCatalog, universities } from "@/data/universities";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 interface LeadFormProps {
@@ -52,17 +53,28 @@ export function LeadForm({
       return;
     }
     setSubmitting(true);
-    // Enquiries are captured in the browser for now. Connect Lovable Cloud to
-    // persist leads and trigger counsellor notifications.
-    window.setTimeout(() => {
+    void (async () => {
+      const { error } = await supabase.from("leads").insert({
+        full_name: name.trim(),
+        phone: phone.trim(),
+        email: email.trim() || null,
+        university_slug:
+          universities.find((u) => u.name === university)?.slug ?? null,
+        program_slug: programCatalog.find((p) => p.name === program)?.slug ?? null,
+        source_path: typeof window === "undefined" ? null : window.location.pathname,
+      });
       setSubmitting(false);
+      if (error) {
+        toast.error("We couldn't submit your enquiry. Please try again.");
+        return;
+      }
       toast.success("Thanks! A counsellor will call you shortly.", {
         description: `${name.trim()} · +91 ${phone.trim()}${program ? ` · ${program}` : ""}`,
       });
       setName("");
       setPhone("");
       setEmail("");
-    }, 600);
+    })();
   }
 
   return (

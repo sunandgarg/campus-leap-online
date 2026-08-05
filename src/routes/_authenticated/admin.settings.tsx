@@ -30,6 +30,7 @@ function AdminSettings() {
       description="Brand details, the announcement bar and homepage hero copy used across the site."
       fields={fields}
       orderBy="key"
+      idColumn="key"
       listColumns={[
         { name: "key", label: "Key" },
         { name: "updated_at", label: "Updated" },

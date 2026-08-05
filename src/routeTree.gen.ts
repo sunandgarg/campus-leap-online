@@ -21,6 +21,11 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
+import { Route as AuthenticatedAdminOfferingsRouteImport } from './routes/_authenticated/admin.offerings'
+import { Route as AuthenticatedAdminProgramsRouteImport } from './routes/_authenticated/admin.programs'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminUniversitiesRouteImport } from './routes/_authenticated/admin.universities'
 import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
 import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
 
@@ -83,6 +88,35 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminOfferingsRoute =
+  AuthenticatedAdminOfferingsRouteImport.update({
+    id: '/offerings',
+    path: '/offerings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProgramsRoute =
+  AuthenticatedAdminProgramsRouteImport.update({
+    id: '/programs',
+    path: '/programs',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUniversitiesRoute =
+  AuthenticatedAdminUniversitiesRouteImport.update({
+    id: '/universities',
+    path: '/universities',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const UniversitiesUniversitySlugIndexRoute =
   UniversitiesUniversitySlugIndexRouteImport.update({
     id: '/universities/$universitySlug/',
@@ -107,6 +141,11 @@ export interface FileRoutesByFullPath {
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
+  '/admin/programs': typeof AuthenticatedAdminProgramsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
@@ -121,6 +160,11 @@ export interface FileRoutesByTo {
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs': typeof ProgramsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
+  '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
+  '/admin/programs': typeof AuthenticatedAdminProgramsRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug': typeof UniversitiesUniversitySlugIndexRoute
@@ -138,6 +182,11 @@ export interface FileRoutesById {
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/programs/': typeof ProgramsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/_authenticated/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
+  '/_authenticated/admin/programs': typeof AuthenticatedAdminProgramsRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
@@ -155,6 +204,11 @@ export interface FileRouteTypes {
     | '/programs/$programSlug'
     | '/programs/'
     | '/universities/'
+    | '/admin/leads'
+    | '/admin/offerings'
+    | '/admin/programs'
+    | '/admin/settings'
+    | '/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/admin/'
     | '/universities/$universitySlug/'
@@ -169,6 +223,11 @@ export interface FileRouteTypes {
     | '/programs/$programSlug'
     | '/programs'
     | '/universities'
+    | '/admin/leads'
+    | '/admin/offerings'
+    | '/admin/programs'
+    | '/admin/settings'
+    | '/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/admin'
     | '/universities/$universitySlug'
@@ -185,6 +244,11 @@ export interface FileRouteTypes {
     | '/programs/$programSlug'
     | '/programs/'
     | '/universities/'
+    | '/_authenticated/admin/leads'
+    | '/_authenticated/admin/offerings'
+    | '/_authenticated/admin/programs'
+    | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/_authenticated/admin/'
     | '/universities/$universitySlug/'
@@ -291,6 +355,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/leads': {
+      id: '/_authenticated/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/offerings': {
+      id: '/_authenticated/admin/offerings'
+      path: '/offerings'
+      fullPath: '/admin/offerings'
+      preLoaderRoute: typeof AuthenticatedAdminOfferingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/programs': {
+      id: '/_authenticated/admin/programs'
+      path: '/programs'
+      fullPath: '/admin/programs'
+      preLoaderRoute: typeof AuthenticatedAdminProgramsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/universities': {
+      id: '/_authenticated/admin/universities'
+      path: '/universities'
+      fullPath: '/admin/universities'
+      preLoaderRoute: typeof AuthenticatedAdminUniversitiesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/universities/$universitySlug/': {
       id: '/universities/$universitySlug/'
       path: '/universities/$universitySlug'
@@ -309,10 +408,20 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
+  AuthenticatedAdminOfferingsRoute: typeof AuthenticatedAdminOfferingsRoute
+  AuthenticatedAdminProgramsRoute: typeof AuthenticatedAdminProgramsRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminUniversitiesRoute: typeof AuthenticatedAdminUniversitiesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
+  AuthenticatedAdminOfferingsRoute: AuthenticatedAdminOfferingsRoute,
+  AuthenticatedAdminProgramsRoute: AuthenticatedAdminProgramsRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminUniversitiesRoute: AuthenticatedAdminUniversitiesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
