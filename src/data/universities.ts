@@ -847,21 +847,42 @@ const BASE_FEE: Record<ProgramLevel, number> = {
   Certificate: 40000,
 };
 
-const templateBySlug = new Map(programTemplates.map((p) => [p.slug, p]));
+type UniversityProgramRef = University["programs"][number];
 
-function buildProgram(template: ProgramTemplate, feeMultiplier: number): UniversityProgram {
-  const totalFee = Math.round((BASE_FEE[template.level] * feeMultiplier) / 1000) * 1000;
+/**
+ * Live catalog. Seeded with the bundled fallback data and replaced at runtime
+ * with the admin-managed content loaded from the database (see
+ * `src/lib/catalog.functions.ts` and the root route).
+ */
+export let universities: University[] = universityData;
+export let programCatalog: ProgramTemplate[] = programTemplates;
+export let siteSettings: SiteSettings = {};
+
+let templateBySlug = new Map(programTemplates.map((p) => [p.slug, p]));
+
+function buildProgram(template: ProgramTemplate, ref: UniversityProgramRef): UniversityProgram {
+  const totalFee =
+    ref.totalFee ?? Math.round((BASE_FEE[template.level] * (ref.feeMultiplier ?? 1)) / 1000) * 1000;
   return {
     ...template,
     totalFee,
-    perSemesterFee: Math.round(totalFee / template.semesters / 500) * 500,
-    emiPerMonth: Math.round(totalFee / (template.durationYears * 12) / 100) * 100,
+    perSemesterFee:
+      ref.perSemesterFee ?? Math.round(totalFee / template.semesters / 500) * 500,
+    emiPerMonth:
+      ref.emiPerMonth ?? Math.round(totalFee / (template.durationYears * 12) / 100) * 100,
+    seatsFilledPercent: ref.seatsFilledPercent,
   };
 }
 
-export const universities: University[] = universityData;
-
-export const programCatalog: ProgramTemplate[] = programTemplates;
+/** Replace the live catalog with admin-managed content. */
+export function setCatalog(catalog: Catalog): void {
+  if (catalog.universities.length > 0) universities = catalog.universities;
+  if (catalog.programs.length > 0) {
+    programCatalog = catalog.programs;
+    templateBySlug = new Map(catalog.programs.map((p) => [p.slug, p]));
+  }
+  siteSettings = catalog.settings;
+}
 
 export function getUniversity(slug: string): University | undefined {
   return universities.find((u) => u.slug === slug);
@@ -869,9 +890,9 @@ export function getUniversity(slug: string): University | undefined {
 
 export function getUniversityPrograms(university: University): UniversityProgram[] {
   return university.programs
-    .map(({ slug, feeMultiplier }) => {
-      const template = templateBySlug.get(slug);
-      return template ? buildProgram(template, feeMultiplier) : null;
+    .map((ref) => {
+      const template = templateBySlug.get(ref.slug);
+      return template ? buildProgram(template, ref) : null;
     })
     .filter((p): p is UniversityProgram => p !== null);
 }
@@ -882,20 +903,21 @@ export function getUniversityProgram(
 ): { university: University; program: UniversityProgram } | null {
   const university = getUniversity(universitySlug);
   if (!university) return null;
-  const entry = university.programs.find((p) => p.slug === programSlug);
-  const template = entry ? templateBySlug.get(entry.slug) : undefined;
-  if (!entry || !template) return null;
-  return { university, program: buildProgram(template, entry.feeMultiplier) };
+  const ref = university.programs.find((p) => p.slug === programSlug);
+  const template = ref ? templateBySlug.get(ref.slug) : undefined;
+  if (!ref || !template) return null;
+  return { university, program: buildProgram(template, ref) };
 }
 
 /** Every university that offers a given program slug, cheapest first. */
 export function universitiesOfferingProgram(programSlug: string) {
   return universities
     .filter((u) => u.programs.some((p) => p.slug === programSlug))
-    .map((u) => {
-      const entry = u.programs.find((p) => p.slug === programSlug)!;
-      const template = templateBySlug.get(programSlug)!;
-      return { university: u, program: buildProgram(template, entry.feeMultiplier) };
+    .flatMap((u) => {
+      const ref = u.programs.find((p) => p.slug === programSlug);
+      const template = templateBySlug.get(programSlug);
+      if (!ref || !template) return [];
+      return [{ university: u, program: buildProgram(template, ref) }];
     })
     .sort((a, b) => a.program.totalFee - b.program.totalFee);
 }
@@ -904,15 +926,19 @@ export function getProgramTemplate(slug: string): ProgramTemplate | undefined {
   return templateBySlug.get(slug);
 }
 
-export const allUniversitySlugs = universities.map((u) => u.slug);
-
 export function formatINR(amount: number): string {
   return "₹" + amount.toLocaleString("en-IN");
 }
 
-export const specialisationCount = programTemplates.reduce(
-  (n, p) => n + p.specialisations.length,
-  0,
-);
+export function getAllUniversitySlugs(): string[] {
+  return universities.map((u) => u.slug);
+}
 
-export const totalProgramCount = universities.reduce((n, u) => n + u.programs.length, 0);
+export function getSpecialisationCount(): number {
+  return programCatalog.reduce((n, p) => n + p.specialisations.length, 0);
+}
+
+export function getTotalProgramCount(): number {
+  return universities.reduce((n, u) => n + u.programs.length, 0);
+}
+
