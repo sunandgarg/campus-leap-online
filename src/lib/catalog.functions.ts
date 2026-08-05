@@ -4,6 +4,7 @@ import type {
   Catalog,
   ProgramLevel,
   ProgramTemplate,
+  SettingsValue,
   SiteSettings,
   University,
 } from "@/data/universities";
@@ -171,7 +172,7 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
   }));
 
   const settings: SiteSettings = {};
-  for (const row of (settingsRes.data ?? []) as { key: string; value: unknown }[]) {
+  for (const row of (settingsRes.data ?? []) as { key: string; value: SettingsValue }[]) {
     settings[row.key] = row.value;
   }
 

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { universities, totalProgramCount } from "@/data/universities";
+import { universities, getTotalProgramCount } from "@/data/universities";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -46,7 +46,7 @@ function AboutPage() {
           <p>
             DekhoCampus Online exists to fix that. We list only universities with valid UGC
             entitlement for online programmes, publish the fee data we verify with each university,
-            and let you compare {universities.length} universities and {totalProgramCount} programs
+            and let you compare {universities.length} universities and {getTotalProgramCount()} programs
             without a sales pitch.
           </p>
           <p>
