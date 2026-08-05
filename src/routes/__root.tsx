@@ -15,7 +15,7 @@ import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { getCatalog } from "@/lib/catalog.functions";
-import { setCatalog, type Catalog } from "@/data/universities";
+import { setCatalog, siteSettings, type Catalog } from "@/data/universities";
 
 function NotFoundComponent() {
   return (
@@ -131,6 +131,23 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function AnnouncementBar() {
+  const announcement = siteSettings["announcement"] as
+    | { enabled?: boolean; text?: string; cta?: string; href?: string }
+    | undefined;
+  if (!announcement?.enabled || !announcement.text) return null;
+  return (
+    <div className="bg-ink px-4 py-2 text-center text-xs text-ink-foreground/85 sm:text-sm">
+      <span>{announcement.text}</span>
+      {announcement.cta && (
+        <Link to="/contact" className="ml-2 font-semibold text-gold hover:underline">
+          {announcement.cta}
+        </Link>
+      )}
+    </div>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const catalog = Route.useLoaderData() as Catalog | undefined;
@@ -139,6 +156,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
+        <AnnouncementBar />
         <SiteHeader />
         <main className="flex-1">
           {/* Required: nested routes render here. */}
