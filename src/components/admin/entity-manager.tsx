@@ -2,7 +2,11 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+
+/** Untyped view of the client so one component can manage several tables. */
+const db = supabase as unknown as SupabaseClient;
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,7 +82,7 @@ export function EntityManager({
   const rowsQuery = useQuery({
     queryKey: ["admin", table],
     queryFn: async () => {
-      const { data, error } = await supabase.from(table).select("*").order(orderBy);
+      const { data, error } = await db.from(table).select("*").order(orderBy);
       if (error) throw error;
       return (data ?? []) as Row[];
     },
@@ -87,10 +91,10 @@ export function EntityManager({
   const save = useMutation({
     mutationFn: async (payload: Row) => {
       if (editingId) {
-        const { error } = await supabase.from(table).update(payload).eq("id", editingId);
+        const { error } = await db.from(table).update(payload).eq("id", editingId);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from(table).insert(payload);
+        const { error } = await db.from(table).insert(payload);
         if (error) throw error;
       }
     },
@@ -107,7 +111,7 @@ export function EntityManager({
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from(table).delete().eq("id", id);
+      const { error } = await db.from(table).delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
