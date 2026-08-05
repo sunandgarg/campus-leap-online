@@ -26,8 +26,8 @@ import { UniversityLogo } from "@/components/site/university-logo";
 import {
   universities,
   programCatalog,
-  totalProgramCount,
-  specialisationCount,
+  getTotalProgramCount,
+  getSpecialisationCount,
 } from "@/data/universities";
 
 export const Route = createFileRoute("/")({
@@ -119,6 +119,8 @@ const faqs = [
 ];
 
 function HomePage() {
+  const totalProgramCount = getTotalProgramCount();
+  const specialisationCount = getSpecialisationCount();
   return (
     <>
       {/* Hero */}
