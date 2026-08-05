@@ -14,6 +14,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { getCatalog } from "@/lib/catalog.functions";
+import { setCatalog, type Catalog } from "@/data/universities";
 
 function NotFoundComponent() {
   return (
@@ -108,6 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
     ],
   }),
+  loader: () => getCatalog(),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -130,6 +133,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const catalog = Route.useLoaderData() as Catalog | undefined;
+  if (catalog) setCatalog(catalog);
 
   return (
     <QueryClientProvider client={queryClient}>
