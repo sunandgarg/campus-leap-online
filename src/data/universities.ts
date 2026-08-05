@@ -24,12 +24,14 @@ export interface ProgramTemplate {
   curriculum: { semester: string; subjects: string[] }[];
   careers: string[];
   averageSalaryLpa: string;
+  heroImageUrl?: string | undefined;
 }
 
 export interface UniversityProgram extends ProgramTemplate {
   totalFee: number;
   perSemesterFee: number;
   emiPerMonth: number;
+  seatsFilledPercent?: number | undefined;
 }
 
 export interface University {
@@ -49,32 +51,39 @@ export interface University {
   placementPartners: string[];
   highlights: string[];
   about: string;
-  logoUrl?: string;
-  heroImageUrl?: string;
-  hiringPartnerCount?: string;
+  logoUrl?: string | undefined;
+  heroImageUrl?: string | undefined;
+  hiringPartnerCount?: string | undefined;
   /**
    * Programs offered. Either a fee multiplier over the base fee (static
    * fallback data) or explicit fees coming from the admin-managed database.
    */
   programs: {
     slug: string;
-    feeMultiplier?: number;
-    totalFee?: number;
-    perSemesterFee?: number;
-    emiPerMonth?: number;
-    seatsFilledPercent?: number;
+    feeMultiplier?: number | undefined;
+    totalFee?: number | undefined;
+    perSemesterFee?: number | undefined;
+    emiPerMonth?: number | undefined;
+    seatsFilledPercent?: number | undefined;
   }[];
 }
 
-export interface SiteSettings {
-  [key: string]: unknown;
-}
+export type SettingsValue =
+  | string
+  | number
+  | boolean
+  | null
+  | SettingsValue[]
+  | { [key: string]: SettingsValue };
+
+export type SiteSettings = Record<string, SettingsValue>;
 
 export interface Catalog {
   universities: University[];
   programs: ProgramTemplate[];
   settings: SiteSettings;
 }
+
 
 
 const programTemplates: ProgramTemplate[] = [
