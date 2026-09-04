@@ -8,7 +8,6 @@ import {
   Check,
   ChevronRight,
   Clock3,
-  Download,
   GraduationCap,
   IndianRupee,
   Laptop2,
@@ -26,9 +25,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
-import programHero from "@/assets/program-hero.jpg";
 import {
   formatINR,
   getProgramTemplate,
@@ -162,57 +159,65 @@ function ProgramComparePage() {
   ];
 
   return (
-    <div className="bg-[#fbfaf7] text-[#121a28]">
-      <section className="relative overflow-hidden bg-[#071d36] text-white">
+    <div className="bg-background text-foreground transition-colors">
+      <section className="relative overflow-hidden border-b border-border bg-[#f6f9fd] dark:bg-[#071522]">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: `url(${p.heroImageUrl ?? programHero})` }}
+          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(30,103,189,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(30,103,189,0.055)_1px,transparent_1px)] [background-size:56px_56px] dark:opacity-30"
           aria-hidden="true"
         />
         <div
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,26,50,0.99)_0%,rgba(5,31,61,0.94)_48%,rgba(8,39,74,0.72)_100%)]"
+          className="pointer-events-none absolute -left-32 -top-40 h-[36rem] w-[36rem] rounded-full bg-[#dcecff] blur-3xl dark:bg-[#0a4a87]/40"
           aria-hidden="true"
         />
         <div
-          className="absolute -left-24 bottom-0 h-80 w-80 rounded-full bg-[#2677dd]/30 blur-3xl"
+          className="pointer-events-none absolute -right-40 top-8 h-[34rem] w-[34rem] rounded-full bg-[#fff0d2] blur-3xl dark:bg-[#5b3d12]/30"
           aria-hidden="true"
         />
 
-        <div className="container-page relative py-6 lg:py-9">
-          <nav className="flex items-center gap-1 text-xs text-white/55" aria-label="Breadcrumb">
-            <Link to="/" className="transition hover:text-white">
+        <div className="container-page relative py-7 lg:py-12">
+          <nav
+            className="flex items-center gap-1 text-xs text-muted-foreground"
+            aria-label="Breadcrumb"
+          >
+            <Link to="/" className="transition hover:text-foreground">
               Home
             </Link>
             <ChevronRight className="h-3 w-3" />
-            <Link to="/programs" className="transition hover:text-white">
+            <Link to="/programs" className="transition hover:text-foreground">
               Programs
             </Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-white/85">{p.code}</span>
+            <span className="font-semibold text-foreground">{p.code}</span>
           </nav>
 
-          <div className="mt-6 grid gap-9 lg:grid-cols-[1fr_405px] lg:items-center xl:gap-16">
-            <div className="max-w-3xl py-4 lg:py-8">
-              <div className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-xs font-extrabold text-[#143967] shadow-lg">
-                <BadgeCheck className="h-4 w-4 text-[#df9e20]" />
-                UGC-entitled university options
+          <div className="mt-9 grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center xl:gap-20">
+            <div className="max-w-3xl py-2 lg:py-8">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#b9d5f5] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#155cb6] shadow-sm backdrop-blur dark:border-[#27547e] dark:bg-[#0e2840]/80 dark:text-[#8bc2ff]">
+                  <BadgeCheck className="h-4 w-4" />
+                  UGC-entitled options only
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/75 px-3.5 py-2 text-[11px] font-bold text-muted-foreground backdrop-blur">
+                  Updated September 2026
+                </span>
               </div>
 
-              <h1 className="mt-6 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.03] tracking-[-0.055em] sm:text-5xl lg:text-[4rem]">
-                Online {p.name} <span className="text-[#ffc23f]">({p.code})</span>
+              <h1 className="mt-7 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.02] tracking-[-0.06em] text-foreground sm:text-5xl lg:text-[4.25rem]">
+                Online {p.name}{" "}
+                <span className="text-[#1768cc] dark:text-[#70b3ff]">({p.code})</span>
               </h1>
 
-              <p className="mt-5 max-w-2xl text-base leading-7 text-white/72 sm:text-lg sm:leading-8">
+              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
                 {p.overview}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold backdrop-blur">
-                  <Clock3 className="h-4 w-4 text-[#ffc23f]" />
+              <div className="mt-7 flex flex-wrap gap-2.5">
+                <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
+                  <Clock3 className="h-4 w-4 text-[#1768cc] dark:text-[#70b3ff]" />
                   {p.durationYears} years · {p.semesters} semesters
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold backdrop-blur">
-                  <GraduationCap className="h-4 w-4 text-[#ffc23f]" />
+                <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
+                  <GraduationCap className="h-4 w-4 text-[#1768cc] dark:text-[#70b3ff]" />
                   {p.level} degree
                 </span>
               </div>
@@ -221,24 +226,24 @@ function ProgramComparePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-xl bg-[#ffc23f] px-6 font-extrabold text-[#11243b] shadow-[0_16px_34px_-16px_rgba(255,194,63,0.75)] hover:bg-[#ffb819]"
+                  className="h-12 rounded-xl bg-[#1768cc] px-6 font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(23,104,204,0.72)] hover:bg-[#0e57b2]"
                 >
                   <Link to="/contact">
-                    Get course brochure
-                    <Download className="ml-2 h-4 w-4" />
+                    Get my free shortlist
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
                   asChild
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-xl border-white/30 bg-white/5 px-6 font-bold text-white hover:bg-white/15 hover:text-white"
+                  className="h-12 rounded-xl border-border bg-background/65 px-6 font-bold text-foreground hover:bg-secondary"
                 >
                   <a href="#universities">Compare universities</a>
                 </Button>
               </div>
 
-              <dl className="mt-9 grid max-w-2xl grid-cols-2 gap-x-4 gap-y-6 border-t border-white/15 pt-7 sm:grid-cols-4">
+              <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-x-4 gap-y-6 border-t border-border pt-7 sm:grid-cols-4">
                 {[
                   [offers.length.toString(), "University options"],
                   [formatINR(startingFee), "Fees from"],
@@ -246,8 +251,8 @@ function ProgramComparePage() {
                   [averageRating, "Avg. rating"],
                 ].map(([value, label]) => (
                   <div key={label}>
-                    <dt className="font-display text-xl font-extrabold text-white">{value}</dt>
-                    <dd className="mt-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/50">
+                    <dt className="font-display text-xl font-extrabold text-foreground">{value}</dt>
+                    <dd className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       {label}
                     </dd>
                   </div>
@@ -255,19 +260,103 @@ function ProgramComparePage() {
               </dl>
             </div>
 
-            <LeadForm
-              compact
-              defaultProgram={p.name}
-              title={`Plan your online ${p.code}`}
-              description="Get an eligibility check, fee comparison and personalised university shortlist."
-              className="border-0 bg-white p-6 text-card-foreground shadow-[0_28px_70px_-28px_rgba(0,0,0,0.55)] md:p-7"
-            />
+            <aside className="relative mx-auto w-full max-w-[440px]">
+              <div
+                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#b9dcff]/60 via-transparent to-[#ffe3a9]/55 blur-xl dark:from-[#1768cc]/25 dark:to-[#bd7b18]/20"
+                aria-hidden="true"
+              />
+              <div className="relative rounded-[1.75rem] border border-white/80 bg-white/90 p-6 shadow-[0_28px_80px_-36px_rgba(25,67,116,0.48)] backdrop-blur-xl dark:border-white/10 dark:bg-[#0d2134]/92 dark:shadow-[0_28px_80px_-32px_rgba(0,0,0,0.75)] sm:p-7">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#1768cc] dark:text-[#70b3ff]">
+                      Smart shortlist
+                    </p>
+                    <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
+                      Compare before you commit.
+                    </h2>
+                  </div>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#e8f3ff] text-[#1768cc] dark:bg-[#143757] dark:text-[#70b3ff]">
+                    <ShieldCheck className="h-5 w-5" />
+                  </span>
+                </div>
+
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  Get matched by budget, accreditation, learning format and your career goal—not
+                  sales pressure.
+                </p>
+
+                <div className="mt-6 space-y-2.5">
+                  {[
+                    `${offers.length} verified university options compared`,
+                    "Transparent fees and EMI in one place",
+                    "Free human guidance when you need it",
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-3 rounded-xl border border-border/80 bg-background/70 px-3.5 py-3 text-sm font-semibold"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e8f7ef] text-[#148055] dark:bg-[#113d30] dark:text-[#67d6a7]">
+                        <Check className="h-3.5 w-3.5" />
+                      </span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-[#f1f6fc] p-4 dark:bg-[#102a42]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                      Program fee from
+                    </p>
+                    <p className="mt-1.5 font-display text-xl font-extrabold">
+                      {formatINR(startingFee)}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl bg-[#fff5df] p-4 dark:bg-[#342919]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                      Monthly EMI from
+                    </p>
+                    <p className="mt-1.5 font-display text-xl font-extrabold">
+                      {formatINR(startingEmi)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between gap-4 border-t border-border pt-5">
+                  <div className="flex -space-x-2">
+                    {offers.slice(0, 3).map(({ university }) => (
+                      <span
+                        key={university.slug}
+                        className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-card bg-background shadow-sm"
+                      >
+                        <UniversityLogo university={university} size="sm" />
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-right text-[10px] font-semibold leading-4 text-muted-foreground">
+                    No payment required
+                    <br />
+                    Your information stays private
+                  </p>
+                </div>
+
+                <Button
+                  asChild
+                  size="lg"
+                  className="mt-5 h-12 w-full rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                >
+                  <Link to="/contact">
+                    Build my shortlist <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
 
       <nav
-        className="sticky top-16 z-40 border-b border-[#dfe4ea] bg-white/95 shadow-sm backdrop-blur"
+        className="sticky top-16 z-40 border-b border-border bg-background/92 shadow-sm backdrop-blur-xl"
         aria-label="Program page sections"
       >
         <div className="container-page flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
@@ -275,7 +364,7 @@ function ProgramComparePage() {
             <a
               key={item.href}
               href={item.href}
-              className="shrink-0 rounded-lg px-4 py-2 text-xs font-bold text-[#5c6777] transition hover:bg-[#edf4ff] hover:text-[#155cb6]"
+              className="shrink-0 rounded-lg px-4 py-2 text-xs font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
             >
               {item.label}
             </a>
@@ -283,9 +372,44 @@ function ProgramComparePage() {
         </div>
       </nav>
 
+      <section className="border-b border-border bg-card">
+        <div className="container-page grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {[
+            {
+              icon: ShieldCheck,
+              title: "Comparable information",
+              text: "Every university is shown on the same core fields.",
+            },
+            {
+              icon: IndianRupee,
+              title: "Fees shown upfront",
+              text: "See total program fee and monthly EMI together.",
+            },
+            {
+              icon: BadgeCheck,
+              title: "Verify before enrolment",
+              text: "We remind you to reconfirm approval and intake details.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="flex items-center gap-3 py-5 sm:px-5 first:pl-0 last:pr-0"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-[#1768cc] dark:text-[#70b3ff]">
+                <item.icon className="h-4.5 w-4.5" />
+              </span>
+              <div>
+                <h2 className="text-sm font-extrabold">{item.title}</h2>
+                <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{item.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section
         id="overview"
-        className="scroll-mt-32 border-b border-[#e5e7e8] bg-white py-16 lg:py-20"
+        className="scroll-mt-32 border-b border-border bg-background py-16 lg:py-20"
       >
         <div className="container-page">
           <SectionHeading
@@ -297,7 +421,7 @@ function ProgramComparePage() {
             {learningFeatures.map((feature) => (
               <article
                 key={feature.title}
-                className="rounded-[1.5rem] border border-[#e2e6e9] bg-[#fbfcfd] p-6 transition hover:-translate-y-1 hover:shadow-[0_20px_45px_-30px_rgba(12,39,71,0.5)]"
+                className="rounded-[1.5rem] border border-border bg-card p-6 transition hover:-translate-y-1 hover:shadow-[0_20px_45px_-30px_rgba(12,39,71,0.5)] dark:hover:border-white/20"
               >
                 <span
                   className={`${feature.color} flex h-12 w-12 items-center justify-center rounded-2xl`}
@@ -307,14 +431,16 @@ function ProgramComparePage() {
                 <h3 className="mt-5 font-display text-lg font-extrabold tracking-[-0.03em]">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-[#67717f]">{feature.description}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {feature.description}
+                </p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="universities" className="scroll-mt-32 bg-[#f3f7fb] py-16 lg:py-20">
+      <section id="universities" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionHeading
@@ -322,7 +448,7 @@ function ProgramComparePage() {
               title={`Universities offering online ${p.code}`}
               description="Compare recognition, total fees, monthly EMI and learner ratings before you shortlist."
             />
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#cfe1f5] bg-white px-4 py-2 text-xs font-extrabold text-[#155cb6]">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
               <Sparkles className="h-4 w-4" /> Sorted by lowest total fee
             </span>
           </div>
@@ -331,11 +457,11 @@ function ProgramComparePage() {
             {offers.map(({ university, program }, index) => (
               <article
                 key={university.slug}
-                className="group rounded-[1.55rem] border border-[#dce3e9] bg-white p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#a9c8ea] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
+                className="group rounded-[1.55rem] border border-border bg-card p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#e4e8eb] bg-[#fafbfc]">
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
                       <UniversityLogo university={university} size="md" />
                     </span>
                     <div>
@@ -349,7 +475,7 @@ function ProgramComparePage() {
                           </span>
                         ) : null}
                       </div>
-                      <p className="mt-1 text-xs text-[#77808d]">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {university.city} · NAAC {university.naacGrade}
                       </p>
                     </div>
@@ -360,22 +486,22 @@ function ProgramComparePage() {
                   </span>
                 </div>
 
-                <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-[#f7f9fb] p-4">
+                <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-secondary/60 p-4">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#89919c]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       Total program fee
                     </p>
                     <p className="mt-1 font-display text-xl font-extrabold">
                       {formatINR(program.totalFee)}
                     </p>
                   </div>
-                  <div className="border-l border-[#dfe4e9] pl-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#89919c]">
+                  <div className="border-l border-border pl-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       EMI from
                     </p>
-                    <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6]">
+                    <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
                       {formatINR(program.emiPerMonth)}
-                      <span className="text-xs font-semibold text-[#7f8996]">/mo</span>
+                      <span className="text-xs font-semibold text-muted-foreground">/mo</span>
                     </p>
                   </div>
                 </div>
@@ -385,7 +511,7 @@ function ProgramComparePage() {
                     {university.approvals.slice(0, 2).map((approval) => (
                       <span
                         key={approval}
-                        className="rounded-full border border-[#dce3e9] px-2.5 py-1 text-[10px] font-bold text-[#606a78]"
+                        className="rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
                       >
                         {approval}
                       </span>
@@ -394,7 +520,7 @@ function ProgramComparePage() {
                   <Link
                     to="/universities/$universitySlug/$programSlug"
                     params={{ universitySlug: university.slug, programSlug: p.slug }}
-                    className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6]"
+                    className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]"
                   >
                     View details{" "}
                     <ArrowRight className="ml-1 h-3.5 w-3.5 transition group-hover:translate-x-1" />
@@ -406,7 +532,7 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section id="curriculum" className="scroll-mt-32 bg-white py-16 lg:py-20">
+      <section id="curriculum" className="scroll-mt-32 bg-background py-16 lg:py-20">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_350px] xl:gap-16">
           <div>
             <SectionHeading
@@ -424,11 +550,11 @@ function ProgramComparePage() {
                 <AccordionItem
                   key={term.semester}
                   value={term.semester}
-                  className="mb-3 rounded-2xl border border-[#e0e5e9] bg-[#fbfcfd] px-5 data-[state=open]:border-[#b8d0eb] data-[state=open]:bg-[#f5f9ff]"
+                  className="mb-3 rounded-2xl border border-border bg-card px-5 data-[state=open]:border-[#78a9df] data-[state=open]:bg-secondary/60"
                 >
                   <AccordionTrigger className="py-5 font-display text-base font-extrabold hover:no-underline">
                     <span className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e4effc] text-xs text-[#155cb6]">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e4effc] text-xs text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       {term.semester}
@@ -439,7 +565,7 @@ function ProgramComparePage() {
                       {term.subjects.map((subject) => (
                         <li
                           key={subject}
-                          className="flex items-start gap-2 rounded-xl bg-white px-3 py-2.5 text-sm text-[#566272]"
+                          className="flex items-start gap-2 rounded-xl bg-background px-3 py-2.5 text-sm text-muted-foreground"
                         >
                           <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#16865b]" />
                           {subject}
@@ -453,7 +579,7 @@ function ProgramComparePage() {
           </div>
 
           <aside className="lg:sticky lg:top-32 lg:h-fit">
-            <div className="overflow-hidden rounded-[1.75rem] bg-[#08213d] text-white shadow-[0_28px_60px_-32px_rgba(8,33,61,0.68)]">
+            <div className="overflow-hidden rounded-[1.75rem] bg-[#08213d] text-white shadow-[0_28px_60px_-32px_rgba(8,33,61,0.68)] ring-1 ring-white/10">
               <div className="border-b border-white/10 p-6">
                 <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#ffc23f]">
                   Program at a glance
@@ -488,7 +614,10 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section id="specialisations" className="scroll-mt-32 bg-[#0b2038] py-16 text-white lg:py-20">
+      <section
+        id="specialisations"
+        className="scroll-mt-32 bg-[#0b2038] py-16 text-white dark:bg-[#050d15] lg:py-20"
+      >
         <div className="container-page">
           <SectionHeading
             dark
@@ -531,10 +660,10 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section id="eligibility" className="scroll-mt-32 bg-[#fbfaf7] py-16 lg:py-20">
+      <section id="eligibility" className="scroll-mt-32 bg-background py-16 lg:py-20">
         <div className="container-page grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[1.75rem] border border-[#e0e4e6] bg-white p-7 md:p-9">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6]">
+          <div className="rounded-[1.75rem] border border-border bg-card p-7 md:p-9">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
               <GraduationCap className="h-5 w-5" />
             </span>
             <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#e96e22]">
@@ -543,8 +672,8 @@ function ProgramComparePage() {
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
               Can you apply?
             </h2>
-            <p className="mt-5 text-base leading-8 text-[#596573]">{p.eligibility}</p>
-            <ul className="mt-6 space-y-3 text-sm text-[#4f5b69]">
+            <p className="mt-5 text-base leading-8 text-muted-foreground">{p.eligibility}</p>
+            <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
               {[
                 "Valid marksheets and identity documents are generally required",
                 "No relocation or campus attendance for regular classes",
@@ -560,8 +689,8 @@ function ProgramComparePage() {
             </ul>
           </div>
 
-          <div className="rounded-[1.75rem] bg-[#fff1e7] p-7 md:p-9">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#e96e22]">
+          <div className="rounded-[1.75rem] bg-[#fff1e7] p-7 dark:bg-[#2b211c] md:p-9">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#e96e22] dark:bg-[#3c2e26]">
               <Medal className="h-5 w-5" />
             </span>
             <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#e96e22]">
@@ -570,7 +699,7 @@ function ProgramComparePage() {
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
               Designed for forward motion
             </h2>
-            <p className="mt-5 text-base leading-8 text-[#596573]">
+            <p className="mt-5 text-base leading-8 text-muted-foreground">
               Continue earning, preparing for competitive exams or managing other commitments while
               building a recognised qualification.
             </p>
@@ -582,7 +711,7 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 lg:py-20">
+      <section className="bg-background py-16 lg:py-20">
         <div className="container-page">
           <SectionHeading
             eyebrow="Simple and supported"
@@ -593,13 +722,13 @@ function ProgramComparePage() {
             {admissionSteps.map(([number, title, description], index) => (
               <article
                 key={number}
-                className="relative rounded-[1.4rem] border border-[#e1e5e8] bg-[#fafbfc] p-5"
+                className="relative rounded-[1.4rem] border border-border bg-card p-5"
               >
                 <span className="font-display text-3xl font-extrabold text-[#c7d9ee]">
                   {number}
                 </span>
                 <h3 className="mt-5 font-display text-base font-extrabold">{title}</h3>
-                <p className="mt-2 text-xs leading-5 text-[#6c7683]">{description}</p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{description}</p>
                 {index < admissionSteps.length - 1 ? (
                   <span className="absolute -right-2.5 top-1/2 z-10 hidden h-5 w-5 items-center justify-center rounded-full bg-[#155cb6] text-white md:flex">
                     <ChevronRight className="h-3 w-3" />
@@ -611,7 +740,7 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section id="careers" className="scroll-mt-32 bg-[#f0f5fa] py-16 lg:py-20">
+      <section id="careers" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
         <div className="container-page grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center xl:gap-16">
           <div>
             <SectionHeading
@@ -633,9 +762,9 @@ function ProgramComparePage() {
             {p.careers.map((career, index) => (
               <article
                 key={career}
-                className="flex items-center gap-4 rounded-2xl border border-[#dbe3ea] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#a9c8ea] hover:shadow-lg"
+                className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-lg"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-[#155cb6]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
                   <BriefcaseBusiness className="h-5 w-5" />
                 </span>
                 <div>
@@ -650,7 +779,7 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <section id="faqs" className="scroll-mt-32 bg-white py-16 lg:py-20">
+      <section id="faqs" className="scroll-mt-32 bg-background py-16 lg:py-20">
         <div className="container-page grid gap-10 lg:grid-cols-[0.72fr_1.28fr] xl:gap-20">
           <div>
             <SectionHeading
@@ -670,12 +799,12 @@ function ProgramComparePage() {
               <AccordionItem
                 key={faq.question}
                 value={`faq-${index}`}
-                className="rounded-2xl border border-[#e0e5e9] px-5"
+                className="rounded-2xl border border-border bg-card px-5"
               >
                 <AccordionTrigger className="py-5 text-left font-display text-base font-extrabold hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="pb-5 text-sm leading-7 text-[#647080]">
+                <AccordionContent className="pb-5 text-sm leading-7 text-muted-foreground">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -728,12 +857,12 @@ function SectionHeading({
         {eyebrow}
       </p>
       <h2
-        className={`mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl ${dark ? "text-white" : "text-[#121a28]"}`}
+        className={`mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl ${dark ? "text-white" : "text-foreground"}`}
       >
         {title}
       </h2>
       <p
-        className={`mt-4 max-w-2xl text-base leading-7 ${dark ? "text-white/60" : "text-[#66717e]"}`}
+        className={`mt-4 max-w-2xl text-base leading-7 ${dark ? "text-white/60" : "text-muted-foreground"}`}
       >
         {description}
       </p>
@@ -757,9 +886,9 @@ function Fact({ icon: Icon, label, value }: { icon: typeof Clock3; label: string
 
 function Metric({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-2xl bg-white/75 p-4">
-      <p className="font-display text-xl font-extrabold text-[#17253a]">{value}</p>
-      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#78818c]">
+    <div className="rounded-2xl bg-white/75 p-4 dark:bg-white/[0.06]">
+      <p className="font-display text-xl font-extrabold text-foreground">{value}</p>
+      <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
     </div>

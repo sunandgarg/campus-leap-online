@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { programCatalog } from "@/data/universities";
 
@@ -14,6 +14,18 @@ const navLinks = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  function toggleTheme() {
+    const nextDark = !dark;
+    document.documentElement.classList.toggle("dark", nextDark);
+    window.localStorage.setItem("dekhocampus-theme", nextDark ? "dark" : "light");
+    setDark(nextDark);
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-lg">
@@ -52,19 +64,38 @@ export function SiteHeader() {
           >
             +91 99999 99999
           </a>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+            title={dark ? "Switch to light theme" : "Switch to dark theme"}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+          >
+            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <Button asChild size="sm" className="bg-ink text-ink-foreground hover:bg-ink-soft">
             <Link to="/contact">Free counselling</Link>
           </Button>
         </div>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border lg:hidden"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background"
+          >
+            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (

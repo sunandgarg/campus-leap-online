@@ -24,8 +24,8 @@ function NotFoundComponent() {
         <h1 className="font-display text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          This university or program page doesn't exist. Browse all UGC-entitled online
-          universities instead.
+          This university or program page doesn't exist. Browse all UGC-entitled online universities
+          instead.
         </p>
         <div className="mt-6 flex justify-center gap-2">
           <Link
@@ -119,9 +119,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('dekhocampus-theme');var d=t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d)}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
         {children}
@@ -133,8 +138,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function AnnouncementBar() {
   const announcement = siteSettings["announcement"] as
-    | { enabled?: boolean; text?: string; cta?: string; href?: string }
-    | undefined;
+    { enabled?: boolean; text?: string; cta?: string; href?: string } | undefined;
   if (!announcement?.enabled || !announcement.text) return null;
   return (
     <div className="bg-ink px-4 py-2 text-center text-xs text-ink-foreground/85 sm:text-sm">

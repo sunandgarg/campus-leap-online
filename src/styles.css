@@ -107,6 +107,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.17 0.03 258);
   --foreground: oklch(0.97 0.008 250);
   --surface: oklch(0.21 0.035 258);
@@ -153,6 +154,9 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
   }
 
   h1,
@@ -172,7 +176,8 @@
 }
 
 @utility hero-ink {
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       120% 120% at 85% 0%,
       color-mix(in oklab, var(--gold) 22%, transparent) 0%,
       transparent 55%
@@ -191,7 +196,8 @@
 }
 
 @utility grid-lines {
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       to right,
       color-mix(in oklab, var(--ink-foreground) 7%, transparent) 1px,
       transparent 1px

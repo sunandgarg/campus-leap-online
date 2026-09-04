@@ -4,7 +4,7 @@ import { universities, programCatalog } from "@/data/universities";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 bg-ink text-ink-foreground">
+    <footer className="bg-ink text-ink-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">
