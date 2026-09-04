@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -9,6 +10,7 @@ import {
   ChevronRight,
   Clock3,
   GraduationCap,
+  GitCompareArrows,
   IndianRupee,
   Laptop2,
   Medal,
@@ -17,6 +19,7 @@ import {
   Star,
   Target,
   WalletCards,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -130,6 +133,7 @@ const admissionSteps = [
 
 function ProgramComparePage() {
   const { program: p, offers } = Route.useLoaderData() as ProgramComparePageData;
+  const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
   const startingFee = Math.min(...offers.map(({ program }) => program.totalFee));
   const startingEmi = Math.min(...offers.map(({ program }) => program.emiPerMonth));
   const averageRating = offers.length
@@ -137,6 +141,17 @@ function ProgramComparePage() {
         1,
       )
     : "—";
+  const selectedOffers = offers.filter(({ university }) =>
+    selectedUniversities.includes(university.slug),
+  );
+
+  function toggleUniversity(slug: string) {
+    setSelectedUniversities((current) => {
+      if (current.includes(slug)) return current.filter((item) => item !== slug);
+      if (current.length >= 3) return current;
+      return [...current, slug];
+    });
+  }
 
   const faqs = [
     {
@@ -440,6 +455,61 @@ function ProgramComparePage() {
         </div>
       </section>
 
+      <section className="border-b border-border bg-background py-16 lg:py-20">
+        <div className="container-page">
+          <SectionHeading
+            eyebrow="Honest decision guide"
+            title={`Is an online ${p.code} right for you?`}
+            description="A good decision starts with fit—not urgency. Use these signals before comparing universities."
+          />
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            <article className="rounded-[1.75rem] border border-[#bfe4d1] bg-[#f0fbf5] p-7 dark:border-[#20543f] dark:bg-[#0e2b21] md:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#168258] shadow-sm dark:bg-[#153d30] dark:text-[#69d7a9]">
+                  <Check className="h-5 w-5" />
+                </span>
+                <h3 className="font-display text-xl font-extrabold">Strong fit if you…</h3>
+              </div>
+              <ul className="mt-6 space-y-3 text-sm leading-6 text-muted-foreground">
+                {[
+                  "Want to study without relocating or pausing other commitments",
+                  "Are comfortable learning through live and recorded online classes",
+                  "Value lower overall costs and flexible payment choices",
+                  "Can manage your time and study with consistent self-discipline",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-[#168258] dark:text-[#69d7a9]" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="rounded-[1.75rem] border border-[#efd9b1] bg-[#fff9eb] p-7 dark:border-[#5d4624] dark:bg-[#2d2517] md:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#a56f0b] shadow-sm dark:bg-[#45351c] dark:text-[#f4bd4f]">
+                  <Target className="h-5 w-5" />
+                </span>
+                <h3 className="font-display text-xl font-extrabold">Compare carefully if you…</h3>
+              </div>
+              <ul className="mt-6 space-y-3 text-sm leading-6 text-muted-foreground">
+                {[
+                  "Need a highly social, full-time residential campus experience",
+                  "Expect placements without building skills, projects or work experience",
+                  "Have not checked the exact program entitlement for your intake",
+                  "Are choosing only by the lowest fee instead of academic and learner support",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#b47b15] dark:bg-[#f4bd4f]" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section id="universities" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
@@ -452,6 +522,100 @@ function ProgramComparePage() {
               <Sparkles className="h-4 w-4" /> Sorted by lowest total fee
             </span>
           </div>
+
+          <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e7f1ff] text-[#1768cc] dark:bg-[#153a5e] dark:text-[#70b3ff]">
+                <GitCompareArrows className="h-4.5 w-4.5" />
+              </span>
+              <div>
+                <p className="text-sm font-extrabold">Build a side-by-side comparison</p>
+                <p className="text-xs text-muted-foreground">Select up to 3 universities below.</p>
+              </div>
+            </div>
+            <p className="text-xs font-bold text-muted-foreground">
+              <span className="text-[#1768cc] dark:text-[#70b3ff]">{selectedOffers.length}</span> of
+              3 selected
+            </p>
+          </div>
+
+          {selectedOffers.length > 0 ? (
+            <div className="mt-4 overflow-hidden rounded-[1.5rem] border border-[#83b4ea] bg-card shadow-[0_20px_50px_-36px_rgba(23,104,204,0.55)] dark:border-[#2e628f]">
+              <div className="flex items-center justify-between border-b border-border bg-[#edf5ff] px-5 py-3 dark:bg-[#102a42]">
+                <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#155cb6] dark:text-[#70b3ff]">
+                  <GitCompareArrows className="h-4 w-4" /> Live comparison
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSelectedUniversities([])}
+                  className="text-xs font-bold text-muted-foreground hover:text-foreground"
+                >
+                  Clear all
+                </button>
+              </div>
+              <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+                {selectedOffers.map(({ university, program }) => (
+                  <div key={university.slug} className="relative p-5">
+                    <button
+                      type="button"
+                      onClick={() => toggleUniversity(university.slug)}
+                      aria-label={`Remove ${university.shortName} from comparison`}
+                      className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div className="flex items-center gap-3 pr-7">
+                      <UniversityLogo university={university} size="sm" />
+                      <div>
+                        <h3 className="text-sm font-extrabold">{university.shortName}</h3>
+                        <p className="mt-0.5 text-[10px] text-muted-foreground">
+                          NAAC {university.naacGrade} · ★ {university.rating}
+                        </p>
+                      </div>
+                    </div>
+                    <dl className="mt-5 grid grid-cols-2 gap-3">
+                      <div>
+                        <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                          Total fee
+                        </dt>
+                        <dd className="mt-1 font-display text-base font-extrabold">
+                          {formatINR(program.totalFee)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                          Monthly EMI
+                        </dt>
+                        <dd className="mt-1 font-display text-base font-extrabold">
+                          {formatINR(program.emiPerMonth)}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                ))}
+                {Array.from({ length: 3 - selectedOffers.length }).map((_, index) => (
+                  <div
+                    key={`empty-${index}`}
+                    className="flex min-h-32 items-center justify-center p-5 text-center text-xs font-semibold text-muted-foreground"
+                  >
+                    Select another university to compare
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs text-muted-foreground">
+                  Compare facts first, then speak to a counsellor only if you need help.
+                </p>
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-lg bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                >
+                  <Link to="/compare">Open complete comparison</Link>
+                </Button>
+              </div>
+            </div>
+          ) : null}
 
           <div className="mt-10 grid gap-4 lg:grid-cols-2">
             {offers.map(({ university, program }, index) => (
@@ -505,6 +669,30 @@ function ProgramComparePage() {
                     </p>
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  aria-pressed={selectedUniversities.includes(university.slug)}
+                  disabled={
+                    selectedUniversities.length >= 3 &&
+                    !selectedUniversities.includes(university.slug)
+                  }
+                  onClick={() => toggleUniversity(university.slug)}
+                  className={`mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                    selectedUniversities.includes(university.slug)
+                      ? "border-[#1768cc] bg-[#1768cc] text-white"
+                      : "border-border bg-background text-foreground hover:border-[#78a9df] hover:bg-[#edf5ff] dark:hover:bg-[#102a42]"
+                  }`}
+                >
+                  {selectedUniversities.includes(university.slug) ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <GitCompareArrows className="h-4 w-4" />
+                  )}
+                  {selectedUniversities.includes(university.slug)
+                    ? "Added to comparison"
+                    : "Add to comparison"}
+                </button>
 
                 <div className="mt-5 flex items-center justify-between gap-4">
                   <div className="flex flex-wrap gap-1.5">
