@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -12,6 +13,7 @@ import {
   Clock3,
   Code2,
   Download,
+  FileCheck2,
   GraduationCap,
   HeartPulse,
   IndianRupee,
@@ -19,7 +21,10 @@ import {
   Lightbulb,
   Megaphone,
   MoonStar,
+  Newspaper,
   PlayCircle,
+  Search,
+  Send,
   ShieldCheck,
   Sparkles,
   Target,
@@ -30,7 +35,6 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
 import {
   universities,
@@ -43,8 +47,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title:
-          "Find Your Best Online Degree from India's Top Universities | DekhoCampus Online",
+        title: "Find Your Best Online Degree from India's Top Universities | DekhoCampus Online",
       },
       {
         name: "description",
@@ -189,12 +192,21 @@ const guides = [
   },
   {
     title: "Choosing the right specialisation",
-    description:
-      "A career-first framework for selecting a specialisation that matches your goals.",
+    description: "A career-first framework for selecting a specialisation that matches your goals.",
     meta: "Career guide · 2 pages",
     icon: Lightbulb,
   },
 ];
+
+const heroGoals = [
+  { label: "Online degree", icon: Laptop2 },
+  { label: "Compare universities", icon: Building2 },
+  { label: "Fees & EMI", icon: IndianRupee },
+  { label: "Career clarity", icon: Target },
+  { label: "Admission help", icon: GraduationCap },
+];
+
+const heroRoles = ["Student", "Parent", "Professional"] as const;
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -207,98 +219,260 @@ function formatCurrency(value: number) {
 function HomePage() {
   const totalPrograms = getTotalProgramCount();
   const totalSpecialisations = getSpecialisationCount();
+  const [heroGoal, setHeroGoal] = useState(heroGoals[0].label);
+  const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
+
+  const heroShortcuts = [
+    {
+      label: `${universities.length}+`,
+      caption: "Universities",
+      icon: GraduationCap,
+      to: "/universities" as const,
+      className: "border-[#f1dfe2] bg-[#fff2f3]",
+      iconClassName: "bg-[#ffe0df] text-[#e97367]",
+    },
+    {
+      label: `${totalPrograms}+`,
+      caption: "Programs",
+      icon: BookOpenCheck,
+      to: "/programs" as const,
+      className: "border-[#d7eaf1] bg-[#effaff]",
+      iconClassName: "bg-[#d8f1fa] text-[#1685aa]",
+    },
+    {
+      label: `${totalSpecialisations}+`,
+      caption: "Specialisations",
+      icon: FileCheck2,
+      to: "/programs" as const,
+      className: "border-[#e7e0f4] bg-[#f5f1ff]",
+      iconClassName: "bg-[#e8dfff] text-[#7860bc]",
+    },
+    {
+      label: "Application",
+      caption: "Support",
+      icon: CheckCircle2,
+      to: "/contact" as const,
+      className: "border-[#d4eee2] bg-[#effcf5]",
+      iconClassName: "bg-[#d8f5e6] text-[#288b5c]",
+    },
+    {
+      label: "Compare",
+      caption: "Universities",
+      icon: BarChart3,
+      to: "/compare" as const,
+      className: "border-[#efe3be] bg-[#fff9e8]",
+      iconClassName: "bg-[#ffefbd] text-[#b17b12]",
+    },
+    {
+      label: "Career",
+      caption: "Guidance",
+      icon: Newspaper,
+      to: "/contact" as const,
+      className: "border-[#d8edf0] bg-[#effcfd]",
+      iconClassName: "bg-[#d8f3f5] text-[#168690]",
+    },
+  ];
 
   return (
     <div className="overflow-hidden bg-[#fbfaf7] text-[#171a17]">
-      <section className="relative border-b border-black/5">
+      <section className="relative overflow-hidden border-b border-[#dbe4f1] bg-[linear-gradient(108deg,#fff5ee_0%,#fffaf7_31%,#f7fbff_54%,#e7f1ff_100%)]">
         <div
-          className="pointer-events-none absolute -left-40 top-16 h-96 w-96 rounded-full bg-[#dbe9ff] blur-3xl"
+          className="pointer-events-none absolute -left-52 top-24 h-[31rem] w-[31rem] rounded-full border-[4.5rem] border-[#f8e9de]/55"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-[#ffe6cf] blur-3xl"
+          className="pointer-events-none absolute -right-44 top-20 h-[34rem] w-[34rem] rounded-full border-[4.5rem] border-[#dceafd]/75"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_48%,rgba(255,255,255,0.95),transparent_32%)]"
           aria-hidden="true"
         />
 
-        <div className="container-page relative grid gap-12 py-14 lg:grid-cols-[1.04fr_0.96fr] lg:items-center lg:py-20 xl:gap-20">
+        <div className="container-page relative grid gap-12 py-14 lg:min-h-[650px] lg:grid-cols-[1.34fr_0.86fr] lg:items-center lg:py-16 xl:gap-20">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#bdd4f3] bg-white/75 px-4 py-2 text-sm font-semibold text-[#174e8f] shadow-sm backdrop-blur">
-              <BadgeCheck className="h-4 w-4" />
-              Trusted guidance for 45,000+ learners
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffc9ac] bg-[#fff0e8]/90 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#ef783b] shadow-sm backdrop-blur">
+              <GraduationCap className="h-3.5 w-3.5 text-[#17202d]" />
+              Built by education experts
             </div>
 
-            <h1 className="mt-7 max-w-3xl font-display text-[2.75rem] font-extrabold leading-[1.02] tracking-[-0.055em] sm:text-6xl lg:text-[4.35rem]">
-              Find the online degree
-              <span className="block text-[#0d5cad]">that is built for you.</span>
+            <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#647083]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#2bc58b] shadow-[0_0_0_4px_rgba(43,197,139,0.1)]" />
+              AI-first guidance for online learners
+            </div>
+
+            <h1 className="mt-7 max-w-3xl font-display text-[3.05rem] font-extrabold leading-[0.98] tracking-[-0.065em] text-[#0d1726] sm:text-6xl lg:text-[4.55rem]">
+              Discover Your Ideal
+              <span className="block text-[#2864da]">Online Degree</span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#5d625c]">
-              No confusing sales pitch. Compare recognised online degrees, transparent fees,
-              flexible learning and career outcomes—then choose with confidence.
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#536176]">
+              Search verified universities and recognised programs, then move forward with clear
+              guidance, transparent fees and human support when you need it.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <form action="/universities" className="mt-7 max-w-2xl" role="search">
+              <div className="flex items-center gap-3 rounded-full border border-white bg-white p-1.5 pl-5 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0]">
+                <Search className="h-5 w-5 shrink-0 text-[#7d899b]" />
+                <input
+                  name="q"
+                  aria-label="Search universities or programs"
+                  placeholder="Search Universities, Programs or Ask AI..."
+                  className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#9ba5b4] sm:text-base"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-[#ff762b] px-5 text-sm font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(255,118,43,0.8)] transition hover:bg-[#ed651c]"
+                >
+                  <Send className="h-4 w-4" />
+                  <span className="hidden sm:inline">Ask AI</span>
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2 text-[11px] text-[#788395]">
+              <span className="flex items-center gap-1.5 font-bold">
+                <Zap className="h-3.5 w-3.5 text-[#ff762b]" /> Try:
+              </span>
+              {["Best online MBA?", "Compare MCA fees", "Which degree fits my career?"].map(
+                (prompt) => (
+                  <span
+                    key={prompt}
+                    className="rounded-full border border-[#e1e6ed] bg-white/75 px-2.5 py-1"
+                  >
+                    {prompt}
+                  </span>
+                ),
+              )}
+            </div>
+
+            <div className="mt-6 grid max-w-[44rem] grid-cols-3 gap-2 sm:grid-cols-6">
+              {heroShortcuts.map((item) => (
+                <Link
+                  key={`${item.label}-${item.caption}`}
+                  to={item.to}
+                  className={`${item.className} group flex min-h-[108px] flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition hover:-translate-y-1 hover:shadow-lg`}
+                >
+                  <span
+                    className={`${item.iconClassName} flex h-10 w-10 items-center justify-center rounded-xl transition group-hover:scale-105`}
+                  >
+                    <item.icon className="h-5 w-5" />
+                  </span>
+                  <span className="mt-2 text-xs font-extrabold leading-4 text-[#17202d]">
+                    {item.label}
+                  </span>
+                  <span className="text-[10px] font-semibold leading-3 text-[#697486]">
+                    {item.caption}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-[430px]">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/90 bg-white/55 p-6 shadow-[0_30px_60px_-28px_rgba(29,55,91,0.46)] backdrop-blur-md sm:p-7">
+              <div className="flex items-center justify-between gap-4">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8fff5] px-3 py-1.5 text-[11px] font-extrabold text-[#268a68]">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  Free expert guidance
+                </span>
+                <span className="flex gap-1.5" aria-label="Step 1 of 2">
+                  <span className="h-1.5 w-8 rounded-full bg-[#1f67dc]" />
+                  <span className="h-1.5 w-4 rounded-full bg-[#cbd8eb]" />
+                </span>
+              </div>
+
+              <p className="mt-5 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#ef783b]">
+                <Sparkles className="h-3.5 w-3.5" /> Personal guidance desk
+              </p>
+              <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.045em] text-[#101927]">
+                What would you like to plan next?
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-[#687487]">
+                Choose one goal and we will shape it into a focused shortlist with the next best
+                steps.
+              </p>
+
+              <fieldset className="mt-4 grid grid-cols-2 gap-2">
+                <legend className="sr-only">Select your goal</legend>
+                {heroGoals.map((goal, index) => {
+                  const GoalIcon = goal.icon;
+                  const selected = heroGoal === goal.label;
+                  return (
+                    <button
+                      key={goal.label}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setHeroGoal(goal.label)}
+                      className={`flex min-h-12 items-center gap-2 rounded-full border px-3 text-left text-xs font-bold transition ${
+                        index === heroGoals.length - 1 ? "col-span-2" : ""
+                      } ${
+                        selected
+                          ? "border-[#4080e3] bg-[#e7f0ff] text-[#2364cd]"
+                          : "border-white bg-white/80 text-[#384354] hover:border-[#b9cbed]"
+                      }`}
+                    >
+                      <span
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${selected ? "bg-[#2b6ddd] text-white" : "bg-[#f0f3f6] text-[#7d8793]"}`}
+                      >
+                        <GoalIcon className="h-4 w-4" />
+                      </span>
+                      {goal.label}
+                      {selected ? <Check className="ml-auto h-3.5 w-3.5" /> : null}
+                    </button>
+                  );
+                })}
+              </fieldset>
+
+              <fieldset className="mt-4">
+                <legend className="text-xs font-extrabold text-[#1a2432]">I am a</legend>
+                <div className="mt-2 grid grid-cols-3 rounded-full bg-white/45 p-1">
+                  {heroRoles.map((role) => {
+                    const selected = heroRole === role;
+                    return (
+                      <button
+                        key={role}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => setHeroRole(role)}
+                        className={`h-10 rounded-full text-xs font-extrabold transition ${
+                          selected
+                            ? "bg-white text-[#2864da] shadow-sm"
+                            : "text-[#707b8c] hover:text-[#334052]"
+                        }`}
+                      >
+                        {role}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-full bg-[#f47a20] px-6 font-bold text-white shadow-[0_14px_30px_-14px_rgba(244,122,32,0.75)] hover:bg-[#dc6818]"
+                className="mt-4 h-12 w-full rounded-full bg-[#2864da] font-extrabold text-white shadow-[0_14px_28px_-16px_rgba(40,100,218,0.8)] hover:bg-[#1954bd]"
               >
-                <Link to="/universities">
-                  Find my best matches
+                <Link to="/contact">
+                  Show my best-fit options
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
 
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-12 rounded-full border-[#cfd6cd] bg-white/70 px-6 font-bold text-[#242824] hover:bg-white"
-              >
-                <Link to="/compare">Compare universities</Link>
-              </Button>
+              <p className="mt-3 flex items-center justify-center gap-2 text-center text-[10px] font-semibold text-[#758094]">
+                <span className="flex -space-x-1">
+                  {["A", "R", "S"].map((initial) => (
+                    <span
+                      key={initial}
+                      className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#e4ebf7] text-[8px] font-extrabold text-[#31568d]"
+                    >
+                      {initial}
+                    </span>
+                  ))}
+                </span>
+                Guidance trusted by thousands of learners
+              </p>
             </div>
-
-            <dl className="mt-11 grid max-w-2xl grid-cols-3 gap-4 border-t border-black/10 pt-7">
-              <div>
-                <dt className="font-display text-2xl font-extrabold tracking-[-0.04em] sm:text-3xl">
-                  {universities.length}+
-                </dt>
-                <dd className="mt-1 text-xs leading-5 text-[#6d726c] sm:text-sm">
-                  verified universities
-                </dd>
-              </div>
-              <div>
-                <dt className="font-display text-2xl font-extrabold tracking-[-0.04em] sm:text-3xl">
-                  {totalPrograms}+
-                </dt>
-                <dd className="mt-1 text-xs leading-5 text-[#6d726c] sm:text-sm">
-                  online degrees
-                </dd>
-              </div>
-              <div>
-                <dt className="font-display text-2xl font-extrabold tracking-[-0.04em] sm:text-3xl">
-                  {totalSpecialisations}+
-                </dt>
-                <dd className="mt-1 text-xs leading-5 text-[#6d726c] sm:text-sm">
-                  specialisations
-                </dd>
-              </div>
-            </dl>
-          </div>
-
-          <div className="relative">
-            <div
-              className="absolute -inset-5 rotate-2 rounded-[2.25rem] bg-[#0d5cad]"
-              aria-hidden="true"
-            />
-            <LeadForm
-              compact
-              showMatchQuestions
-              className="relative rounded-[2rem] border-0 bg-white p-6 shadow-[0_30px_80px_-28px_rgba(28,48,73,0.42)] md:p-8"
-              title="What matters most to you?"
-              description="Tell us your priority. We will match you with the right university and program."
-            />
           </div>
         </div>
       </section>
@@ -743,10 +917,7 @@ function HomePage() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {outcomeStats.map((stat) => (
-            <div
-              key={stat.value}
-              className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6"
-            >
+            <div key={stat.value} className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6">
               <stat.icon className="h-5 w-5 text-[#f47a20]" />
               <p className="mt-7 font-display text-4xl font-extrabold tracking-[-0.055em] text-[#0d5cad]">
                 {stat.value}
@@ -781,11 +952,7 @@ function HomePage() {
               >
                 <div
                   className={`relative h-52 p-6 ${
-                    index === 0
-                      ? "bg-[#dceaff]"
-                      : index === 1
-                        ? "bg-[#ffe8d8]"
-                        : "bg-[#e5f5ec]"
+                    index === 0 ? "bg-[#dceaff]" : index === 1 ? "bg-[#ffe8d8]" : "bg-[#e5f5ec]"
                   }`}
                 >
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
@@ -955,9 +1122,7 @@ function DegreeCard({
           >
             {label}
           </p>
-          <h3 className="mt-3 font-display text-2xl font-extrabold tracking-[-0.04em]">
-            {title}
-          </h3>
+          <h3 className="mt-3 font-display text-2xl font-extrabold tracking-[-0.04em]">{title}</h3>
         </div>
         <span
           className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
@@ -1003,10 +1168,7 @@ function CostLine({
         <span className="font-bold">{value}</span>
       </div>
       <div className="mt-2 h-2 rounded-full bg-[#eff1ed]">
-        <div
-          className="h-full rounded-full bg-[#c5cbc3]"
-          style={{ width: `${percentage}%` }}
-        />
+        <div className="h-full rounded-full bg-[#c5cbc3]" style={{ width: `${percentage}%` }} />
       </div>
     </div>
   );
