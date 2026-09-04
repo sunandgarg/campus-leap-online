@@ -1,0 +1,333 @@
+import { useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BriefcaseBusiness,
+  Check,
+  Clock3,
+  GraduationCap,
+  IndianRupee,
+  ShieldCheck,
+  Sparkles,
+  UserRoundSearch,
+  WalletCards,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { UniversityLogo } from "@/components/site/university-logo";
+import {
+  formatINR,
+  type ProgramTemplate,
+  type University,
+  type UniversityProgram,
+} from "@/data/universities";
+
+type Offer = { university: University; program: UniversityProgram };
+type LearnerProfile = "fresher" | "professional" | "switcher";
+type Priority = "budget" | "flexibility" | "career";
+
+const profiles = [
+  { value: "fresher" as const, label: "Recent graduate", icon: GraduationCap },
+  { value: "professional" as const, label: "Working professional", icon: BriefcaseBusiness },
+  { value: "switcher" as const, label: "Career switcher", icon: UserRoundSearch },
+];
+
+const priorities = [
+  { value: "budget" as const, label: "Keep costs low", icon: WalletCards },
+  { value: "flexibility" as const, label: "Maximum flexibility", icon: Clock3 },
+  { value: "career" as const, label: "Career progression", icon: Sparkles },
+];
+
+const profileCopy: Record<LearnerProfile, string> = {
+  fresher:
+    "Prioritise a structured learning calendar, peer interaction and strong academic support.",
+  professional:
+    "Prioritise recorded access, predictable assessment windows and a manageable weekly workload.",
+  switcher:
+    "Prioritise practical projects, relevant specialisations and clear links to your target roles.",
+};
+
+interface ProgramDecisionStudioProps {
+  program: ProgramTemplate;
+  offers: Offer[];
+}
+
+export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudioProps) {
+  const minEmi = Math.min(...offers.map(({ program: offer }) => offer.emiPerMonth));
+  const maxEmi = Math.max(...offers.map(({ program: offer }) => offer.emiPerMonth));
+  const [profile, setProfile] = useState<LearnerProfile>("professional");
+  const [priority, setPriority] = useState<Priority>("flexibility");
+  const [weeklyHours, setWeeklyHours] = useState(8);
+  const [monthlyBudget, setMonthlyBudget] = useState(minEmi);
+
+  const affordableOffers = useMemo(
+    () =>
+      [...offers]
+        .filter(({ program: offer }) => offer.emiPerMonth <= monthlyBudget)
+        .sort((a, b) => {
+          if (priority === "career") return b.university.rating - a.university.rating;
+          if (priority === "budget") return a.program.totalFee - b.program.totalFee;
+          return a.program.emiPerMonth - b.program.emiPerMonth;
+        }),
+    [monthlyBudget, offers, priority],
+  );
+
+  const readiness = weeklyHours >= 10 ? "Strong" : weeklyHours >= 7 ? "Good" : "Needs planning";
+  const studyNote =
+    weeklyHours >= 10
+      ? "You have a healthy study window for classes, revision and project work."
+      : weeklyHours >= 7
+        ? "Your study window is workable if you protect two focused sessions each week."
+        : "Before enrolling, identify two more weekly study hours or choose a lighter assessment rhythm.";
+
+  return (
+    <section
+      id="decision-tools"
+      className="scroll-mt-32 border-b border-border bg-background py-16 lg:py-20"
+    >
+      <div className="container-page">
+        <div className="max-w-3xl">
+          <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#1664c0] dark:text-[#78b9ff]">
+            <Sparkles className="h-4 w-4" /> Free decision tools
+          </span>
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl">
+            Make a decision that fits your life—not a sales script
+          </h2>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+            Check your learning fit and payment comfort before shortlisting an online {program.code}
+            . These tools are guidance, not an admission or finance guarantee.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
+          <article className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_24px_70px_-54px_rgba(12,39,71,0.7)]">
+            <div className="border-b border-border bg-gradient-to-r from-[#edf5ff] to-[#f8fbff] p-6 dark:from-[#102a42] dark:to-card sm:p-8">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
+                    Course-fit check
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl font-extrabold">
+                    Build your learner profile
+                  </h3>
+                </div>
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-[#1768cc] shadow-sm dark:bg-[#153a5e] dark:text-[#78b9ff]">
+                  <UserRoundSearch className="h-5 w-5" />
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-7 p-6 sm:p-8">
+              <fieldset>
+                <legend className="text-sm font-extrabold">Where are you today?</legend>
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                  {profiles.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      aria-pressed={profile === item.value}
+                      onClick={() => setProfile(item.value)}
+                      className={`flex min-h-20 flex-col items-start justify-between rounded-2xl border p-3.5 text-left text-xs font-bold transition ${
+                        profile === item.value
+                          ? "border-[#1768cc] bg-[#edf5ff] text-[#155cb6] dark:bg-[#102a42] dark:text-[#78b9ff]"
+                          : "border-border bg-background text-muted-foreground hover:border-[#8db8e8]"
+                      }`}
+                    >
+                      <item.icon className="h-4.5 w-4.5" />
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend className="text-sm font-extrabold">What matters most?</legend>
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                  {priorities.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      aria-pressed={priority === item.value}
+                      onClick={() => setPriority(item.value)}
+                      className={`flex items-center gap-2 rounded-xl border px-3 py-3 text-left text-xs font-bold transition ${
+                        priority === item.value
+                          ? "border-[#1768cc] bg-[#1768cc] text-white"
+                          : "border-border bg-background text-muted-foreground hover:border-[#8db8e8]"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div>
+                <div className="flex items-center justify-between gap-4">
+                  <label htmlFor="weekly-hours" className="text-sm font-extrabold">
+                    Weekly study time
+                  </label>
+                  <span className="rounded-full bg-secondary px-3 py-1 text-xs font-extrabold">
+                    {weeklyHours} hours
+                  </span>
+                </div>
+                <input
+                  id="weekly-hours"
+                  type="range"
+                  min="4"
+                  max="16"
+                  step="1"
+                  value={weeklyHours}
+                  onChange={(event) => setWeeklyHours(Number(event.target.value))}
+                  className="mt-4 w-full accent-[#1768cc]"
+                />
+              </div>
+
+              <div className="rounded-2xl border border-[#b9d8f6] bg-[#f3f8ff] p-5 dark:border-[#295a85] dark:bg-[#0e263b]">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-display text-lg font-extrabold">Your readiness: {readiness}</p>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#168258] dark:bg-[#153d30] dark:text-[#69d7a9]">
+                    <Check className="h-3.5 w-3.5" /> Personalised guidance
+                  </span>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {profileCopy[profile]}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{studyNote}</p>
+              </div>
+            </div>
+          </article>
+
+          <article className="overflow-hidden rounded-[2rem] border border-border bg-[#081c2e] text-white shadow-[0_28px_80px_-50px_rgba(6,28,48,0.95)] dark:bg-[#0b2235]">
+            <div className="border-b border-white/10 p-6 sm:p-8">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#85c3ff]">
+                Budget planner
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-extrabold">
+                Set a comfortable monthly range
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-white/65">
+                Compare the published EMI figures in this catalogue. Final lender eligibility,
+                interest and terms can differ.
+              </p>
+            </div>
+
+            <div className="p-6 sm:p-8">
+              <div className="flex items-end justify-between gap-4">
+                <label htmlFor="monthly-budget" className="text-sm font-bold text-white/70">
+                  Monthly study budget
+                </label>
+                <p className="font-display text-2xl font-extrabold text-white">
+                  {formatINR(monthlyBudget)}
+                  <span className="text-xs font-semibold text-white/50">/mo</span>
+                </p>
+              </div>
+              <input
+                id="monthly-budget"
+                type="range"
+                min={minEmi}
+                max={maxEmi}
+                step="250"
+                value={monthlyBudget}
+                onChange={(event) => setMonthlyBudget(Number(event.target.value))}
+                className="mt-5 w-full accent-[#ff8a3d]"
+              />
+              <div className="mt-2 flex justify-between text-[10px] font-bold text-white/45">
+                <span>{formatINR(minEmi)}</span>
+                <span>{formatINR(maxEmi)}</span>
+              </div>
+
+              <div className="mt-7 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-white/45">
+                    Matches
+                  </p>
+                  <p className="mt-1 font-display text-xl font-extrabold">
+                    {affordableOffers.length}{" "}
+                    {affordableOffers.length === 1 ? "university" : "universities"}
+                  </p>
+                </div>
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-[#ffab73]">
+                  <IndianRupee className="h-5 w-5" />
+                </span>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                {affordableOffers.slice(0, 3).map(({ university, program: offer }) => (
+                  <div
+                    key={university.slug}
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.055] p-3"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
+                      <UniversityLogo university={university} size="sm" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-extrabold">{university.shortName}</p>
+                      <p className="mt-0.5 text-[10px] text-white/50">
+                        NAAC {university.naacGrade} · ★ {university.rating}
+                      </p>
+                    </div>
+                    <p className="text-xs font-extrabold text-[#8bc7ff]">
+                      {formatINR(offer.emiPerMonth)}/mo
+                    </p>
+                  </div>
+                ))}
+                {affordableOffers.length === 0 ? (
+                  <div className="rounded-2xl border border-[#ffb27f]/25 bg-[#ff8a3d]/10 p-4 text-sm leading-6 text-white/70">
+                    No listed EMI starts within this range. Consider a higher upfront payment or ask
+                    the university about semester-wise payment.
+                  </div>
+                ) : null}
+              </div>
+
+              <Button
+                asChild
+                className="mt-6 h-12 w-full rounded-xl bg-[#ff7a24] font-extrabold text-white hover:bg-[#ee6710]"
+              >
+                <Link to="/compare">
+                  Compare all fees <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </article>
+        </div>
+
+        <div className="mt-5 grid overflow-hidden rounded-[1.5rem] border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            [
+              "Verified comparisons",
+              "Recognition, fee and program facts shown together.",
+              BadgeCheck,
+            ],
+            [
+              "No forced application",
+              "Explore and shortlist before sharing application details.",
+              ShieldCheck,
+            ],
+            [
+              "Clear fee context",
+              "See total program fee as well as monthly payment estimates.",
+              WalletCards,
+            ],
+            [
+              "Human support",
+              "Ask for help when you need eligibility or application clarity.",
+              UserRoundSearch,
+            ],
+          ].map(([title, description, Icon], index) => (
+            <div
+              key={String(title)}
+              className={`p-5 ${index ? "border-t border-border sm:border-l sm:border-t-0" : ""} ${index === 2 ? "sm:border-t lg:border-t-0" : ""}`}
+            >
+              <Icon className="h-5 w-5 text-[#1768cc] dark:text-[#78b9ff]" />
+              <h3 className="mt-4 text-sm font-extrabold">{String(title)}</h3>
+              <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                {String(description)}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

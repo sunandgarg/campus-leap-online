@@ -29,6 +29,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { UniversityLogo } from "@/components/site/university-logo";
+import { ProgramDecisionStudio } from "@/components/site/program-decision-studio";
 import {
   formatINR,
   getProgramTemplate,
@@ -88,6 +89,7 @@ export const Route = createFileRoute("/programs/$programSlug")({
 
 const pageNav = [
   { label: "Overview", href: "#overview" },
+  { label: "Decision tools", href: "#decision-tools" },
   { label: "Universities", href: "#universities" },
   { label: "Curriculum", href: "#curriculum" },
   { label: "Specialisations", href: "#specialisations" },
@@ -134,6 +136,9 @@ const admissionSteps = [
 function ProgramComparePage() {
   const { program: p, offers } = Route.useLoaderData() as ProgramComparePageData;
   const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
+  const highestFee = Math.max(...offers.map(({ program }) => program.totalFee));
+  const [feeCeiling, setFeeCeiling] = useState(highestFee);
+  const [sortBy, setSortBy] = useState<"fee" | "emi" | "rating">("fee");
   const startingFee = Math.min(...offers.map(({ program }) => program.totalFee));
   const startingEmi = Math.min(...offers.map(({ program }) => program.emiPerMonth));
   const averageRating = offers.length
@@ -144,6 +149,13 @@ function ProgramComparePage() {
   const selectedOffers = offers.filter(({ university }) =>
     selectedUniversities.includes(university.slug),
   );
+  const displayedOffers = [...offers]
+    .filter(({ program }) => program.totalFee <= feeCeiling)
+    .sort((a, b) => {
+      if (sortBy === "rating") return b.university.rating - a.university.rating;
+      if (sortBy === "emi") return a.program.emiPerMonth - b.program.emiPerMonth;
+      return a.program.totalFee - b.program.totalFee;
+    });
 
   function toggleUniversity(slug: string) {
     setSelectedUniversities((current) => {
@@ -510,6 +522,8 @@ function ProgramComparePage() {
         </div>
       </section>
 
+      <ProgramDecisionStudio program={p} offers={offers} />
+
       <section id="universities" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
@@ -519,7 +533,7 @@ function ProgramComparePage() {
               description="Compare recognition, total fees, monthly EMI and learner ratings before you shortlist."
             />
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-              <Sparkles className="h-4 w-4" /> Sorted by lowest total fee
+              <Sparkles className="h-4 w-4" /> {displayedOffers.length} matching options
             </span>
           </div>
 
@@ -617,8 +631,50 @@ function ProgramComparePage() {
             </div>
           ) : null}
 
+          <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
+            <div>
+              <div className="flex items-center justify-between gap-4">
+                <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
+                  Maximum total fee
+                </label>
+                <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-extrabold text-[#155cb6] dark:text-[#78b9ff]">
+                  {formatINR(feeCeiling)}
+                </span>
+              </div>
+              <input
+                id="fee-ceiling"
+                type="range"
+                min={startingFee}
+                max={highestFee}
+                step="5000"
+                value={feeCeiling}
+                onChange={(event) => setFeeCeiling(Number(event.target.value))}
+                className="mt-4 w-full accent-[#1768cc]"
+              />
+              <div className="mt-1 flex justify-between text-[10px] font-bold text-muted-foreground">
+                <span>{formatINR(startingFee)}</span>
+                <span>{formatINR(highestFee)}</span>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="sort-offers" className="text-sm font-extrabold">
+                Sort universities
+              </label>
+              <select
+                id="sort-offers"
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value as "fee" | "emi" | "rating")}
+                className="mt-3 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-bold text-foreground outline-none focus:border-[#1768cc]"
+              >
+                <option value="fee">Lowest total fee</option>
+                <option value="emi">Lowest monthly EMI</option>
+                <option value="rating">Highest learner rating</option>
+              </select>
+            </div>
+          </div>
+
           <div className="mt-10 grid gap-4 lg:grid-cols-2">
-            {offers.map(({ university, program }, index) => (
+            {displayedOffers.map(({ university, program }, index) => (
               <article
                 key={university.slug}
                 className="group rounded-[1.55rem] border border-border bg-card p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
@@ -633,7 +689,7 @@ function ProgramComparePage() {
                         <h3 className="font-display text-base font-extrabold tracking-[-0.025em]">
                           {university.shortName}
                         </h3>
-                        {index === 0 ? (
+                        {index === 0 && sortBy === "fee" ? (
                           <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
                             Lowest fee
                           </span>
@@ -717,6 +773,24 @@ function ProgramComparePage() {
               </article>
             ))}
           </div>
+          {displayedOffers.length === 0 ? (
+            <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
+              <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
+              <h3 className="mt-4 font-display text-lg font-extrabold">
+                No option fits this fee range
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Raise your maximum fee to see more universities.
+              </p>
+              <button
+                type="button"
+                onClick={() => setFeeCeiling(highestFee)}
+                className="mt-4 text-sm font-extrabold text-[#155cb6] dark:text-[#78b9ff]"
+              >
+                Reset fee filter
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 
