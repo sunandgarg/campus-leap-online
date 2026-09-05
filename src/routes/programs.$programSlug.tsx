@@ -181,17 +181,17 @@ function ProgramComparePage() {
 
   return (
     <div className="bg-background text-foreground transition-colors">
-      <section className="relative overflow-hidden border-b border-border bg-[#f6f9fd] dark:bg-[#071522]">
+      <section className="relative overflow-hidden border-b border-[#eadfcd] bg-[#fffaf0] dark:border-border dark:bg-[#071522]">
         <div
-          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(30,103,189,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(30,103,189,0.055)_1px,transparent_1px)] [background-size:56px_56px] dark:opacity-30"
+          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(40,48,55,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(40,48,55,0.045)_1px,transparent_1px)] [background-size:56px_56px] dark:opacity-25"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -left-32 -top-40 h-[36rem] w-[36rem] rounded-full bg-[#dcecff] blur-3xl dark:bg-[#0a4a87]/40"
+          className="pointer-events-none absolute -left-32 -top-40 h-[36rem] w-[36rem] rounded-full bg-[#ffe2c8] blur-3xl dark:bg-[#6b3417]/30"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-40 top-8 h-[34rem] w-[34rem] rounded-full bg-[#fff0d2] blur-3xl dark:bg-[#5b3d12]/30"
+          className="pointer-events-none absolute -right-40 top-8 h-[34rem] w-[34rem] rounded-full bg-[#fff0bb] blur-3xl dark:bg-[#5b3d12]/30"
           aria-hidden="true"
         />
 
@@ -214,7 +214,7 @@ function ProgramComparePage() {
           <div className="mt-9 grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center xl:gap-20">
             <div className="max-w-3xl py-2 lg:py-8">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-[#b9d5f5] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#155cb6] shadow-sm backdrop-blur dark:border-[#27547e] dark:bg-[#0e2840]/80 dark:text-[#8bc2ff]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#b9dfca] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#187a55] shadow-sm backdrop-blur dark:border-[#275e4a] dark:bg-[#113329]/80 dark:text-[#76dcb1]">
                   <BadgeCheck className="h-4 w-4" />
                   UGC-entitled options only
                 </span>
@@ -225,7 +225,10 @@ function ProgramComparePage() {
 
               <h1 className="mt-7 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.02] tracking-[-0.06em] text-foreground sm:text-5xl lg:text-[4.25rem]">
                 Online {p.name}{" "}
-                <span className="text-[#1768cc] dark:text-[#70b3ff]">({p.code})</span>
+                <span className="relative inline-block text-[#e96e22] dark:text-[#ff9a5b]">
+                  ({p.code})
+                  <span className="absolute -bottom-1 left-0 h-1 w-full -rotate-1 rounded-full bg-[#f47a20]/35" />
+                </span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
@@ -234,11 +237,11 @@ function ProgramComparePage() {
 
               <div className="mt-7 flex flex-wrap gap-2.5">
                 <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
-                  <Clock3 className="h-4 w-4 text-[#1768cc] dark:text-[#70b3ff]" />
+                  <Clock3 className="h-4 w-4 text-[#e96e22] dark:text-[#ff9a5b]" />
                   {p.durationYears} years · {p.semesters} semesters
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
-                  <GraduationCap className="h-4 w-4 text-[#1768cc] dark:text-[#70b3ff]" />
+                  <GraduationCap className="h-4 w-4 text-[#e96e22] dark:text-[#ff9a5b]" />
                   {p.level} degree
                 </span>
               </div>
@@ -247,7 +250,7 @@ function ProgramComparePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-xl bg-[#1768cc] px-6 font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(23,104,204,0.72)] hover:bg-[#0e57b2]"
+                  className="h-12 rounded-full bg-[#f47a20] px-6 font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(244,122,32,0.72)] hover:bg-[#dd6818]"
                 >
                   <Link to="/contact">
                     Get my free shortlist
@@ -258,7 +261,7 @@ function ProgramComparePage() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-xl border-border bg-background/65 px-6 font-bold text-foreground hover:bg-secondary"
+                  className="h-12 rounded-full border-border bg-background/65 px-6 font-bold text-foreground hover:bg-secondary"
                 >
                   <a href="#universities">Compare universities</a>
                 </Button>
@@ -283,20 +286,20 @@ function ProgramComparePage() {
 
             <aside className="relative mx-auto w-full max-w-[440px]">
               <div
-                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#b9dcff]/60 via-transparent to-[#ffe3a9]/55 blur-xl dark:from-[#1768cc]/25 dark:to-[#bd7b18]/20"
+                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#ffd2b1]/70 via-transparent to-[#ffe3a9]/60 blur-xl dark:from-[#f47a20]/20 dark:to-[#bd7b18]/20"
                 aria-hidden="true"
               />
               <div className="relative rounded-[1.75rem] border border-white/80 bg-white/90 p-6 shadow-[0_28px_80px_-36px_rgba(25,67,116,0.48)] backdrop-blur-xl dark:border-white/10 dark:bg-[#0d2134]/92 dark:shadow-[0_28px_80px_-32px_rgba(0,0,0,0.75)] sm:p-7">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#1768cc] dark:text-[#70b3ff]">
-                      Smart shortlist
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#e96e22] dark:text-[#ff9a5b]">
+                      Your decision desk
                     </p>
                     <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
                       Compare before you commit.
                     </h2>
                   </div>
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#e8f3ff] text-[#1768cc] dark:bg-[#143757] dark:text-[#70b3ff]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#e96e22] dark:bg-[#3a2518] dark:text-[#ff9a5b]">
                     <ShieldCheck className="h-5 w-5" />
                   </span>
                 </div>
@@ -364,7 +367,7 @@ function ProgramComparePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="mt-5 h-12 w-full rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                  className="mt-5 h-12 w-full rounded-full bg-[#f47a20] font-extrabold text-white shadow-[0_14px_28px_-18px_rgba(244,122,32,0.8)] hover:bg-[#dd6818]"
                 >
                   <Link to="/contact">
                     Build my shortlist <ArrowRight className="ml-2 h-4 w-4" />
@@ -377,7 +380,7 @@ function ProgramComparePage() {
       </section>
 
       <nav
-        className="sticky top-16 z-40 border-b border-border bg-background/92 shadow-sm backdrop-blur-xl"
+        className="sticky top-[5.45rem] z-40 border-b border-border bg-background/92 shadow-sm backdrop-blur-xl"
         aria-label="Program page sections"
       >
         <div className="container-page flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">

@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   Clock3,
   Code2,
-  Download,
   FileCheck2,
   GraduationCap,
   HeartPulse,
@@ -29,18 +28,19 @@ import {
   Sparkles,
   Target,
   TimerReset,
-  TrendingUp,
   Users,
   WalletCards,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
+import heroImage from "@/assets/program-hero.jpg";
 import {
   universities,
   programCatalog,
   getSpecialisationCount,
   getTotalProgramCount,
+  universitiesOfferingProgram,
 } from "@/data/universities";
 
 export const Route = createFileRoute("/")({
@@ -119,39 +119,6 @@ const domainCards = [
   },
 ];
 
-const programStartingFees: Record<string, number> = {
-  MBA: 94000,
-  BBA: 72000,
-  MCA: 108800,
-  BCA: 75000,
-  "M.Com": 65000,
-  "B.Com": 60000,
-  MA: 60000,
-};
-
-const outcomeStats = [
-  {
-    value: "87%",
-    label: "learners reported career growth within a year",
-    icon: TrendingUp,
-  },
-  {
-    value: "9 in 10",
-    label: "said the degree opened new career possibilities",
-    icon: Target,
-  },
-  {
-    value: "3 in 4",
-    label: "received a role or promotion opportunity",
-    icon: BriefcaseBusiness,
-  },
-  {
-    value: "92%",
-    label: "would recommend online learning to others",
-    icon: Users,
-  },
-];
-
 const studyBenefits = [
   {
     title: "Live at your hour",
@@ -180,20 +147,20 @@ const guides = [
     title: "Is this online degree valid?",
     description:
       "A practical checklist to verify UGC entitlement, accreditation and university claims.",
-    meta: "Parent checklist · 1 page",
+    meta: "Verification checklist",
     icon: ShieldCheck,
   },
   {
     title: "How to compare online universities",
     description:
       "The key questions to ask about fees, live classes, exams, placements and learner support.",
-    meta: "Comparison guide · 2 pages",
+    meta: "Decision framework",
     icon: BarChart3,
   },
   {
     title: "Choosing the right specialisation",
     description: "A career-first framework for selecting a specialisation that matches your goals.",
-    meta: "Career guide · 2 pages",
+    meta: "Career worksheet",
     icon: Lightbulb,
   },
 ];
@@ -221,6 +188,12 @@ function HomePage() {
   const totalSpecialisations = getSpecialisationCount();
   const [heroGoal, setHeroGoal] = useState(heroGoals[0].label);
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
+  const catalogStats = [
+    { value: universities.length.toString(), label: "university profiles", icon: Building2 },
+    { value: programCatalog.length.toString(), label: "degree pathways", icon: GraduationCap },
+    { value: totalPrograms.toString(), label: "university-program options", icon: BookOpenCheck },
+    { value: totalSpecialisations.toString(), label: "specialisations mapped", icon: Target },
+  ];
 
   const heroShortcuts = [
     {
@@ -274,51 +247,58 @@ function HomePage() {
   ];
 
   return (
-    <div className="overflow-hidden bg-[#fbfaf7] text-[#171a17]">
-      <section className="relative overflow-hidden border-b border-[#dbe4f1] bg-[linear-gradient(108deg,#fff5ee_0%,#fffaf7_31%,#f7fbff_54%,#e7f1ff_100%)]">
+    <div className="overflow-hidden bg-[#fbfaf7] text-[#171a17] transition-colors dark:bg-background dark:text-foreground">
+      <section className="relative overflow-hidden border-b border-[#eadfd4] bg-[#fffaf2] dark:border-border dark:bg-[#081722]">
         <div
-          className="pointer-events-none absolute -left-52 top-24 h-[31rem] w-[31rem] rounded-full border-[4.5rem] border-[#f8e9de]/55"
+          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(32,42,57,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(32,42,57,0.045)_1px,transparent_1px)] [background-size:52px_52px] dark:opacity-20"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-44 top-20 h-[34rem] w-[34rem] rounded-full border-[4.5rem] border-[#dceafd]/75"
+          className="pointer-events-none absolute -left-52 top-24 h-[31rem] w-[31rem] rounded-full border-[4.5rem] border-[#f7dcc7]/55 dark:border-[#f47a20]/10"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_48%,rgba(255,255,255,0.95),transparent_32%)]"
+          className="pointer-events-none absolute -right-44 top-20 h-[34rem] w-[34rem] rounded-full border-[4.5rem] border-[#fee7ac]/55 dark:border-[#1768cc]/10"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_48%,rgba(255,255,255,0.92),transparent_34%)] dark:bg-[radial-gradient(circle_at_48%_48%,rgba(20,48,67,0.45),transparent_38%)]"
           aria-hidden="true"
         />
 
-        <div className="container-page relative grid gap-12 py-14 lg:min-h-[650px] lg:grid-cols-[1.34fr_0.86fr] lg:items-center lg:py-16 xl:gap-20">
+        <div className="container-page relative grid gap-12 py-14 lg:min-h-[720px] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-16 xl:gap-20">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#ffc9ac] bg-[#fff0e8]/90 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#ef783b] shadow-sm backdrop-blur">
               <GraduationCap className="h-3.5 w-3.5 text-[#17202d]" />
-              Built by education experts
+              Built for online learners
             </div>
 
-            <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#647083]">
+            <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#647083] dark:text-muted-foreground">
               <span className="h-2.5 w-2.5 rounded-full bg-[#2bc58b] shadow-[0_0_0_4px_rgba(43,197,139,0.1)]" />
-              AI-first guidance for online learners
+              Comparison-first guidance, with human help
             </div>
 
-            <h1 className="mt-7 max-w-3xl font-display text-[3.05rem] font-extrabold leading-[0.98] tracking-[-0.065em] text-[#0d1726] sm:text-6xl lg:text-[4.55rem]">
-              Discover Your Ideal
-              <span className="block text-[#2864da]">Online Degree</span>
+            <h1 className="mt-7 max-w-3xl font-display text-[3.05rem] font-extrabold leading-[0.98] tracking-[-0.065em] text-[#0d1726] dark:text-foreground sm:text-6xl lg:text-[4.55rem]">
+              An online degree for your
+              <span className="relative mt-2 block w-fit text-[#2864da] dark:text-[#72b4ff]">
+                next big move.
+                <span className="absolute -bottom-2 left-1 h-1.5 w-[88%] -rotate-1 rounded-full bg-[#f47a20]" />
+              </span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#536176]">
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#536176] dark:text-muted-foreground">
               Search verified universities and recognised programs, then move forward with clear
               guidance, transparent fees and human support when you need it.
             </p>
 
             <form action="/search" className="mt-7 max-w-2xl" role="search">
-              <div className="flex items-center gap-3 rounded-full border border-white bg-white p-1.5 pl-5 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0]">
+              <div className="flex items-center gap-3 rounded-full border border-white bg-white p-1.5 pl-5 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0] dark:border-border dark:bg-card dark:ring-border">
                 <Search className="h-5 w-5 shrink-0 text-[#7d899b]" />
                 <input
                   name="q"
                   aria-label="Search universities or programs"
                   placeholder="Search universities, programs or specialisations..."
-                  className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#9ba5b4] sm:text-base"
+                  className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#9ba5b4] dark:text-foreground sm:text-base"
                 />
                 <button
                   type="submit"
@@ -330,7 +310,7 @@ function HomePage() {
               </div>
             </form>
 
-            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2 text-[11px] text-[#788395]">
+            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2 text-[11px] text-[#788395] dark:text-muted-foreground">
               <span className="flex items-center gap-1.5 font-bold">
                 <Zap className="h-3.5 w-3.5 text-[#ff762b]" /> Try:
               </span>
@@ -338,7 +318,7 @@ function HomePage() {
                 (prompt) => (
                   <span
                     key={prompt}
-                    className="rounded-full border border-[#e1e6ed] bg-white/75 px-2.5 py-1"
+                    className="rounded-full border border-[#e1e6ed] bg-white/75 px-2.5 py-1 dark:border-border dark:bg-card/75"
                   >
                     {prompt}
                   </span>
@@ -351,17 +331,17 @@ function HomePage() {
                 <Link
                   key={`${item.label}-${item.caption}`}
                   to={item.to}
-                  className={`${item.className} group flex min-h-[108px] flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition hover:-translate-y-1 hover:shadow-lg`}
+                  className={`${item.className} group flex min-h-[108px] flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition hover:-translate-y-1 hover:shadow-lg dark:border-border dark:bg-card`}
                 >
                   <span
                     className={`${item.iconClassName} flex h-10 w-10 items-center justify-center rounded-xl transition group-hover:scale-105`}
                   >
                     <item.icon className="h-5 w-5" />
                   </span>
-                  <span className="mt-2 text-xs font-extrabold leading-4 text-[#17202d]">
+                  <span className="mt-2 text-xs font-extrabold leading-4 text-[#17202d] dark:text-foreground">
                     {item.label}
                   </span>
-                  <span className="text-[10px] font-semibold leading-3 text-[#697486]">
+                  <span className="text-[10px] font-semibold leading-3 text-[#697486] dark:text-muted-foreground">
                     {item.caption}
                   </span>
                 </Link>
@@ -369,109 +349,93 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[430px]">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/90 bg-white/55 p-6 shadow-[0_30px_60px_-28px_rgba(29,55,91,0.46)] backdrop-blur-md sm:p-7">
-              <div className="flex items-center justify-between gap-4">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8fff5] px-3 py-1.5 text-[11px] font-extrabold text-[#268a68]">
-                  <ShieldCheck className="h-3.5 w-3.5" />
-                  Free expert guidance
-                </span>
-                <span className="flex gap-1.5" aria-label="Step 1 of 2">
-                  <span className="h-1.5 w-8 rounded-full bg-[#1f67dc]" />
-                  <span className="h-1.5 w-4 rounded-full bg-[#cbd8eb]" />
-                </span>
+          <div className="relative mx-auto w-full max-w-[470px]">
+            <div className="absolute -inset-4 rounded-[2.8rem] bg-gradient-to-br from-[#ffd6b8]/70 via-transparent to-[#c9ddff]/65 blur-2xl dark:from-[#f47a20]/15 dark:to-[#1768cc]/20" />
+            <div className="relative rounded-[2.25rem] border border-white/90 bg-white/70 p-3 shadow-[0_34px_75px_-30px_rgba(31,55,83,0.58)] backdrop-blur dark:border-white/10 dark:bg-card/80">
+              <div className="relative h-[330px] overflow-hidden rounded-[1.7rem] sm:h-[360px]">
+                <img
+                  src={heroImage}
+                  alt="Professionals planning their next online degree"
+                  className="h-full w-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#101923]/75 via-transparent to-transparent" />
+                <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-[#101923]/72 px-3 py-2 text-[11px] font-extrabold text-white backdrop-blur">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#8be2bb]" />
+                  {universities.length} university profiles
+                </div>
+                <p className="absolute bottom-5 left-5 right-5 font-display text-xl font-extrabold leading-snug text-white">
+                  Ambition looks different for everyone. Your shortlist should too.
+                </p>
               </div>
 
-              <p className="mt-5 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#ef783b]">
-                <Sparkles className="h-3.5 w-3.5" /> Personal guidance desk
-              </p>
-              <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.045em] text-[#101927]">
-                What would you like to plan next?
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[#687487]">
-                Choose one goal and we will shape it into a focused shortlist with the next best
-                steps.
-              </p>
+              <div className="relative -mt-4 rounded-[1.6rem] border border-border bg-card p-5 shadow-xl sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#ef783b]">
+                      <Sparkles className="h-3.5 w-3.5" /> Plan your next move
+                    </p>
+                    <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-[-0.04em] text-foreground">
+                      What matters most to you?
+                    </h2>
+                  </div>
+                  <span className="rounded-full bg-[#e8fff5] px-2.5 py-1.5 text-[10px] font-extrabold text-[#268a68] dark:bg-[#123b30] dark:text-[#77ddb4]">
+                    Free
+                  </span>
+                </div>
 
-              <fieldset className="mt-4 grid grid-cols-2 gap-2">
-                <legend className="sr-only">Select your goal</legend>
-                {heroGoals.map((goal, index) => {
-                  const GoalIcon = goal.icon;
-                  const selected = heroGoal === goal.label;
-                  return (
-                    <button
-                      key={goal.label}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setHeroGoal(goal.label)}
-                      className={`flex min-h-12 items-center gap-2 rounded-full border px-3 text-left text-xs font-bold transition ${
-                        index === heroGoals.length - 1 ? "col-span-2" : ""
-                      } ${
-                        selected
-                          ? "border-[#4080e3] bg-[#e7f0ff] text-[#2364cd]"
-                          : "border-white bg-white/80 text-[#384354] hover:border-[#b9cbed]"
-                      }`}
-                    >
-                      <span
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${selected ? "bg-[#2b6ddd] text-white" : "bg-[#f0f3f6] text-[#7d8793]"}`}
-                      >
-                        <GoalIcon className="h-4 w-4" />
-                      </span>
-                      {goal.label}
-                      {selected ? <Check className="ml-auto h-3.5 w-3.5" /> : null}
-                    </button>
-                  );
-                })}
-              </fieldset>
-
-              <fieldset className="mt-4">
-                <legend className="text-xs font-extrabold text-[#1a2432]">I am a</legend>
-                <div className="mt-2 grid grid-cols-3 rounded-full bg-white/45 p-1">
-                  {heroRoles.map((role) => {
-                    const selected = heroRole === role;
+                <fieldset className="mt-4 flex flex-wrap gap-2">
+                  <legend className="sr-only">Select your goal</legend>
+                  {heroGoals.map((goal) => {
+                    const selected = heroGoal === goal.label;
                     return (
+                      <button
+                        key={goal.label}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => setHeroGoal(goal.label)}
+                        className={`rounded-full border px-3 py-2 text-[11px] font-extrabold transition ${
+                          selected
+                            ? "border-[#f47a20] bg-[#fff0e6] text-[#d85e12] dark:bg-[#3a2518] dark:text-[#ffad70]"
+                            : "border-border bg-background text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {goal.label}
+                      </button>
+                    );
+                  })}
+                </fieldset>
+
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                  <div className="grid flex-1 grid-cols-3 rounded-full bg-secondary p-1">
+                    {heroRoles.map((role) => (
                       <button
                         key={role}
                         type="button"
-                        aria-pressed={selected}
+                        aria-pressed={heroRole === role}
                         onClick={() => setHeroRole(role)}
-                        className={`h-10 rounded-full text-xs font-extrabold transition ${
-                          selected
-                            ? "bg-white text-[#2864da] shadow-sm"
-                            : "text-[#707b8c] hover:text-[#334052]"
+                        className={`h-9 rounded-full text-[10px] font-extrabold transition ${
+                          heroRole === role
+                            ? "bg-card text-[#1768cc] shadow-sm dark:text-[#70b3ff]"
+                            : "text-muted-foreground"
                         }`}
                       >
                         {role}
                       </button>
-                    );
-                  })}
+                    ))}
+                  </div>
+                  <Button
+                    asChild
+                    className="rounded-full bg-[#f47a20] px-5 font-extrabold text-white hover:bg-[#dd6818]"
+                  >
+                    <Link to="/contact">
+                      Get my shortlist <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
-              </fieldset>
-
-              <Button
-                asChild
-                size="lg"
-                className="mt-4 h-12 w-full rounded-full bg-[#2864da] font-extrabold text-white shadow-[0_14px_28px_-16px_rgba(40,100,218,0.8)] hover:bg-[#1954bd]"
-              >
-                <Link to="/contact">
-                  Show my best-fit options
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-
-              <p className="mt-3 flex items-center justify-center gap-2 text-center text-[10px] font-semibold text-[#758094]">
-                <span className="flex -space-x-1">
-                  {["A", "R", "S"].map((initial) => (
-                    <span
-                      key={initial}
-                      className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#e4ebf7] text-[8px] font-extrabold text-[#31568d]"
-                    >
-                      {initial}
-                    </span>
-                  ))}
-                </span>
-                Guidance trusted by thousands of learners
-              </p>
+                <p className="mt-3 text-center text-[10px] font-semibold text-muted-foreground">
+                  Private guidance · No payment required
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -488,7 +452,7 @@ function HomePage() {
           {domainCards.map((domain) => (
             <article
               key={domain.title}
-              className={`${domain.background} group rounded-[1.75rem] border border-black/[0.06] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_-25px_rgba(20,30,45,0.38)]`}
+              className={`${domain.background} group rounded-[1.75rem] border border-black/[0.06] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_-25px_rgba(20,30,45,0.38)] dark:border-border dark:bg-card`}
             >
               <div
                 className={`${domain.iconBackground} flex h-12 w-12 items-center justify-center rounded-2xl`}
@@ -498,12 +462,14 @@ function HomePage() {
               <h3 className="mt-5 font-display text-xl font-bold tracking-[-0.035em]">
                 {domain.title}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-[#656a64]">{domain.description}</p>
+              <p className="mt-2 text-sm leading-6 text-[#656a64] dark:text-muted-foreground">
+                {domain.description}
+              </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {domain.codes.map((code) => (
                   <span
                     key={code}
-                    className="rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs font-bold"
+                    className="rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs font-bold dark:border-border dark:bg-secondary"
                   >
                     {code}
                   </span>
@@ -515,25 +481,26 @@ function HomePage() {
 
         <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {programCatalog.slice(0, 6).map((program) => {
-            const matchingUniversities = universities
-              .filter((university) =>
-                university.programs.some((item) => item.slug === program.slug),
-              )
+            const matchingOffers = universitiesOfferingProgram(program.slug);
+            const matchingUniversities = matchingOffers
+              .map(({ university }) => university)
               .slice(0, 3);
-            const startingFee = programStartingFees[program.code];
+            const startingFee = matchingOffers.length
+              ? Math.min(...matchingOffers.map(({ program: offer }) => offer.totalFee))
+              : null;
 
             return (
               <Link
                 key={program.slug}
                 to="/programs/$programSlug"
                 params={{ programSlug: program.slug }}
-                className="group rounded-[1.6rem] border border-[#dfe3dc] bg-white p-6 shadow-[0_10px_30px_-24px_rgba(23,26,23,0.4)] transition duration-300 hover:-translate-y-1 hover:border-[#adc8e8] hover:shadow-[0_24px_50px_-30px_rgba(13,92,173,0.55)]"
+                className="group rounded-[1.6rem] border border-[#dfe3dc] bg-white p-6 shadow-[0_10px_30px_-24px_rgba(23,26,23,0.4)] transition duration-300 hover:-translate-y-1 hover:border-[#adc8e8] hover:shadow-[0_24px_50px_-30px_rgba(13,92,173,0.55)] dark:border-border dark:bg-card"
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="rounded-full bg-[#eaf3ff] px-3 py-1.5 text-xs font-extrabold text-[#0d5cad]">
                     {program.level}
                   </span>
-                  <span className="text-xs font-semibold text-[#777c76]">
+                  <span className="text-xs font-semibold text-[#777c76] dark:text-muted-foreground">
                     {program.durationYears} years
                   </span>
                 </div>
@@ -552,7 +519,7 @@ function HomePage() {
                   </span>
                 </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-4 border-y border-[#eceeea] py-4">
+                <div className="mt-6 grid grid-cols-2 gap-4 border-y border-[#eceeea] py-4 dark:border-border">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8a8f89]">
                       Starts from
@@ -576,16 +543,16 @@ function HomePage() {
                     {matchingUniversities.map((university) => (
                       <span
                         key={university.slug}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#f7f7f4] shadow-sm"
+                        className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-[#f7f7f4] shadow-sm dark:border-card dark:bg-secondary"
                         title={university.shortName}
                       >
                         <UniversityLogo university={university} size="sm" />
                       </span>
                     ))}
                   </div>
-                  <span className="text-xs font-semibold text-[#6d726c]">
-                    {matchingUniversities.length > 0
-                      ? `${matchingUniversities.length}+ universities`
+                  <span className="text-xs font-semibold text-[#6d726c] dark:text-muted-foreground">
+                    {matchingOffers.length > 0
+                      ? `${matchingOffers.length} universities`
                       : "View universities"}
                   </span>
                 </div>
@@ -654,7 +621,7 @@ function HomePage() {
             <Button
               asChild
               variant="outline"
-              className="rounded-full border-[#ccd3ca] bg-white px-5 font-bold"
+              className="rounded-full border-[#ccd3ca] bg-white px-5 font-bold dark:border-border dark:bg-card"
             >
               <Link to="/universities">
                 View all universities
@@ -670,11 +637,11 @@ function HomePage() {
               key={university.slug}
               to="/universities/$universitySlug"
               params={{ universitySlug: university.slug }}
-              className="group flex min-h-44 flex-col items-center justify-center rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[#b6cde8] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.55)]"
+              className="group flex min-h-44 flex-col items-center justify-center rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[#b6cde8] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.55)] dark:border-border dark:bg-card"
             >
               <UniversityLogo university={university} size="lg" />
               <h3 className="mt-4 line-clamp-2 text-sm font-bold">{university.shortName}</h3>
-              <p className="mt-1 text-[11px] text-[#777c76]">
+              <p className="mt-1 text-[11px] text-[#777c76] dark:text-muted-foreground">
                 {university.programs.length} courses
               </p>
             </Link>
@@ -710,7 +677,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#eff4f8] py-20 lg:py-28">
+      <section className="bg-[#eff4f8] py-20 dark:bg-secondary/35 lg:py-28">
         <div className="container-page">
           <SectionIntro
             eyebrow="Cost advantage"
@@ -719,7 +686,7 @@ function HomePage() {
           />
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-[2rem] border border-[#dbe0db] bg-white p-7 md:p-9">
+            <div className="rounded-[2rem] border border-[#dbe0db] bg-white p-7 dark:border-border dark:bg-card md:p-9">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7e837d]">
@@ -815,7 +782,7 @@ function HomePage() {
                 key={program.slug}
                 to="/programs/$programSlug"
                 params={{ programSlug: program.slug }}
-                className="group flex min-h-40 flex-col justify-between rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-[#b9cee6] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.5)]"
+                className="group flex min-h-40 flex-col justify-between rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-[#b9cee6] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.5)] dark:border-border dark:bg-card"
               >
                 <div className="flex items-start justify-between">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf3ff] text-[#0d5cad]">
@@ -827,7 +794,9 @@ function HomePage() {
                   <h3 className="font-display text-xl font-extrabold tracking-[-0.04em]">
                     {program.code}
                   </h3>
-                  <p className="mt-1 line-clamp-1 text-xs text-[#777c76]">{program.name}</p>
+                  <p className="mt-1 line-clamp-1 text-xs text-[#777c76] dark:text-muted-foreground">
+                    {program.name}
+                  </p>
                   <p className="mt-3 text-xs font-semibold text-[#0d5cad]">
                     {program.specialisations.length} specialisations
                   </p>
@@ -910,33 +879,37 @@ function HomePage() {
 
       <section className="container-page py-20 lg:py-28">
         <SectionIntro
-          eyebrow="Career outcomes"
-          title="What can happen after graduation?"
-          description="Online education works best when program choice, university support and learner effort align."
+          eyebrow="Transparent coverage"
+          title="A catalog you can inspect, not a promise you must trust."
+          description="Every figure below is calculated from the university and program information currently available on this platform."
         />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {outcomeStats.map((stat) => (
-            <div key={stat.value} className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6">
+          {catalogStats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6 dark:border-border dark:bg-card"
+            >
               <stat.icon className="h-5 w-5 text-[#f47a20]" />
               <p className="mt-7 font-display text-4xl font-extrabold tracking-[-0.055em] text-[#0d5cad]">
                 {stat.value}
               </p>
-              <p className="mt-3 text-sm leading-6 text-[#686d67]">{stat.label}</p>
+              <p className="mt-3 text-sm font-semibold leading-6 text-[#686d67] dark:text-muted-foreground">
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-8 rounded-[1.5rem] border border-[#e0e4de] bg-white px-6 py-5">
-          <p className="text-center text-xs font-semibold leading-5 text-[#858a84]">
-            Career outcomes vary by learner profile, experience, program, market conditions and
-            individual effort. Figures should be replaced with your verified internal survey data
-            before publishing.
+        <div className="mt-8 rounded-[1.5rem] border border-[#e0e4de] bg-white px-6 py-5 dark:border-border dark:bg-card">
+          <p className="text-center text-xs font-semibold leading-5 text-[#858a84] dark:text-muted-foreground">
+            Catalog information can change by intake. Reconfirm entitlement, fees and admission
+            dates with the university before paying.
           </p>
         </div>
       </section>
 
-      <section className="bg-[#f2f5f1] py-20 lg:py-28">
+      <section className="bg-[#f2f5f1] py-20 dark:bg-secondary/35 lg:py-28">
         <div className="container-page">
           <SectionIntro
             eyebrow="Decision guides"
@@ -948,17 +921,17 @@ function HomePage() {
             {guides.map((guide, index) => (
               <article
                 key={guide.title}
-                className="group overflow-hidden rounded-[1.75rem] border border-[#dfe4dd] bg-white"
+                className="group overflow-hidden rounded-[1.75rem] border border-[#dfe4dd] bg-white dark:border-border dark:bg-card"
               >
                 <div
                   className={`relative h-52 p-6 ${
                     index === 0 ? "bg-[#dceaff]" : index === 1 ? "bg-[#ffe8d8]" : "bg-[#e5f5ec]"
                   }`}
                 >
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm dark:bg-card">
                     <guide.icon className="h-5 w-5 text-[#0d5cad]" />
                   </span>
-                  <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm backdrop-blur">
+                  <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-border dark:bg-card/90">
                     <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#f47a20]">
                       DekhoCampus guide
                     </p>
@@ -970,15 +943,17 @@ function HomePage() {
                   <h3 className="font-display text-xl font-bold tracking-[-0.035em]">
                     {guide.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-[#6c716b]">{guide.description}</p>
+                  <p className="mt-3 text-sm leading-6 text-[#6c716b] dark:text-muted-foreground">
+                    {guide.description}
+                  </p>
                   <Button
                     asChild
                     variant="outline"
                     className="mt-6 w-full rounded-full border-[#ccd3ca] font-bold"
                   >
-                    <Link to="/contact">
-                      <Download className="mr-2 h-4 w-4" />
-                      Get this guide
+                    <Link to={index === 0 ? "/methodology" : index === 1 ? "/compare" : "/contact"}>
+                      Open this guide
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </div>
@@ -1004,11 +979,11 @@ function HomePage() {
               <Sparkles className="h-6 w-6" />
             </div>
             <h2 className="mt-6 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] md:text-5xl">
-              Every semester you delay is time you do not get back.
+              Make your next degree decision with clarity.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/70">
-              One free counselling session can help you compare programs, verify university claims,
-              understand fees and complete the application correctly.
+              Compare programs, verify university claims, understand fees and ask for human help
+              only when you need it.
             </p>
 
             <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -1074,14 +1049,14 @@ function SectionIntro({
         </p>
         <h2
           className={`mt-3 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] md:text-5xl ${
-            dark ? "text-white" : "text-[#171a17]"
+            dark ? "text-white" : "text-[#171a17] dark:text-foreground"
           }`}
         >
           {title}
         </h2>
         <p
           className={`mt-4 max-w-2xl text-base leading-7 ${
-            dark ? "text-white/60" : "text-[#696e68]"
+            dark ? "text-white/60" : "text-[#696e68] dark:text-muted-foreground"
           }`}
         >
           {description}
