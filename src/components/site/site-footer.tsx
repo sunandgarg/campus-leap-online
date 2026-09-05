@@ -71,6 +71,11 @@ export function SiteFooter() {
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm text-ink-foreground/75">
             <li>
+              <Link to="/methodology" className="hover:text-gold">
+                How we evaluate
+              </Link>
+            </li>
+            <li>
               <a href="tel:+919999999999" className="hover:text-gold">
                 +91 99999 99999
               </a>

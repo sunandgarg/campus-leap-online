@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X, GraduationCap, Moon, Sun } from "lucide-react";
+import { Menu, X, GraduationCap, Moon, Sun, Search, GitCompareArrows } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { programCatalog } from "@/data/universities";
+import { useComparison } from "@/hooks/use-comparison";
 
 const navLinks = [
+  { to: "/search", label: "Discover" },
   { to: "/universities", label: "Universities" },
   { to: "/programs", label: "Programs" },
   { to: "/compare", label: "Compare" },
@@ -15,6 +17,7 @@ const navLinks = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
+  const comparison = useComparison();
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -58,6 +61,25 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            to="/search"
+            aria-label="Search courses and universities"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+          >
+            <Search className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/compare"
+            aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+          >
+            <GitCompareArrows className="h-4 w-4" />
+            {comparison.count > 0 ? (
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1768cc] px-1 text-[10px] font-extrabold text-white">
+                {comparison.count}
+              </span>
+            ) : null}
+          </Link>
           <a
             href="tel:+919999999999"
             className="text-sm font-semibold text-foreground hover:text-primary"
@@ -79,6 +101,18 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
+          <Link
+            to="/compare"
+            aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background"
+          >
+            <GitCompareArrows className="h-4 w-4" />
+            {comparison.count > 0 ? (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1768cc] px-1 text-[10px] font-extrabold text-white">
+                {comparison.count}
+              </span>
+            ) : null}
+          </Link>
           <button
             type="button"
             onClick={toggleTheme}

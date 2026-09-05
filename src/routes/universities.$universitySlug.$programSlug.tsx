@@ -75,23 +75,25 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
       <p className="mt-2 text-sm text-muted-foreground">Please refresh and try again.</p>
     </div>
   ),
-  notFoundComponent: () => {
-    const { universitySlug } = Route.useParams();
-    return (
-      <div className="container-page py-24 text-center">
-        <h1 className="font-display text-2xl font-bold">Program not offered</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          This university doesn't offer that program online.
-        </p>
-        <Button asChild className="mt-6 bg-ink text-ink-foreground hover:bg-ink-soft">
-          <Link to="/universities/$universitySlug" params={{ universitySlug }}>
-            See available programs
-          </Link>
-        </Button>
-      </div>
-    );
-  },
+  notFoundComponent: ProgramNotFound,
 });
+
+function ProgramNotFound() {
+  const { universitySlug } = Route.useParams();
+  return (
+    <div className="container-page py-24 text-center">
+      <h1 className="font-display text-2xl font-bold">Program not offered</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        This university doesn't offer that program online.
+      </p>
+      <Button asChild className="mt-6 bg-ink text-ink-foreground hover:bg-ink-soft">
+        <Link to="/universities/$universitySlug" params={{ universitySlug }}>
+          See available programs
+        </Link>
+      </Button>
+    </div>
+  );
+}
 
 function ProgramPage() {
   const { university: u, program: p, alternatives } = Route.useLoaderData() as ProgramPageData;
@@ -241,7 +243,7 @@ function ProgramPage() {
                   {[
                     ["Total program fee", formatINR(p.totalFee)],
                     ["Per semester", formatINR(p.perSemesterFee)],
-                    ["No-cost EMI (approx.)", `${formatINR(p.emiPerMonth)} / month`],
+                    ["Published EMI estimate", `${formatINR(p.emiPerMonth)} / month`],
                     ["Duration", `${p.durationYears} years · ${p.semesters} semesters`],
                     ["Exam mode", "Online proctored"],
                   ].map(([k, v], i) => (
@@ -341,7 +343,7 @@ function ProgramPage() {
                 <BadgeCheck className="h-4 w-4 text-success" /> Online proctored exams
               </li>
               <li className="flex items-center gap-2">
-                <BadgeCheck className="h-4 w-4 text-success" /> Placement assistance
+                <BadgeCheck className="h-4 w-4 text-success" /> Career-support details available
               </li>
               <li className="flex items-center gap-2">
                 <BadgeCheck className="h-4 w-4 text-success" /> Free counselling

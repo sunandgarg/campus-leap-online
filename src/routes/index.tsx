@@ -311,13 +311,13 @@ function HomePage() {
               guidance, transparent fees and human support when you need it.
             </p>
 
-            <form action="/universities" className="mt-7 max-w-2xl" role="search">
+            <form action="/search" className="mt-7 max-w-2xl" role="search">
               <div className="flex items-center gap-3 rounded-full border border-white bg-white p-1.5 pl-5 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0]">
                 <Search className="h-5 w-5 shrink-0 text-[#7d899b]" />
                 <input
                   name="q"
                   aria-label="Search universities or programs"
-                  placeholder="Search Universities, Programs or Ask AI..."
+                  placeholder="Search universities, programs or specialisations..."
                   className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#9ba5b4] sm:text-base"
                 />
                 <button
@@ -325,7 +325,7 @@ function HomePage() {
                   className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-[#ff762b] px-5 text-sm font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(255,118,43,0.8)] transition hover:bg-[#ed651c]"
                 >
                   <Send className="h-4 w-4" />
-                  <span className="hidden sm:inline">Ask AI</span>
+                  <span className="hidden sm:inline">Search</span>
                 </button>
               </div>
             </form>

@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Clock, Download, ShieldCheck, Share2 } from "lucide-react";
+import { Check, CheckCircle2, Clock, GitCompareArrows, ShieldCheck, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
 import type { University, UniversityProgram } from "@/data/universities";
+import { useComparison } from "@/hooks/use-comparison";
 import heroImage from "@/assets/program-hero.jpg";
 
 interface ProgramHeroProps {
@@ -13,14 +14,16 @@ interface ProgramHeroProps {
 }
 
 export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
+  const comparison = useComparison(p.slug);
+  const isCompared = comparison.universitySlugs.includes(u.slug);
   const words = p.name.split(" ");
   const head = words.slice(0, Math.ceil(words.length / 2)).join(" ");
   const tail = words.slice(Math.ceil(words.length / 2)).join(" ");
 
   const stats = [
-    { value: u.studentsEnrolled, label: "Learner community" },
-    { value: "100%", label: "Placement assistance" },
-    { value: `${u.placementPartners.length * 50}+`, label: "Hiring partners" },
+    { value: `NAAC ${u.naacGrade}`, label: "Accreditation listed" },
+    { value: `${u.approvals.length}`, label: "Recognition markers" },
+    { value: `${p.specialisations.length}`, label: "Specialisations" },
   ];
 
   function share() {
@@ -101,9 +104,25 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 className="rounded-xl bg-ink-foreground text-ink hover:bg-ink-foreground/90"
               >
                 <a href="#apply">
-                  Download Brochure <Download className="ml-2 h-4 w-4" />
+                  Get fee guidance <CheckCircle2 className="ml-2 h-4 w-4" />
                 </a>
               </Button>
+              <button
+                type="button"
+                onClick={() => comparison.toggleUniversity(p.slug, u.slug)}
+                className={`inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-extrabold transition ${
+                  isCompared
+                    ? "border-[#77d3ad] bg-[#e9fff5] text-[#126f4b]"
+                    : "border-ink-foreground/35 bg-ink-foreground/10 text-ink-foreground hover:bg-ink-foreground/15"
+                }`}
+              >
+                {isCompared ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <GitCompareArrows className="h-4 w-4" />
+                )}
+                {isCompared ? "Added to compare" : "Add to compare"}
+              </button>
               <button
                 type="button"
                 onClick={share}
@@ -151,13 +170,11 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               defaultUniversity={u.name}
               className="rounded-2xl border-0 text-card-foreground shadow-lift"
               title={`Future-Proof Your Career with an Online ${p.code} at ${u.shortName}`}
-              description="Free counselling, fee structure and EMI options shared instantly."
+              description="Request current fee, eligibility and admission guidance without any payment."
             />
-            <div className="mt-4 flex items-center gap-3 rounded-xl bg-ink-foreground/10 px-4 py-3">
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-ink-foreground/20">
-                <div className="h-full w-[91%] rounded-full bg-gold" />
-              </div>
-              <span className="text-xs font-bold">91% seats filled</span>
+            <div className="mt-4 flex items-start gap-3 rounded-xl bg-ink-foreground/10 px-4 py-3 text-xs leading-5 text-ink-foreground/70">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+              Final fees, entitlement and intake availability must be reconfirmed before payment.
             </div>
           </div>
         </div>

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/accordion";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { ProgramDecisionStudio } from "@/components/site/program-decision-studio";
+import { useComparison } from "@/hooks/use-comparison";
 import {
   formatINR,
   getProgramTemplate,
@@ -135,7 +136,8 @@ const admissionSteps = [
 
 function ProgramComparePage() {
   const { program: p, offers } = Route.useLoaderData() as ProgramComparePageData;
-  const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
+  const comparison = useComparison(p.slug);
+  const selectedUniversities = comparison.universitySlugs;
   const highestFee = Math.max(...offers.map(({ program }) => program.totalFee));
   const [feeCeiling, setFeeCeiling] = useState(highestFee);
   const [sortBy, setSortBy] = useState<"fee" | "emi" | "rating">("fee");
@@ -156,14 +158,6 @@ function ProgramComparePage() {
       if (sortBy === "emi") return a.program.emiPerMonth - b.program.emiPerMonth;
       return a.program.totalFee - b.program.totalFee;
     });
-
-  function toggleUniversity(slug: string) {
-    setSelectedUniversities((current) => {
-      if (current.includes(slug)) return current.filter((item) => item !== slug);
-      if (current.length >= 3) return current;
-      return [...current, slug];
-    });
-  }
 
   const faqs = [
     {
@@ -561,7 +555,7 @@ function ProgramComparePage() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => setSelectedUniversities([])}
+                  onClick={comparison.clearComparison}
                   className="text-xs font-bold text-muted-foreground hover:text-foreground"
                 >
                   Clear all
@@ -572,7 +566,7 @@ function ProgramComparePage() {
                   <div key={university.slug} className="relative p-5">
                     <button
                       type="button"
-                      onClick={() => toggleUniversity(university.slug)}
+                      onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
                       aria-label={`Remove ${university.shortName} from comparison`}
                       className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     >
@@ -733,7 +727,7 @@ function ProgramComparePage() {
                     selectedUniversities.length >= 3 &&
                     !selectedUniversities.includes(university.slug)
                   }
-                  onClick={() => toggleUniversity(university.slug)}
+                  onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
                   className={`mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
                     selectedUniversities.includes(university.slug)
                       ? "border-[#1768cc] bg-[#1768cc] text-white"
