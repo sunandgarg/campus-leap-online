@@ -20,10 +20,10 @@ function initialsOf(name: string) {
 }
 
 /**
- * University mark: renders the university's real brand logo (resolved from its
- * official domain) with an initials monogram fallback tinted with the
- * university's accent colour. Fully data-driven — adding a university to
- * universities.ts automatically gets a logo tile.
+ * University mark: renders a reviewed logo URL from the catalogue, with an
+ * initials monogram fallback. We deliberately do not request third-party
+ * favicon services: that leaks a visitor request, adds network work to every
+ * card and often returns a low-quality or unrelated mark.
  */
 export function UniversityLogo({
   university,
@@ -43,13 +43,13 @@ export function UniversityLogo({
     className,
   );
 
-  if (failed) {
+  if (failed || !university.logoUrl) {
     return (
       <span
         aria-hidden="true"
         className={cn(tile, s.text)}
         style={{
-          color: university.accentColor,
+          color: `color-mix(in oklab, ${university.accentColor} 55%, #101923)`,
           backgroundColor: `color-mix(in oklab, ${university.accentColor} 12%, white)`,
           borderColor: `color-mix(in oklab, ${university.accentColor} 25%, transparent)`,
         }}
@@ -65,12 +65,13 @@ export function UniversityLogo({
       style={{ borderColor: `color-mix(in oklab, ${university.accentColor} 20%, transparent)` }}
     >
       <img
-        src={`https://www.google.com/s2/favicons?domain=${university.domain}&sz=${s.px}`}
+        src={university.logoUrl}
         alt={`${university.name} logo`}
         width={s.px}
         height={s.px}
         loading="lazy"
         decoding="async"
+        referrerPolicy="no-referrer"
         className="h-[70%] w-[70%] object-contain"
         onError={() => setFailed(true)}
       />

@@ -12,21 +12,30 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccessibilityRouteImport } from './routes/accessibility'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FinderRouteImport } from './routes/finder'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
+import { Route as SpecialisationsIndexRouteImport } from './routes/specialisations.index'
+import { Route as SpecialisationsSpecialisationSlugRouteImport } from './routes/specialisations.$specialisationSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminClaimsRouteImport } from './routes/_authenticated/admin.claims'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
+import { Route as AuthenticatedAdminOfferingSpecialisationsRouteImport } from './routes/_authenticated/admin.offering-specialisations'
 import { Route as AuthenticatedAdminOfferingsRouteImport } from './routes/_authenticated/admin.offerings'
 import { Route as AuthenticatedAdminProgramsRouteImport } from './routes/_authenticated/admin.programs'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
+import { Route as AuthenticatedAdminSpecialisationsRouteImport } from './routes/_authenticated/admin.specialisations'
 import { Route as AuthenticatedAdminUniversitiesRouteImport } from './routes/_authenticated/admin.universities'
 import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
 import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
@@ -45,6 +54,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccessibilityRoute = AccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -60,9 +74,19 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FinderRoute = FinderRouteImport.update({
+  id: '/finder',
+  path: '/finder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -73,6 +97,11 @@ const SearchRoute = SearchRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -90,6 +119,17 @@ const ProgramsProgramSlugRoute = ProgramsProgramSlugRouteImport.update({
   path: '/programs/$programSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SpecialisationsIndexRoute = SpecialisationsIndexRouteImport.update({
+  id: '/specialisations/',
+  path: '/specialisations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpecialisationsSpecialisationSlugRoute =
+  SpecialisationsSpecialisationSlugRouteImport.update({
+    id: '/specialisations/$specialisationSlug',
+    path: '/specialisations/$specialisationSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const UniversitiesIndexRoute = UniversitiesIndexRouteImport.update({
   id: '/universities/',
   path: '/universities/',
@@ -100,11 +140,23 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminClaimsRoute =
+  AuthenticatedAdminClaimsRouteImport.update({
+    id: '/claims',
+    path: '/claims',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminOfferingSpecialisationsRoute =
+  AuthenticatedAdminOfferingSpecialisationsRouteImport.update({
+    id: '/offering-specialisations',
+    path: '/offering-specialisations',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminOfferingsRoute =
   AuthenticatedAdminOfferingsRouteImport.update({
     id: '/offerings',
@@ -121,6 +173,12 @@ const AuthenticatedAdminSettingsRoute =
   AuthenticatedAdminSettingsRouteImport.update({
     id: '/settings',
     path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSpecialisationsRoute =
+  AuthenticatedAdminSpecialisationsRouteImport.update({
+    id: '/specialisations',
+    path: '/specialisations',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminUniversitiesRoute =
@@ -145,20 +203,29 @@ const UniversitiesUniversitySlugProgramSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
   '/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
   '/admin/programs': typeof AuthenticatedAdminProgramsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -167,19 +234,28 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs': typeof ProgramsIndexRoute
+  '/specialisations': typeof SpecialisationsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
+  '/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
   '/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
   '/admin/programs': typeof AuthenticatedAdminProgramsRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -190,20 +266,29 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/accessibility': typeof AccessibilityRoute
   '/auth': typeof AuthRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
+  '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/_authenticated/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/_authenticated/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
   '/_authenticated/admin/offerings': typeof AuthenticatedAdminOfferingsRoute
   '/_authenticated/admin/programs': typeof AuthenticatedAdminProgramsRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/_authenticated/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -214,20 +299,29 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/auth'
     | '/compare'
     | '/contact'
+    | '/finder'
     | '/methodology'
+    | '/privacy'
     | '/search'
     | '/sitemap.xml'
+    | '/terms'
     | '/admin'
     | '/programs/$programSlug'
+    | '/specialisations/$specialisationSlug'
     | '/programs/'
+    | '/specialisations/'
     | '/universities/'
+    | '/admin/claims'
     | '/admin/leads'
+    | '/admin/offering-specialisations'
     | '/admin/offerings'
     | '/admin/programs'
     | '/admin/settings'
+    | '/admin/specialisations'
     | '/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/admin/'
@@ -236,19 +330,28 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/accessibility'
     | '/auth'
     | '/compare'
     | '/contact'
+    | '/finder'
     | '/methodology'
+    | '/privacy'
     | '/search'
     | '/sitemap.xml'
+    | '/terms'
     | '/programs/$programSlug'
+    | '/specialisations/$specialisationSlug'
     | '/programs'
+    | '/specialisations'
     | '/universities'
+    | '/admin/claims'
     | '/admin/leads'
+    | '/admin/offering-specialisations'
     | '/admin/offerings'
     | '/admin/programs'
     | '/admin/settings'
+    | '/admin/specialisations'
     | '/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/admin'
@@ -258,20 +361,29 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/about'
+    | '/accessibility'
     | '/auth'
     | '/compare'
     | '/contact'
+    | '/finder'
     | '/methodology'
+    | '/privacy'
     | '/search'
     | '/sitemap.xml'
+    | '/terms'
     | '/_authenticated/admin'
     | '/programs/$programSlug'
+    | '/specialisations/$specialisationSlug'
     | '/programs/'
+    | '/specialisations/'
     | '/universities/'
+    | '/_authenticated/admin/claims'
     | '/_authenticated/admin/leads'
+    | '/_authenticated/admin/offering-specialisations'
     | '/_authenticated/admin/offerings'
     | '/_authenticated/admin/programs'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/specialisations'
     | '/_authenticated/admin/universities'
     | '/universities/$universitySlug/$programSlug'
     | '/_authenticated/admin/'
@@ -282,14 +394,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AccessibilityRoute: typeof AccessibilityRoute
   AuthRoute: typeof AuthRoute
   CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
+  FinderRoute: typeof FinderRoute
   MethodologyRoute: typeof MethodologyRoute
+  PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
+  SpecialisationsSpecialisationSlugRoute: typeof SpecialisationsSpecialisationSlugRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  SpecialisationsIndexRoute: typeof SpecialisationsIndexRoute
   UniversitiesIndexRoute: typeof UniversitiesIndexRoute
   UniversitiesUniversitySlugProgramSlugRoute: typeof UniversitiesUniversitySlugProgramSlugRoute
   UniversitiesUniversitySlugIndexRoute: typeof UniversitiesUniversitySlugIndexRoute
@@ -318,6 +436,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/accessibility': {
+      id: '/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof AccessibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -339,11 +464,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/finder': {
+      id: '/finder'
+      path: '/finder'
+      fullPath: '/finder'
+      preLoaderRoute: typeof FinderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/methodology': {
       id: '/methodology'
       path: '/methodology'
       fullPath: '/methodology'
       preLoaderRoute: typeof MethodologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -358,6 +497,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -381,6 +527,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsProgramSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/specialisations/': {
+      id: '/specialisations/'
+      path: '/specialisations'
+      fullPath: '/specialisations/'
+      preLoaderRoute: typeof SpecialisationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/specialisations/$specialisationSlug': {
+      id: '/specialisations/$specialisationSlug'
+      path: '/specialisations/$specialisationSlug'
+      fullPath: '/specialisations/$specialisationSlug'
+      preLoaderRoute: typeof SpecialisationsSpecialisationSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/universities/': {
       id: '/universities/'
       path: '/universities'
@@ -395,11 +555,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/claims': {
+      id: '/_authenticated/admin/claims'
+      path: '/claims'
+      fullPath: '/admin/claims'
+      preLoaderRoute: typeof AuthenticatedAdminClaimsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/leads': {
       id: '/_authenticated/admin/leads'
       path: '/leads'
       fullPath: '/admin/leads'
       preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/offering-specialisations': {
+      id: '/_authenticated/admin/offering-specialisations'
+      path: '/offering-specialisations'
+      fullPath: '/admin/offering-specialisations'
+      preLoaderRoute: typeof AuthenticatedAdminOfferingSpecialisationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/offerings': {
@@ -421,6 +595,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/specialisations': {
+      id: '/_authenticated/admin/specialisations'
+      path: '/specialisations'
+      fullPath: '/admin/specialisations'
+      preLoaderRoute: typeof AuthenticatedAdminSpecialisationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/universities': {
@@ -448,19 +629,27 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminClaimsRoute: typeof AuthenticatedAdminClaimsRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
+  AuthenticatedAdminOfferingSpecialisationsRoute: typeof AuthenticatedAdminOfferingSpecialisationsRoute
   AuthenticatedAdminOfferingsRoute: typeof AuthenticatedAdminOfferingsRoute
   AuthenticatedAdminProgramsRoute: typeof AuthenticatedAdminProgramsRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSpecialisationsRoute: typeof AuthenticatedAdminSpecialisationsRoute
   AuthenticatedAdminUniversitiesRoute: typeof AuthenticatedAdminUniversitiesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminClaimsRoute: AuthenticatedAdminClaimsRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
+  AuthenticatedAdminOfferingSpecialisationsRoute:
+    AuthenticatedAdminOfferingSpecialisationsRoute,
   AuthenticatedAdminOfferingsRoute: AuthenticatedAdminOfferingsRoute,
   AuthenticatedAdminProgramsRoute: AuthenticatedAdminProgramsRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSpecialisationsRoute:
+    AuthenticatedAdminSpecialisationsRoute,
   AuthenticatedAdminUniversitiesRoute: AuthenticatedAdminUniversitiesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
@@ -483,14 +672,21 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AccessibilityRoute: AccessibilityRoute,
   AuthRoute: AuthRoute,
   CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
+  FinderRoute: FinderRoute,
   MethodologyRoute: MethodologyRoute,
+  PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
+  SpecialisationsSpecialisationSlugRoute:
+    SpecialisationsSpecialisationSlugRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  SpecialisationsIndexRoute: SpecialisationsIndexRoute,
   UniversitiesIndexRoute: UniversitiesIndexRoute,
   UniversitiesUniversitySlugProgramSlugRoute:
     UniversitiesUniversitySlugProgramSlugRoute,

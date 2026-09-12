@@ -11,13 +11,13 @@ const fields: FieldDef[] = [
     label: "Setting key",
     type: "text",
     required: true,
-    help: "brand, announcement or home_hero",
+    help: "Only the announcement key is rendered by this release.",
   },
   {
     name: "value",
     label: "Value (JSON)",
     type: "json",
-    help: 'e.g. {"enabled":true,"text":"Admissions open","cta":"Talk to us","href":"/contact"}',
+    help: 'e.g. {"enabled":true,"text":"Use the UGC-DEB checklist before enrolling","cta":"View checklist","href":"/methodology#admission-safety"}',
     defaultValue: {},
   },
 ];
@@ -27,7 +27,7 @@ function AdminSettings() {
     <EntityManager
       table="site_settings"
       title="Site settings"
-      description="Brand details, the announcement bar and homepage hero copy used across the site."
+      description="Structured configuration for the announcement bar. Only the announcement key is publicly readable; unsupported keys remain administrator-only and are not rendered."
       fields={fields}
       orderBy="key"
       idColumn="key"

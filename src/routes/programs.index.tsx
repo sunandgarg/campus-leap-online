@@ -16,6 +16,7 @@ import {
   formatINR,
   programCatalog,
   universitiesOfferingProgram,
+  verifiedUniversitiesOfferingProgram,
   type ProgramLevel,
 } from "@/data/universities";
 
@@ -26,13 +27,13 @@ export const Route = createFileRoute("/programs/")({
       {
         name: "description",
         content:
-          "Explore every online degree program available in India with duration, specialisations, eligibility and the universities that offer it.",
+          "Explore online degree category guides with typical duration, pathway themes and clearly separated university source records.",
       },
       { property: "og:title", content: "Online Degree Programs in India" },
       {
         property: "og:description",
         content:
-          "Compare online MBA, BBA, MCA, BCA, M.Com and PG diploma programs across UGC-entitled universities.",
+          "Browse online degree category guides and clearly labelled university catalogue records, with exact fees shown only when sourced.",
       },
     ],
   }),
@@ -71,8 +72,8 @@ function ProgramsPage() {
             Start with the course. Then compare every university.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
-            Explore eligibility, syllabus, specialisations, career direction and transparent fees
-            before choosing where to enrol.
+            Explore category-level eligibility, curriculum themes, career direction and clearly
+            labelled fee status before choosing where to enrol.
           </p>
         </div>
       </section>
@@ -87,7 +88,7 @@ function ProgramsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search course, specialisation or career"
                 aria-label="Search online courses"
-                className="h-12 w-full rounded-xl border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#1768cc]"
+                className="h-12 w-full rounded-xl border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
@@ -96,6 +97,7 @@ function ProgramsPage() {
                   <button
                     key={item}
                     type="button"
+                    aria-pressed={level === item}
                     onClick={() => setLevel(item)}
                     className={`h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition ${
                       level === item
@@ -112,7 +114,12 @@ function ProgramsPage() {
         </div>
 
         <div className="mt-7 flex items-center justify-between gap-4">
-          <p className="text-sm font-bold text-muted-foreground">
+          <p
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="text-sm font-bold text-muted-foreground"
+          >
             Showing {programs.length} of {programCatalog.length} courses
           </p>
           <Link
@@ -127,8 +134,14 @@ function ProgramsPage() {
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
-              const lowest = offers[0]?.program.totalFee ?? 0;
-              const lowestEmi = Math.min(...offers.map(({ program: offer }) => offer.emiPerMonth));
+              const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
+              const lowest = verifiedOffers[0]?.program.totalFee ?? null;
+              const monthlyOffers = verifiedOffers.filter(
+                ({ program: offer }) => offer.emiPerMonthVerified,
+              );
+              const lowestEmi = monthlyOffers.length
+                ? Math.min(...monthlyOffers.map(({ program: offer }) => offer.emiPerMonth))
+                : null;
               return (
                 <article
                   key={program.slug}
@@ -145,7 +158,7 @@ function ProgramsPage() {
                             {program.durationYears} years
                           </span>
                         </div>
-                        <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.15em] text-[#e96e22]">
+                        <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.15em] text-[#a94300] dark:text-[#ff9a5b]">
                           Online {program.code}
                         </p>
                         <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em]">
@@ -164,7 +177,7 @@ function ProgramsPage() {
                       <div className="px-2">
                         <p className="font-display text-base font-extrabold">{offers.length}</p>
                         <p className="mt-1 text-[10px] font-bold text-muted-foreground">
-                          Universities
+                          Catalogue records
                         </p>
                       </div>
                       <div className="px-2">
@@ -172,7 +185,7 @@ function ProgramsPage() {
                           {program.specialisations.length}
                         </p>
                         <p className="mt-1 text-[10px] font-bold text-muted-foreground">
-                          Specialisations
+                          Pathway themes
                         </p>
                       </div>
                       <div className="px-2">
@@ -187,19 +200,21 @@ function ProgramsPage() {
                   <div className="grid grid-cols-2 border-y border-border bg-background">
                     <div className="p-4 sm:px-6">
                       <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                        Total fee from
+                        Sourced fee from
                       </p>
                       <p className="mt-1 font-display text-lg font-extrabold">
-                        {formatINR(lowest)}
+                        {lowest !== null ? formatINR(lowest) : "Confirm current fee"}
                       </p>
                     </div>
                     <div className="border-l border-border p-4 sm:px-6">
                       <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                        EMI from
+                        Published monthly amount from
                       </p>
                       <p className="mt-1 font-display text-lg font-extrabold text-[#1768cc] dark:text-[#78b9ff]">
-                        {formatINR(lowestEmi)}
-                        <span className="text-[10px] text-muted-foreground">/mo</span>
+                        {lowestEmi !== null ? formatINR(lowestEmi) : "Not mapped"}
+                        {lowestEmi !== null ? (
+                          <span className="text-[10px] text-muted-foreground">/mo</span>
+                        ) : null}
                       </p>
                     </div>
                   </div>
@@ -221,7 +236,7 @@ function ProgramsPage() {
                       className="rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
                     >
                       <Link to="/programs/$programSlug" params={{ programSlug: program.slug }}>
-                        Explore course <ArrowRight className="ml-2 h-4 w-4" />
+                        View course details <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
                   </div>

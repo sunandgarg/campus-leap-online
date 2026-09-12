@@ -16,7 +16,6 @@ import {
   Medal,
   ShieldCheck,
   Sparkles,
-  Star,
   Target,
   WalletCards,
   X,
@@ -31,9 +30,13 @@ import {
 import { UniversityLogo } from "@/components/site/university-logo";
 import { ProgramDecisionStudio } from "@/components/site/program-decision-studio";
 import { useComparison } from "@/hooks/use-comparison";
+import { slugifySpecialisation } from "@/data/specialisations";
 import {
   formatINR,
+  getProgramApprovalClaims,
   getProgramTemplate,
+  isComparableProgramOffer,
+  isVerifiedProgramOffer,
   universitiesOfferingProgram,
   type ProgramTemplate,
   type University,
@@ -61,8 +64,12 @@ export const Route = createFileRoute("/programs/$programSlug")({
       };
     }
     const p = loaderData.program;
-    const title = `${p.name} (${p.code}) Online — Fees, Syllabus & Best Universities`;
-    const description = `Compare ${loaderData.offers.length} UGC-entitled universities offering an online ${p.code}. Fees from ${formatINR(loaderData.offers[0]?.program.totalFee ?? 0)}, ${p.durationYears}-year duration, ${p.specialisations.length} specialisations.`;
+    const comparableOffers = loaderData.offers.filter(isComparableProgramOffer);
+    const discoveryCount = loaderData.offers.filter(
+      (offer) => !isComparableProgramOffer(offer),
+    ).length;
+    const title = `${p.name} (${p.code}) Online — Course Guide & University Records`;
+    const description = `Explore an online ${p.code} category guide with ${comparableOffers.length} labelled comparison profiles and ${discoveryCount} catalogue records excluded from ranking. Verify every intake-level detail before applying.`;
     return {
       meta: [
         { title },
@@ -108,13 +115,15 @@ const learningFeatures = [
   },
   {
     title: "Industry-aligned curriculum",
-    description: "Build practical knowledge through current subjects, projects and case studies.",
+    description:
+      "Check whether the syllabus includes practical subjects, projects and case studies.",
     icon: BookOpenCheck,
-    color: "bg-[#fff0e6] text-[#e96e22]",
+    color: "bg-[#fff0e6] text-[#a94300]",
   },
   {
-    title: "Recognised universities",
-    description: "Compare only UGC-entitled university options with clear accreditation details.",
+    title: "Recognition checks first",
+    description:
+      "Use UGC-DEB and the official prospectus to verify the exact intake before paying.",
     icon: ShieldCheck,
     color: "bg-[#eafaf3] text-[#16865b]",
   },
@@ -129,40 +138,60 @@ const learningFeatures = [
 const admissionSteps = [
   ["01", "Shortlist universities", "Compare recognition, fees and learning support."],
   ["02", "Check eligibility", "Confirm your qualification and document requirements."],
-  ["03", "Complete application", "Submit your details with expert application support."],
-  ["04", "Pay securely", "Select full payment, semester fee or an eligible EMI plan."],
+  [
+    "03",
+    "Use the official portal",
+    "Submit documents only through the university's official route.",
+  ],
+  ["04", "Verify before payment", "Confirm the written total fee, refund policy and recipient."],
   ["05", "Start learning", "Receive enrolment details and access your digital campus."],
 ];
 
 function ProgramComparePage() {
-  const { program: p, offers } = Route.useLoaderData() as ProgramComparePageData;
+  const data = Route.useLoaderData() as ProgramComparePageData;
+
+  return <ProgramComparePageContent key={data.program.slug} data={data} />;
+}
+
+function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
+  const { program: p, offers } = data;
+  const comparableOffers = offers.filter(isComparableProgramOffer);
+  const verifiedOffers = offers.filter(isVerifiedProgramOffer);
+  const discoveryOffers = offers.filter((offer) => !isComparableProgramOffer(offer));
   const comparison = useComparison(p.slug);
   const selectedUniversities = comparison.universitySlugs;
-  const highestFee = Math.max(...offers.map(({ program }) => program.totalFee));
+  const highestFee = comparableOffers.length
+    ? Math.max(...comparableOffers.map(({ program }) => program.totalFee))
+    : 0;
   const [feeCeiling, setFeeCeiling] = useState(highestFee);
-  const [sortBy, setSortBy] = useState<"fee" | "emi" | "rating">("fee");
-  const startingFee = Math.min(...offers.map(({ program }) => program.totalFee));
-  const startingEmi = Math.min(...offers.map(({ program }) => program.emiPerMonth));
-  const averageRating = offers.length
-    ? (offers.reduce((sum, { university }) => sum + university.rating, 0) / offers.length).toFixed(
-        1,
-      )
-    : "—";
-  const selectedOffers = offers.filter(({ university }) =>
+  const [sortBy, setSortBy] = useState<"fee" | "emi">("fee");
+  const [showAllDiscovery, setShowAllDiscovery] = useState(false);
+  const monthlyComparisonAmount = (program: UniversityProgram) =>
+    program.emiPerMonthVerified
+      ? program.emiPerMonth
+      : Math.round(program.totalFee / Math.max(1, program.durationYears * 12));
+  const startingFee = comparableOffers.length
+    ? Math.min(...comparableOffers.map(({ program }) => program.totalFee))
+    : 0;
+  const startingEmi = comparableOffers.length
+    ? Math.min(...comparableOffers.map(({ program }) => monthlyComparisonAmount(program)))
+    : 0;
+  const selectedOffers = comparableOffers.filter(({ university }) =>
     selectedUniversities.includes(university.slug),
   );
-  const displayedOffers = [...offers]
+  const displayedOffers = [...comparableOffers]
     .filter(({ program }) => program.totalFee <= feeCeiling)
     .sort((a, b) => {
-      if (sortBy === "rating") return b.university.rating - a.university.rating;
-      if (sortBy === "emi") return a.program.emiPerMonth - b.program.emiPerMonth;
+      if (sortBy === "emi") {
+        return monthlyComparisonAmount(a.program) - monthlyComparisonAmount(b.program);
+      }
       return a.program.totalFee - b.program.totalFee;
     });
 
   const faqs = [
     {
       question: `Is an online ${p.code} degree valid?`,
-      answer: `The universities listed here offer UGC-entitled online programs. Always verify the university and program entitlement for your exact admission session before enrolling.`,
+      answer: `Validity depends on the exact university, program, mode and admission session. Use the current UGC-DEB records and the official university prospectus before enrolling.`,
     },
     {
       question: `Who should choose an online ${p.code}?`,
@@ -175,7 +204,9 @@ function ProgramComparePage() {
     },
     {
       question: "Can I pay the program fee in instalments?",
-      answer: `Yes, several listed universities provide semester-wise payment or EMI options. Current plans for this program start around ${formatINR(startingEmi)} per month, subject to university and lender terms.`,
+      answer: comparableOffers.length
+        ? `Some labelled profiles include arithmetic payment estimates from ${formatINR(startingEmi)} per month. Confirm the current university and lender terms in writing.`
+        : "Payment plans have not been reviewed for the catalogue records shown here. Ask the university for the current written fee and financing terms.",
     },
   ];
 
@@ -203,20 +234,22 @@ function ProgramComparePage() {
             <Link to="/" className="transition hover:text-foreground">
               Home
             </Link>
-            <ChevronRight className="h-3 w-3" />
+            <ChevronRight aria-hidden="true" className="h-3 w-3" />
             <Link to="/programs" className="transition hover:text-foreground">
               Programs
             </Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="font-semibold text-foreground">{p.code}</span>
+            <ChevronRight aria-hidden="true" className="h-3 w-3" />
+            <span aria-current="page" className="font-semibold text-foreground">
+              {p.code}
+            </span>
           </nav>
 
-          <div className="mt-9 grid gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center xl:gap-20">
-            <div className="max-w-3xl py-2 lg:py-8">
+          <div className="mt-9 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center xl:gap-20">
+            <div className="min-w-0 max-w-3xl py-2 lg:py-8">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-2 rounded-full border border-[#b9dfca] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#187a55] shadow-sm backdrop-blur dark:border-[#275e4a] dark:bg-[#113329]/80 dark:text-[#76dcb1]">
                   <BadgeCheck className="h-4 w-4" />
-                  UGC-entitled options only
+                  Category guide · intake verification required
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/75 px-3.5 py-2 text-[11px] font-bold text-muted-foreground backdrop-blur">
                   Updated September 2026
@@ -225,23 +258,24 @@ function ProgramComparePage() {
 
               <h1 className="mt-7 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.02] tracking-[-0.06em] text-foreground sm:text-5xl lg:text-[4.25rem]">
                 Online {p.name}{" "}
-                <span className="relative inline-block text-[#e96e22] dark:text-[#ff9a5b]">
+                <span className="relative inline-block text-[#a94300] dark:text-[#ff9a5b]">
                   ({p.code})
                   <span className="absolute -bottom-1 left-0 h-1 w-full -rotate-1 rounded-full bg-[#f47a20]/35" />
                 </span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+                <span className="font-semibold text-foreground">Typical category overview: </span>
                 {p.overview}
               </p>
 
               <div className="mt-7 flex flex-wrap gap-2.5">
                 <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
-                  <Clock3 className="h-4 w-4 text-[#e96e22] dark:text-[#ff9a5b]" />
+                  <Clock3 className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.durationYears} years · {p.semesters} semesters
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
-                  <GraduationCap className="h-4 w-4 text-[#e96e22] dark:text-[#ff9a5b]" />
+                  <GraduationCap className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.level} degree
                 </span>
               </div>
@@ -250,10 +284,10 @@ function ProgramComparePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-full bg-[#f47a20] px-6 font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(244,122,32,0.72)] hover:bg-[#dd6818]"
+                  className="rounded-xl bg-[#a94300] font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(169,67,0,0.62)] hover:bg-[#8f3700]"
                 >
                   <Link to="/contact">
-                    Get my free shortlist
+                    Get free counselling
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -261,7 +295,7 @@ function ProgramComparePage() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-full border-border bg-background/65 px-6 font-bold text-foreground hover:bg-secondary"
+                  className="rounded-xl border-border bg-background/65 font-bold text-foreground hover:bg-secondary"
                 >
                   <a href="#universities">Compare universities</a>
                 </Button>
@@ -269,10 +303,16 @@ function ProgramComparePage() {
 
               <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-x-4 gap-y-6 border-t border-border pt-7 sm:grid-cols-4">
                 {[
-                  [offers.length.toString(), "University options"],
-                  [formatINR(startingFee), "Fees from"],
-                  [formatINR(startingEmi), "Monthly EMI from"],
-                  [averageRating, "Avg. rating"],
+                  [comparableOffers.length.toString(), "Source-backed offerings"],
+                  [discoveryOffers.length.toString(), "Unranked catalogue records"],
+                  [
+                    comparableOffers.length ? formatINR(startingFee) : "Not mapped",
+                    "Fee guide from",
+                  ],
+                  [
+                    comparableOffers.length ? formatINR(startingEmi) : "Not mapped",
+                    "Monthly split from",
+                  ],
                 ].map(([value, label]) => (
                   <div key={label}>
                     <dt className="font-display text-xl font-extrabold text-foreground">{value}</dt>
@@ -284,7 +324,7 @@ function ProgramComparePage() {
               </dl>
             </div>
 
-            <aside className="relative mx-auto w-full max-w-[440px]">
+            <aside className="relative mx-auto min-w-0 w-full max-w-[440px]">
               <div
                 className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#ffd2b1]/70 via-transparent to-[#ffe3a9]/60 blur-xl dark:from-[#f47a20]/20 dark:to-[#bd7b18]/20"
                 aria-hidden="true"
@@ -292,14 +332,14 @@ function ProgramComparePage() {
               <div className="relative rounded-[1.75rem] border border-white/80 bg-white/90 p-6 shadow-[0_28px_80px_-36px_rgba(25,67,116,0.48)] backdrop-blur-xl dark:border-white/10 dark:bg-[#0d2134]/92 dark:shadow-[0_28px_80px_-32px_rgba(0,0,0,0.75)] sm:p-7">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#e96e22] dark:text-[#ff9a5b]">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
                       Your decision desk
                     </p>
                     <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
                       Compare before you commit.
                     </h2>
                   </div>
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#e96e22] dark:bg-[#3a2518] dark:text-[#ff9a5b]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ff9a5b]">
                     <ShieldCheck className="h-5 w-5" />
                   </span>
                 </div>
@@ -311,8 +351,8 @@ function ProgramComparePage() {
 
                 <div className="mt-6 space-y-2.5">
                   {[
-                    `${offers.length} verified university options compared`,
-                    "Transparent fees and EMI in one place",
+                    `${comparableOffers.length} labelled comparison profiles`,
+                    `${discoveryOffers.length} unranked catalogue records kept separate`,
                     "Free human guidance when you need it",
                   ].map((item) => (
                     <div
@@ -330,25 +370,25 @@ function ProgramComparePage() {
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <div className="rounded-2xl bg-[#f1f6fc] p-4 dark:bg-[#102a42]">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Program fee from
+                      Catalogue fee guide
                     </p>
                     <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {formatINR(startingFee)}
+                      {comparableOffers.length ? formatINR(startingFee) : "Not mapped"}
                     </p>
                   </div>
                   <div className="rounded-2xl bg-[#fff5df] p-4 dark:bg-[#342919]">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Monthly EMI from
+                      Arithmetic monthly split
                     </p>
                     <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {formatINR(startingEmi)}
+                      {comparableOffers.length ? formatINR(startingEmi) : "Not mapped"}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between gap-4 border-t border-border pt-5">
                   <div className="flex -space-x-2">
-                    {offers.slice(0, 3).map(({ university }) => (
+                    {comparableOffers.slice(0, 3).map(({ university }) => (
                       <span
                         key={university.slug}
                         className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-card bg-background shadow-sm"
@@ -360,17 +400,17 @@ function ProgramComparePage() {
                   <p className="text-right text-[10px] font-semibold leading-4 text-muted-foreground">
                     No payment required
                     <br />
-                    Your information stays private
+                    Used only for your requested response
                   </p>
                 </div>
 
                 <Button
                   asChild
                   size="lg"
-                  className="mt-5 h-12 w-full rounded-full bg-[#f47a20] font-extrabold text-white shadow-[0_14px_28px_-18px_rgba(244,122,32,0.8)] hover:bg-[#dd6818]"
+                  className="mt-5 w-full rounded-xl bg-[#a94300] font-extrabold text-white shadow-[0_14px_28px_-18px_rgba(169,67,0,0.72)] hover:bg-[#8f3700]"
                 >
                   <Link to="/contact">
-                    Build my shortlist <ArrowRight className="ml-2 h-4 w-4" />
+                    Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </div>
@@ -388,7 +428,7 @@ function ProgramComparePage() {
             <a
               key={item.href}
               href={item.href}
-              className="shrink-0 rounded-lg px-4 py-2 text-xs font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+              className="inline-flex min-h-10 shrink-0 items-center rounded-lg px-4 py-2 text-xs font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
             >
               {item.label}
             </a>
@@ -406,8 +446,8 @@ function ProgramComparePage() {
             },
             {
               icon: IndianRupee,
-              title: "Fees shown upfront",
-              text: "See total program fee and monthly EMI together.",
+              title: "Fee provenance upfront",
+              text: "See sourced total fees and clearly labelled arithmetic monthly splits.",
             },
             {
               icon: BadgeCheck,
@@ -439,7 +479,7 @@ function ProgramComparePage() {
           <SectionHeading
             eyebrow="Program overview"
             title={`Build a future-ready career with an online ${p.code}`}
-            description={`A flexible ${p.durationYears}-year program designed to help you build recognised academic credentials and practical, career-relevant knowledge.`}
+            description={`A category-level ${p.durationYears}-year format guide for comparing curriculum, workload and career directions. Exact institutional delivery requires a current source check.`}
           />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {learningFeatures.map((feature) => (
@@ -519,18 +559,40 @@ function ProgramComparePage() {
         </div>
       </section>
 
-      <ProgramDecisionStudio program={p} offers={offers} />
+      {verifiedOffers.length ? (
+        <ProgramDecisionStudio program={p} offers={verifiedOffers} />
+      ) : (
+        <section
+          id="decision-tools"
+          className="scroll-mt-32 border-b border-border bg-background py-16"
+        >
+          <div className="container-page">
+            <div className="rounded-[1.75rem] border border-dashed border-border bg-card p-8">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
+                Decision tools paused for this course
+              </p>
+              <h2 className="mt-3 font-display text-2xl font-extrabold">
+                Source-backed fee inputs are not available yet
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                Editorial and directory records remain useful for discovery, but they do not enter
+                this planner until current offering and total-fee evidence is mapped.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section id="universities" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               eyebrow="Compare your options"
-              title={`Universities offering online ${p.code}`}
-              description="Compare recognition, total fees, monthly EMI and learner ratings before you shortlist."
+              title={`Source-backed ${p.code} comparison profiles`}
+              description="Compare cited total fees and recognition evidence. Editorial, directory and non-current records stay outside rankings."
             />
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-              <Sparkles className="h-4 w-4" /> {displayedOffers.length} matching options
+              <Sparkles className="h-4 w-4" /> {displayedOffers.length} comparable options
             </span>
           </div>
 
@@ -571,7 +633,7 @@ function ProgramComparePage() {
                       type="button"
                       onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
                       aria-label={`Remove ${university.shortName} from comparison`}
-                      className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                      className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -580,7 +642,7 @@ function ProgramComparePage() {
                       <div>
                         <h3 className="text-sm font-extrabold">{university.shortName}</h3>
                         <p className="mt-0.5 text-[10px] text-muted-foreground">
-                          NAAC {university.naacGrade} · ★ {university.rating}
+                          Sourced total-fee offering
                         </p>
                       </div>
                     </div>
@@ -595,7 +657,9 @@ function ProgramComparePage() {
                       </div>
                       <div>
                         <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                          Monthly EMI
+                          {program.emiPerMonthVerified
+                            ? "Published monthly amount"
+                            : "Arithmetic monthly split"}
                         </dt>
                         <dd className="mt-1 font-display text-base font-extrabold">
                           {formatINR(program.emiPerMonth)}
@@ -628,164 +692,246 @@ function ProgramComparePage() {
             </div>
           ) : null}
 
-          <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
-            <div>
-              <div className="flex items-center justify-between gap-4">
-                <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
-                  Maximum total fee
+          {comparableOffers.length ? (
+            <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
+              <div>
+                <div className="flex items-center justify-between gap-4">
+                  <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
+                    Maximum total fee
+                  </label>
+                  <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-extrabold text-[#155cb6] dark:text-[#78b9ff]">
+                    {formatINR(feeCeiling)}
+                  </span>
+                </div>
+                <input
+                  id="fee-ceiling"
+                  type="range"
+                  min={startingFee}
+                  max={highestFee}
+                  step="5000"
+                  value={feeCeiling}
+                  onChange={(event) => setFeeCeiling(Number(event.target.value))}
+                  className="mt-4 w-full accent-[#1768cc]"
+                />
+                <div className="mt-1 flex justify-between text-[10px] font-bold text-muted-foreground">
+                  <span>{formatINR(startingFee)}</span>
+                  <span>{formatINR(highestFee)}</span>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="sort-offers" className="text-sm font-extrabold">
+                  Sort universities
                 </label>
-                <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-extrabold text-[#155cb6] dark:text-[#78b9ff]">
-                  {formatINR(feeCeiling)}
-                </span>
-              </div>
-              <input
-                id="fee-ceiling"
-                type="range"
-                min={startingFee}
-                max={highestFee}
-                step="5000"
-                value={feeCeiling}
-                onChange={(event) => setFeeCeiling(Number(event.target.value))}
-                className="mt-4 w-full accent-[#1768cc]"
-              />
-              <div className="mt-1 flex justify-between text-[10px] font-bold text-muted-foreground">
-                <span>{formatINR(startingFee)}</span>
-                <span>{formatINR(highestFee)}</span>
+                <select
+                  id="sort-offers"
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value as "fee" | "emi")}
+                  className="mt-3 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-bold text-foreground outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
+                >
+                  <option value="fee">Lowest total fee</option>
+                  <option value="emi">Lowest arithmetic monthly split</option>
+                </select>
               </div>
             </div>
-            <div>
-              <label htmlFor="sort-offers" className="text-sm font-extrabold">
-                Sort universities
-              </label>
-              <select
-                id="sort-offers"
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as "fee" | "emi" | "rating")}
-                className="mt-3 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-bold text-foreground outline-none focus:border-[#1768cc]"
-              >
-                <option value="fee">Lowest total fee</option>
-                <option value="emi">Lowest monthly EMI</option>
-                <option value="rating">Highest learner rating</option>
-              </select>
-            </div>
-          </div>
+          ) : null}
 
           <div className="mt-10 grid gap-4 lg:grid-cols-2">
-            {displayedOffers.map(({ university, program }, index) => (
-              <article
-                key={university.slug}
-                className="group rounded-[1.55rem] border border-border bg-card p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
-                      <UniversityLogo university={university} size="md" />
-                    </span>
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-display text-base font-extrabold tracking-[-0.025em]">
-                          {university.shortName}
-                        </h3>
-                        {index === 0 && sortBy === "fee" ? (
-                          <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
-                            Lowest fee
-                          </span>
-                        ) : null}
+            {displayedOffers.map(({ university, program }, index) => {
+              const approvalClaims = getProgramApprovalClaims(university, program);
+              return (
+                <article
+                  key={university.slug}
+                  className="group rounded-[1.55rem] border border-border bg-card p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
+                        <UniversityLogo university={university} size="md" />
+                      </span>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-display text-base font-extrabold tracking-[-0.025em]">
+                            {university.shortName}
+                          </h3>
+                          {index === 0 && sortBy === "fee" ? (
+                            <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
+                              Lowest sourced total fee
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {university.city} · recognition must be checked for the intake
+                        </p>
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {university.city} · NAAC {university.naacGrade}
+                    </div>
+                    <span className="rounded-full bg-[#fff7df] px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#8c6811]">
+                      Sourced total fee
+                    </span>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-secondary/60 p-4">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                        Sourced total fee
+                      </p>
+                      <p className="mt-1 font-display text-xl font-extrabold">
+                        {formatINR(program.totalFee)}
+                      </p>
+                    </div>
+                    <div className="border-l border-border pl-4">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                        {program.emiPerMonthVerified
+                          ? "Published monthly amount"
+                          : "Arithmetic monthly split"}
+                      </p>
+                      <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
+                        {formatINR(monthlyComparisonAmount(program))}
+                        <span className="text-xs font-semibold text-muted-foreground">/mo</span>
                       </p>
                     </div>
                   </div>
-                  <span className="flex items-center gap-1 rounded-full bg-[#fff7df] px-2.5 py-1.5 text-xs font-extrabold text-[#8c6811]">
-                    <Star className="h-3.5 w-3.5 fill-[#f2b72d] text-[#f2b72d]" />
-                    {university.rating}
-                  </span>
-                </div>
 
-                <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-secondary/60 p-4">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Total program fee
-                    </p>
-                    <p className="mt-1 font-display text-xl font-extrabold">
-                      {formatINR(program.totalFee)}
-                    </p>
-                  </div>
-                  <div className="border-l border-border pl-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      EMI from
-                    </p>
-                    <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-                      {formatINR(program.emiPerMonth)}
-                      <span className="text-xs font-semibold text-muted-foreground">/mo</span>
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  aria-pressed={selectedUniversities.includes(university.slug)}
-                  disabled={
-                    selectedUniversities.length >= 3 &&
-                    !selectedUniversities.includes(university.slug)
-                  }
-                  onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
-                  className={`mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
-                    selectedUniversities.includes(university.slug)
-                      ? "border-[#1768cc] bg-[#1768cc] text-white"
-                      : "border-border bg-background text-foreground hover:border-[#78a9df] hover:bg-[#edf5ff] dark:hover:bg-[#102a42]"
-                  }`}
-                >
-                  {selectedUniversities.includes(university.slug) ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    <GitCompareArrows className="h-4 w-4" />
-                  )}
-                  {selectedUniversities.includes(university.slug)
-                    ? "Added to comparison"
-                    : "Add to comparison"}
-                </button>
-
-                <div className="mt-5 flex items-center justify-between gap-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {university.approvals.slice(0, 2).map((approval) => (
-                      <span
-                        key={approval}
-                        className="rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
-                      >
-                        {approval}
-                      </span>
-                    ))}
-                  </div>
-                  <Link
-                    to="/universities/$universitySlug/$programSlug"
-                    params={{ universitySlug: university.slug, programSlug: p.slug }}
-                    className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]"
+                  <button
+                    type="button"
+                    aria-pressed={selectedUniversities.includes(university.slug)}
+                    disabled={
+                      selectedUniversities.length >= 3 &&
+                      !selectedUniversities.includes(university.slug)
+                    }
+                    onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
+                    className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                      selectedUniversities.includes(university.slug)
+                        ? "border-[#1768cc] bg-[#1768cc] text-white"
+                        : "border-border bg-background text-foreground hover:border-[#78a9df] hover:bg-[#edf5ff] dark:hover:bg-[#102a42]"
+                    }`}
                   >
-                    View details{" "}
-                    <ArrowRight className="ml-1 h-3.5 w-3.5 transition group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </article>
-            ))}
+                    {selectedUniversities.includes(university.slug) ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <GitCompareArrows className="h-4 w-4" />
+                    )}
+                    {selectedUniversities.includes(university.slug)
+                      ? "Added to comparison"
+                      : "Add to comparison"}
+                  </button>
+
+                  <div className="mt-5 flex items-center justify-between gap-4">
+                    <div className="flex flex-wrap gap-1.5">
+                      {approvalClaims.length ? (
+                        approvalClaims.slice(0, 2).map((claim) => (
+                          <a
+                            key={claim.id}
+                            href={claim.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
+                          >
+                            {claim.renderedClaim}
+                          </a>
+                        ))
+                      ) : (
+                        <span className="text-[10px] font-semibold text-muted-foreground">
+                          No separate recognition evidence mapped
+                        </span>
+                      )}
+                    </div>
+                    <Link
+                      to="/universities/$universitySlug/$programSlug"
+                      params={{ universitySlug: university.slug, programSlug: p.slug }}
+                      className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]"
+                    >
+                      View details{" "}
+                      <ArrowRight className="ml-1 h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
           </div>
           {displayedOffers.length === 0 ? (
             <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
               <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
               <h3 className="mt-4 font-display text-lg font-extrabold">
-                No option fits this fee range
+                {comparableOffers.length
+                  ? "No option fits this fee range"
+                  : "No comparison-ready profile yet"}
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Raise your maximum fee to see more universities.
+                {comparableOffers.length
+                  ? "Raise your maximum fee to see more universities."
+                  : "Unverified and directory records appear separately below and do not enter rankings."}
               </p>
-              <button
-                type="button"
-                onClick={() => setFeeCeiling(highestFee)}
-                className="mt-4 text-sm font-extrabold text-[#155cb6] dark:text-[#78b9ff]"
-              >
-                Reset fee filter
-              </button>
+              {comparableOffers.length ? (
+                <button
+                  type="button"
+                  onClick={() => setFeeCeiling(highestFee)}
+                  className="mt-4 text-sm font-extrabold text-[#155cb6] dark:text-[#78b9ff]"
+                >
+                  Reset fee filter
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+
+          {discoveryOffers.length ? (
+            <div className="mt-12 border-t border-border pt-10">
+              <div className="max-w-3xl">
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#a66316] dark:text-[#ffc36f]">
+                  Discovery catalogue · excluded from rankings
+                </p>
+                <h3 className="mt-2 font-display text-2xl font-extrabold">
+                  {discoveryOffers.length} unranked university records
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  These directory, editorial or non-current records help with discovery. No exact
+                  fee, rating, salary, pathway availability or current-intake entitlement is
+                  asserted here.
+                </p>
+              </div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {(showAllDiscovery ? discoveryOffers : discoveryOffers.slice(0, 12)).map(
+                  ({ university, program }) => (
+                    <Link
+                      key={university.slug}
+                      to="/universities/$universitySlug"
+                      params={{ universitySlug: university.slug }}
+                      className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition hover:border-[#d09b5d]"
+                    >
+                      <UniversityLogo university={university} size="sm" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-extrabold">
+                          {university.shortName}
+                        </span>
+                        <span className="mt-1 block text-[10px] text-muted-foreground">
+                          {program.entitlementStatus === undefined &&
+                          university.profileDepth !== "directory"
+                            ? "Editorial profile · current offering not verified"
+                            : program.entitlementStatus === "expired"
+                              ? "Offering evidence expired · verify intake"
+                              : program.entitlementStatus === "no-admission" ||
+                                  program.entitlementStatus === "debarred"
+                                ? `${program.entitlementStatus} status · check source`
+                                : `${university.verificationAcademicYear ?? program.academicSession ?? "Historical"} source · verify intake`}
+                        </span>
+                      </span>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1" />
+                    </Link>
+                  ),
+                )}
+              </div>
+              {discoveryOffers.length > 12 ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAllDiscovery((value) => !value)}
+                  className="mt-5 rounded-xl"
+                  aria-expanded={showAllDiscovery}
+                >
+                  {showAllDiscovery
+                    ? "Show fewer records"
+                    : `Show all ${discoveryOffers.length} records`}
+                </Button>
+              ) : null}
             </div>
           ) : null}
         </div>
@@ -802,7 +948,7 @@ function ProgramComparePage() {
             <Accordion
               type="single"
               collapsible
-              defaultValue={p.curriculum[0]?.semester}
+              defaultValue={p.curriculum[0]?.semester ?? ""}
               className="mt-8"
             >
               {p.curriculum.map((term, index) => (
@@ -852,20 +998,28 @@ function ProgramComparePage() {
                   label="Academic terms"
                   value={`${p.semesters} semesters`}
                 />
-                <Fact icon={IndianRupee} label="Starting fee" value={formatINR(startingFee)} />
+                <Fact
+                  icon={IndianRupee}
+                  label="Fee guide from"
+                  value={comparableOffers.length ? formatINR(startingFee) : "Not mapped"}
+                />
                 <Fact
                   icon={WalletCards}
-                  label="EMI from"
-                  value={`${formatINR(startingEmi)}/month`}
+                  label="Arithmetic monthly split from"
+                  value={comparableOffers.length ? `${formatINR(startingEmi)}/month` : "Not mapped"}
                 />
-                <Fact icon={Building2} label="Universities" value={`${offers.length} options`} />
+                <Fact
+                  icon={Building2}
+                  label="Source-backed offerings"
+                  value={`${comparableOffers.length} options`}
+                />
               </div>
               <div className="p-6 pt-0">
                 <Button
                   asChild
-                  className="h-11 w-full rounded-xl bg-[#ffc23f] font-extrabold text-[#12253b] hover:bg-[#ffb819]"
+                  className="w-full rounded-xl bg-[#ffc23f] font-extrabold text-[#12253b] hover:bg-[#ffb819]"
                 >
-                  <Link to="/contact">Get a personalised shortlist</Link>
+                  <Link to="/contact">Get free counselling</Link>
                 </Button>
               </div>
             </div>
@@ -881,13 +1035,17 @@ function ProgramComparePage() {
           <SectionHeading
             dark
             eyebrow="Choose your focus"
-            title="Popular specialisations"
-            description="Shape the degree around the field and career direction you want to pursue."
+            title="Common specialisation themes"
+            description="These are category-level pathways, not a claim that every university offers them. Verify the current prospectus and award wording."
           />
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {p.specialisations.map((specialisation, index) => (
-              <article
+              <Link
                 key={specialisation}
+                to="/specialisations/$specialisationSlug"
+                params={{
+                  specialisationSlug: `${p.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
+                }}
                 className="group flex min-h-32 items-end justify-between rounded-[1.4rem] border border-white/10 bg-white/[0.06] p-5 transition hover:border-[#ffc23f]/40 hover:bg-white/[0.1]"
               >
                 <div>
@@ -897,7 +1055,7 @@ function ProgramComparePage() {
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 transition group-hover:bg-[#ffc23f] group-hover:text-[#102239]">
                   <ArrowRight className="h-4 w-4" />
                 </span>
-              </article>
+              </Link>
             ))}
           </div>
           <div className="mt-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-6 md:flex-row md:items-center md:justify-between">
@@ -913,7 +1071,7 @@ function ProgramComparePage() {
               asChild
               className="rounded-xl bg-white font-extrabold text-[#102239] hover:bg-[#eef3f8]"
             >
-              <Link to="/contact">Get personalised guidance</Link>
+              <Link to="/specialisations">Explore all pathways</Link>
             </Button>
           </div>
         </div>
@@ -925,7 +1083,7 @@ function ProgramComparePage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
               <GraduationCap className="h-5 w-5" />
             </span>
-            <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#e96e22]">
+            <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
               Eligibility criteria
             </p>
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
@@ -949,10 +1107,10 @@ function ProgramComparePage() {
           </div>
 
           <div className="rounded-[1.75rem] bg-[#fff1e7] p-7 dark:bg-[#2b211c] md:p-9">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#e96e22] dark:bg-[#3c2e26]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#a94300] dark:bg-[#3c2e26] dark:text-[#ff9a5b]">
               <Medal className="h-5 w-5" />
             </span>
-            <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#e96e22]">
+            <p className="mt-6 text-xs font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
               Why this program
             </p>
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
@@ -963,8 +1121,8 @@ function ProgramComparePage() {
               building a recognised qualification.
             </p>
             <div className="mt-7 grid grid-cols-2 gap-3">
-              <Metric value={`${p.specialisations.length}`} label="Specialisations" />
-              <Metric value={p.averageSalaryLpa} label="Typical salary range" />
+              <Metric value={`${p.specialisations.length}`} label="Category pathways" />
+              <Metric value={`${p.careers.length}`} label="Career directions" />
             </div>
           </div>
         </div>
@@ -1009,11 +1167,12 @@ function ProgramComparePage() {
             />
             <div className="mt-7 rounded-2xl bg-[#155cb6] p-5 text-white">
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">
-                Indicative salary range
+                Outcome guardrail
               </p>
-              <p className="mt-2 font-display text-4xl font-extrabold">{p.averageSalaryLpa}</p>
+              <p className="mt-2 font-display text-2xl font-extrabold">No salary promise</p>
               <p className="mt-2 text-xs leading-5 text-white/65">
-                Varies by role, city, experience and employer.
+                Compare skills, projects and role requirements. Salary depends on experience,
+                location, evidence of work and market conditions.
               </p>
             </div>
           </div>
@@ -1085,10 +1244,10 @@ function ProgramComparePage() {
           <Button
             asChild
             size="lg"
-            className="h-12 shrink-0 rounded-xl bg-[#10243b] px-6 font-extrabold text-white hover:bg-[#183b60]"
+            className="shrink-0 rounded-xl bg-[#10243b] font-extrabold text-white hover:bg-[#183b60]"
           >
             <Link to="/contact">
-              Get my free shortlist <ArrowRight className="ml-2 h-4 w-4" />
+              Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -1111,7 +1270,7 @@ function SectionHeading({
   return (
     <div className="max-w-3xl">
       <p
-        className={`text-xs font-extrabold uppercase tracking-[0.17em] ${dark ? "text-[#ffc23f]" : "text-[#e96e22]"}`}
+        className={`text-xs font-extrabold uppercase tracking-[0.17em] ${dark ? "text-[#ffc23f]" : "text-[#a94300]"}`}
       >
         {eyebrow}
       </p>
@@ -1136,7 +1295,7 @@ function Fact({ icon: Icon, label, value }: { icon: typeof Clock3; label: string
         <Icon className="h-4 w-4" />
       </span>
       <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/45">{label}</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-white/65">{label}</p>
         <p className="mt-0.5 font-bold">{value}</p>
       </div>
     </div>

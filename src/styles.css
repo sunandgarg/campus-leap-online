@@ -145,8 +145,22 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
+  }
+
   * {
     border-color: var(--color-border);
+  }
+
+  :focus-visible {
+    outline: 3px solid #0d5cad;
+    outline-offset: 3px;
+  }
+
+  .dark :focus-visible {
+    outline-color: #8bc7ff;
   }
 
   body {
@@ -154,6 +168,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
     transition:
       background-color 180ms ease,
       color 180ms ease;
@@ -165,6 +180,42 @@
   h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button,
+  a,
+  input,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a {
+    touch-action: manipulation;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, #f47a20 28%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -173,6 +224,12 @@
   margin-inline: auto;
   max-width: 80rem;
   padding-inline: 1.25rem;
+}
+
+@media (min-width: 48rem) {
+  .container-page {
+    padding-inline: 2rem;
+  }
 }
 
 @utility hero-ink {

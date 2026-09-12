@@ -7,15 +7,18 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { MobileBottomNav } from "@/components/site/mobile-bottom-nav";
+import { DekhoAICopilot } from "@/components/site/dekho-ai-copilot";
 import { Toaster } from "@/components/ui/sonner";
 import { getCatalog } from "@/lib/catalog.functions";
-import { setCatalog, siteSettings, type Catalog } from "@/data/universities";
+import { setCatalog, siteSettings } from "@/data/universities";
+
+const SITE_ORIGIN = "https://online.dekhocampus.in";
 
 function NotFoundComponent() {
   return (
@@ -24,19 +27,19 @@ function NotFoundComponent() {
         <h1 className="font-display text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          This university or program page doesn't exist. Browse all UGC-entitled online universities
+          This university or program page doesn't exist. Browse the online-university directory
           instead.
         </p>
         <div className="mt-6 flex justify-center gap-2">
           <Link
             to="/universities"
-            className="inline-flex items-center justify-center rounded-md bg-ink px-4 py-2 text-sm font-medium text-ink-foreground transition-colors hover:bg-ink-soft"
+            className="inline-flex h-11 min-w-24 items-center justify-center rounded-xl bg-ink px-5 text-sm font-bold text-ink-foreground transition-colors hover:bg-ink-soft"
           >
             Browse universities
           </Link>
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md border border-input px-4 py-2 text-sm font-medium transition-colors hover:bg-accent"
+            className="inline-flex h-11 min-w-24 items-center justify-center rounded-xl border border-input px-5 text-sm font-bold transition-colors hover:bg-accent"
           >
             Go home
           </Link>
@@ -49,10 +52,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-[70vh] items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -68,13 +67,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-ink px-4 py-2 text-sm font-medium text-ink-foreground transition-colors hover:bg-ink-soft"
+            className="inline-flex h-11 min-w-24 items-center justify-center rounded-xl bg-ink px-5 text-sm font-bold text-ink-foreground transition-colors hover:bg-ink-soft"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex h-11 min-w-24 items-center justify-center rounded-xl border border-input bg-background px-5 text-sm font-bold text-foreground transition-colors hover:bg-accent"
           >
             Go home
           </a>
@@ -85,32 +84,43 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "DekhoCampus Online — UGC-Entitled Online Degrees in India" },
-      {
-        name: "description",
-        content:
-          "Compare UGC-entitled online degrees from India's top universities. Fees, eligibility, specialisations and placement support in one place.",
-      },
-      { name: "author", content: "DekhoCampus" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap",
-      },
-    ],
-  }),
-  loader: () => getCatalog(),
+  head: ({ matches }) => {
+    const pathname = matches.at(-1)?.pathname ?? "/";
+    const canonicalPath = pathname === "/" ? "/" : pathname.replace(/\/+$/, "");
+    const includeCanonical = !/^\/(?:admin|auth|search|sitemap\.xml)(?:\/|$)/.test(canonicalPath);
+
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { title: "Online Degree Discovery & Comparison | DekhoCampus" },
+        {
+          name: "description",
+          content:
+            "Explore online degrees, compare source-checked catalogue facts, build a private shortlist and verify the exact intake before applying.",
+        },
+        { name: "author", content: "DekhoCampus" },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
+      ],
+      links: [
+        { rel: "stylesheet", href: appCss },
+        { rel: "icon", href: "/dekhocampus-mark.svg", type: "image/svg+xml" },
+        ...(includeCanonical ? [{ rel: "canonical", href: `${SITE_ORIGIN}${canonicalPath}` }] : []),
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap",
+        },
+      ],
+    };
+  },
+  beforeLoad: async () => {
+    const catalog = await getCatalog();
+    setCatalog(catalog);
+    return { catalog };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -136,38 +146,116 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function normaliseAnnouncement(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+
+  const record = value as Record<string, unknown>;
+  if (record["enabled"] !== true || typeof record["text"] !== "string") return null;
+
+  const text = record["text"].trim().slice(0, 280);
+  if (!text) return null;
+
+  return {
+    text,
+    cta: typeof record["cta"] === "string" ? record["cta"].trim().slice(0, 64) : "",
+    href: typeof record["href"] === "string" ? record["href"].trim().slice(0, 512) : "",
+  };
+}
+
 function AnnouncementBar() {
-  const announcement = siteSettings["announcement"] as
-    { enabled?: boolean; text?: string; cta?: string; href?: string } | undefined;
-  if (!announcement?.enabled || !announcement.text) return null;
+  const [visible, setVisible] = useState(true);
+  const announcement = normaliseAnnouncement(siteSettings["announcement"]);
+  if (!announcement || !visible) return null;
+
+  // Admin-entered announcements have no source date or inventory feed. Replace
+  // time-sensitive pressure copy instead of presenting it as a verified fact.
+  const unverifiableUrgency =
+    /(?:limited|few|only)\s+(?:\d+\s+)?(?:seats?|spots?)|(?:seats?|spots?)\s+(?:left|filling)|last\s+chance|hurry|ending\s+soon|closes?\s+(?:today|tonight|soon)|deadline\s+in|countdown|offer\s+expires?|admissions?\s+(?:open|closing|closed)|applications?\s+(?:open|closing|closed)/i;
+  const containsUnverifiableUrgency = unverifiableUrgency.test(
+    `${announcement.text} ${announcement.cta ?? ""}`,
+  );
+  const text = containsUnverifiableUrgency
+    ? "Admission dates and programme entitlement can change. Verify the current intake before applying."
+    : announcement.text;
+  const cta = containsUnverifiableUrgency ? "See verification steps" : announcement.cta;
+  const safeConfiguredHref = getSafeInternalHref(announcement.href);
+  const href = containsUnverifiableUrgency ? "/methodology" : safeConfiguredHref;
+
   return (
-    <div className="bg-ink px-4 py-2 text-center text-xs text-ink-foreground/85 sm:text-sm">
-      <span>{announcement.text}</span>
-      {announcement.cta && (
-        <Link to="/contact" className="ml-2 font-semibold text-gold hover:underline">
-          {announcement.cta}
-        </Link>
-      )}
+    <div
+      role="region"
+      aria-label="Site announcement"
+      className="bg-ink px-3 py-2 text-xs text-ink-foreground/85 sm:text-sm"
+    >
+      <div className="container-page flex items-center justify-center gap-2">
+        <span className="line-clamp-2 text-center sm:line-clamp-1">{text}</span>
+        {cta ? (
+          <a
+            href={href}
+            className="shrink-0 rounded-md font-semibold text-gold underline-offset-4 hover:underline"
+          >
+            {cta}
+          </a>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => setVisible(false)}
+          aria-label="Dismiss announcement"
+          className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base leading-none text-ink-foreground/55 transition hover:bg-white/10 hover:text-white"
+        >
+          ×
+        </button>
+      </div>
     </div>
   );
 }
 
+function getSafeInternalHref(value: string | undefined) {
+  const hasUnsafeCharacter = value
+    ? [...value].some((character) => character === "\\" || character.charCodeAt(0) < 32)
+    : false;
+
+  if (!value || !value.startsWith("/") || value.startsWith("//") || hasUnsafeCharacter) {
+    return "/contact";
+  }
+
+  try {
+    const parsed = new URL(value, SITE_ORIGIN);
+    return parsed.origin === SITE_ORIGIN
+      ? `${parsed.pathname}${parsed.search}${parsed.hash}`
+      : "/contact";
+  } catch {
+    return "/contact";
+  }
+}
+
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-  const catalog = Route.useLoaderData() as Catalog | undefined;
-  if (catalog) setCatalog(catalog);
+  const { queryClient, catalog } = Route.useRouteContext();
+
+  // The server runs beforeLoad before nested loaders. During client hydration,
+  // TanStack restores that context without rerunning beforeLoad, so synchronise
+  // the transported catalogue before Outlet renders as well.
+  setCatalog(catalog);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
+      <a
+        href="#main-content"
+        className="fixed left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-foreground px-4 py-2 text-sm font-bold text-background transition focus:translate-y-0"
+      >
+        Skip to main content
+      </a>
+      <div className="flex min-h-screen flex-col pb-24 lg:pb-0">
         <AnnouncementBar />
         <SiteHeader />
-        <main className="flex-1">
+        <main id="main-content" className="flex-1" tabIndex={-1}>
           {/* Required: nested routes render here. */}
           <Outlet />
         </main>
         <SiteFooter />
       </div>
+      <MobileBottomNav />
+      <DekhoAICopilot />
       <Toaster />
     </QueryClientProvider>
   );

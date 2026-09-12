@@ -5,13 +5,13 @@ import {
   BadgeCheck,
   Check,
   CircleAlert,
+  ExternalLink,
   GitCompareArrows,
   GraduationCap,
   IndianRupee,
   Scale,
   ShieldCheck,
   Sparkles,
-  Star,
   Trash2,
   WalletCards,
 } from "lucide-react";
@@ -20,8 +20,9 @@ import { LeadForm } from "@/components/site/lead-form";
 import { Button } from "@/components/ui/button";
 import {
   formatINR,
+  getProgramApprovalClaims,
   programCatalog,
-  universitiesOfferingProgram,
+  comparableUniversitiesOfferingProgram,
   type University,
   type UniversityProgram,
 } from "@/data/universities";
@@ -32,17 +33,17 @@ type Offer = { university: University; program: UniversityProgram };
 export const Route = createFileRoute("/compare")({
   head: () => ({
     meta: [
-      { title: "Compare Online Universities — Fees, NAAC Grade & EMI | DekhoCampus Online" },
+      { title: "Compare Online Universities — Fee Guides & Program Details | DekhoCampus" },
       {
         name: "description",
         content:
-          "Build a side-by-side comparison of online university fees, accreditation, ratings, EMI plans and program details.",
+          "Build a side-by-side comparison of current source-backed online offerings, cited total fees and clearly labelled derived payment splits.",
       },
       { property: "og:title", content: "Compare Online Universities in India" },
       {
         property: "og:description",
         content:
-          "Compare fees, NAAC grades, ratings and EMI plans across UGC-entitled online universities.",
+          "Compare source-backed offerings and cited total fees; directory and expired records remain excluded.",
       },
     ],
   }),
@@ -51,7 +52,7 @@ export const Route = createFileRoute("/compare")({
 
 function ComparePage() {
   const comparison = useComparison();
-  const [programSlug, setProgramSlug] = useState(programCatalog[0]!.slug);
+  const [programSlug, setProgramSlug] = useState(programCatalog[0]?.slug ?? "");
   const [programChosen, setProgramChosen] = useState(false);
 
   useEffect(() => {
@@ -65,17 +66,39 @@ function ComparePage() {
     }
   }, [comparison.programSlug, comparison.ready, programChosen]);
 
-  const offers = useMemo(() => universitiesOfferingProgram(programSlug), [programSlug]);
-  const program = programCatalog.find((item) => item.slug === programSlug)!;
+  const offers = useMemo(() => comparableUniversitiesOfferingProgram(programSlug), [programSlug]);
+  const program = programCatalog.find((item) => item.slug === programSlug);
   const selectedSlugs = comparison.programSlug === programSlug ? comparison.universitySlugs : [];
   const selectedOffers = offers.filter(({ university }) => selectedSlugs.includes(university.slug));
-  const lowestFee = Math.min(...offers.map(({ program: offer }) => offer.totalFee));
-  const highestFee = Math.max(...offers.map(({ program: offer }) => offer.totalFee));
+  const lowestFee = offers.length
+    ? Math.min(...offers.map(({ program: offer }) => offer.totalFee))
+    : null;
+  const highestFee = offers.length
+    ? Math.max(...offers.map(({ program: offer }) => offer.totalFee))
+    : null;
 
   function changeProgram(nextSlug: string) {
     setProgramChosen(true);
     setProgramSlug(nextSlug);
     comparison.changeProgram(nextSlug);
+  }
+
+  if (!program) {
+    return (
+      <div className="container-page flex min-h-[65vh] items-center justify-center py-20 text-center">
+        <div className="max-w-xl rounded-[1.75rem] border border-border bg-card p-8">
+          <CircleAlert className="mx-auto h-8 w-8 text-[#a94300] dark:text-[#ff9a5b]" />
+          <h1 className="mt-5 font-display text-3xl font-extrabold">No published course yet</h1>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            The managed catalogue has no published course to compare. An administrator can publish a
+            reviewed course record, or you can request general guidance in the meantime.
+          </p>
+          <Button asChild className="mt-6 rounded-xl">
+            <Link to="/contact">Request general guidance</Link>
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -92,8 +115,8 @@ function ComparePage() {
               Compare online universities side by side.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
-              Select one course and up to three universities. We line up published catalogue facts
-              so the trade-offs are easy to see.
+              Select one course and up to three source-backed offerings. Directory, editorial and
+              expired records do not enter this comparison.
             </p>
           </div>
           <div className="rounded-[1.75rem] border border-white/12 bg-white/[0.07] p-6 backdrop-blur">
@@ -114,7 +137,7 @@ function ComparePage() {
                 {Array.from({ length: Math.max(0, 3 - selectedOffers.length) }).map((_, index) => (
                   <span
                     key={index}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#071c2e] bg-white/10 text-[10px] font-bold text-white/40"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#071c2e] bg-white/10 text-[10px] font-bold text-white/65"
                   >
                     +
                   </span>
@@ -142,7 +165,7 @@ function ComparePage() {
               disabled={!comparison.ready}
               value={programSlug}
               onChange={(event) => changeProgram(event.target.value)}
-              className="mt-2 h-12 w-full max-w-xl rounded-xl border border-border bg-background px-4 text-sm font-extrabold text-foreground outline-none focus:border-[#1768cc]"
+              className="mt-2 h-12 w-full max-w-xl rounded-xl border border-border bg-background px-4 text-sm font-extrabold text-foreground outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
             >
               {programCatalog.map((item) => (
                 <option key={item.slug} value={item.slug}>
@@ -153,11 +176,20 @@ function ComparePage() {
           </div>
           <div className="flex gap-2">
             {selectedOffers.length > 0 ? (
-              <Button variant="outline" onClick={comparison.clearComparison} className="rounded-xl">
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={comparison.clearComparison}
+                className="rounded-xl"
+              >
                 <Trash2 className="mr-2 h-4 w-4" /> Clear
               </Button>
             ) : null}
-            <Button asChild className="rounded-xl bg-[#1768cc] text-white hover:bg-[#0e57b2]">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-xl bg-[#1768cc] text-white hover:bg-[#0e57b2]"
+            >
               <Link to="/programs/$programSlug" params={{ programSlug }}>
                 Course guide <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -180,8 +212,10 @@ function ComparePage() {
             </p>
           </div>
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-muted-foreground">
-            <IndianRupee className="h-4 w-4 text-[#1768cc] dark:text-[#78b9ff]" /> Fees range{" "}
-            {formatINR(lowestFee)}–{formatINR(highestFee)}
+            <IndianRupee className="h-4 w-4 text-[#1768cc] dark:text-[#78b9ff]" />
+            {lowestFee !== null && highestFee !== null
+              ? `Sourced total-fee range ${formatINR(lowestFee)}–${formatINR(highestFee)}`
+              : "No priced comparison profiles yet"}
           </span>
         </div>
 
@@ -210,7 +244,7 @@ function ComparePage() {
                     {university.shortName}
                   </span>
                   <span className="mt-1 block text-[11px] text-muted-foreground">
-                    NAAC {university.naacGrade} · {formatINR(offer.totalFee)}
+                    Sourced total fee · {formatINR(offer.totalFee)}
                   </span>
                 </span>
                 <span
@@ -223,9 +257,21 @@ function ComparePage() {
           })}
         </div>
 
+        {offers.length === 0 ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+            <p className="font-display text-lg font-extrabold">
+              No source-backed comparison data yet
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Directory, editorial and expired records are intentionally excluded until a current
+              offering and cited total fee are mapped.
+            </p>
+          </div>
+        ) : null}
+
         <div className="mt-14">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#e96e22] dark:bg-[#3d281c] dark:text-[#ffab73]">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffab73]">
               <GitCompareArrows className="h-5 w-5" />
             </span>
             <div>
@@ -251,8 +297,8 @@ function ComparePage() {
           )}
         </div>
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-[1fr_420px]">
-          <div className="rounded-[1.75rem] border border-[#bfdaf4] bg-[#f3f8ff] p-7 dark:border-[#295a85] dark:bg-[#0e263b]">
+        <div className="mt-14 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_420px]">
+          <div className="min-w-0 rounded-[1.75rem] border border-[#bfdaf4] bg-[#f3f8ff] p-7 dark:border-[#295a85] dark:bg-[#0e263b]">
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="font-display text-xl font-extrabold">How to use this comparison</h2>
@@ -291,7 +337,11 @@ function ComparePage() {
               Read our evaluation methodology <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
-          <LeadForm compact defaultProgram={program.name} title="Need a human second opinion?" />
+          <LeadForm
+            compact
+            defaultProgramSlug={program.slug}
+            title="Need a human second opinion?"
+          />
         </div>
       </section>
     </div>
@@ -301,58 +351,97 @@ function ComparePage() {
 function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlug: string }) {
   const cheapestSlug = [...offers].sort((a, b) => a.program.totalFee - b.program.totalFee)[0]
     ?.university.slug;
-  const topRatedSlug = [...offers].sort((a, b) => b.university.rating - a.university.rating)[0]
-    ?.university.slug;
 
-  const rows: { label: string; icon: typeof Star; render: (offer: Offer) => ReactNode }[] = [
+  const rows: { label: string; icon: typeof ShieldCheck; render: (offer: Offer) => ReactNode }[] = [
     {
-      label: "Accreditation",
+      label: "Offering evidence",
       icon: ShieldCheck,
-      render: ({ university }) => `NAAC ${university.naacGrade}`,
+      render: ({ program }) => (
+        <span>
+          {program.deliveryMode ?? "ONLINE"} · {program.academicSession ?? "Session cited"}
+          {program.entitlementSourceUrl ? (
+            <a
+              href={program.entitlementSourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 flex items-center gap-1 text-xs text-[#1768cc] dark:text-[#78b9ff]"
+            >
+              Open entitlement source <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </span>
+      ),
     },
     {
-      label: "Learner rating",
-      icon: Star,
-      render: ({ university }) =>
-        `${university.rating} / 5 (${university.reviews.toLocaleString("en-IN")} reviews)`,
-    },
-    {
-      label: "Total program fee",
+      label: "Sourced total fee",
       icon: IndianRupee,
-      render: ({ program }) => formatINR(program.totalFee),
+      render: ({ program }) => `${formatINR(program.totalFee)} (sourced catalogue value)`,
+    },
+    {
+      label: "Fee citation",
+      icon: BadgeCheck,
+      render: ({ program }) =>
+        program.feeSourceUrl ? (
+          <a
+            href={program.feeSourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-[#1768cc] dark:text-[#78b9ff]"
+          >
+            Source checked {program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        ) : (
+          "Fee source unavailable—do not rely on this value"
+        ),
     },
     {
       label: "Per semester",
       icon: WalletCards,
-      render: ({ program }) => formatINR(program.perSemesterFee),
+      render: ({ program }) =>
+        `${formatINR(program.perSemesterFee)} (${program.perSemesterFeeVerified ? "sourced" : "derived from total"})`,
     },
     {
-      label: "Published EMI from",
+      label: "Estimated monthly payment",
       icon: IndianRupee,
-      render: ({ program }) => `${formatINR(program.emiPerMonth)} / month`,
+      render: ({ program }) =>
+        `${formatINR(program.emiPerMonth)} / month (${program.emiPerMonthVerified ? "published monthly amount" : "arithmetic split, not a lender quote"})`,
     },
     {
       label: "Duration",
       icon: GraduationCap,
-      render: ({ program }) => `${program.durationYears} years · ${program.semesters} semesters`,
+      render: ({ program }) =>
+        `${program.durationVerified ? "Offering duration" : "Typical course duration"}: ${program.durationYears} years · ${program.semesters} semesters`,
     },
     {
-      label: "Approvals listed",
+      label: "Separate accreditation evidence",
       icon: BadgeCheck,
-      render: ({ university }) => university.approvals.slice(0, 4).join(" · "),
+      render: ({ university, program }) => {
+        const claims = getProgramApprovalClaims(university, program);
+        return claims.length ? (
+          <span className="flex flex-col gap-1.5">
+            {claims.slice(0, 4).map((claim) => (
+              <a
+                key={claim.id}
+                href={claim.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-start gap-1 text-[#1768cc] dark:text-[#78b9ff]"
+              >
+                {claim.renderedClaim} <ExternalLink className="mt-1 h-3 w-3 shrink-0" />
+              </a>
+            ))}
+          </span>
+        ) : (
+          "No current, scope-matched recognition evidence mapped"
+        );
+      },
     },
     {
-      label: "Catalogue highlights",
+      label: "Offering details",
       icon: Sparkles,
-      render: ({ university }) => (
-        <ul className="space-y-2">
-          {university.highlights.slice(0, 3).map((highlight) => (
-            <li key={highlight} className="flex items-start gap-2 text-xs leading-5">
-              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#168258]" /> {highlight}
-            </li>
-          ))}
-        </ul>
-      ),
+      render: ({ program }) =>
+        `${program.examMode ? `Exam mode: ${program.examMode}` : "Exam mode: confirm with university"} · ${program.specialisationsVerified ? `${program.specialisations.length} sourced pathways` : "Pathways require confirmation"}`,
     },
   ];
 
@@ -378,8 +467,9 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1.5">
-                  {university.slug === cheapestSlug ? <InsightPill label="Lowest fee" /> : null}
-                  {university.slug === topRatedSlug ? <InsightPill label="Top rated" /> : null}
+                  {university.slug === cheapestSlug ? (
+                    <InsightPill label="Lowest sourced total fee" />
+                  ) : null}
                 </div>
               </th>
             ))}
@@ -423,8 +513,9 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
         </tbody>
       </table>
       <div className="flex items-start gap-3 border-t border-border bg-[#fff9eb] p-4 text-xs leading-5 text-[#785914] dark:bg-[#2d2517] dark:text-[#e5bd62]">
-        <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" /> Fees, approvals and support policies can
-        change by intake. Reconfirm final details with the university before payment.
+        <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" /> Total fees link to their catalogue
+        source; arithmetic semester or monthly splits are labelled as derived. Fees, recognition and
+        support policies can change by intake, so reconfirm before payment.
       </div>
     </div>
   );

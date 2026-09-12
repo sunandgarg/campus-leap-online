@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   BookOpenCheck,
@@ -15,16 +15,19 @@ import { UniversityCard } from "@/components/site/university-card";
 import { Button } from "@/components/ui/button";
 import {
   formatINR,
+  getUniversityApprovalClaims,
   programCatalog,
   universities,
   universitiesOfferingProgram,
+  verifiedUniversitiesOfferingProgram,
 } from "@/data/universities";
+import { slugifySpecialisation } from "@/data/specialisations";
 
 type ResultType = "all" | "programs" | "universities" | "specialisations";
 
 export const Route = createFileRoute("/search")({
   validateSearch: (search: Record<string, unknown>) => ({
-    q: typeof search.q === "string" ? search.q : "",
+    q: typeof search["q"] === "string" ? search["q"] : "",
   }),
   head: () => ({
     meta: [
@@ -32,8 +35,9 @@ export const Route = createFileRoute("/search")({
       {
         name: "description",
         content:
-          "Search online degree programs, specialisations and UGC-entitled universities in one place.",
+          "Search online degree categories, specialisations and source-labelled university records in one place.",
       },
+      { name: "robots", content: "noindex, follow" },
     ],
   }),
   component: SearchPage,
@@ -43,11 +47,24 @@ function SearchPage() {
   const { q: initialQuery } = Route.useSearch();
   const [query, setQuery] = useState(initialQuery);
   const [resultType, setResultType] = useState<ResultType>("all");
+  const [showAllUniversities, setShowAllUniversities] = useState(false);
   const normalizedQuery = query.trim().toLowerCase();
 
+  useEffect(() => {
+    setQuery(initialQuery);
+    setResultType("all");
+    setShowAllUniversities(false);
+  }, [initialQuery]);
+
   const results = useMemo(() => {
-    const matches = (value: string) =>
-      !normalizedQuery || value.toLowerCase().includes(normalizedQuery);
+    const matches = (value: string) => {
+      if (!normalizedQuery) return true;
+      const normalizedValue = value.toLowerCase();
+      if (/^[a-z0-9]{1,3}$/.test(normalizedQuery)) {
+        return normalizedValue.split(/[^a-z0-9]+/).includes(normalizedQuery);
+      }
+      return normalizedValue.includes(normalizedQuery);
+    };
 
     const programs = programCatalog.filter(
       (program) =>
@@ -58,14 +75,21 @@ function SearchPage() {
         program.careers.some(matches),
     );
 
-    const matchedUniversities = universities.filter(
+    const directlyMatchedUniversities = universities.filter(
       (university) =>
         matches(university.name) ||
         matches(university.shortName) ||
         matches(university.city) ||
         matches(university.state) ||
-        university.approvals.some(matches) ||
+        getUniversityApprovalClaims(university).some((claim) => matches(claim.renderedClaim)) ||
         university.highlights.some(matches),
+    );
+
+    const matchingProgramSlugs = new Set(programs.map((program) => program.slug));
+    const matchedUniversities = universities.filter(
+      (university) =>
+        directlyMatchedUniversities.includes(university) ||
+        university.programs.some((program) => matchingProgramSlugs.has(program.slug)),
     );
 
     const specialisations = programCatalog.flatMap((program) =>
@@ -101,19 +125,18 @@ function SearchPage() {
           <div className="mt-8 flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-2 pl-4 shadow-[0_20px_55px_-38px_rgba(12,39,71,0.7)]">
             <Search className="h-5 w-5 shrink-0 text-[#1768cc] dark:text-[#78b9ff]" />
             <input
-              autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Try “MBA”, “data science”, “A++” or “Noida”"
               aria-label="Search the online degree catalogue"
-              className="h-12 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground sm:text-base"
+              className="h-12 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2 sm:text-base"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Clear search"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-secondary hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -125,13 +148,18 @@ function SearchPage() {
       <section className="container-page py-10 lg:py-14">
         <div className="flex flex-col gap-4 border-b border-border pb-7 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="font-display text-xl font-extrabold">
+            <p
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="font-display text-xl font-extrabold"
+            >
               {normalizedQuery
                 ? `${totalResults} results for “${query.trim()}”`
                 : "Explore the catalogue"}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Compare verified catalogue facts before you enquire.
+              Source status, cited fees and editorial guidance stay clearly separated.
             </p>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
@@ -144,8 +172,9 @@ function SearchPage() {
               <button
                 key={value}
                 type="button"
+                aria-pressed={resultType === value}
                 onClick={() => setResultType(value as ResultType)}
-                className={`shrink-0 rounded-full border px-4 py-2 text-xs font-extrabold transition ${
+                className={`flex h-10 shrink-0 items-center rounded-xl border px-4 text-xs font-extrabold transition ${
                   resultType === value
                     ? "border-[#1768cc] bg-[#1768cc] text-white"
                     : "border-border bg-card text-muted-foreground hover:border-[#80ace0] hover:text-foreground"
@@ -180,7 +209,8 @@ function SearchPage() {
                 <div className="mt-6 grid gap-4 lg:grid-cols-2">
                   {results.programs.map((program) => {
                     const offers = universitiesOfferingProgram(program.slug);
-                    const lowestFee = offers[0]?.program.totalFee ?? 0;
+                    const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
+                    const lowestFee = verifiedOffers[0]?.program.totalFee ?? null;
                     return (
                       <Link
                         key={program.slug}
@@ -191,7 +221,7 @@ function SearchPage() {
                         <div className="flex items-start justify-between gap-4">
                           <div>
                             <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                              {program.level} · {program.durationYears} years
+                              {program.level} · typically {program.durationYears} years
                             </span>
                             <h2 className="mt-4 font-display text-xl font-extrabold">
                               {program.name}
@@ -205,9 +235,13 @@ function SearchPage() {
                           </span>
                         </div>
                         <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-4 text-xs font-bold text-muted-foreground">
-                          <span>{offers.length} universities</span>
-                          <span>{program.specialisations.length} specialisations</span>
-                          <span>{lowestFee ? `From ${formatINR(lowestFee)}` : "Compare fees"}</span>
+                          <span>{offers.length} catalogue records</span>
+                          <span>{program.specialisations.length} pathway themes</span>
+                          <span>
+                            {lowestFee !== null
+                              ? `Sourced fee from ${formatINR(lowestFee)}`
+                              : "Confirm current fee"}
+                          </span>
                         </div>
                       </Link>
                     );
@@ -224,10 +258,26 @@ function SearchPage() {
                   count={results.universities.length}
                 />
                 <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {results.universities.map((university) => (
+                  {(showAllUniversities
+                    ? results.universities
+                    : results.universities.slice(0, 12)
+                  ).map((university) => (
                     <UniversityCard key={university.slug} university={university} />
                   ))}
                 </div>
+                {results.universities.length > 12 ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAllUniversities((value) => !value)}
+                    aria-expanded={showAllUniversities}
+                    className="mt-5 rounded-xl"
+                  >
+                    {showAllUniversities
+                      ? "Show fewer universities"
+                      : `Show all ${results.universities.length} universities`}
+                  </Button>
+                ) : null}
               </section>
             ) : null}
 
@@ -242,9 +292,10 @@ function SearchPage() {
                   {results.specialisations.map(({ specialisation, program }) => (
                     <Link
                       key={`${program.slug}-${specialisation}`}
-                      to="/programs/$programSlug"
-                      params={{ programSlug: program.slug }}
-                      hash="specialisations"
+                      to="/specialisations/$specialisationSlug"
+                      params={{
+                        specialisationSlug: `${program.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
+                      }}
                       className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 transition hover:border-[#80ace0]"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
@@ -253,8 +304,8 @@ function SearchPage() {
                       <div className="min-w-0">
                         <p className="truncate text-sm font-extrabold">{specialisation}</p>
                         <p className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <Clock3 className="h-3 w-3" /> {program.code} · {program.durationYears}{" "}
-                          years
+                          <Clock3 className="h-3 w-3" /> {program.code} · typically{" "}
+                          {program.durationYears} years
                         </p>
                       </div>
                     </Link>

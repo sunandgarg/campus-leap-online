@@ -2,10 +2,10 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandLogo } from "@/components/site/brand-logo";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -14,7 +14,8 @@ export const Route = createFileRoute("/auth")({
       { title: "Admin sign in | DekhoCampus Online" },
       {
         name: "description",
-        content: "Sign in to manage universities, programs, fees and enquiries on DekhoCampus Online.",
+        content:
+          "Sign in to manage universities, programs, fees and enquiries on DekhoCampus Online.",
       },
       { property: "og:title", content: "Admin sign in | DekhoCampus Online" },
       { property: "og:description", content: "Content management sign-in for DekhoCampus Online." },
@@ -26,7 +27,6 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -41,26 +41,12 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email: email.trim(),
-          password,
-          options: { emailRedirectTo: window.location.origin + "/auth" },
-        });
-        if (error) throw error;
-        if (data.session) {
-          navigate({ to: "/admin", replace: true });
-        } else {
-          toast.success("Check your email to confirm your account.");
-        }
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: email.trim(),
-          password,
-        });
-        if (error) throw error;
-        navigate({ to: "/admin", replace: true });
-      }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (error) throw error;
+      navigate({ to: "/admin", replace: true });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not sign in.");
     } finally {
@@ -69,25 +55,24 @@ function AuthPage() {
   }
 
   async function handleGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/auth",
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + "/auth" },
     });
-    if (result.error) {
+    if (error) {
       toast.error("Google sign-in failed.");
       return;
     }
-    if (result.redirected) return;
-    navigate({ to: "/admin", replace: true });
+    if (data.url) window.location.assign(data.url);
   }
 
   return (
     <section className="container-page flex min-h-[70vh] items-center justify-center py-16">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card p-7 shadow-card">
-        <h1 className="font-display text-2xl font-bold">
-          {mode === "signin" ? "Admin sign in" : "Create admin account"}
-        </h1>
+        <BrandLogo size="lg" className="mb-7" />
+        <h1 className="font-display text-2xl font-bold">Admin sign in</h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Manage universities, programs, fees, settings and enquiries.
+          Restricted to invited DekhoCampus administrators.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -109,7 +94,7 @@ function AuthPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               minLength={6}
               required
             />
@@ -119,7 +104,7 @@ function AuthPage() {
             disabled={busy}
             className="w-full bg-ink text-ink-foreground hover:bg-ink-soft"
           >
-            {mode === "signin" ? "Sign in" : "Create account"}
+            Sign in
           </Button>
         </form>
 
@@ -127,15 +112,9 @@ function AuthPage() {
           Continue with Google
         </Button>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-5 w-full text-sm text-muted-foreground hover:text-foreground"
-        >
-          {mode === "signin"
-            ? "First time here? Create the admin account"
-            : "Already have an account? Sign in"}
-        </button>
+        <p className="mt-5 text-center text-xs leading-5 text-muted-foreground">
+          Need access? Ask an existing administrator to invite you and assign the appropriate role.
+        </p>
       </div>
     </section>
   );

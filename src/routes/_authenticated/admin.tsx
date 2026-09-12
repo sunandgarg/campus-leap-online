@@ -1,16 +1,20 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  BadgeCheck,
   Building2,
   FileText,
   GraduationCap,
   IndianRupee,
   Inbox,
+  Loader2,
   LogOut,
+  Shapes,
   Settings,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/site/brand-logo";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
@@ -21,6 +25,14 @@ const nav = [
   { to: "/admin/universities", label: "Universities", icon: Building2, exact: false },
   { to: "/admin/programs", label: "Programs", icon: GraduationCap, exact: false },
   { to: "/admin/offerings", label: "Fees & offerings", icon: IndianRupee, exact: false },
+  { to: "/admin/specialisations", label: "Specialisations", icon: Shapes, exact: false },
+  {
+    to: "/admin/offering-specialisations",
+    label: "Offering pathways",
+    icon: GraduationCap,
+    exact: false,
+  },
+  { to: "/admin/claims", label: "Claim evidence", icon: BadgeCheck, exact: false },
   { to: "/admin/leads", label: "Enquiries", icon: Inbox, exact: false },
   { to: "/admin/settings", label: "Site settings", icon: Settings, exact: false },
 ] as const;
@@ -55,10 +67,8 @@ function AdminLayout() {
     <div className="container-page py-10">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
         <div className="min-w-0">
-          <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            DekhoCampus Online
-          </p>
-          <h1 className="truncate font-display text-xl font-bold">Content admin</h1>
+          <BrandLogo size="sm" />
+          <h1 className="mt-2 truncate font-display text-xl font-bold">Content admin</h1>
         </div>
         <Button variant="outline" size="sm" onClick={signOut}>
           <LogOut className="mr-1.5 h-3.5 w-3.5" /> Sign out
@@ -66,7 +76,7 @@ function AdminLayout() {
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-        <nav className="flex flex-wrap gap-1.5 lg:flex-col">
+        <nav aria-label="Administration" className="flex flex-wrap gap-1.5 lg:flex-col">
           {nav.map((item) => {
             const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
             return (
@@ -85,16 +95,30 @@ function AdminLayout() {
         </nav>
 
         <div className="min-w-0">
-          {roleQuery.data === false ? (
+          {roleQuery.isPending ? (
+            <div
+              role="status"
+              className="flex min-h-52 items-center justify-center rounded-2xl border border-border bg-card p-8 text-sm text-muted-foreground"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying admin access…
+            </div>
+          ) : roleQuery.isError ? (
+            <div className="rounded-2xl border border-border bg-card p-8 text-center">
+              <h2 className="font-display text-lg font-bold">Could not verify admin access</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Sign in again or check the Supabase connection before retrying.
+              </p>
+            </div>
+          ) : roleQuery.data === false ? (
             <div className="rounded-2xl border border-border bg-card p-8 text-center">
               <h2 className="font-display text-lg font-bold">Admin access required</h2>
               <p className="mt-2 text-sm text-muted-foreground">
                 This account does not have admin rights. Ask an existing admin to grant access.
               </p>
             </div>
-          ) : (
+          ) : roleQuery.data === true ? (
             <Outlet />
-          )}
+          ) : null}
         </div>
       </div>
     </div>

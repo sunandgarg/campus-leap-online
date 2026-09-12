@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,11 +20,17 @@ export interface FieldDef {
   label: string;
   type: FieldType;
   help?: string;
+  min?: number;
+  step?: number | "any";
   options?: string[];
   required?: boolean;
+  /** Persist an empty field as SQL NULL instead of an empty string or zero. */
+  nullable?: boolean;
   defaultValue?: unknown;
   wide?: boolean;
 }
+
+export type SelectOption = string | { value: string; label: string };
 
 type Row = Record<string, unknown>;
 
@@ -34,28 +40,35 @@ interface EntityManagerProps {
   description: string;
   fields: FieldDef[];
   /** columns shown in the list */
-  listColumns: { name: string; label: string }[];
+  listColumns: { name: string; label: string; maxLength?: number }[];
   orderBy?: string;
+  orderAscending?: boolean;
   /** extra select options loaded for select fields, e.g. slugs */
-  selectSources?: Record<string, string[]>;
+  selectSources?: Record<string, SelectOption[]>;
   /** primary key column, defaults to "id" */
   idColumn?: string;
+  /** Disable record creation for audit-sensitive tables such as enquiries. */
+  allowCreate?: boolean;
 }
+
+const PAGE_SIZE = 50;
 
 function emptyDraft(fields: FieldDef[]): Row {
   const draft: Row = {};
   for (const f of fields) {
     draft[f.name] =
       f.defaultValue ??
-      (f.type === "list"
-        ? []
-        : f.type === "json"
+      (f.nullable
+        ? null
+        : f.type === "list"
           ? []
-          : f.type === "bool"
-            ? true
-            : f.type === "number"
-              ? 0
-              : "");
+          : f.type === "json"
+            ? []
+            : f.type === "bool"
+              ? true
+              : f.type === "number"
+                ? 0
+                : "");
   }
   return draft;
 }
@@ -74,20 +87,28 @@ export function EntityManager({
   fields,
   listColumns,
   orderBy = "sort_order",
+  orderAscending = true,
   selectSources,
   idColumn = "id",
+  allowCreate = true,
 }: EntityManagerProps) {
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState<Row | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   const rowsQuery = useQuery({
-    queryKey: ["admin", table],
+    queryKey: ["admin", table, page, orderBy, orderAscending],
     queryFn: async () => {
-      const { data, error } = await db.from(table).select("*").order(orderBy);
+      const start = page * PAGE_SIZE;
+      const { data, error, count } = await db
+        .from(table)
+        .select("*", { count: "exact" })
+        .order(orderBy, { ascending: orderAscending })
+        .range(start, start + PAGE_SIZE - 1);
       if (error) throw error;
-      return (data ?? []) as Row[];
+      return { rows: (data ?? []) as Row[], count: count ?? 0 };
     },
   });
 
@@ -127,13 +148,20 @@ export function EntityManager({
   });
 
   const rows = useMemo(() => {
-    const all = rowsQuery.data ?? [];
+    const all = rowsQuery.data?.rows ?? [];
     if (!search.trim()) return all;
     const q = search.toLowerCase();
     return all.filter((r) =>
-      listColumns.some((c) => String(r[c.name] ?? "").toLowerCase().includes(q)),
+      listColumns.some((c) =>
+        String(r[c.name] ?? "")
+          .toLowerCase()
+          .includes(q),
+      ),
     );
-  }, [rowsQuery.data, search, listColumns]);
+  }, [rowsQuery.data?.rows, search, listColumns]);
+
+  const totalRows = rowsQuery.data?.count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
 
   function startEdit(row: Row) {
     const next: Row = {};
@@ -146,14 +174,15 @@ export function EntityManager({
     setDraft((prev) => {
       const next = { ...(prev ?? {}) };
       if (field.type === "bool") next[field.name] = Boolean(raw);
-      else if (field.type === "number") next[field.name] = Number(raw) || 0;
-      else if (field.type === "list")
+      else if (field.type === "number") {
+        next[field.name] = raw === "" && field.nullable ? null : Number(raw) || 0;
+      } else if (field.type === "list")
         next[field.name] = String(raw)
           .split("\n")
           .map((v) => v.trim())
           .filter(Boolean);
       else if (field.type === "json") next[field.name] = String(raw);
-      else next[field.name] = raw;
+      else next[field.name] = raw === "" && field.nullable ? null : raw;
       return next;
     });
   }
@@ -164,8 +193,13 @@ export function EntityManager({
     const payload: Row = { ...draft };
     for (const f of fields) {
       if (f.type === "json" && typeof payload[f.name] === "string") {
+        const rawValue = String(payload[f.name]).trim();
+        if (!rawValue && f.nullable) {
+          payload[f.name] = null;
+          continue;
+        }
         try {
-          payload[f.name] = JSON.parse(String(payload[f.name] || "[]"));
+          payload[f.name] = JSON.parse(rawValue || "[]");
         } catch {
           toast.error(`${f.label} is not valid JSON.`);
           return;
@@ -187,17 +221,20 @@ export function EntityManager({
             placeholder="Search…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label={`Search the current ${title.toLowerCase()} page`}
             className="w-44"
           />
-          <Button
-            onClick={() => {
-              setDraft(emptyDraft(fields));
-              setEditingId(null);
-            }}
-            className="bg-ink text-ink-foreground hover:bg-ink-soft"
-          >
-            <Plus className="mr-1.5 h-4 w-4" /> New
-          </Button>
+          {allowCreate ? (
+            <Button
+              onClick={() => {
+                setDraft(emptyDraft(fields));
+                setEditingId(null);
+              }}
+              className="bg-ink text-ink-foreground hover:bg-ink-soft"
+            >
+              <Plus className="mr-1.5 h-4 w-4" /> New
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -214,6 +251,8 @@ export function EntityManager({
               type="button"
               variant="ghost"
               size="sm"
+              aria-label="Close editor"
+              title="Close editor"
               onClick={() => {
                 setDraft(null);
                 setEditingId(null);
@@ -247,17 +286,22 @@ export function EntityManager({
                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                   >
                     <option value="">Select…</option>
-                    {(f.options ?? selectSources?.[f.name] ?? []).map((o) => (
-                      <option key={o} value={o}>
-                        {o}
-                      </option>
-                    ))}
+                    {(f.options ?? selectSources?.[f.name] ?? []).map((option) => {
+                      const value = typeof option === "string" ? option : option.value;
+                      const label = typeof option === "string" ? option : option.label;
+                      return (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      );
+                    })}
                   </select>
                 ) : f.type === "textarea" || f.type === "list" || f.type === "json" ? (
                   <Textarea
                     id={`f-${f.name}`}
                     value={toInputValue(f, draft[f.name])}
                     onChange={(e) => updateField(f, e.target.value)}
+                    required={f.required}
                     rows={f.type === "json" ? 10 : 4}
                     className={f.type === "json" ? "font-mono text-xs" : ""}
                   />
@@ -265,6 +309,8 @@ export function EntityManager({
                   <Input
                     id={`f-${f.name}`}
                     type={f.type === "number" ? "number" : "text"}
+                    min={f.type === "number" ? f.min : undefined}
+                    step={f.type === "number" ? (f.step ?? "any") : undefined}
                     value={toInputValue(f, draft[f.name])}
                     onChange={(e) => updateField(f, e.target.value)}
                     required={f.required}
@@ -295,7 +341,9 @@ export function EntityManager({
                   {c.label}
                 </th>
               ))}
-              <th className="px-4 py-3" />
+              <th className="px-4 py-3">
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -324,18 +372,27 @@ export function EntityManager({
                       ? row[c.name]
                         ? "Yes"
                         : "No"
-                      : String(row[c.name] ?? "—").slice(0, 60)}
+                      : String(row[c.name] ?? "—").slice(0, c.maxLength ?? 60)}
                   </td>
                 ))}
                 <td className="whitespace-nowrap px-4 py-3 text-right">
-                  <Button variant="ghost" size="sm" onClick={() => startEdit(row)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => startEdit(row)}
+                    aria-label={`Edit ${String(row[listColumns[0]?.name ?? idColumn] ?? "record")}`}
+                    title="Edit record"
+                  >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
+                    aria-label={`Delete ${String(row[listColumns[0]?.name ?? idColumn] ?? "record")}`}
+                    title="Delete record"
                     onClick={() => {
-                      if (window.confirm("Delete this record?")) remove.mutate(String(row[idColumn]));
+                      if (window.confirm("Delete this record?"))
+                        remove.mutate(String(row[idColumn]));
                     }}
                   >
                     <Trash2 className="h-3.5 w-3.5 text-destructive" />
@@ -346,6 +403,35 @@ export function EntityManager({
           </tbody>
         </table>
       </div>
+
+      {totalRows > PAGE_SIZE ? (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+          <p>
+            Page {page + 1} of {totalPages} · {totalRows.toLocaleString("en-IN")} records · Search
+            filters this page
+          </p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page === 0 || rowsQuery.isFetching}
+              onClick={() => setPage((value) => Math.max(0, value - 1))}
+            >
+              <ChevronLeft className="mr-1 h-3.5 w-3.5" /> Previous
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={page + 1 >= totalPages || rowsQuery.isFetching}
+              onClick={() => setPage((value) => Math.min(totalPages - 1, value + 1))}
+            >
+              Next <ChevronRight className="ml-1 h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

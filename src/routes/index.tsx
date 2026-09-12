@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   Clock3,
   Code2,
-  FileCheck2,
   GraduationCap,
   HeartPulse,
   IndianRupee,
@@ -20,7 +19,6 @@ import {
   Lightbulb,
   Megaphone,
   MoonStar,
-  Newspaper,
   PlayCircle,
   Search,
   Send,
@@ -34,25 +32,26 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
-import heroImage from "@/assets/program-hero.jpg";
+import heroImage from "@/assets/program-hero.webp";
 import {
   universities,
   programCatalog,
   getSpecialisationCount,
   getTotalProgramCount,
   universitiesOfferingProgram,
+  verifiedUniversitiesOfferingProgram,
 } from "@/data/universities";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "Find Your Best Online Degree from India's Top Universities | DekhoCampus Online",
+        title: "Find Your Best-Fit Online Degree in India | DekhoCampus Online",
       },
       {
         name: "description",
         content:
-          "Compare UGC-entitled online MBA, BBA, MCA, BCA and other degrees by university, fees, specialisations and career outcomes. Get a free personalised shortlist.",
+          "Explore online MBA, BBA, MCA, BCA and other degrees by university, source status, fees where verified and specialisation. Get a private, free shortlist.",
       },
       {
         property: "og:title",
@@ -61,7 +60,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Transparent fees, verified universities and free expert counselling from DekhoCampus Online.",
+          "Clear source status, ungated comparison and optional expert counselling from DekhoCampus Online.",
       },
     ],
   }),
@@ -110,8 +109,9 @@ const domainCards = [
     iconBackground: "bg-[#ddd4ff]",
   },
   {
-    title: "Healthcare Management",
-    description: "Healthcare operations, hospital administration and leadership.",
+    title: "Non-clinical Healthcare Operations",
+    description:
+      "Management-focused operations and administration; verify prohibited-domain rules.",
     icon: HeartPulse,
     codes: ["MBA"],
     background: "bg-[#ffedf3]",
@@ -121,23 +121,23 @@ const domainCards = [
 
 const studyBenefits = [
   {
-    title: "Live at your hour",
-    description: "Choose morning, evening or weekend learning windows.",
+    title: "Plan around work",
+    description: "Compare the live-class timing each university actually publishes.",
     icon: PlayCircle,
   },
   {
-    title: "Recorded lectures",
-    description: "Pause, rewind and revisit difficult concepts anytime.",
+    title: "Recordings where offered",
+    description: "Confirm recording access, expiry and attendance rules before enrolling.",
     icon: BookOpenCheck,
   },
   {
-    title: "Flexible exam windows",
-    description: "Plan assessments around work and personal commitments.",
+    title: "Assessment clarity",
+    description: "Check exam windows, proctoring, centres and resit rules upfront.",
     icon: TimerReset,
   },
   {
     title: "Zero commute",
-    description: "Your classroom works wherever your laptop does.",
+    description: "Study without a daily campus journey, subject to device and connectivity needs.",
     icon: Laptop2,
   },
 ];
@@ -166,12 +166,11 @@ const guides = [
 ];
 
 const heroGoals = [
-  { label: "Online degree", icon: Laptop2 },
-  { label: "Compare universities", icon: Building2 },
-  { label: "Fees & EMI", icon: IndianRupee },
-  { label: "Career clarity", icon: Target },
-  { label: "Admission help", icon: GraduationCap },
-];
+  { label: "Career growth", value: "career-growth", icon: BriefcaseBusiness },
+  { label: "Career switch", value: "career-switch", icon: Target },
+  { label: "Lower fees", value: "lower-fees", icon: IndianRupee },
+  { label: "Flexible study", value: "flexible-study", icon: Clock3 },
+] as const;
 
 const heroRoles = ["Student", "Parent", "Professional"] as const;
 
@@ -186,64 +185,14 @@ function formatCurrency(value: number) {
 function HomePage() {
   const totalPrograms = getTotalProgramCount();
   const totalSpecialisations = getSpecialisationCount();
-  const [heroGoal, setHeroGoal] = useState(heroGoals[0].label);
+  const [heroGoal, setHeroGoal] = useState<(typeof heroGoals)[number]["label"]>("Career growth");
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
+  const selectedHeroGoal = heroGoals.find((goal) => goal.label === heroGoal)!;
   const catalogStats = [
     { value: universities.length.toString(), label: "university profiles", icon: Building2 },
     { value: programCatalog.length.toString(), label: "degree pathways", icon: GraduationCap },
     { value: totalPrograms.toString(), label: "university-program options", icon: BookOpenCheck },
     { value: totalSpecialisations.toString(), label: "specialisations mapped", icon: Target },
-  ];
-
-  const heroShortcuts = [
-    {
-      label: `${universities.length}+`,
-      caption: "Universities",
-      icon: GraduationCap,
-      to: "/universities" as const,
-      className: "border-[#f1dfe2] bg-[#fff2f3]",
-      iconClassName: "bg-[#ffe0df] text-[#e97367]",
-    },
-    {
-      label: `${totalPrograms}+`,
-      caption: "Programs",
-      icon: BookOpenCheck,
-      to: "/programs" as const,
-      className: "border-[#d7eaf1] bg-[#effaff]",
-      iconClassName: "bg-[#d8f1fa] text-[#1685aa]",
-    },
-    {
-      label: `${totalSpecialisations}+`,
-      caption: "Specialisations",
-      icon: FileCheck2,
-      to: "/programs" as const,
-      className: "border-[#e7e0f4] bg-[#f5f1ff]",
-      iconClassName: "bg-[#e8dfff] text-[#7860bc]",
-    },
-    {
-      label: "Application",
-      caption: "Support",
-      icon: CheckCircle2,
-      to: "/contact" as const,
-      className: "border-[#d4eee2] bg-[#effcf5]",
-      iconClassName: "bg-[#d8f5e6] text-[#288b5c]",
-    },
-    {
-      label: "Compare",
-      caption: "Universities",
-      icon: BarChart3,
-      to: "/compare" as const,
-      className: "border-[#efe3be] bg-[#fff9e8]",
-      iconClassName: "bg-[#ffefbd] text-[#b17b12]",
-    },
-    {
-      label: "Career",
-      caption: "Guidance",
-      icon: Newspaper,
-      to: "/contact" as const,
-      className: "border-[#d8edf0] bg-[#effcfd]",
-      iconClassName: "bg-[#d8f3f5] text-[#168690]",
-    },
   ];
 
   return (
@@ -266,43 +215,44 @@ function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="container-page relative grid gap-12 py-14 lg:min-h-[720px] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-16 xl:gap-20">
+        <div className="container-page relative grid gap-10 py-10 sm:py-12 lg:min-h-[660px] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-14 xl:gap-16">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffc9ac] bg-[#fff0e8]/90 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#ef783b] shadow-sm backdrop-blur">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffc9ac] bg-[#fff0e8]/90 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#a94300] shadow-sm backdrop-blur">
               <GraduationCap className="h-3.5 w-3.5 text-[#17202d]" />
-              Built for online learners
+              Independent online-degree discovery
             </div>
 
             <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#647083] dark:text-muted-foreground">
               <span className="h-2.5 w-2.5 rounded-full bg-[#2bc58b] shadow-[0_0_0_4px_rgba(43,197,139,0.1)]" />
-              Comparison-first guidance, with human help
+              Compare first. Speak to a human only when needed.
             </div>
 
-            <h1 className="mt-7 max-w-3xl font-display text-[3.05rem] font-extrabold leading-[0.98] tracking-[-0.065em] text-[#0d1726] dark:text-foreground sm:text-6xl lg:text-[4.55rem]">
-              An online degree for your
+            <h1 className="mt-6 max-w-3xl font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.055em] text-[#0d1726] dark:text-foreground sm:text-6xl lg:mt-7 lg:text-[4.15rem] lg:leading-[1]">
+              Find the online degree for your{" "}
               <span className="relative mt-2 block w-fit text-[#2864da] dark:text-[#72b4ff]">
-                next big move.
+                next career move.
                 <span className="absolute -bottom-2 left-1 h-1.5 w-[88%] -rotate-1 rounded-full bg-[#f47a20]" />
               </span>
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-8 text-[#536176] dark:text-muted-foreground">
-              Search verified universities and recognised programs, then move forward with clear
-              guidance, transparent fees and human support when you need it.
+            <p className="mt-7 max-w-2xl text-base leading-7 text-[#536176] dark:text-muted-foreground sm:text-lg sm:leading-8">
+              Explore online programs, source status and fees where verified in plain
+              language—before sharing your details or making a decision.
             </p>
 
-            <form action="/search" className="mt-7 max-w-2xl" role="search">
-              <div className="flex items-center gap-3 rounded-full border border-white bg-white p-1.5 pl-5 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0] dark:border-border dark:bg-card dark:ring-border">
+            <form action="/search" className="mt-6 max-w-2xl" role="search">
+              <div className="flex min-h-14 items-center gap-3 rounded-2xl border border-white bg-white p-1.5 pl-4 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0] dark:border-border dark:bg-card dark:ring-border sm:pl-5">
                 <Search className="h-5 w-5 shrink-0 text-[#7d899b]" />
                 <input
                   name="q"
                   aria-label="Search universities or programs"
-                  placeholder="Search universities, programs or specialisations..."
-                  className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#9ba5b4] dark:text-foreground sm:text-base"
+                  placeholder="Search MBA, BCA or a university..."
+                  className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-[#192333] outline-none placeholder:text-[#667386] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2 dark:text-foreground dark:placeholder:text-muted-foreground sm:text-base"
                 />
                 <button
                   type="submit"
-                  className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-[#ff762b] px-5 text-sm font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(255,118,43,0.8)] transition hover:bg-[#ed651c]"
+                  aria-label="Search the degree catalogue"
+                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#a94300] px-3 text-sm font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(255,118,43,0.8)] transition hover:bg-[#8f3700] sm:min-w-28 sm:px-5"
                 >
                   <Send className="h-4 w-4" />
                   <span className="hidden sm:inline">Search</span>
@@ -310,41 +260,32 @@ function HomePage() {
               </div>
             </form>
 
-            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2 text-[11px] text-[#788395] dark:text-muted-foreground">
+            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2 text-xs text-[#788395] dark:text-muted-foreground">
               <span className="flex items-center gap-1.5 font-bold">
                 <Zap className="h-3.5 w-3.5 text-[#ff762b]" /> Try:
               </span>
-              {["Best online MBA?", "Compare MCA fees", "Which degree fits my career?"].map(
-                (prompt) => (
-                  <span
-                    key={prompt}
-                    className="rounded-full border border-[#e1e6ed] bg-white/75 px-2.5 py-1 dark:border-border dark:bg-card/75"
-                  >
-                    {prompt}
-                  </span>
-                ),
-              )}
+              {[
+                { label: "Explore online MBA", query: "MBA" },
+                { label: "Compare MCA fees", query: "MCA" },
+                { label: "Data science options", query: "data science" },
+              ].map((prompt) => (
+                <Link
+                  key={prompt.label}
+                  to="/search"
+                  search={{ q: prompt.query }}
+                  className="inline-flex min-h-9 items-center rounded-lg border border-[#e1e6ed] bg-white/75 px-3 py-1.5 font-semibold transition hover:border-[#f47a20] hover:text-foreground dark:border-border dark:bg-card/75"
+                >
+                  {prompt.label}
+                </Link>
+              ))}
             </div>
 
-            <div className="mt-6 grid max-w-[44rem] grid-cols-3 gap-2 sm:grid-cols-6">
-              {heroShortcuts.map((item) => (
-                <Link
-                  key={`${item.label}-${item.caption}`}
-                  to={item.to}
-                  className={`${item.className} group flex min-h-[108px] flex-col items-center justify-center rounded-[1.35rem] border px-2 py-3 text-center transition hover:-translate-y-1 hover:shadow-lg dark:border-border dark:bg-card`}
-                >
-                  <span
-                    className={`${item.iconClassName} flex h-10 w-10 items-center justify-center rounded-xl transition group-hover:scale-105`}
-                  >
-                    <item.icon className="h-5 w-5" />
-                  </span>
-                  <span className="mt-2 text-xs font-extrabold leading-4 text-[#17202d] dark:text-foreground">
-                    {item.label}
-                  </span>
-                  <span className="text-[10px] font-semibold leading-3 text-[#697486] dark:text-muted-foreground">
-                    {item.caption}
-                  </span>
-                </Link>
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-[#5f6b7d] dark:text-muted-foreground">
+              {["Fee source status", "Exact-offering checks", "Free comparison"].map((item) => (
+                <span key={item} className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-[#208960]" />
+                  {item}
+                </span>
               ))}
             </div>
           </div>
@@ -352,10 +293,14 @@ function HomePage() {
           <div className="relative mx-auto w-full max-w-[470px]">
             <div className="absolute -inset-4 rounded-[2.8rem] bg-gradient-to-br from-[#ffd6b8]/70 via-transparent to-[#c9ddff]/65 blur-2xl dark:from-[#f47a20]/15 dark:to-[#1768cc]/20" />
             <div className="relative rounded-[2.25rem] border border-white/90 bg-white/70 p-3 shadow-[0_34px_75px_-30px_rgba(31,55,83,0.58)] backdrop-blur dark:border-white/10 dark:bg-card/80">
-              <div className="relative h-[330px] overflow-hidden rounded-[1.7rem] sm:h-[360px]">
+              <div className="relative h-[250px] overflow-hidden rounded-[1.7rem] sm:h-[280px]">
                 <img
                   src={heroImage}
                   alt="Professionals planning their next online degree"
+                  width={1280}
+                  height={720}
+                  decoding="async"
+                  fetchPriority="high"
                   className="h-full w-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#101923]/75 via-transparent to-transparent" />
@@ -371,7 +316,7 @@ function HomePage() {
               <div className="relative -mt-4 rounded-[1.6rem] border border-border bg-card p-5 shadow-xl sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#ef783b]">
+                    <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#a94300]">
                       <Sparkles className="h-3.5 w-3.5" /> Plan your next move
                     </p>
                     <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-[-0.04em] text-foreground">
@@ -383,7 +328,7 @@ function HomePage() {
                   </span>
                 </div>
 
-                <fieldset className="mt-4 flex flex-wrap gap-2">
+                <fieldset className="mt-4 grid grid-cols-2 gap-2">
                   <legend className="sr-only">Select your goal</legend>
                   {heroGoals.map((goal) => {
                     const selected = heroGoal === goal.label;
@@ -393,27 +338,31 @@ function HomePage() {
                         type="button"
                         aria-pressed={selected}
                         onClick={() => setHeroGoal(goal.label)}
-                        className={`rounded-full border px-3 py-2 text-[11px] font-extrabold transition ${
+                        className={`flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-left text-[11px] font-extrabold transition ${
                           selected
-                            ? "border-[#f47a20] bg-[#fff0e6] text-[#d85e12] dark:bg-[#3a2518] dark:text-[#ffad70]"
+                            ? "border-[#f47a20] bg-[#fff0e6] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]"
                             : "border-border bg-background text-muted-foreground hover:text-foreground"
                         }`}
                       >
+                        <goal.icon className="h-4 w-4 shrink-0" />
                         {goal.label}
                       </button>
                     );
                   })}
                 </fieldset>
 
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                  <div className="grid flex-1 grid-cols-3 rounded-full bg-secondary p-1">
+                <div className="mt-4">
+                  <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground">
+                    I am a
+                  </p>
+                  <div className="grid grid-cols-3 rounded-xl bg-secondary p-1">
                     {heroRoles.map((role) => (
                       <button
                         key={role}
                         type="button"
                         aria-pressed={heroRole === role}
                         onClick={() => setHeroRole(role)}
-                        className={`h-9 rounded-full text-[10px] font-extrabold transition ${
+                        className={`h-10 rounded-lg text-[10px] font-extrabold transition sm:text-[11px] ${
                           heroRole === role
                             ? "bg-card text-[#1768cc] shadow-sm dark:text-[#70b3ff]"
                             : "text-muted-foreground"
@@ -425,15 +374,22 @@ function HomePage() {
                   </div>
                   <Button
                     asChild
-                    className="rounded-full bg-[#f47a20] px-5 font-extrabold text-white hover:bg-[#dd6818]"
+                    size="lg"
+                    className="mt-3 w-full rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
                   >
-                    <Link to="/contact">
-                      Get my shortlist <ArrowRight className="ml-2 h-4 w-4" />
+                    <Link
+                      to="/finder"
+                      search={{
+                        goal: selectedHeroGoal.value,
+                        audience: heroRole.toLowerCase() as Lowercase<typeof heroRole>,
+                      }}
+                    >
+                      See my best matches <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </div>
                 <p className="mt-3 text-center text-[10px] font-semibold text-muted-foreground">
-                  Private guidance · No payment required
+                  Takes about 60 seconds · No personal details required
                 </p>
               </div>
             </div>
@@ -441,11 +397,65 @@ function HomePage() {
         </div>
       </section>
 
+      <section className="border-b border-border bg-background py-8 dark:bg-[#0a1823]">
+        <div className="container-page grid gap-5 lg:grid-cols-[0.72fr_2.28fr] lg:items-center">
+          <div>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.17em] text-[#a94300]">
+              One clear next step
+            </p>
+            <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-[-0.035em]">
+              Start with what you know.
+            </h2>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                icon: BookOpenCheck,
+                title: "I know my course",
+                text: "Browse MBA, BBA, MCA and more.",
+                to: "/programs" as const,
+              },
+              {
+                icon: Building2,
+                title: "I know a university",
+                text: "Check recognition, fees and programs.",
+                to: "/universities" as const,
+              },
+              {
+                icon: Target,
+                title: "I need help deciding",
+                text: "Answer four questions and get matched.",
+                to: "/finder" as const,
+              },
+            ].map((step) => (
+              <Link
+                key={step.title}
+                to={step.to}
+                className="group flex min-h-24 items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition hover:-translate-y-0.5 hover:border-[#f4a46c] hover:shadow-md"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-[#1768cc] dark:text-[#70b3ff]">
+                  <step.icon className="h-4.5 w-4.5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="flex items-center gap-1.5 text-sm font-extrabold">
+                    {step.title}
+                    <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                  </span>
+                  <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground">
+                    {step.text}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="container-page py-20 lg:py-28">
         <SectionIntro
-          eyebrow="Explore by ambition"
-          title="Online degrees built around your career."
-          description="Start with the domain you want to enter—not a long, confusing university list."
+          eyebrow="Explore courses"
+          title="Choose what you want to study."
+          description="Explore by career area or compare the most popular online degree types directly."
         />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -455,7 +465,7 @@ function HomePage() {
               className={`${domain.background} group rounded-[1.75rem] border border-black/[0.06] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_-25px_rgba(20,30,45,0.38)] dark:border-border dark:bg-card`}
             >
               <div
-                className={`${domain.iconBackground} flex h-12 w-12 items-center justify-center rounded-2xl`}
+                className={`${domain.iconBackground} flex h-12 w-12 items-center justify-center rounded-2xl text-[#17202d] dark:text-[#17202d]`}
               >
                 <domain.icon className="h-5 w-5" />
               </div>
@@ -481,12 +491,15 @@ function HomePage() {
 
         <div className="mt-14 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {programCatalog.slice(0, 6).map((program) => {
-            const matchingOffers = universitiesOfferingProgram(program.slug);
+            const matchingOffers = universitiesOfferingProgram(program.slug).filter(
+              ({ university }) => university.profileDepth !== "directory",
+            );
+            const sourcedFeeOffers = verifiedUniversitiesOfferingProgram(program.slug);
             const matchingUniversities = matchingOffers
               .map(({ university }) => university)
               .slice(0, 3);
-            const startingFee = matchingOffers.length
-              ? Math.min(...matchingOffers.map(({ program: offer }) => offer.totalFee))
+            const startingFee = sourcedFeeOffers.length
+              ? Math.min(...sourcedFeeOffers.map(({ program: offer }) => offer.totalFee))
               : null;
 
             return (
@@ -500,14 +513,14 @@ function HomePage() {
                   <span className="rounded-full bg-[#eaf3ff] px-3 py-1.5 text-xs font-extrabold text-[#0d5cad]">
                     {program.level}
                   </span>
-                  <span className="text-xs font-semibold text-[#777c76] dark:text-muted-foreground">
+                  <span className="text-xs font-semibold text-[#656a64] dark:text-muted-foreground">
                     {program.durationYears} years
                   </span>
                 </div>
 
                 <div className="mt-5 flex items-start justify-between gap-5">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f47a20]">
+                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#a94300]">
                       {program.code}
                     </p>
                     <h3 className="mt-2 font-display text-xl font-bold leading-snug tracking-[-0.035em]">
@@ -521,15 +534,15 @@ function HomePage() {
 
                 <div className="mt-6 grid grid-cols-2 gap-4 border-y border-[#eceeea] py-4 dark:border-border">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8a8f89]">
-                      Starts from
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#656a64]">
+                      {startingFee ? "Sourced from" : "Fee status"}
                     </p>
                     <p className="mt-1 font-display text-base font-bold">
-                      {startingFee ? formatCurrency(startingFee) : "Compare fees"}
+                      {startingFee ? formatCurrency(startingFee) : "Needs source review"}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#8a8f89]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#656a64]">
                       Options
                     </p>
                     <p className="mt-1 font-display text-base font-bold">
@@ -552,8 +565,8 @@ function HomePage() {
                   </div>
                   <span className="text-xs font-semibold text-[#6d726c] dark:text-muted-foreground">
                     {matchingOffers.length > 0
-                      ? `${matchingOffers.length} universities`
-                      : "View universities"}
+                      ? `${matchingOffers.length} reviewed profiles`
+                      : "Explore the course guide"}
                   </span>
                 </div>
               </Link>
@@ -566,39 +579,47 @@ function HomePage() {
         <div className="container-page">
           <SectionIntro
             dark
-            eyebrow="Degree validity"
-            title="One degree. Zero distinctions."
-            description="For UGC-entitled programs, the qualification carries the same academic validity. The difference is where and how you study."
+            eyebrow="Admission verification"
+            title="A university name is only the first check."
+            description="Confirm the exact programme, Online mode and admission session on UGC-DEB. A directory listing never substitutes for current programme-level evidence."
           />
 
           <div className="relative mt-12 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
             <DegreeCard
-              label="On-campus"
-              title="UGC-entitled degree"
-              points={["Fixed timetable", "Campus attendance", "Location dependent"]}
+              label="Step 1"
+              title="Check the institution"
+              points={[
+                "Match the legal university name",
+                "Use the official university domain",
+                "Review current regulator notices",
+              ]}
               icon={Building2}
             />
 
             <div className="relative z-10 flex items-center justify-center lg:-mx-3">
-              <span className="flex h-16 w-16 items-center justify-center rounded-full border-8 border-[#101713] bg-[#f47a20] font-display text-2xl font-extrabold text-white shadow-xl">
-                =
+              <span className="flex h-16 w-16 items-center justify-center rounded-full border-8 border-[#101713] bg-[#a94300] text-white shadow-xl">
+                <ArrowRight className="h-6 w-6" />
               </span>
             </div>
 
             <DegreeCard
               featured
-              label="Online"
-              title="UGC-entitled degree"
-              points={["Flexible timetable", "Learn from anywhere", "Work while studying"]}
+              label="Step 2"
+              title="Check the exact offering"
+              points={[
+                "Exact programme nomenclature",
+                "Online—not ODL—mode",
+                "Your academic session and status",
+              ]}
               icon={Laptop2}
             />
           </div>
 
           <div className="mt-8 grid gap-3 md:grid-cols-3">
             {[
-              "Eligible for government and private-sector roles",
-              "Eligible for higher education, subject to institution rules",
-              "Can be evaluated for international study and employment",
+              "Academic equivalence depends on UGC rules and the exact entitled offering.",
+              "Job and higher-study eligibility remains subject to the receiving organisation’s rules.",
+              "International use may require a separate evaluation by the receiving institution or authority.",
             ].map((item) => (
               <div
                 key={item}
@@ -609,19 +630,36 @@ function HomePage() {
               </div>
             ))}
           </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a
+              href="https://deb.ugc.ac.in/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#ffc23f] px-5 text-sm font-extrabold text-[#10243b] transition hover:bg-[#ffd163]"
+            >
+              Open official UGC-DEB portal
+            </a>
+            <Link
+              to="/methodology"
+              hash="admission-safety"
+              className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/20 bg-white/[0.06] px-5 text-sm font-extrabold text-white transition hover:bg-white/[0.12]"
+            >
+              View the four-step safety checklist
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="container-page py-20 lg:py-28">
         <SectionIntro
-          eyebrow="Verified universities"
-          title="Start with a name you already trust."
-          description="Explore UGC-entitled online universities with clear program, fee and accreditation information."
+          eyebrow="University directory"
+          title="Compare familiar names with visible data status."
+          description="Research-complete and directory-stage profiles are labelled separately, so missing evidence is never disguised as certainty."
           action={
             <Button
               asChild
               variant="outline"
-              className="rounded-full border-[#ccd3ca] bg-white px-5 font-bold dark:border-border dark:bg-card"
+              className="rounded-xl border-[#ccd3ca] bg-white font-bold dark:border-border dark:bg-card"
             >
               <Link to="/universities">
                 View all universities
@@ -641,7 +679,7 @@ function HomePage() {
             >
               <UniversityLogo university={university} size="lg" />
               <h3 className="mt-4 line-clamp-2 text-sm font-bold">{university.shortName}</h3>
-              <p className="mt-1 text-[11px] text-[#777c76] dark:text-muted-foreground">
+              <p className="mt-1 text-[11px] text-[#656a64] dark:text-muted-foreground">
                 {university.programs.length} courses
               </p>
             </Link>
@@ -651,13 +689,13 @@ function HomePage() {
         <div className="mt-12 overflow-hidden rounded-[2rem] bg-[#0d5cad] text-white shadow-[0_28px_70px_-35px_rgba(13,92,173,0.72)]">
           <div className="grid gap-8 p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ffc18f]">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ffe1cb]">
                 Personal shortlist
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.045em] md:text-4xl">
                 So, where should you actually enrol?
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/75 md:text-base">
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/85 md:text-base">
                 Get your best-fit university shortlist based on qualification, budget, career goal
                 and learning preference.
               </p>
@@ -666,10 +704,10 @@ function HomePage() {
             <Button
               asChild
               size="lg"
-              className="h-12 rounded-full bg-[#f47a20] px-6 font-bold text-white hover:bg-[#dd6818]"
+              className="rounded-xl bg-[#a94300] font-bold text-white hover:bg-[#8f3700]"
             >
-              <Link to="/contact">
-                Find my top matches
+              <Link to="/finder">
+                Build my private shortlist
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -680,20 +718,20 @@ function HomePage() {
       <section className="bg-[#eff4f8] py-20 dark:bg-secondary/35 lg:py-28">
         <div className="container-page">
           <SectionIntro
-            eyebrow="Cost advantage"
-            title="Same ambition. A much lighter cost."
-            description="Pay for learning and the degree—not hostel, food, transport and relocation."
+            eyebrow="Cost clarity"
+            title="Compare the whole cost—not a headline EMI."
+            description="Online study may remove some campus expenses, but the real decision starts with a source-checked total and every compulsory charge."
           />
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
             <div className="rounded-[2rem] border border-[#dbe0db] bg-white p-7 dark:border-border dark:bg-card md:p-9">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7e837d]">
-                    On-campus · annual
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#646963]">
+                    Potentially avoided
                   </p>
-                  <p className="mt-3 font-display text-4xl font-extrabold tracking-[-0.055em]">
-                    ₹3,00,000+
+                  <p className="mt-3 max-w-sm font-display text-3xl font-extrabold tracking-[-0.045em]">
+                    Costs outside the degree
                   </p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f1f1ee]">
@@ -701,11 +739,20 @@ function HomePage() {
                 </span>
               </div>
 
-              <div className="mt-8 space-y-4">
-                <CostLine label="Tuition" value="₹1.2L+" percentage={40} />
-                <CostLine label="Hostel or rent" value="₹80K+" percentage={27} />
-                <CostLine label="Food and daily costs" value="₹50K+" percentage={17} />
-                <CostLine label="Travel and relocation" value="₹30K+" percentage={10} />
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Hostel or relocation",
+                  "Daily campus commute",
+                  "Campus living costs",
+                  "A full-time career pause",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex min-h-16 items-center gap-3 rounded-2xl bg-[#f3f5f1] p-4 text-sm font-bold dark:bg-secondary"
+                  >
+                    <Check className="h-4 w-4 shrink-0 text-[#168258]" /> {item}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -716,11 +763,11 @@ function HomePage() {
               />
               <div className="relative flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/60">
-                    Online · annual
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/85">
+                    Always verify
                   </p>
-                  <p className="mt-3 font-display text-4xl font-extrabold tracking-[-0.055em]">
-                    ₹70K–₹1.5L
+                  <p className="mt-3 max-w-sm font-display text-3xl font-extrabold tracking-[-0.045em]">
+                    The full payable amount
                   </p>
                 </div>
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
@@ -729,23 +776,23 @@ function HomePage() {
               </div>
 
               <div className="relative mt-8 rounded-2xl border border-white/10 bg-white/[0.07] p-5">
-                <p className="font-display text-5xl font-extrabold tracking-[-0.06em] text-[#ff9a50]">
-                  40–60%
+                <p className="font-display text-2xl font-extrabold tracking-[-0.04em] text-[#ffb078]">
+                  No synthetic fee estimates
                 </p>
-                <p className="mt-2 font-bold">potential annual saving</p>
-                <p className="mt-1 text-sm leading-6 text-white/65">
-                  Plus monthly EMI options on selected university programs.
+                <p className="mt-1 text-sm leading-6 text-white/90">
+                  DekhoCampus shows a fee only when the offering is marked source-checked. EMI is
+                  illustrative until a university or lender confirms eligibility and terms.
                 </p>
               </div>
 
               <div className="relative mt-6 grid gap-3 sm:grid-cols-2">
                 {[
-                  "Add industry certifications",
-                  "Build an emergency cushion",
-                  "Avoid education debt",
-                  "Continue earning while learning",
+                  "Total tuition",
+                  "Registration and exam charges",
+                  "Financing cost and lender terms",
+                  "Device and connectivity needs",
                 ].map((item) => (
-                  <div key={item} className="flex items-start gap-2 text-sm text-white/75">
+                  <div key={item} className="flex items-start gap-2 text-sm text-white/85">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#ff9a50]" />
                     {item}
                   </div>
@@ -756,65 +803,14 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-20 lg:py-28">
-        <SectionIntro
-          eyebrow="Popular degrees"
-          title="Great careers begin with the right program."
-          description="Explore recognised online degrees across management, technology, commerce and humanities."
-        />
-
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {programCatalog.slice(0, 8).map((program, index) => {
-            const icons = [
-              BriefcaseBusiness,
-              GraduationCap,
-              Code2,
-              Laptop2,
-              BarChart3,
-              IndianRupee,
-              BookOpenCheck,
-              Sparkles,
-            ];
-            const ProgramIcon = icons[index % icons.length];
-
-            return (
-              <Link
-                key={program.slug}
-                to="/programs/$programSlug"
-                params={{ programSlug: program.slug }}
-                className="group flex min-h-40 flex-col justify-between rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 transition duration-300 hover:-translate-y-1 hover:border-[#b9cee6] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.5)] dark:border-border dark:bg-card"
-              >
-                <div className="flex items-start justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf3ff] text-[#0d5cad]">
-                    <ProgramIcon className="h-4.5 w-4.5" />
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-[#9ba09a] transition group-hover:translate-x-1 group-hover:text-[#0d5cad]" />
-                </div>
-                <div className="mt-5">
-                  <h3 className="font-display text-xl font-extrabold tracking-[-0.04em]">
-                    {program.code}
-                  </h3>
-                  <p className="mt-1 line-clamp-1 text-xs text-[#777c76] dark:text-muted-foreground">
-                    {program.name}
-                  </p>
-                  <p className="mt-3 text-xs font-semibold text-[#0d5cad]">
-                    {program.specialisations.length} specialisations
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
       <section className="bg-[#101713] py-20 text-white lg:py-28">
         <div className="container-page grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
           <div>
             <SectionIntro
               dark
               eyebrow="Flexible learning"
-              title="Study when your brain is ready."
-              description="The degree fits around your life—not the other way around."
+              title="Build a schedule you can sustain."
+              description="Online formats can fit around work and family, but live classes, recordings and exams still vary by university."
             />
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -823,7 +819,7 @@ function HomePage() {
                   key={benefit.title}
                   className="rounded-2xl border border-white/10 bg-white/[0.055] p-5"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f47a20] text-white">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#a94300] text-white">
                     <benefit.icon className="h-4.5 w-4.5" />
                   </span>
                   <h3 className="mt-4 font-display text-base font-bold">{benefit.title}</h3>
@@ -835,9 +831,9 @@ function HomePage() {
 
           <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 md:p-9">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-bold">Your learning day</p>
-              <span className="rounded-full bg-[#f47a20] px-3 py-1 text-xs font-bold">
-                24/7 access
+              <p className="text-sm font-bold">One possible study plan</p>
+              <span className="rounded-full bg-[#a94300] px-3 py-1 text-xs font-bold">
+                Example only
               </span>
             </div>
 
@@ -866,11 +862,11 @@ function HomePage() {
             <div className="mt-12 rounded-2xl bg-white/[0.06] p-5">
               <div className="flex items-center gap-3">
                 <Clock3 className="h-5 w-5 text-[#ff9a50]" />
-                <p className="font-display text-lg font-bold">Learn without pausing your career</p>
+                <p className="font-display text-lg font-bold">Ask before you enrol</p>
               </div>
               <p className="mt-2 text-sm leading-6 text-white/60">
-                Combine live classes, recorded content and weekend assessments around your work
-                schedule.
+                Confirm the actual weekly workload, mandatory attendance, recording access and
+                assessment calendar for your exact programme.
               </p>
             </div>
           </div>
@@ -890,7 +886,7 @@ function HomePage() {
               key={stat.label}
               className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6 dark:border-border dark:bg-card"
             >
-              <stat.icon className="h-5 w-5 text-[#f47a20]" />
+              <stat.icon className="h-5 w-5 text-[#a94300]" />
               <p className="mt-7 font-display text-4xl font-extrabold tracking-[-0.055em] text-[#0d5cad]">
                 {stat.value}
               </p>
@@ -902,7 +898,7 @@ function HomePage() {
         </div>
 
         <div className="mt-8 rounded-[1.5rem] border border-[#e0e4de] bg-white px-6 py-5 dark:border-border dark:bg-card">
-          <p className="text-center text-xs font-semibold leading-5 text-[#858a84] dark:text-muted-foreground">
+          <p className="text-center text-xs font-semibold leading-5 text-[#656a64] dark:text-muted-foreground">
             Catalog information can change by intake. Reconfirm entitlement, fees and admission
             dates with the university before paying.
           </p>
@@ -932,7 +928,7 @@ function HomePage() {
                     <guide.icon className="h-5 w-5 text-[#0d5cad]" />
                   </span>
                   <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-border dark:bg-card/90">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#f47a20]">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a94300]">
                       DekhoCampus guide
                     </p>
                     <p className="mt-1 font-display text-base font-bold">{guide.meta}</p>
@@ -949,9 +945,13 @@ function HomePage() {
                   <Button
                     asChild
                     variant="outline"
-                    className="mt-6 w-full rounded-full border-[#ccd3ca] font-bold"
+                    className="mt-6 w-full rounded-xl border-[#ccd3ca] font-bold"
                   >
-                    <Link to={index === 0 ? "/methodology" : index === 1 ? "/compare" : "/contact"}>
+                    <Link
+                      to={
+                        index === 0 ? "/methodology" : index === 1 ? "/compare" : "/specialisations"
+                      }
+                    >
                       Open this guide
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -981,7 +981,7 @@ function HomePage() {
             <h2 className="mt-6 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] md:text-5xl">
               Make your next degree decision with clarity.
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/70">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/85">
               Compare programs, verify university claims, understand fees and ask for human help
               only when you need it.
             </p>
@@ -990,10 +990,10 @@ function HomePage() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-full bg-[#f47a20] px-7 font-bold text-white hover:bg-[#dd6818]"
+                className="rounded-xl bg-[#a94300] font-bold text-white hover:bg-[#8f3700]"
               >
                 <Link to="/contact">
-                  Book my free session
+                  Get free counselling
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -1001,21 +1001,24 @@ function HomePage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-full border-white/25 bg-white/5 px-7 font-bold text-white hover:bg-white/10 hover:text-white"
+                className="rounded-xl border-white/25 bg-white/5 font-bold text-white hover:bg-white/10 hover:text-white"
               >
                 <Link to="/universities">Explore universities</Link>
               </Button>
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-x-7 gap-y-3 text-xs font-semibold text-white/65">
-              {["Free guidance", "No hidden fee", "Human counsellors", "Verified information"].map(
-                (item) => (
-                  <span key={item} className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#ff9a50]" />
-                    {item}
-                  </span>
-                ),
-              )}
+            <div className="mt-8 flex flex-wrap justify-center gap-x-7 gap-y-3 text-xs font-semibold text-white/85">
+              {[
+                "Free guidance",
+                "No result gate",
+                "Human counsellors",
+                "Visible source status",
+              ].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-[#ff9a50]" />
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -1042,7 +1045,7 @@ function SectionIntro({
       <div className="max-w-3xl">
         <p
           className={`text-xs font-extrabold uppercase tracking-[0.18em] ${
-            dark ? "text-[#ff9a50]" : "text-[#f47a20]"
+            dark ? "text-[#ff9a50]" : "text-[#a94300]"
           }`}
         >
           {eyebrow}
@@ -1084,7 +1087,7 @@ function DegreeCard({
     <div
       className={`rounded-[2rem] border p-7 md:p-9 ${
         featured
-          ? "border-[#f47a20]/45 bg-[#f47a20] text-white"
+          ? "border-[#f47a20]/45 bg-[#9f470d] text-white"
           : "border-white/10 bg-white/[0.055] text-white"
       }`}
     >
@@ -1092,7 +1095,7 @@ function DegreeCard({
         <div>
           <p
             className={`text-xs font-extrabold uppercase tracking-[0.18em] ${
-              featured ? "text-white/65" : "text-[#ff9a50]"
+              featured ? "text-white/90" : "text-[#ff9a50]"
             }`}
           >
             {label}
@@ -1111,40 +1114,25 @@ function DegreeCard({
       <div className="mt-8 rounded-2xl border border-white/10 bg-black/10 p-5">
         <div className="flex items-center gap-3">
           <ShieldCheck className="h-5 w-5" />
-          <span className="font-bold">Recognised qualification</span>
+          <span className="font-bold">
+            {featured ? "Programme-level evidence" : "Institution identity"}
+          </span>
         </div>
       </div>
 
       <ul className="mt-6 space-y-3">
         {points.map((point) => (
-          <li key={point} className="flex items-center gap-3 text-sm text-white/75">
+          <li
+            key={point}
+            className={`flex items-center gap-3 text-sm ${
+              featured ? "text-white/90" : "text-white/75"
+            }`}
+          >
             <Check className="h-4 w-4 shrink-0" />
             {point}
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-function CostLine({
-  label,
-  value,
-  percentage,
-}: {
-  label: string;
-  value: string;
-  percentage: number;
-}) {
-  return (
-    <div>
-      <div className="flex items-center justify-between gap-4 text-sm">
-        <span className="font-semibold text-[#60655f]">{label}</span>
-        <span className="font-bold">{value}</span>
-      </div>
-      <div className="mt-2 h-2 rounded-full bg-[#eff1ed]">
-        <div className="h-full rounded-full bg-[#c5cbc3]" style={{ width: `${percentage}%` }} />
-      </div>
     </div>
   );
 }

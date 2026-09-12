@@ -1,15 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, Star } from "lucide-react";
+import { ArrowUpRight, ShieldCheck, Star } from "lucide-react";
 import { UniversityLogo } from "./university-logo";
 import { formatINR, getUniversityPrograms, type University } from "@/data/universities";
-import { Badge } from "@/components/ui/badge";
 
 export function UniversityCard({ university }: { university: University }) {
   const programs = getUniversityPrograms(university);
-  const cheapest = programs.reduce(
-    (min, p) => (p.totalFee < min ? p.totalFee : min),
-    Number.POSITIVE_INFINITY,
+  const isDirectoryProfile = university.profileDepth === "directory";
+  const hasDirectorySource = Boolean(
+    university.verificationSourceUrl && university.verificationAcademicYear,
   );
+  const cheapest = programs
+    .filter((program) => program.totalFeeAvailable)
+    .reduce((min, p) => (p.totalFee < min ? p.totalFee : min), Number.POSITIVE_INFINITY);
 
   return (
     <Link
@@ -24,28 +26,51 @@ export function UniversityCard({ university }: { university: University }) {
 
       <h3 className="mt-4 font-display text-lg font-bold leading-snug">{university.name}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        {university.city}, {university.state} · Est. {university.established}
+        {university.city}, {university.state}
+        {university.established ? ` · Est. ${university.established}` : ""}
       </p>
 
       <div className="mt-4 flex flex-wrap gap-1.5">
-        {university.approvals.slice(0, 3).map((a) => (
-          <Badge key={a} variant="secondary" className="font-medium">
-            {a}
-          </Badge>
-        ))}
+        <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-muted-foreground">
+          {isDirectoryProfile
+            ? hasDirectorySource
+              ? "Historical directory source"
+              : "Editorial directory record"
+            : "Editorial profile"}
+        </span>
+        <span className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-muted-foreground">
+          Verify each intake
+        </span>
       </div>
 
       <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
         <div>
-          <p className="text-xs text-muted-foreground">Fees from</p>
-          <p className="font-display text-base font-bold">{formatINR(cheapest)}</p>
+          <p className="text-xs text-muted-foreground">
+            {isDirectoryProfile || !Number.isFinite(cheapest) ? "Fee status" : "Sourced fees from"}
+          </p>
+          <p className="font-display text-base font-bold">
+            {!isDirectoryProfile && Number.isFinite(cheapest)
+              ? formatINR(cheapest)
+              : "Confirm current fee"}
+          </p>
         </div>
         <div className="text-right">
-          <p className="flex items-center justify-end gap-1 text-sm font-semibold">
-            <Star className="h-4 w-4 fill-gold text-gold" />
-            {university.rating}
+          {isDirectoryProfile ? (
+            <p className="flex items-center justify-end gap-1 text-xs font-semibold text-[#187a55] dark:text-[#77ddb2]">
+              <ShieldCheck className="h-4 w-4" />
+              {hasDirectorySource ? "Source documented" : "Needs source review"}
+            </p>
+          ) : university.metricsVerified ? (
+            <p className="flex items-center justify-end gap-1 text-sm font-semibold">
+              <Star className="h-4 w-4 fill-gold text-gold" />
+              {university.rating}
+            </p>
+          ) : (
+            <p className="text-xs font-semibold text-muted-foreground">Editorial profile</p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            {programs.length} {programs.length === 1 ? "program" : "programs"}
           </p>
-          <p className="text-xs text-muted-foreground">{programs.length} programs</p>
         </div>
       </div>
     </Link>

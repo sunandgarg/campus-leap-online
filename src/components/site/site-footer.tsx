@@ -1,21 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { GraduationCap } from "lucide-react";
 import { universities, programCatalog } from "@/data/universities";
+import { BrandLogo } from "@/components/site/brand-logo";
 
 export function SiteFooter() {
   return (
     <footer className="bg-ink text-ink-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold text-gold-foreground">
-              <GraduationCap className="h-5 w-5" />
-            </span>
-            <span className="font-display text-base font-bold">DekhoCampus Online</span>
-          </div>
+          <Link to="/" aria-label="DekhoCampus home" className="inline-flex rounded-lg">
+            <BrandLogo size="lg" tone="inverse" />
+          </Link>
           <p className="mt-4 max-w-xs text-sm text-ink-foreground/70">
-            India's dedicated portal for UGC-entitled online degrees. Compare universities, fees and
-            placements — then apply with a counsellor by your side.
+            An independent education discovery and counselling platform. Programmes are offered,
+            admitted and awarded solely by the respective university.
           </p>
           <a
             href="https://dekhocampus.in"
@@ -29,7 +26,7 @@ export function SiteFooter() {
 
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-foreground/60">
-            Top universities
+            University profiles
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm">
             {universities.slice(0, 6).map((u) => (
@@ -71,24 +68,49 @@ export function SiteFooter() {
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm text-ink-foreground/75">
             <li>
+              <Link to="/finder" className="hover:text-gold">
+                Find my best match
+              </Link>
+            </li>
+            <li>
+              <Link to="/specialisations" className="hover:text-gold">
+                Explore specialisations
+              </Link>
+            </li>
+            <li>
               <Link to="/methodology" className="hover:text-gold">
                 How we evaluate
               </Link>
             </li>
             <li>
-              <a href="tel:+919999999999" className="hover:text-gold">
-                +91 99999 99999
-              </a>
+              <Link to="/methodology" hash="admission-safety" className="hover:text-gold">
+                Admission safety checklist
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-gold">
+                About DekhoCampus
+              </Link>
             </li>
             <li>
               <a href="mailto:online@dekhocampus.in" className="hover:text-gold">
                 online@dekhocampus.in
               </a>
             </li>
-            <li>Mon – Sat, 10 AM – 7 PM IST</li>
+            <li className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-xs">
+              <Link to="/privacy" className="hover:text-gold">
+                Privacy
+              </Link>
+              <Link to="/terms" className="hover:text-gold">
+                Terms
+              </Link>
+              <Link to="/accessibility" className="hover:text-gold">
+                Accessibility
+              </Link>
+            </li>
             <li className="pt-2">
               <Link to="/contact" className="font-semibold text-gold hover:underline">
-                Book free counselling →
+                Request free counselling →
               </Link>
             </li>
           </ul>
@@ -96,11 +118,21 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-ink-foreground/10">
-        <div className="container-page flex flex-col gap-2 py-6 text-xs text-ink-foreground/55 md:flex-row md:items-center md:justify-between">
+        <div className="container-page flex flex-col gap-3 py-6 text-xs text-ink-foreground/55 md:flex-row md:items-start md:justify-between">
           <p>© {new Date().getFullYear()} DekhoCampus Online. All rights reserved.</p>
-          <p>
-            Fees and approvals are indicative and verified with universities periodically. Always
-            confirm details with the university before enrolling.
+          <p className="max-w-3xl md:text-right">
+            Programme entitlement, fees, admissions and outcomes can change by intake. Verify the
+            exact university–programme–mode–session combination on the{" "}
+            <a
+              href="https://deb.ugc.ac.in/"
+              target="_blank"
+              rel="noreferrer"
+              className="font-bold text-ink-foreground/75 hover:text-gold"
+            >
+              UGC-DEB portal
+            </a>{" "}
+            and pay only through the university's official channel. DekhoCampus does not guarantee
+            admission, placement, scholarship or salary.
           </p>
         </div>
       </div>

@@ -4,9 +4,12 @@ import {
   BadgeCheck,
   BookOpenCheck,
   BriefcaseBusiness,
+  CalendarCheck2,
   CircleAlert,
+  ExternalLink,
   IndianRupee,
   Laptop2,
+  ListChecks,
   Scale,
   ShieldCheck,
   UsersRound,
@@ -32,8 +35,8 @@ const pillars = [
     number: "01",
     title: "Recognition & credibility",
     description:
-      "We begin with the institution and the exact online programme. UGC entitlement and relevant university accreditation are the baseline—not a decorative badge.",
-    checks: ["UGC entitlement", "NAAC accreditation", "Programme and intake verification"],
+      "We begin with the institution and the exact online programme, mode and academic session. A university-level listing alone is not programme entitlement.",
+    checks: ["Exact programme", "Online mode", "Academic-session evidence"],
     icon: ShieldCheck,
     color: "bg-[#e9f3ff] text-[#1768cc] dark:bg-[#153a5e] dark:text-[#78b9ff]",
   },
@@ -62,7 +65,7 @@ const pillars = [
       "The best programme on paper can still fail without dependable academic and administrative support. We surface the support claims learners should verify.",
     checks: ["Academic assistance", "Administrative help", "Career-service access"],
     icon: UsersRound,
-    color: "bg-[#fff1e7] text-[#e96e22] dark:bg-[#3d281c] dark:text-[#ffab73]",
+    color: "bg-[#fff1e7] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffab73]",
   },
   {
     number: "05",
@@ -77,8 +80,8 @@ const pillars = [
     number: "06",
     title: "Cost & payment clarity",
     description:
-      "We show total programme fee beside semester and EMI figures. Affordability is personal, so the lowest fee is never treated as the automatic best choice.",
-    checks: ["Total fee", "Semester payment", "EMI disclosed as indicative"],
+      "Where primary-source evidence is available, we show total programme fee beside semester and indicative EMI figures. Unsourced fees are withheld—not estimated.",
+    checks: ["Source-checked fee", "Full cost before EMI", "No synthetic estimates"],
     icon: IndianRupee,
     color: "bg-[#ffedf3] text-[#c84b76] dark:bg-[#462333] dark:text-[#ff8eb7]",
   },
@@ -164,10 +167,102 @@ function MethodologyPage() {
         </div>
       </section>
 
+      <section
+        id="admission-safety"
+        className="scroll-mt-28 border-y border-border bg-[#071c2e] py-16 text-white lg:py-20"
+      >
+        <div className="container-page">
+          <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
+                <CalendarCheck2 className="h-4 w-4" /> Admission safety desk
+              </span>
+              <h2 className="mt-5 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl">
+                Check the intake, not just the university.
+              </h2>
+              <p className="mt-4 max-w-xl text-sm leading-7 text-white/65">
+                Entitlement, fees and admissions can change by session. DekhoCampus separates a
+                researched profile from a directory-stage listing and links you back to the official
+                regulator before any payment decision.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a
+                  href="https://deb.ugc.ac.in/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffc23f] px-5 text-sm font-extrabold text-[#10243b] transition hover:bg-[#ffd163]"
+                >
+                  Verify on UGC-DEB <ExternalLink className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://deb.ugc.ac.in/studentDEBID"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-5 text-sm font-extrabold text-white transition hover:bg-white/[0.12]"
+                >
+                  Create or check DEB-ID <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/12 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#78ddb3]/15 text-[#78ddb3]">
+                  <ListChecks className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="font-display text-xl font-extrabold">Before you enrol</p>
+                  <p className="mt-1 text-xs text-white/55">Four checks for every application</p>
+                </div>
+              </div>
+              <ol className="mt-7 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Match the exact programme, Online mode and admission session on UGC-DEB.",
+                  "Keep your ABC-ID and mandatory DEB-ID ready; do not share them in a lead form.",
+                  "Read the university prospectus, complete fee components and refund policy.",
+                  "Apply and pay only on the university’s official domain; save every receipt.",
+                ].map((item, index) => (
+                  <li
+                    key={item}
+                    className="flex gap-3 rounded-2xl border border-white/10 bg-black/10 p-4 text-xs font-semibold leading-6 text-white/75"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#1768cc] text-[10px] font-extrabold text-white">
+                      {index + 1}
+                    </span>
+                    {item}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#f2b06f]/30 bg-[#f47a20]/10 p-5 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex max-w-4xl items-start gap-3">
+              <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-[#ffad70]" />
+              <p className="text-xs leading-6 text-white/75 sm:text-sm">
+                <strong className="text-white">Check prohibited domains too.</strong> UGC-DEB’s
+                current instructions list programmes that cannot be offered online or by ODL and,
+                from the August 2026 session, add covered allied and healthcare programmes,
+                including Psychology as a specialisation. A polished university page is not proof
+                that a prohibited offering is valid.
+              </p>
+            </div>
+            <a
+              href="https://deb.ugc.ac.in/Instruction"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.06] px-4 text-xs font-extrabold text-white transition hover:bg-white/[0.12]"
+            >
+              Read current instructions <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section className="border-y border-border bg-secondary/45 py-16">
         <div className="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
-            <CircleAlert className="h-8 w-8 text-[#e96e22]" />
+            <CircleAlert className="h-8 w-8 text-[#a94300] dark:text-[#ff9a5b]" />
             <h2 className="mt-5 font-display text-3xl font-extrabold tracking-[-0.04em]">
               What we cannot decide for you
             </h2>

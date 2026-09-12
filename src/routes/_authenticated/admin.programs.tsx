@@ -17,11 +17,15 @@ const fields: FieldDef[] = [
   },
   { name: "duration_years", label: "Duration (years)", type: "number" },
   { name: "semesters", label: "Semesters", type: "number" },
-  { name: "average_salary_lpa", label: "Salary range", type: "text", help: "e.g. 6 - 18 LPA" },
   { name: "hero_image_url", label: "Hero image URL", type: "text" },
   { name: "overview", label: "Overview", type: "textarea" },
   { name: "eligibility", label: "Eligibility", type: "textarea" },
-  { name: "specialisations", label: "Specialisations", type: "list", help: "One per line" },
+  {
+    name: "specialisations",
+    label: "Common pathway ideas",
+    type: "list",
+    help: "Category guidance only. Verify availability separately for each university offering.",
+  },
   { name: "careers", label: "Career paths", type: "list", help: "One per line" },
   {
     name: "curriculum",
@@ -30,7 +34,7 @@ const fields: FieldDef[] = [
     help: '[{"semester":"Semester 1","subjects":["Subject A","Subject B"]}]',
   },
   { name: "sort_order", label: "Sort order", type: "number" },
-  { name: "published", label: "Published", type: "bool" },
+  { name: "published", label: "Published", type: "bool", defaultValue: false },
 ];
 
 function AdminPrograms() {
@@ -38,7 +42,7 @@ function AdminPrograms() {
     <EntityManager
       table="programs"
       title="Programs"
-      description="The shared course template: syllabus, specialisations, eligibility and careers. Linked to universities under Fees & offerings."
+      description="A category guide. University-specific eligibility, syllabus and pathways belong to a verified offering."
       fields={fields}
       listColumns={[
         { name: "name", label: "Program" },

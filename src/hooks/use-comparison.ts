@@ -39,7 +39,12 @@ function readComparison(): ComparisonState {
 
 function persistComparison(next: ComparisonState) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // Storage can be blocked by privacy settings or fail at quota. Keep the
+    // comparison usable for the current tab through React state and the event.
+  }
   window.dispatchEvent(new CustomEvent<ComparisonState>(CHANGE_EVENT, { detail: next }));
 }
 

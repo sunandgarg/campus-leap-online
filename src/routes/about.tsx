@@ -9,13 +9,13 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "DekhoCampus Online is the dedicated online-degree arm of dekhocampus.in, helping students compare UGC-entitled online universities with verified fees and unbiased counselling.",
+          "DekhoCampus Online is the dedicated online-degree discovery experience from DekhoCampus, with visible source status, ungated comparison and optional counselling.",
       },
       { property: "og:title", content: "About DekhoCampus Online" },
       {
         property: "og:description",
         content:
-          "Why we built a dedicated portal for UGC-entitled online degrees, and how our free counselling works.",
+          "Why we built a dedicated online-degree discovery portal and how its source-status model works.",
       },
     ],
   }),
@@ -39,28 +39,30 @@ function AboutPage() {
       <section className="container-page grid gap-12 py-14 lg:grid-cols-[1.3fr_0.7fr]">
         <div className="space-y-6 leading-relaxed text-muted-foreground">
           <p>
-            Online degrees now sit alongside on-campus degrees in the eyes of UGC — but choosing one
-            is harder than choosing a college. Entitlement status, exam formats, placement support
-            and real fee structures are scattered across dozens of university microsites.
+            Choosing an online degree takes more than recognising a university name. Programme
+            entitlement, delivery mode, academic session, exam format and full fee components can
+            differ—and the primary evidence is scattered across regulator and university websites.
           </p>
           <p>
-            DekhoCampus Online exists to fix that. We list only universities with valid UGC
-            entitlement for online programmes, publish the fee data we verify with each university,
-            and let you compare {universities.length} universities and {getTotalProgramCount()} programs
-            without a sales pitch.
+            DekhoCampus Online organises that decision. You can explore {universities.length}{" "}
+            university profiles and {getTotalProgramCount()} mapped university-program
+            relationships. Research-complete and directory-stage records are labelled separately,
+            and a fee is not intended to appear where its source status has not been checked.
           </p>
           <p>
-            Our counselling is free for students. We're paid by universities only when a student
-            enrols — and we never rank a university higher because of it. Fee tables on this site are
-            always sorted by cost, not by commission.
+            The catalogue and finder can be used before sharing personal information. A requested
+            counselling response is free; final application, document submission, payment and the
+            admission decision always remain with the university through its official process.
           </p>
-          <h2 className="pt-4 font-display text-2xl font-bold text-foreground">What we verify</h2>
+          <h2 className="pt-4 font-display text-2xl font-bold text-foreground">What we check</h2>
           <ul className="list-inside list-disc space-y-2">
-            <li>UGC entitlement for online programme delivery</li>
-            <li>NAAC grade and other statutory approvals (AICTE, AIU, WES)</li>
-            <li>Published fee structure and EMI availability</li>
-            <li>Programme duration, specialisations and exam mode</li>
-            <li>Placement support available to online learners</li>
+            <li>The exact university, programme, Online mode and academic session</li>
+            <li>The date and primary link behind a regulatory or accreditation claim</li>
+            <li>
+              Published total fee and compulsory components before displaying payment estimates
+            </li>
+            <li>University-specific duration, eligibility, specialisations and exam mode</li>
+            <li>Whether career support is actually available to that online cohort</li>
           </ul>
         </div>
 
@@ -69,7 +71,7 @@ function AboutPage() {
             <h2 className="font-display text-lg font-bold">Also from DekhoCampus</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Looking for regular on-campus colleges, entrance exams and cut-offs? Our main portal
-              covers 20,000+ Indian colleges.
+              covers Indian colleges, entrance exams and campus admissions.
             </p>
             <Button asChild variant="outline" className="mt-4 w-full">
               <a href="https://dekhocampus.in" target="_blank" rel="noopener noreferrer">

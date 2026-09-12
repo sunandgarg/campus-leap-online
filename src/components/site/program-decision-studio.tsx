@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
 import {
   formatINR,
+  isVerifiedProgramOffer,
   type ProgramTemplate,
   type University,
   type UniversityProgram,
@@ -35,7 +36,7 @@ const profiles = [
 const priorities = [
   { value: "budget" as const, label: "Keep costs low", icon: WalletCards },
   { value: "flexibility" as const, label: "Maximum flexibility", icon: Clock3 },
-  { value: "career" as const, label: "Career progression", icon: Sparkles },
+  { value: "career" as const, label: "Career lens (no rank)", icon: Sparkles },
 ];
 
 const profileCopy: Record<LearnerProfile, string> = {
@@ -47,29 +48,61 @@ const profileCopy: Record<LearnerProfile, string> = {
     "Prioritise practical projects, relevant specialisations and clear links to your target roles.",
 };
 
+const trustNotes: [string, string, typeof BadgeCheck][] = [
+  [
+    "Source-backed comparisons",
+    "Only current offerings with cited total-fee evidence enter this planner.",
+    BadgeCheck,
+  ],
+  [
+    "No forced application",
+    "Explore and shortlist before sharing application details.",
+    ShieldCheck,
+  ],
+  [
+    "Clear fee context",
+    "Derived monthly splits stay distinct from published payment plans.",
+    WalletCards,
+  ],
+  [
+    "Human support",
+    "Ask for help when you need eligibility or application clarity.",
+    UserRoundSearch,
+  ],
+];
+
 interface ProgramDecisionStudioProps {
   program: ProgramTemplate;
   offers: Offer[];
 }
 
 export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudioProps) {
-  const minEmi = Math.min(...offers.map(({ program: offer }) => offer.emiPerMonth));
-  const maxEmi = Math.max(...offers.map(({ program: offer }) => offer.emiPerMonth));
+  const sourceBackedOffers = useMemo(() => offers.filter(isVerifiedProgramOffer), [offers]);
+  const minEmi = sourceBackedOffers.length
+    ? Math.min(...sourceBackedOffers.map(({ program: offer }) => offer.emiPerMonth))
+    : 0;
+  const maxEmi = sourceBackedOffers.length
+    ? Math.max(...sourceBackedOffers.map(({ program: offer }) => offer.emiPerMonth))
+    : 0;
   const [profile, setProfile] = useState<LearnerProfile>("professional");
   const [priority, setPriority] = useState<Priority>("flexibility");
   const [weeklyHours, setWeeklyHours] = useState(8);
   const [monthlyBudget, setMonthlyBudget] = useState(minEmi);
 
+  useEffect(() => {
+    setMonthlyBudget(minEmi);
+  }, [program.slug, minEmi, maxEmi]);
+
   const affordableOffers = useMemo(
     () =>
-      [...offers]
+      [...sourceBackedOffers]
         .filter(({ program: offer }) => offer.emiPerMonth <= monthlyBudget)
         .sort((a, b) => {
-          if (priority === "career") return b.university.rating - a.university.rating;
+          if (priority === "career") return a.university.name.localeCompare(b.university.name);
           if (priority === "budget") return a.program.totalFee - b.program.totalFee;
           return a.program.emiPerMonth - b.program.emiPerMonth;
         }),
-    [monthlyBudget, offers, priority],
+    [monthlyBudget, priority, sourceBackedOffers],
   );
 
   const readiness = weeklyHours >= 10 ? "Strong" : weeklyHours >= 7 ? "Good" : "Needs planning";
@@ -187,7 +220,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-display text-lg font-extrabold">Your readiness: {readiness}</p>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#168258] dark:bg-[#153d30] dark:text-[#69d7a9]">
-                    <Check className="h-3.5 w-3.5" /> Personalised guidance
+                    <Check className="h-3.5 w-3.5" /> On-device rule guidance
                   </span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -207,8 +240,8 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 Set a comfortable monthly range
               </h3>
               <p className="mt-3 text-sm leading-6 text-white/65">
-                Compare the published EMI figures in this catalogue. Final lender eligibility,
-                interest and terms can differ.
+                Compare arithmetic monthly splits from source-backed total fees. A split is not a
+                lender quote; published monthly plans are labelled separately.
               </p>
             </div>
 
@@ -232,19 +265,24 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 onChange={(event) => setMonthlyBudget(Number(event.target.value))}
                 className="mt-5 w-full accent-[#ff8a3d]"
               />
-              <div className="mt-2 flex justify-between text-[10px] font-bold text-white/45">
+              <div className="mt-2 flex justify-between text-[10px] font-bold text-white/65">
                 <span>{formatINR(minEmi)}</span>
                 <span>{formatINR(maxEmi)}</span>
               </div>
 
               <div className="mt-7 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-white/45">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-white/65">
                     Matches
                   </p>
                   <p className="mt-1 font-display text-xl font-extrabold">
                     {affordableOffers.length}{" "}
                     {affordableOffers.length === 1 ? "university" : "universities"}
+                  </p>
+                  <p className="mt-1 text-[10px] text-white/65">
+                    {priority === "career"
+                      ? "Shown A–Z; no provider outcome ranking"
+                      : "Filtered by the labelled monthly-cost rule"}
                   </p>
                 </div>
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-[#ffab73]">
@@ -264,7 +302,9 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-extrabold">{university.shortName}</p>
                       <p className="mt-0.5 text-[10px] text-white/50">
-                        NAAC {university.naacGrade} · ★ {university.rating}
+                        {offer.emiPerMonthVerified
+                          ? "Published monthly amount"
+                          : "Derived monthly split"}
                       </p>
                     </div>
                     <p className="text-xs font-extrabold text-[#8bc7ff]">
@@ -274,15 +314,16 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 ))}
                 {affordableOffers.length === 0 ? (
                   <div className="rounded-2xl border border-[#ffb27f]/25 bg-[#ff8a3d]/10 p-4 text-sm leading-6 text-white/70">
-                    No listed EMI starts within this range. Consider a higher upfront payment or ask
-                    the university about semester-wise payment.
+                    No arithmetic monthly split starts within this range. Review total cost first,
+                    then ask the university about a published payment plan.
                   </div>
                 ) : null}
               </div>
 
               <Button
                 asChild
-                className="mt-6 h-12 w-full rounded-xl bg-[#ff7a24] font-extrabold text-white hover:bg-[#ee6710]"
+                size="lg"
+                className="mt-6 w-full rounded-xl bg-[#ff7a24] font-extrabold text-white hover:bg-[#ee6710]"
               >
                 <Link to="/compare">
                   Compare all fees <ArrowRight className="ml-2 h-4 w-4" />
@@ -293,28 +334,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
         </div>
 
         <div className="mt-5 grid overflow-hidden rounded-[1.5rem] border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            [
-              "Verified comparisons",
-              "Recognition, fee and program facts shown together.",
-              BadgeCheck,
-            ],
-            [
-              "No forced application",
-              "Explore and shortlist before sharing application details.",
-              ShieldCheck,
-            ],
-            [
-              "Clear fee context",
-              "See total program fee as well as monthly payment estimates.",
-              WalletCards,
-            ],
-            [
-              "Human support",
-              "Ask for help when you need eligibility or application clarity.",
-              UserRoundSearch,
-            ],
-          ].map(([title, description, Icon], index) => (
+          {trustNotes.map(([title, description, Icon], index) => (
             <div
               key={String(title)}
               className={`p-5 ${index ? "border-t border-border sm:border-l sm:border-t-0" : ""} ${index === 2 ? "sm:border-t lg:border-t-0" : ""}`}

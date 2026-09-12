@@ -1,3 +1,5 @@
+import { directoryUniversities } from "@/data/directory-universities";
+
 /**
  * Central data layer for online.dekhocampus.in
  *
@@ -7,6 +9,38 @@
  */
 
 export type ProgramLevel = "Bachelors" | "Masters" | "Diploma" | "Certificate";
+export type EntitlementStatus = "verified" | "unverified" | "expired" | "no-admission" | "debarred";
+
+export interface ClaimEvidence {
+  id: string;
+  renderedClaim: string;
+  claimType: string;
+  universitySlug?: string | undefined;
+  programSlug?: string | undefined;
+  offeringId?: string | undefined;
+  sourceUrl: string;
+  sourceDate?: string | undefined;
+  academicSession?: string | undefined;
+  methodology?: string | undefined;
+  verifiedAt: string;
+  expiresAt: string;
+  published: boolean;
+}
+
+export interface CatalogSpecialisation {
+  id: string;
+  slug: string;
+  name: string;
+  category?: string | undefined;
+  summary?: string | undefined;
+  skills: string[];
+  careerDirections: string[];
+  sortOrder: number;
+  /** Programs inferred from current, published offering mappings or legacy taxonomy labels. */
+  programSlugs: string[];
+  /** Exact labels used by a university for a current, published offering mapping. */
+  programLabels: { programSlug: string; label: string }[];
+}
 
 export interface ProgramTemplate {
   /** url slug fragment, e.g. "online-mba" */
@@ -23,7 +57,6 @@ export interface ProgramTemplate {
   specialisations: string[];
   curriculum: { semester: string; subjects: string[] }[];
   careers: string[];
-  averageSalaryLpa: string;
   heroImageUrl?: string | undefined;
 }
 
@@ -31,6 +64,40 @@ export interface UniversityProgram extends ProgramTemplate {
   totalFee: number;
   perSemesterFee: number;
   emiPerMonth: number;
+  /** Whether at least one source-backed fee field exists for comparison. */
+  feeGuideAvailable: boolean;
+  totalFeeAvailable: boolean;
+  perSemesterFeeAvailable: boolean;
+  emiPerMonthAvailable: boolean;
+  /** True only when the amount has explicit source evidence, not a fallback multiplier. */
+  feesVerified: boolean;
+  /** True only when the cited fee source states the semester amount itself. */
+  perSemesterFeeVerified: boolean;
+  /** True only when the cited fee source states the monthly payment itself. */
+  emiPerMonthVerified: boolean;
+  /** Whether the duration and semester count came from the reviewed offering. */
+  durationVerified: boolean;
+  /** Whether eligibility came from the reviewed offering. */
+  eligibilityVerified: boolean;
+  /** Whether curriculum came from the reviewed offering. */
+  curriculumVerified: boolean;
+  /** True only when this university-level offering has its own checked pathway list. */
+  specialisationsVerified: boolean;
+  offeringId?: string | undefined;
+  entitlementStatus?: EntitlementStatus | undefined;
+  academicSession?: string | undefined;
+  entitlementSourceUrl?: string | undefined;
+  universityProgramUrl?: string | undefined;
+  officialApplicationUrl?: string | undefined;
+  verifiedAt?: string | undefined;
+  deliveryMode?: "ONLINE" | "ODL" | undefined;
+  examMode?: string | undefined;
+  scholarshipSummary?: string | undefined;
+  refundPolicyUrl?: string | undefined;
+  feeSourceUrl?: string | undefined;
+  feeVerifiedAt?: string | undefined;
+  feeNextReviewAt?: string | undefined;
+  feeComponents?: { [key: string]: SettingsValue } | undefined;
   seatsFilledPercent?: number | undefined;
 }
 
@@ -43,8 +110,14 @@ export interface University {
   established: number;
   domain: string;
   accentColor: string;
+  /** Legacy editorial field; render accreditation only through current claim evidence. */
   naacGrade: string;
+  /** Legacy editorial tags; never present these as verified public approvals. */
   approvals: string[];
+  /** Current evidence rows scoped to this university (and optionally one of its programs). */
+  claimEvidence?: ClaimEvidence[] | undefined;
+  /** University-wide recognition/accreditation claims derived only from current evidence rows. */
+  supportedApprovals?: string[] | undefined;
   rating: number;
   reviews: number;
   studentsEnrolled: string;
@@ -54,9 +127,26 @@ export interface University {
   logoUrl?: string | undefined;
   heroImageUrl?: string | undefined;
   hiringPartnerCount?: string | undefined;
+  legalName?: string | undefined;
+  heiId?: string | undefined;
   /**
-   * Programs offered. Either a fee multiplier over the base fee (static
-   * fallback data) or explicit fees coming from the admin-managed database.
+   * Complete profiles contain editorially reviewed fees and learning details.
+   * Directory profiles are discovery records with deliberately limited detail.
+   * A source may be attached, but callers must check before describing one as
+   * source-listed. Every record still needs intake-level confirmation.
+   */
+  profileDepth?: "complete" | "directory" | undefined;
+  verificationAcademicYear?: string | undefined;
+  verificationSourceUrl?: string | undefined;
+  lastVerified?: string | undefined;
+  verificationNextReviewAt?: string | undefined;
+  verificationCurrent?: boolean | undefined;
+  /** Independent evidence for ratings, review totals and enrolment metrics. */
+  metricsVerified?: boolean | undefined;
+  /**
+   * Programs offered. `feeMultiplier` is retained only to read the legacy
+   * editorial seed; it is never converted into a public fee. Publish amounts
+   * only through explicit, independently verified fee fields.
    */
   programs: {
     slug: string;
@@ -64,27 +154,50 @@ export interface University {
     totalFee?: number | undefined;
     perSemesterFee?: number | undefined;
     emiPerMonth?: number | undefined;
+    feeGuideAvailable?: boolean | undefined;
+    feesVerified?: boolean | undefined;
+    perSemesterFeeVerified?: boolean | undefined;
+    emiPerMonthVerified?: boolean | undefined;
+    specialisations?: string[] | undefined;
+    specialisationsVerified?: boolean | undefined;
+    offeringId?: string | undefined;
+    entitlementStatus?: EntitlementStatus | undefined;
+    academicSession?: string | undefined;
+    entitlementSourceUrl?: string | undefined;
+    universityProgramUrl?: string | undefined;
+    officialApplicationUrl?: string | undefined;
+    verifiedAt?: string | undefined;
+    officialProgrammeName?: string | undefined;
+    deliveryMode?: "ONLINE" | "ODL" | undefined;
+    durationYears?: number | undefined;
+    semesters?: number | undefined;
+    eligibility?: string | undefined;
+    curriculum?: ProgramTemplate["curriculum"] | undefined;
+    examMode?: string | undefined;
+    scholarshipSummary?: string | undefined;
+    refundPolicyUrl?: string | undefined;
+    feeSourceUrl?: string | undefined;
+    feeVerifiedAt?: string | undefined;
+    feeNextReviewAt?: string | undefined;
+    feeComponents?: { [key: string]: SettingsValue } | undefined;
     seatsFilledPercent?: number | undefined;
   }[];
 }
 
 export type SettingsValue =
-  | string
-  | number
-  | boolean
-  | null
-  | SettingsValue[]
-  | { [key: string]: SettingsValue };
+  string | number | boolean | null | SettingsValue[] | { [key: string]: SettingsValue };
 
 export type SiteSettings = Record<string, SettingsValue>;
 
 export interface Catalog {
   universities: University[];
   programs: ProgramTemplate[];
+  claimEvidence?: ClaimEvidence[] | undefined;
+  specialisations?: CatalogSpecialisation[] | undefined;
   settings: SiteSettings;
+  /** Database is authoritative; fallback keeps the reviewed bundled catalogue. */
+  source?: "database" | "fallback" | undefined;
 }
-
-
 
 const programTemplates: ProgramTemplate[] = [
   {
@@ -97,7 +210,7 @@ const programTemplates: ProgramTemplate[] = [
     eligibility:
       "Bachelor's degree in any discipline from a recognised university with minimum 50% aggregate (45% for reserved categories).",
     overview:
-      "A UGC-entitled online MBA built for working professionals who want to move into leadership. The programme blends core management fundamentals with a deep specialisation, live faculty sessions and industry capstone projects.",
+      "An online MBA category guide covering management foundations, possible elective pathways and the curriculum questions a working professional should compare.",
     specialisations: [
       "Marketing Management",
       "Finance",
@@ -158,7 +271,6 @@ const programTemplates: ProgramTemplate[] = [
       "Operations Lead",
       "Product Manager",
     ],
-    averageSalaryLpa: "6 - 18 LPA",
   },
   {
     slug: "online-bba",
@@ -168,9 +280,9 @@ const programTemplates: ProgramTemplate[] = [
     durationYears: 3,
     semesters: 6,
     eligibility:
-      "10+2 (any stream) from a recognised board with minimum 50% aggregate. No entrance exam required.",
+      "10+2 or an equivalent qualification from a recognised board; exact thresholds and entrance requirements vary by university.",
     overview:
-      "An online BBA that gives you a complete grounding in business, finance and marketing while you work or prepare for higher studies. Learn through recorded lectures, live doubt-clearing classes and case-based assessments.",
+      "An online BBA category guide covering common business, finance and marketing foundations and the delivery and assessment questions to compare.",
     specialisations: [
       "Marketing",
       "Finance",
@@ -218,7 +330,6 @@ const programTemplates: ProgramTemplate[] = [
       "HR Executive",
       "Operations Executive",
     ],
-    averageSalaryLpa: "3 - 7 LPA",
   },
   {
     slug: "online-mca",
@@ -283,7 +394,6 @@ const programTemplates: ProgramTemplate[] = [
       "Cloud Engineer",
       "QA Automation Engineer",
     ],
-    averageSalaryLpa: "5 - 16 LPA",
   },
   {
     slug: "online-bca",
@@ -336,7 +446,6 @@ const programTemplates: ProgramTemplate[] = [
       "Web Developer",
       "Data Entry & Analytics Associate",
     ],
-    averageSalaryLpa: "3 - 8 LPA",
   },
   {
     slug: "online-mcom",
@@ -388,7 +497,6 @@ const programTemplates: ProgramTemplate[] = [
       },
     ],
     careers: ["Accountant", "Tax Consultant", "Finance Executive", "Audit Associate"],
-    averageSalaryLpa: "4 - 10 LPA",
   },
   {
     slug: "online-bcom",
@@ -421,7 +529,6 @@ const programTemplates: ProgramTemplate[] = [
       },
     ],
     careers: ["Accounts Executive", "Tax Assistant", "Banking Associate"],
-    averageSalaryLpa: "3 - 6 LPA",
   },
   {
     slug: "online-ma-journalism-mass-communication",
@@ -463,7 +570,6 @@ const programTemplates: ProgramTemplate[] = [
       },
     ],
     careers: ["Content Writer", "Digital Marketer", "PR Executive", "News Producer"],
-    averageSalaryLpa: "3.5 - 9 LPA",
   },
   {
     slug: "online-ma-english",
@@ -483,7 +589,12 @@ const programTemplates: ProgramTemplate[] = [
       },
       {
         semester: "Semester 2",
-        subjects: ["British Fiction", "American Literature", "Indian Writing in English", "Elective"],
+        subjects: [
+          "British Fiction",
+          "American Literature",
+          "Indian Writing in English",
+          "Elective",
+        ],
       },
       {
         semester: "Semester 3",
@@ -491,11 +602,15 @@ const programTemplates: ProgramTemplate[] = [
       },
       {
         semester: "Semester 4",
-        subjects: ["Comparative Literature", "English Language Teaching", "Elective", "Dissertation"],
+        subjects: [
+          "Comparative Literature",
+          "English Language Teaching",
+          "Elective",
+          "Dissertation",
+        ],
       },
     ],
     careers: ["Teacher", "Editor", "Content Strategist", "Academic Researcher"],
-    averageSalaryLpa: "3 - 8 LPA",
   },
   {
     slug: "online-pg-diploma-data-science",
@@ -529,11 +644,227 @@ const programTemplates: ProgramTemplate[] = [
       },
     ],
     careers: ["Data Analyst", "Business Analyst", "ML Engineer (entry)", "BI Developer"],
-    averageSalaryLpa: "5 - 14 LPA",
+  },
+  {
+    slug: "online-ba",
+    code: "BA",
+    name: "Bachelor of Arts",
+    level: "Bachelors",
+    durationYears: 3,
+    semesters: 6,
+    eligibility: "10+2 or an equivalent qualification from a recognised board.",
+    overview:
+      "A flexible multidisciplinary online degree for learners interested in humanities, public service, communication and postgraduate study.",
+    specialisations: ["English", "Economics", "Political Science", "History", "Sociology"],
+    curriculum: [
+      {
+        semester: "Year 1",
+        subjects: ["English Communication", "Indian Society", "Political Theory", "Microeconomics"],
+      },
+      {
+        semester: "Year 2",
+        subjects: [
+          "Research Methods",
+          "Macroeconomics",
+          "Modern Indian History",
+          "Public Administration",
+        ],
+      },
+      {
+        semester: "Year 3",
+        subjects: [
+          "Specialisation Electives",
+          "Contemporary India",
+          "Dissertation",
+          "Career Skills",
+        ],
+      },
+    ],
+    careers: [
+      "Content Associate",
+      "Public Policy Associate",
+      "Research Assistant",
+      "Civil Services Aspirant",
+    ],
+  },
+  {
+    slug: "online-ma-economics",
+    code: "MA Economics",
+    name: "Master of Arts in Economics",
+    level: "Masters",
+    durationYears: 2,
+    semesters: 4,
+    eligibility:
+      "Bachelor's degree from a recognised university; economics or mathematics exposure may be preferred.",
+    overview:
+      "An online postgraduate degree covering economic theory, applied statistics, policy analysis and research methods.",
+    specialisations: [
+      "Applied Economics",
+      "Development Economics",
+      "Financial Economics",
+      "Public Policy",
+    ],
+    curriculum: [
+      {
+        semester: "Semester 1",
+        subjects: [
+          "Microeconomic Theory",
+          "Macroeconomic Theory",
+          "Mathematical Economics",
+          "Statistics",
+        ],
+      },
+      {
+        semester: "Semester 2",
+        subjects: ["Econometrics", "Public Economics", "Indian Economy", "Research Methods"],
+      },
+      {
+        semester: "Semester 3–4",
+        subjects: ["Development Economics", "Electives", "Policy Lab", "Dissertation"],
+      },
+    ],
+    careers: [
+      "Economic Analyst",
+      "Policy Researcher",
+      "Market Research Analyst",
+      "Data Research Associate",
+    ],
+  },
+  {
+    slug: "online-ma-political-science",
+    code: "MA Political Science",
+    name: "Master of Arts in Political Science",
+    level: "Masters",
+    durationYears: 2,
+    semesters: 4,
+    eligibility: "Bachelor's degree in any discipline from a recognised university.",
+    overview:
+      "A postgraduate online programme exploring political theory, Indian government, international relations, public policy and research.",
+    specialisations: [
+      "International Relations",
+      "Public Administration",
+      "Indian Politics",
+      "Political Theory",
+    ],
+    curriculum: [
+      {
+        semester: "Semester 1",
+        subjects: [
+          "Western Political Thought",
+          "Indian Political Thought",
+          "Comparative Politics",
+          "Research Methods",
+        ],
+      },
+      {
+        semester: "Semester 2",
+        subjects: [
+          "Indian Government",
+          "International Relations",
+          "Public Administration",
+          "Political Sociology",
+        ],
+      },
+      {
+        semester: "Semester 3–4",
+        subjects: ["Public Policy", "Electives", "Contemporary Political Issues", "Dissertation"],
+      },
+    ],
+    careers: ["Policy Associate", "Researcher", "Programme Officer", "Public Affairs Associate"],
+  },
+  {
+    slug: "online-msc-data-science",
+    code: "MSc Data Science",
+    name: "Master of Science in Data Science",
+    level: "Masters",
+    durationYears: 2,
+    semesters: 4,
+    eligibility:
+      "Bachelor's degree from a recognised university; mathematics, statistics or programming exposure may be required.",
+    overview:
+      "An applied online master's degree in statistics, machine learning, data engineering and responsible AI for analytical roles.",
+    specialisations: [
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Business Analytics",
+      "Data Engineering",
+    ],
+    curriculum: [
+      {
+        semester: "Semester 1",
+        subjects: [
+          "Python Programming",
+          "Probability & Statistics",
+          "Data Management",
+          "Linear Algebra",
+        ],
+      },
+      {
+        semester: "Semester 2",
+        subjects: [
+          "Machine Learning",
+          "Data Visualisation",
+          "Big Data Systems",
+          "Research Methods",
+        ],
+      },
+      {
+        semester: "Semester 3–4",
+        subjects: ["Deep Learning", "Responsible AI", "Electives", "Industry Capstone"],
+      },
+    ],
+    careers: ["Data Analyst", "Data Scientist", "ML Engineer", "Analytics Consultant"],
+  },
+  {
+    slug: "online-msw",
+    code: "MSW",
+    name: "Master of Social Work",
+    level: "Masters",
+    durationYears: 2,
+    semesters: 4,
+    eligibility: "Bachelor's degree in any discipline from a recognised university.",
+    overview:
+      "An online social-work degree covering community practice, social policy, counselling foundations and programme management.",
+    specialisations: [
+      "Community Development",
+      "Social Policy",
+      "Rural Development",
+      "CSR & NGO Management",
+    ],
+    curriculum: [
+      {
+        semester: "Semester 1",
+        subjects: [
+          "Social Work Foundations",
+          "Human Behaviour",
+          "Indian Social Structure",
+          "Fieldwork Methods",
+        ],
+      },
+      {
+        semester: "Semester 2",
+        subjects: [
+          "Community Organisation",
+          "Social Policy",
+          "Counselling Basics",
+          "Research Methods",
+        ],
+      },
+      {
+        semester: "Semester 3–4",
+        subjects: [
+          "Programme Management",
+          "Specialisation Electives",
+          "Supervised Project",
+          "Dissertation",
+        ],
+      },
+    ],
+    careers: ["Programme Coordinator", "CSR Associate", "Community Manager", "Social Researcher"],
   },
 ];
 
-const universityData: University[] = [
+const coreUniversityData: University[] = [
   {
     slug: "amity-university-online",
     name: "Amity University Online",
@@ -569,6 +900,8 @@ const universityData: University[] = [
   {
     slug: "manipal-university-online",
     name: "Manipal University Jaipur Online",
+    legalName: "Manipal University Jaipur",
+    heiId: "HEI-U-0749",
     shortName: "Manipal Jaipur",
     city: "Jaipur",
     state: "Rajasthan",
@@ -589,7 +922,23 @@ const universityData: University[] = [
     about:
       "Manipal University Jaipur Online delivers UGC-entitled online degrees from one of India's most respected private education groups, with strong industry integration and a mature digital campus.",
     programs: [
-      { slug: "online-mba", feeMultiplier: 1.4 },
+      {
+        slug: "online-mba",
+        entitlementStatus: "expired",
+        academicSession: "2025–26 (July–August 2025)",
+        entitlementSourceUrl:
+          "https://deb.ugc.ac.in/Uploads/Notices_Upload/UGC_20251006094420_1.pdf",
+        universityProgramUrl: "https://www.onlinemanipal.com/online-mba-manipal-university-jaipur",
+        officialProgrammeName: "Master of Business Administration",
+        deliveryMode: "ONLINE",
+        durationYears: 2,
+        semesters: 4,
+        eligibility:
+          "A 10+2+3 bachelor's degree or AIU-equivalent qualification with at least 50% marks (45% for reserved categories).",
+        examMode: "Online proctored examinations",
+        feesVerified: false,
+        specialisationsVerified: false,
+      },
       { slug: "online-bba", feeMultiplier: 1.2 },
       { slug: "online-mca", feeMultiplier: 1.35 },
       { slug: "online-bca", feeMultiplier: 1.1 },
@@ -597,6 +946,8 @@ const universityData: University[] = [
       { slug: "online-bcom", feeMultiplier: 0.95 },
       { slug: "online-ma-english", feeMultiplier: 0.9 },
     ],
+    verificationAcademicYear: "2025–26",
+    verificationSourceUrl: "https://deb.ugc.ac.in/Uploads/Notices_Upload/UGC_20251006094420_1.pdf",
   },
   {
     slug: "lpu-online",
@@ -839,13 +1190,20 @@ const universityData: University[] = [
   },
 ];
 
-/** Base total fee (INR) for a program before per-university multiplier. */
-const BASE_FEE: Record<ProgramLevel, number> = {
-  Masters: 120000,
-  Bachelors: 90000,
-  Diploma: 80000,
-  Certificate: 40000,
-};
+const editorialUniversityData: University[] = coreUniversityData.map((university) => ({
+  ...university,
+  metricsVerified: false,
+  studentsEnrolled: "Not independently verified",
+  placementPartners: [],
+  highlights: [
+    "Course fields are editorial guides; fee amounts stay hidden unless source-backed",
+    "Recognition must be checked for the exact programme, mode and admission session",
+    "Learning delivery, examinations, support and refund rules require university confirmation",
+  ],
+  about: `${university.name} is maintained as an editorial comparison profile. Course fields are discovery aids rather than a current prospectus, and fee amounts remain hidden unless backed by a reviewed source. Verify the exact programme, online mode, academic session, recognition status, payable fee and official application route before applying or paying.`,
+}));
+
+const universityData: University[] = [...editorialUniversityData, ...directoryUniversities];
 
 type UniversityProgramRef = University["programs"][number];
 
@@ -856,32 +1214,176 @@ type UniversityProgramRef = University["programs"][number];
  */
 export let universities: University[] = universityData;
 export let programCatalog: ProgramTemplate[] = programTemplates;
+export let claimEvidenceCatalog: ClaimEvidence[] = [];
+export let specialisationCatalog: CatalogSpecialisation[] = [];
 export let siteSettings: SiteSettings = {};
 
 let templateBySlug = new Map(programTemplates.map((p) => [p.slug, p]));
 
 function buildProgram(template: ProgramTemplate, ref: UniversityProgramRef): UniversityProgram {
-  const totalFee =
-    ref.totalFee ?? Math.round((BASE_FEE[template.level] * (ref.feeMultiplier ?? 1)) / 1000) * 1000;
+  const useOfferingDetails = !ref.entitlementStatus || ref.entitlementStatus === "verified";
+  const reviewedOffering = ref.entitlementStatus === "verified";
+  const hasAcademicEvidence = useOfferingDetails && Boolean(ref.universityProgramUrl);
+  const feeEvidenceCurrent = Boolean(
+    ref.feeVerifiedAt &&
+    ref.feeNextReviewAt &&
+    Date.parse(ref.feeVerifiedAt) <= Date.now() &&
+    Date.parse(ref.feeNextReviewAt) > Date.now(),
+  );
+  const durationYears = hasAcademicEvidence
+    ? (ref.durationYears ?? template.durationYears)
+    : template.durationYears;
+  const semesters = hasAcademicEvidence
+    ? (ref.semesters ?? template.semesters)
+    : template.semesters;
+  const totalFeeAvailable =
+    useOfferingDetails &&
+    feeEvidenceCurrent &&
+    ref.feesVerified === true &&
+    ref.totalFee !== undefined;
+  const perSemesterFeeAvailable =
+    useOfferingDetails &&
+    feeEvidenceCurrent &&
+    ref.perSemesterFeeVerified === true &&
+    ref.perSemesterFee !== undefined;
+  const emiPerMonthAvailable =
+    useOfferingDetails &&
+    feeEvidenceCurrent &&
+    ref.emiPerMonthVerified === true &&
+    ref.emiPerMonth !== undefined;
+  const feeGuideAvailable = totalFeeAvailable || perSemesterFeeAvailable || emiPerMonthAvailable;
+  const feesVerified = totalFeeAvailable;
+  const totalFee = ref.totalFee ?? 0;
   return {
     ...template,
+    name:
+      useOfferingDetails && ref.officialProgrammeName ? ref.officialProgrammeName : template.name,
+    durationYears,
+    semesters,
+    eligibility: hasAcademicEvidence && ref.eligibility ? ref.eligibility : template.eligibility,
+    curriculum:
+      hasAcademicEvidence && ref.curriculum?.length ? ref.curriculum : template.curriculum,
+    specialisations:
+      useOfferingDetails && ref.specialisations ? ref.specialisations : template.specialisations,
     totalFee,
-    perSemesterFee:
-      ref.perSemesterFee ?? Math.round(totalFee / template.semesters / 500) * 500,
-    emiPerMonth:
-      ref.emiPerMonth ?? Math.round(totalFee / (template.durationYears * 12) / 100) * 100,
-    seatsFilledPercent: ref.seatsFilledPercent,
+    perSemesterFee: perSemesterFeeAvailable
+      ? (ref.perSemesterFee ?? 0)
+      : totalFeeAvailable
+        ? Math.round(totalFee / Math.max(1, semesters))
+        : 0,
+    emiPerMonth: emiPerMonthAvailable
+      ? (ref.emiPerMonth ?? 0)
+      : totalFeeAvailable
+        ? Math.round(totalFee / Math.max(1, durationYears * 12))
+        : 0,
+    feeGuideAvailable,
+    totalFeeAvailable,
+    perSemesterFeeAvailable,
+    emiPerMonthAvailable,
+    feesVerified,
+    perSemesterFeeVerified: perSemesterFeeAvailable,
+    emiPerMonthVerified: emiPerMonthAvailable,
+    durationVerified:
+      reviewedOffering &&
+      hasAcademicEvidence &&
+      ref.durationYears !== undefined &&
+      ref.semesters !== undefined,
+    eligibilityVerified: reviewedOffering && hasAcademicEvidence && Boolean(ref.eligibility),
+    curriculumVerified: reviewedOffering && hasAcademicEvidence && Boolean(ref.curriculum?.length),
+    specialisationsVerified: reviewedOffering && ref.specialisationsVerified === true,
+    offeringId: ref.offeringId,
+    entitlementStatus: ref.entitlementStatus,
+    academicSession: ref.academicSession,
+    entitlementSourceUrl: ref.entitlementSourceUrl,
+    universityProgramUrl: ref.universityProgramUrl,
+    officialApplicationUrl: ref.officialApplicationUrl,
+    verifiedAt: ref.verifiedAt,
+    deliveryMode: useOfferingDetails ? ref.deliveryMode : undefined,
+    examMode: hasAcademicEvidence ? ref.examMode : undefined,
+    scholarshipSummary: undefined,
+    refundPolicyUrl: useOfferingDetails ? ref.refundPolicyUrl : undefined,
+    feeSourceUrl:
+      feesVerified || perSemesterFeeAvailable || emiPerMonthAvailable
+        ? ref.feeSourceUrl
+        : undefined,
+    feeVerifiedAt:
+      feesVerified || perSemesterFeeAvailable || emiPerMonthAvailable
+        ? ref.feeVerifiedAt
+        : undefined,
+    feeNextReviewAt:
+      feesVerified || perSemesterFeeAvailable || emiPerMonthAvailable
+        ? ref.feeNextReviewAt
+        : undefined,
+    feeComponents: undefined,
+    seatsFilledPercent: undefined,
   };
 }
 
-/** Replace the live catalog with admin-managed content. */
-export function setCatalog(catalog: Catalog): void {
-  if (catalog.universities.length > 0) universities = catalog.universities;
-  if (catalog.programs.length > 0) {
-    programCatalog = catalog.programs;
-    templateBySlug = new Map(catalog.programs.map((p) => [p.slug, p]));
+export function resolveCatalog(catalog: Catalog): Catalog {
+  // A newly provisioned or fully failed import must not turn the public site
+  // into an empty shell. The bundled catalogue is deliberately editorial and
+  // unranked, so it is a safe failover until both CMS core tables are populated.
+  const databaseIsAuthoritative =
+    catalog.source === "database" && catalog.universities.length > 0 && catalog.programs.length > 0;
+  let resolvedUniversities = universityData;
+  let resolvedPrograms = programTemplates;
+
+  if (databaseIsAuthoritative) {
+    resolvedUniversities = catalog.universities.map((university) => ({
+      ...university,
+      profileDepth: university.profileDepth ?? "complete",
+    }));
+    resolvedPrograms = catalog.programs;
+  } else if (catalog.universities.length > 0) {
+    const managedSlugs = new Set(catalog.universities.map((university) => university.slug));
+    resolvedUniversities = [
+      ...catalog.universities.map((university) => ({
+        ...university,
+        profileDepth: university.profileDepth ?? "complete",
+      })),
+      ...universityData.filter((university) => !managedSlugs.has(university.slug)),
+    ];
   }
-  siteSettings = catalog.settings;
+  if (!databaseIsAuthoritative && catalog.programs.length > 0) {
+    const managedProgramSlugs = new Set(catalog.programs.map((program) => program.slug));
+    resolvedPrograms = [
+      ...catalog.programs,
+      ...programTemplates.filter((program) => !managedProgramSlugs.has(program.slug)),
+    ];
+  }
+
+  resolvedUniversities = resolvedUniversities.map((university) => {
+    const normalizedUniversity: University = {
+      ...university,
+      claimEvidence: university.claimEvidence ?? [],
+    };
+    return {
+      ...normalizedUniversity,
+      supportedApprovals: getUniversityApprovalClaims(normalizedUniversity).map(
+        (claim) => claim.renderedClaim,
+      ),
+    };
+  });
+
+  return {
+    universities: resolvedUniversities,
+    programs: resolvedPrograms,
+    claimEvidence: catalog.claimEvidence ?? [],
+    specialisations: catalog.specialisations ?? [],
+    settings: catalog.settings,
+    source: databaseIsAuthoritative ? "database" : "fallback",
+  };
+}
+
+/** Replace the live catalogue before nested route loaders and components run. */
+export function setCatalog(catalog: Catalog): void {
+  const resolved = resolveCatalog(catalog);
+  universities = resolved.universities;
+  programCatalog = resolved.programs;
+  claimEvidenceCatalog = resolved.claimEvidence ?? [];
+  specialisationCatalog = resolved.specialisations ?? [];
+  siteSettings = resolved.settings;
+  templateBySlug = new Map(programCatalog.map((program) => [program.slug, program]));
 }
 
 export function getUniversity(slug: string): University | undefined {
@@ -919,11 +1421,115 @@ export function universitiesOfferingProgram(programSlug: string) {
       if (!ref || !template) return [];
       return [{ university: u, program: buildProgram(template, ref) }];
     })
-    .sort((a, b) => a.program.totalFee - b.program.totalFee);
+    .sort((a, b) => {
+      const aVerified = isVerifiedProgramOffer(a);
+      const bVerified = isVerifiedProgramOffer(b);
+      if (aVerified !== bVerified) return aVerified ? -1 : 1;
+      if (aVerified && bVerified) return a.program.totalFee - b.program.totalFee;
+      return a.university.name.localeCompare(b.university.name);
+    });
+}
+
+export type ProgramOffer = { university: University; program: UniversityProgram };
+
+/** Directory records never participate in price/rating recommendations or comparisons. */
+export function isComparableProgramOffer(offer: ProgramOffer): boolean {
+  return (
+    offer.university.profileDepth !== "directory" &&
+    offer.university.verificationCurrent === true &&
+    offer.program.totalFeeAvailable &&
+    offer.program.feesVerified &&
+    offer.program.entitlementStatus === "verified"
+  );
+}
+
+/** Exact structured claims require both a reviewed profile and sourced fee data. */
+export function isVerifiedProgramOffer(offer: ProgramOffer): boolean {
+  return isComparableProgramOffer(offer) && offer.program.feesVerified;
+}
+
+export function verifiedUniversitiesOfferingProgram(programSlug: string): ProgramOffer[] {
+  return universitiesOfferingProgram(programSlug).filter(isVerifiedProgramOffer);
+}
+
+export function comparableUniversitiesOfferingProgram(programSlug: string): ProgramOffer[] {
+  return universitiesOfferingProgram(programSlug).filter(isComparableProgramOffer);
+}
+
+/**
+ * A degree-level pathway is not automatically offered by every university.
+ * Only explicitly mapped, reviewed university offerings are returned here.
+ */
+export function universitiesOfferingSpecialisation(
+  programSlug: string,
+  specialisation: string,
+): ProgramOffer[] {
+  const normalized = specialisation.trim().toLowerCase();
+  return universitiesOfferingProgram(programSlug).filter(
+    (offer) =>
+      offer.university.profileDepth !== "directory" &&
+      offer.university.verificationCurrent === true &&
+      offer.program.entitlementStatus === "verified" &&
+      offer.program.specialisationsVerified &&
+      offer.program.specialisations.some((item) => item.trim().toLowerCase() === normalized),
+  );
 }
 
 export function getProgramTemplate(slug: string): ProgramTemplate | undefined {
   return templateBySlug.get(slug);
+}
+
+const APPROVAL_CLAIM_TYPES = new Set(["recognition", "accreditation"]);
+
+function isPublicEvidenceUrl(value: string): boolean {
+  try {
+    const protocol = new URL(value).protocol;
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function isCurrentClaim(claim: ClaimEvidence): boolean {
+  const now = Date.now();
+  return Boolean(
+    claim.published &&
+    isPublicEvidenceUrl(claim.sourceUrl) &&
+    claim.verifiedAt &&
+    Date.parse(claim.verifiedAt) <= now &&
+    Date.parse(claim.expiresAt) > now,
+  );
+}
+
+/** University-wide approval evidence; program/offering-scoped claims are intentionally excluded. */
+export function getUniversityApprovalClaims(university: University): ClaimEvidence[] {
+  return (university.claimEvidence ?? []).filter(
+    (claim) =>
+      claim.universitySlug === university.slug &&
+      !claim.programSlug &&
+      !claim.offeringId &&
+      APPROVAL_CLAIM_TYPES.has(claim.claimType) &&
+      isCurrentClaim(claim),
+  );
+}
+
+/**
+ * Approval evidence applicable to an exact program offering. University-wide
+ * records are inherited; narrower records must match this program/offering.
+ */
+export function getProgramApprovalClaims(
+  university: University,
+  program: UniversityProgram,
+): ClaimEvidence[] {
+  return (university.claimEvidence ?? []).filter(
+    (claim) =>
+      claim.universitySlug === university.slug &&
+      (!claim.programSlug || claim.programSlug === program.slug) &&
+      (!claim.offeringId || claim.offeringId === program.offeringId) &&
+      (!claim.academicSession || claim.academicSession === program.academicSession) &&
+      APPROVAL_CLAIM_TYPES.has(claim.claimType) &&
+      isCurrentClaim(claim),
+  );
 }
 
 export function formatINR(amount: number): string {
@@ -941,4 +1547,3 @@ export function getSpecialisationCount(): number {
 export function getTotalProgramCount(): number {
   return universities.reduce((n, u) => n + u.programs.length, 0);
 }
-

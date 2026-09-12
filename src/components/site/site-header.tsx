@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
@@ -13,14 +13,15 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/site/brand-logo";
 import { programCatalog, universities } from "@/data/universities";
 import { useComparison } from "@/hooks/use-comparison";
 
 const navLinks = [
-  { to: "/search", label: "Discover" },
+  { to: "/specialisations", label: "Specialisations" },
+  { to: "/finder", label: "Degree finder" },
   { to: "/compare", label: "Compare" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/methodology", label: "How it works" },
 ] as const;
 
 type DesktopMenu = "programs" | "universities" | null;
@@ -29,10 +30,28 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<DesktopMenu>(null);
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const comparison = useComparison();
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+    setDesktopMenu(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        setDesktopMenu(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   function toggleTheme() {
@@ -55,38 +74,42 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 px-3 pt-3">
       <div className="container-page relative flex h-16 items-center justify-between gap-4 rounded-2xl border border-border/80 bg-background/92 px-4 shadow-[0_16px_45px_-28px_rgba(18,38,62,0.58)] backdrop-blur-xl sm:px-5">
-        <Link to="/" className="flex items-center gap-2.5" onClick={closeNavigation}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#152238] text-white shadow-sm">
-            <GraduationCap className="h-5 w-5" />
-          </span>
-          <span className="leading-tight">
-            <span className="block font-display text-base font-extrabold tracking-[-0.035em]">
-              Dekho<span className="text-[#f47a20]">Campus</span>
-            </span>
-            <span className="block text-[9px] font-bold uppercase tracking-[0.19em] text-muted-foreground">
-              Online Degrees
-            </span>
-          </span>
+        <Link
+          to="/"
+          aria-label="DekhoCampus home"
+          className="flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          onClick={closeNavigation}
+        >
+          <BrandLogo variant="mark" size="md" className="sm:hidden" />
+          <BrandLogo size="md" className="hidden sm:inline-flex" />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Main navigation">
           <button
             type="button"
             aria-expanded={desktopMenu === "programs"}
+            aria-controls="desktop-navigation-panel"
             onClick={() => setDesktopMenu((menu) => (menu === "programs" ? null : "programs"))}
             className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
           >
-            Programs <ChevronDown className="h-3.5 w-3.5" />
+            Programs
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition ${desktopMenu === "programs" ? "rotate-180" : ""}`}
+            />
           </button>
           <button
             type="button"
             aria-expanded={desktopMenu === "universities"}
+            aria-controls="desktop-navigation-panel"
             onClick={() =>
               setDesktopMenu((menu) => (menu === "universities" ? null : "universities"))
             }
             className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
           >
-            Universities <ChevronDown className="h-3.5 w-3.5" />
+            Universities
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition ${desktopMenu === "universities" ? "rotate-180" : ""}`}
+            />
           </button>
           {navLinks.map((link) => (
             <Link
@@ -101,18 +124,19 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           <Link
             to="/search"
+            search={{ q: "" }}
             aria-label="Search courses and universities"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
           >
             <Search className="h-4 w-4" />
           </Link>
           <Link
             to="/compare"
             aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
           >
             <GitCompareArrows className="h-4 w-4" />
             {comparison.count > 0 ? (
@@ -126,24 +150,24 @@ export function SiteHeader() {
             onClick={toggleTheme}
             aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
             title={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           <Button
             asChild
             size="sm"
-            className="rounded-full bg-[#f47a20] px-4 font-extrabold text-white hover:bg-[#dd6818]"
+            className="h-10 min-w-0 rounded-xl bg-[#a94300] px-4 font-extrabold text-white hover:bg-[#8f3700]"
           >
-            <Link to="/contact">Free guidance</Link>
+            <Link to="/contact">Free counselling</Link>
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <Link
             to="/compare"
             aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background"
+            className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background"
           >
             <GitCompareArrows className="h-4 w-4" />
             {comparison.count > 0 ? (
@@ -156,7 +180,7 @@ export function SiteHeader() {
             type="button"
             onClick={toggleTheme}
             aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
@@ -165,14 +189,17 @@ export function SiteHeader() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
         {desktopMenu ? (
-          <div className="absolute left-0 right-0 top-[4.45rem] hidden overflow-hidden rounded-[1.4rem] border border-border bg-popover shadow-[0_28px_80px_-34px_rgba(18,38,62,0.6)] lg:block">
+          <div
+            id="desktop-navigation-panel"
+            className="absolute left-0 right-0 top-[4.45rem] hidden overflow-hidden rounded-[1.4rem] border border-border bg-popover shadow-[0_28px_80px_-34px_rgba(18,38,62,0.6)] xl:block"
+          >
             {desktopMenu === "programs" ? (
               <div className="grid grid-cols-[0.76fr_2.24fr]">
                 <div className="bg-[#152238] p-7 text-white">
@@ -209,7 +236,9 @@ export function SiteHeader() {
                               onClick={closeNavigation}
                               className="block rounded-lg px-2 py-2 text-sm font-bold transition hover:bg-secondary hover:text-[#1768cc]"
                             >
-                              <span className="mr-2 text-[#f47a20]">{program.code}</span>
+                              <span className="mr-2 text-[#a94300] dark:text-[#ff9a5b]">
+                                {program.code}
+                              </span>
                               <span className="text-xs font-medium text-muted-foreground">
                                 {program.durationYears} yr
                               </span>
@@ -227,11 +256,11 @@ export function SiteHeader() {
               <div className="p-7">
                 <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#f47a20]">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
                       University directory
                     </p>
                     <p className="mt-1 font-display text-xl font-extrabold tracking-[-0.035em]">
-                      Compare recognised online universities
+                      Explore online-university profiles
                     </p>
                   </div>
                   <Link
@@ -260,7 +289,10 @@ export function SiteHeader() {
                       <span>
                         <span className="block text-sm font-extrabold">{university.shortName}</span>
                         <span className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <ShieldCheck className="h-3 w-3" /> NAAC {university.naacGrade}
+                          <ShieldCheck className="h-3 w-3" />
+                          {university.profileDepth === "directory"
+                            ? "Directory record"
+                            : "Reviewed profile"}
                         </span>
                       </span>
                     </Link>
@@ -273,8 +305,22 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div className="container-page mt-2 overflow-hidden rounded-2xl border border-border bg-background shadow-xl lg:hidden">
+        <div className="container-page mt-2 overflow-hidden rounded-2xl border border-border bg-background shadow-xl xl:hidden">
           <div className="flex max-h-[calc(100vh-7rem)] flex-col gap-1 overflow-y-auto p-4">
+            <Link
+              to="/search"
+              search={{ q: "" }}
+              onClick={closeNavigation}
+              className="mb-2 flex items-center gap-3 rounded-xl border border-border bg-secondary px-3 py-3 text-sm font-extrabold text-foreground"
+            >
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card text-[#1768cc] dark:text-[#70b3ff]">
+                <Search className="h-4 w-4" />
+              </span>
+              Search courses and universities
+            </Link>
+            <p className="px-3 pt-1 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
+              Popular courses
+            </p>
             <Link
               to="/programs"
               onClick={closeNavigation}
@@ -302,6 +348,9 @@ export function SiteHeader() {
             >
               Universities
             </Link>
+            <p className="mt-2 px-3 pt-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
+              More
+            </p>
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -312,9 +361,12 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Button asChild className="mt-2 rounded-xl bg-[#f47a20] font-extrabold text-white">
+            <Button
+              asChild
+              className="mt-2 w-full rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
+            >
               <Link to="/contact" onClick={closeNavigation}>
-                Get free guidance
+                Get free counselling
               </Link>
             </Button>
           </div>
