@@ -1,7 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, ShieldCheck, Star } from "lucide-react";
 import { UniversityLogo } from "./university-logo";
-import { formatINR, getUniversityPrograms, type University } from "@/data/universities";
+import {
+  formatINR,
+  formatUniversityLocation,
+  getUniversityPrograms,
+  type University,
+} from "@/data/universities";
 
 export function UniversityCard({ university }: { university: University }) {
   const programs = getUniversityPrograms(university);
@@ -26,7 +31,7 @@ export function UniversityCard({ university }: { university: University }) {
 
       <h3 className="mt-4 font-display text-lg font-bold leading-snug">{university.name}</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        {university.city}, {university.state}
+        {formatUniversityLocation(university)}
         {university.established ? ` · Est. ${university.established}` : ""}
       </p>
 

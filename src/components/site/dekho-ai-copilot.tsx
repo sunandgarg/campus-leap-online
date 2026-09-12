@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   formatINR,
+  formatUniversityLocation,
   programCatalog,
   universities,
   universitiesOfferingProgram,
@@ -259,7 +260,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
       suggestions: [
         {
           label: `${matchedUniversity.name} profile`,
-          detail: `${matchedUniversity.city}, ${matchedUniversity.state} · ${matchedPrograms.length || matchedUniversity.programs.length} programme paths shown`,
+          detail: `${formatUniversityLocation(matchedUniversity)} · ${matchedPrograms.length || matchedUniversity.programs.length} programme paths shown`,
           href: `/universities/${matchedUniversity.slug}`,
         },
         ...matchedPrograms.map((program) => ({

@@ -32,6 +32,7 @@ import { useComparison } from "@/hooks/use-comparison";
 import { slugifySpecialisation } from "@/data/specialisations";
 import {
   formatINR,
+  formatUniversityLocation,
   getProgramApprovalClaims,
   getProgramTemplate,
   isComparableProgramOffer,
@@ -733,7 +734,8 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                           ) : null}
                         </div>
                         <p className="mt-1 text-xs text-muted-foreground">
-                          {university.city} · recognition must be checked for the intake
+                          {formatUniversityLocation(university)} · recognition must be checked for
+                          the intake
                         </p>
                       </div>
                     </div>

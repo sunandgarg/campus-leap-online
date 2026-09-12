@@ -1,4 +1,4 @@
-import { directoryUniversities } from "@/data/directory-universities";
+import { directoryUniversities, universityLogoUrls } from "@/data/directory-universities";
 
 /**
  * Central data layer for online.dekhocampus.in
@@ -1192,6 +1192,7 @@ const coreUniversityData: University[] = [
 
 const editorialUniversityData: University[] = coreUniversityData.map((university) => ({
   ...university,
+  logoUrl: university.logoUrl ?? universityLogoUrls[university.slug],
   metricsVerified: false,
   studentsEnrolled: "Not independently verified",
   placementPartners: [],
@@ -1337,10 +1338,21 @@ export function resolveCatalog(catalog: Catalog): Catalog {
   } else if (catalog.universities.length > 0) {
     const managedSlugs = new Set(catalog.universities.map((university) => university.slug));
     resolvedUniversities = [
-      ...catalog.universities.map((university) => ({
-        ...university,
-        profileDepth: university.profileDepth ?? "complete",
-      })),
+      ...catalog.universities.map((university) => {
+        const bundledUniversity = universityData.find((entry) => entry.slug === university.slug);
+        return {
+          ...university,
+          // A directory-only database import must not erase the reviewed,
+          // explicitly unranked discovery relationships bundled with the app.
+          // Once both CMS core tables are populated, the database becomes
+          // authoritative and this fallback is no longer used.
+          programs:
+            university.programs.length > 0
+              ? university.programs
+              : (bundledUniversity?.programs ?? []),
+          profileDepth: university.profileDepth ?? "complete",
+        };
+      }),
       ...universityData.filter((university) => !managedSlugs.has(university.slug)),
     ];
   }
@@ -1388,6 +1400,10 @@ export function setCatalog(catalog: Catalog): void {
 
 export function getUniversity(slug: string): University | undefined {
   return universities.find((u) => u.slug === slug);
+}
+
+export function formatUniversityLocation(university: Pick<University, "city" | "state">): string {
+  return [university.city, university.state].filter(Boolean).join(", ");
 }
 
 export function getUniversityPrograms(university: University): UniversityProgram[] {

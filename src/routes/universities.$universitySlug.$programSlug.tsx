@@ -24,6 +24,7 @@ import { UniversityLogo } from "@/components/site/university-logo";
 
 import {
   formatINR,
+  formatUniversityLocation,
   getUniversityProgram,
   comparableUniversitiesOfferingProgram,
   type University,
@@ -542,7 +543,8 @@ function ProgramPage() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold">{university.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        Source-backed {program.academicSession ?? "offering"} · {university.city}
+                        Source-backed {program.academicSession ?? "offering"} ·{" "}
+                        {formatUniversityLocation(university)}
                       </p>
                     </div>
                     <div className="text-right">

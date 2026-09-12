@@ -19,6 +19,7 @@ import { LeadForm } from "@/components/site/lead-form";
 import { Button } from "@/components/ui/button";
 import {
   formatINR,
+  formatUniversityLocation,
   getProgramApprovalClaims,
   programCatalog,
   comparableUniversitiesOfferingProgram,
@@ -455,7 +456,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
                   <div>
                     <p className="font-display text-base font-extrabold">{university.shortName}</p>
                     <p className="mt-1 text-[10px] font-semibold text-muted-foreground">
-                      {university.city}, {university.state}
+                      {formatUniversityLocation(university)}
                     </p>
                   </div>
                 </div>

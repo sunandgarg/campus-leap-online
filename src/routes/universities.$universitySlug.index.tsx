@@ -27,6 +27,7 @@ import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
 import {
   formatINR,
+  formatUniversityLocation,
   getUniversityApprovalClaims,
   getUniversity,
   getUniversityPrograms,
@@ -162,7 +163,7 @@ function UniversityPage() {
                   {u.name}
                 </h1>
                 <p className="mt-2 text-sm text-ink-foreground/70">
-                  {u.city}, {u.state}
+                  {formatUniversityLocation(u)}
                   {u.established ? ` · Established ${u.established}` : ""}
                   {approvalClaims.length
                     ? ` · ${approvalClaims.length} current recognition record${approvalClaims.length === 1 ? "" : "s"}`
@@ -485,7 +486,7 @@ function UniversityPage() {
 
           <div className="mt-14 grid gap-4 sm:grid-cols-3">
             {[
-              { icon: Building2, k: "Campus", v: `${u.city}, ${u.state}` },
+              { icon: Building2, k: "Location", v: formatUniversityLocation(u) },
               {
                 icon: CalendarDays,
                 k: "Established",
