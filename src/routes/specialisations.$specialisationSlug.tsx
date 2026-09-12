@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,7 +69,7 @@ function SpecialisationPage() {
   return (
     <div className="bg-background">
       <section className="relative overflow-hidden border-b border-border bg-[#f3f8ff] dark:bg-[#071723]">
-        <div className="container-page relative py-10 lg:py-16">
+        <div className="container-page relative py-9 lg:py-12">
           <nav
             className="flex items-center gap-1.5 text-xs text-muted-foreground"
             aria-label="Breadcrumb"
@@ -86,7 +87,7 @@ function SpecialisationPage() {
             </span>
           </nav>
 
-          <div className="mt-9 grid gap-10 lg:grid-cols-[1fr_0.62fr] lg:items-center">
+          <div className="mt-7 grid gap-8 lg:grid-cols-[1fr_0.62fr] lg:items-center">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-[#b9d6f6] bg-white/75 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.13em] text-[#1768cc] dark:border-[#295a83] dark:bg-[#102a42] dark:text-[#78b9ff]">
                 <Sparkles className="h-4 w-4" /> Rule-based pathway guide ·{" "}
@@ -150,7 +151,7 @@ function SpecialisationPage() {
         </div>
       </section>
 
-      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_360px] lg:py-16">
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:py-12">
         <div className="min-w-0">
           <section>
             <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -159,11 +160,11 @@ function SpecialisationPage() {
             <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em]">
               What this pathway should help you build
             </h2>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <CompactRail label={`${specialisation.name} skills`} rows={2} columns={2}>
               {specialisation.skills.map((skill) => (
                 <div
                   key={skill}
-                  className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4"
+                  className="flex min-h-20 items-center gap-3 rounded-xl border border-border bg-card p-4"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#eaf8f1] text-[#187a55] dark:bg-[#123329] dark:text-[#77ddb2]">
                     <Check className="h-4 w-4" />
@@ -171,10 +172,10 @@ function SpecialisationPage() {
                   <span className="text-sm font-bold">{skill}</span>
                 </div>
               ))}
-            </div>
+            </CompactRail>
           </section>
 
-          <section className="mt-14">
+          <section className="mt-10">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]">
                 <BriefcaseBusiness className="h-5 w-5" />
@@ -204,7 +205,7 @@ function SpecialisationPage() {
             </p>
           </section>
 
-          <section className="mt-14 rounded-[1.75rem] border border-border bg-secondary/35 p-6 sm:p-8">
+          <section className="mt-10 rounded-xl border border-border bg-secondary/35 p-5 sm:p-6">
             <div className="flex items-start gap-4">
               <BookOpenCheck className="mt-1 h-6 w-6 shrink-0 text-[#1768cc] dark:text-[#78b9ff]" />
               <div>
@@ -230,7 +231,7 @@ function SpecialisationPage() {
             </div>
           </section>
 
-          <section id="universities" className="mt-14 scroll-mt-28">
+          <section id="universities" className="mt-10 scroll-mt-28">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -249,13 +250,17 @@ function SpecialisationPage() {
                 </Link>
               </Button>
             </div>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {offers.slice(0, 8).map(({ university, program }) => (
+            <CompactRail
+              label={`${specialisation.name} university availability`}
+              rows={2}
+              columns={2}
+            >
+              {offers.map(({ university, program }) => (
                 <Link
                   key={university.slug}
                   to="/universities/$universitySlug/$programSlug"
                   params={{ universitySlug: university.slug, programSlug: program.slug }}
-                  className="group rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-[#78a8df] hover:shadow-card motion-reduce:transform-none"
+                  className="group rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
                 >
                   <div className="flex items-start gap-3">
                     <UniversityLogo university={university} size="sm" />
@@ -285,7 +290,7 @@ function SpecialisationPage() {
                   </div>
                 </Link>
               ))}
-            </div>
+            </CompactRail>
             {offers.length === 0 ? (
               <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-6">
                 <p className="font-display text-lg font-extrabold">
@@ -300,7 +305,7 @@ function SpecialisationPage() {
             ) : null}
           </section>
 
-          <section className="mt-14">
+          <section className="mt-10">
             <div className="flex items-center gap-3">
               <CircleHelp className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="font-display text-2xl font-extrabold">Questions learners ask</h2>

@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { UniversityCard } from "@/components/site/university-card";
+import { CompactRail } from "@/components/site/compact-rail";
 import { Button } from "@/components/ui/button";
 import {
   formatINR,
@@ -46,13 +47,11 @@ function SearchPage() {
   const { q: initialQuery } = Route.useSearch();
   const [query, setQuery] = useState(initialQuery);
   const [resultType, setResultType] = useState<ResultType>("all");
-  const [showAllUniversities, setShowAllUniversities] = useState(false);
   const normalizedQuery = query.trim().toLowerCase();
 
   useEffect(() => {
     setQuery(initialQuery);
     setResultType("all");
-    setShowAllUniversities(false);
   }, [initialQuery]);
 
   const results = useMemo(() => {
@@ -196,7 +195,7 @@ function SearchPage() {
             </Button>
           </div>
         ) : (
-          <div className="space-y-16 pt-10">
+          <div className="space-y-12 pt-8">
             {showPrograms && results.programs.length > 0 ? (
               <section>
                 <SectionTitle
@@ -204,7 +203,7 @@ function SearchPage() {
                   title="Online courses"
                   count={results.programs.length}
                 />
-                <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <CompactRail label="Matching online courses" rows={2} columns={2}>
                   {results.programs.map((program) => {
                     const offers = universitiesOfferingProgram(program.slug);
                     const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
@@ -214,7 +213,7 @@ function SearchPage() {
                         key={program.slug}
                         to="/programs/$programSlug"
                         params={{ programSlug: program.slug }}
-                        className="group rounded-[1.5rem] border border-border bg-card p-6 transition hover:-translate-y-0.5 hover:border-[#80ace0] hover:shadow-lg"
+                        className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div>
@@ -244,7 +243,7 @@ function SearchPage() {
                       </Link>
                     );
                   })}
-                </div>
+                </CompactRail>
               </section>
             ) : null}
 
@@ -255,27 +254,11 @@ function SearchPage() {
                   title="Online universities"
                   count={results.universities.length}
                 />
-                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {(showAllUniversities
-                    ? results.universities
-                    : results.universities.slice(0, 12)
-                  ).map((university) => (
+                <CompactRail label="Matching online universities" rows={2} columns={3}>
+                  {results.universities.map((university) => (
                     <UniversityCard key={university.slug} university={university} />
                   ))}
-                </div>
-                {results.universities.length > 12 ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowAllUniversities((value) => !value)}
-                    aria-expanded={showAllUniversities}
-                    className="mt-5 rounded-xl"
-                  >
-                    {showAllUniversities
-                      ? "Show fewer universities"
-                      : `Show all ${results.universities.length} universities`}
-                  </Button>
-                ) : null}
+                </CompactRail>
               </section>
             ) : null}
 
@@ -286,7 +269,7 @@ function SearchPage() {
                   title="Matching specialisations"
                   count={results.specialisations.length}
                 />
-                <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <CompactRail label="Matching specialisations" rows={2} columns={3}>
                   {results.specialisations.map(({ specialisation, program }) => (
                     <Link
                       key={`${program.slug}-${specialisation}`}
@@ -294,7 +277,7 @@ function SearchPage() {
                       params={{
                         specialisationSlug: `${program.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
                       }}
-                      className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 transition hover:border-[#80ace0]"
+                      className="group flex min-h-24 items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
                         <GraduationCap className="h-4.5 w-4.5" />
@@ -308,7 +291,7 @@ function SearchPage() {
                       </div>
                     </Link>
                   ))}
-                </div>
+                </CompactRail>
               </section>
             ) : null}
           </div>

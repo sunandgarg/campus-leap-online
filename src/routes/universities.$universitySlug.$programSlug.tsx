@@ -20,6 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ProgramHero, ProgramSectionNav } from "@/components/site/program-hero";
+import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 
 import {
@@ -289,7 +290,7 @@ function ProgramPage() {
               ? `Offering-specific fields are used only where the reviewed record supplies them. Remaining overview, curriculum, eligibility and career text is category guidance; check the official ${p.academicSession ?? "intake"} prospectus.`
               : `This category guide covers common curriculum themes, eligibility questions and career directions for an online ${p.name}. It does not describe a verified current offering at ${u.shortName}; check the official prospectus for your intake.`}
           </p>
-          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <CompactRail label={`${u.shortName} ${p.code} key facts`} columns={3}>
             {facts.map((f) => (
               <div
                 key={f.k}
@@ -302,12 +303,12 @@ function ProgramPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </CompactRail>
         </div>
       </section>
 
-      <section className="container-page grid gap-12 py-14 lg:grid-cols-[1fr_340px]">
-        <div className="space-y-14">
+      <section className="container-page grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0 space-y-10">
           <div id="specialisations" className="scroll-mt-32">
             <h2 className="font-display text-2xl font-bold">
               {p.specialisationsVerified ? "Verified specialisations" : "Common pathways to check"}
@@ -318,7 +319,7 @@ function ProgramPage() {
                 ? "These pathways have been mapped to this university offering. Reconfirm them for your intake."
                 : "These are degree-category examples, not a claim that this university offers each one. Check the current prospectus and how the pathway appears on the award."}
             </p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <CompactRail label={`${p.code} specialisation pathways`} rows={2} columns={2}>
               {p.specialisations.map((s) => (
                 <div
                   key={s}
@@ -328,7 +329,7 @@ function ProgramPage() {
                   {s}
                 </div>
               ))}
-            </div>
+            </CompactRail>
           </div>
 
           <div id="curriculum" className="scroll-mt-32">
@@ -501,7 +502,7 @@ function ProgramPage() {
                 ? "These role directions come from the degree category; no salary or placement outcome is asserted for this discovery record."
                 : "Career directions are illustrative and do not guarantee a role, placement or salary."}
             </p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <CompactRail label={`${p.code} career directions`} rows={2} columns={2}>
               {p.careers.map((c) => (
                 <div
                   key={c}
@@ -511,7 +512,7 @@ function ProgramPage() {
                   {c}
                 </div>
               ))}
-            </div>
+            </CompactRail>
             <div className="mt-5 flex flex-wrap gap-2">
               {hasCurrentOfferingEvidence &&
                 u.metricsVerified &&
@@ -531,13 +532,13 @@ function ProgramPage() {
               <h2 className="font-display text-2xl font-bold">
                 Other universities offering {p.code} online
               </h2>
-              <div className="mt-5 space-y-3">
+              <CompactRail label={`Other universities offering ${p.code}`} rows={2} columns={2}>
                 {alternatives.map(({ university, program }) => (
                   <Link
                     key={university.slug}
                     to="/universities/$universitySlug/$programSlug"
                     params={{ universitySlug: university.slug, programSlug: program.slug }}
-                    className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-all hover:-translate-y-0.5 hover:shadow-card"
+                    className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
                   >
                     <UniversityLogo university={university} size="sm" />
                     <div className="min-w-0 flex-1">
@@ -554,7 +555,7 @@ function ProgramPage() {
                     <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
                   </Link>
                 ))}
-              </div>
+              </CompactRail>
             </div>
           )}
         </div>

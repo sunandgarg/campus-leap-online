@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { ProgramDecisionStudio } from "@/components/site/program-decision-studio";
+import { CompactRail } from "@/components/site/compact-rail";
 import { useComparison } from "@/hooks/use-comparison";
 import { slugifySpecialisation } from "@/data/specialisations";
 import {
@@ -449,7 +450,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section
         id="overview"
-        className="scroll-mt-32 border-b border-border bg-background py-16 lg:py-20"
+        className="scroll-mt-32 border-b border-border bg-background py-12 lg:py-14"
       >
         <div className="container-page">
           <SectionHeading
@@ -457,7 +458,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             title={`Build a future-ready career with an online ${p.code}`}
             description={`A category-level ${p.durationYears}-year format guide for comparing curriculum, workload and career directions. Exact institutional delivery requires a current source check.`}
           />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <CompactRail label={`Online ${p.code} learning features`} columns={4}>
             {learningFeatures.map((feature) => (
               <article
                 key={feature.title}
@@ -474,18 +475,18 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </p>
               </article>
             ))}
-          </div>
+          </CompactRail>
         </div>
       </section>
 
-      <section className="border-b border-border bg-background py-16 lg:py-20">
+      <section className="border-b border-border bg-background py-12 lg:py-14">
         <div className="container-page">
           <SectionHeading
             eyebrow="Honest decision guide"
             title={`Is an online ${p.code} right for you?`}
             description="A good decision starts with fit—not urgency. Use these signals before comparing universities."
           />
-          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+          <CompactRail label={`Online ${p.code} fit checks`} columns={2}>
             <article className="rounded-xl border border-border bg-card p-7 md:p-8">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
@@ -529,7 +530,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 ))}
               </ul>
             </article>
-          </div>
+          </CompactRail>
         </div>
       </section>
 
@@ -557,7 +558,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </section>
       )}
 
-      <section id="universities" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
+      <section id="universities" className="scroll-mt-32 bg-secondary/55 py-12 lg:py-14">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionHeading
@@ -709,7 +710,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </div>
           ) : null}
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          <CompactRail label={`Comparable ${p.code} university records`} rows={2} columns={2}>
             {displayedOffers.map(({ university, program }, index) => {
               const approvalClaims = getProgramApprovalClaims(university, program);
               return (
@@ -822,7 +823,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </article>
               );
             })}
-          </div>
+          </CompactRail>
           {displayedOffers.length === 0 ? (
             <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
               <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
@@ -863,7 +864,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   asserted here.
                 </p>
               </div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <CompactRail label={`Unranked ${p.code} discovery records`} rows={2} columns={3}>
                 {(showAllDiscovery ? discoveryOffers : discoveryOffers.slice(0, 12)).map(
                   ({ university, program }) => (
                     <Link
@@ -893,7 +894,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                     </Link>
                   ),
                 )}
-              </div>
+              </CompactRail>
               {discoveryOffers.length > 12 ? (
                 <Button
                   type="button"
@@ -912,7 +913,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="curriculum" className="scroll-mt-32 bg-background py-16 lg:py-20">
+      <section id="curriculum" className="scroll-mt-32 bg-background py-12 lg:py-14">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_350px] xl:gap-16">
           <div>
             <SectionHeading
@@ -1004,7 +1005,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section
         id="specialisations"
-        className="scroll-mt-32 bg-[#131720] py-16 text-white dark:bg-[#0b1018] lg:py-20"
+        className="scroll-mt-32 bg-[#131720] py-12 text-white dark:bg-[#0b1018] lg:py-14"
       >
         <div className="container-page">
           <SectionHeading
@@ -1013,7 +1014,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             title="Common specialisation themes"
             description="These are category-level pathways, not a claim that every university offers them. Verify the current prospectus and award wording."
           />
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <CompactRail label={`Online ${p.code} specialisation themes`} rows={2} columns={3} dark>
             {p.specialisations.map((specialisation, index) => (
               <Link
                 key={specialisation}
@@ -1032,7 +1033,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </span>
               </Link>
             ))}
-          </div>
+          </CompactRail>
           <div className="mt-8 flex flex-col gap-5 rounded-xl border border-[#3b4350] bg-[#252b36] p-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="font-display text-xl font-extrabold">
@@ -1052,9 +1053,9 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="eligibility" className="scroll-mt-32 bg-background py-16 lg:py-20">
+      <section id="eligibility" className="scroll-mt-32 bg-background py-12 lg:py-14">
         <div className="container-page grid gap-6 lg:grid-cols-2">
-          <div className="rounded-[1.75rem] border border-border bg-card p-7 md:p-9">
+          <div className="rounded-xl border border-border bg-card p-6">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
               <GraduationCap className="h-5 w-5" />
             </span>
@@ -1081,7 +1082,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </ul>
           </div>
 
-          <div className="rounded-[1.75rem] bg-[#fff1e7] p-7 dark:bg-[#2b211c] md:p-9">
+          <div className="rounded-xl bg-[#fff1e7] p-6 dark:bg-[#2b211c]">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#a94300] dark:bg-[#3c2e26] dark:text-[#ff9a5b]">
               <Medal className="h-5 w-5" />
             </span>
@@ -1103,14 +1104,14 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section className="bg-background py-16 lg:py-20">
+      <section className="bg-background py-12 lg:py-14">
         <div className="container-page">
           <SectionHeading
             eyebrow="Simple and supported"
             title="Your admission journey"
             description="Move from comparison to enrolment with clear steps and expert support when you need it."
           />
-          <div className="mt-10 grid gap-3 md:grid-cols-5">
+          <CompactRail label={`Online ${p.code} admission steps`} columns={4}>
             {admissionSteps.map(([number, title, description], index) => (
               <article
                 key={number}
@@ -1128,11 +1129,11 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 ) : null}
               </article>
             ))}
-          </div>
+          </CompactRail>
         </div>
       </section>
 
-      <section id="careers" className="scroll-mt-32 bg-secondary/55 py-16 lg:py-20">
+      <section id="careers" className="scroll-mt-32 bg-secondary/55 py-12 lg:py-14">
         <div className="container-page grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center xl:gap-16">
           <div>
             <SectionHeading
@@ -1151,7 +1152,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               </p>
             </div>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <CompactRail label={`Online ${p.code} career directions`} rows={2} columns={2}>
             {p.careers.map((career, index) => (
               <article
                 key={career}
@@ -1168,11 +1169,11 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </div>
               </article>
             ))}
-          </div>
+          </CompactRail>
         </div>
       </section>
 
-      <section id="faqs" className="scroll-mt-32 bg-background py-16 lg:py-20">
+      <section id="faqs" className="scroll-mt-32 bg-background py-12 lg:py-14">
         <div className="container-page grid gap-10 lg:grid-cols-[0.72fr_1.28fr] xl:gap-20">
           <div>
             <SectionHeading

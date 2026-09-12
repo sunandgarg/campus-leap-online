@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { CompactRail } from "@/components/site/compact-rail";
 import { universities, getTotalProgramCount } from "@/data/universities";
 
 export const Route = createFileRoute("/about")({
@@ -26,7 +27,7 @@ function AboutPage() {
   return (
     <>
       <section className="hero-ink text-ink-foreground">
-        <div className="container-page py-14">
+        <div className="container-page py-10 lg:py-12">
           <h1 className="font-display text-3xl font-extrabold md:text-4xl">
             About DekhoCampus Online
           </h1>
@@ -36,8 +37,8 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="container-page grid gap-12 py-14 lg:grid-cols-[1.3fr_0.7fr]">
-        <div className="space-y-6 leading-relaxed text-muted-foreground">
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:py-12">
+        <div className="min-w-0 space-y-6 leading-relaxed text-muted-foreground">
           <p>
             Choosing an online degree takes more than recognising a university name. Programme
             entitlement, delivery mode, academic session, exam format and full fee components can
@@ -54,19 +55,27 @@ function AboutPage() {
             counselling response is free; final application, document submission, payment and the
             admission decision always remain with the university through its official process.
           </p>
-          <h2 className="pt-4 font-display text-2xl font-bold text-foreground">What we check</h2>
-          <ul className="list-inside list-disc space-y-2">
-            <li>The exact university, programme, Online mode and academic session</li>
-            <li>The date and primary link behind a regulatory or accreditation claim</li>
-            <li>
+          <h2 className="pt-2 font-display text-2xl font-bold text-foreground">What we check</h2>
+          <CompactRail label="What DekhoCampus checks" rows={2} columns={2}>
+            <article className="rounded-xl border border-border bg-card p-4 text-sm font-semibold">
+              The exact university, programme, Online mode and academic session
+            </article>
+            <article className="rounded-xl border border-border bg-card p-4 text-sm font-semibold">
+              The date and primary link behind a regulatory or accreditation claim
+            </article>
+            <article className="rounded-xl border border-border bg-card p-4 text-sm font-semibold">
               Published total fee and compulsory components before displaying payment estimates
-            </li>
-            <li>University-specific duration, eligibility, specialisations and exam mode</li>
-            <li>Whether career support is actually available to that online cohort</li>
-          </ul>
+            </article>
+            <article className="rounded-xl border border-border bg-card p-4 text-sm font-semibold">
+              University-specific duration, eligibility, specialisations and exam mode
+            </article>
+            <article className="rounded-xl border border-border bg-card p-4 text-sm font-semibold">
+              Whether career support is actually available to that online cohort
+            </article>
+          </CompactRail>
         </div>
 
-        <aside className="space-y-4">
+        <aside className="min-w-0 space-y-4">
           <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
             <h2 className="font-display text-lg font-bold">Also from DekhoCampus</h2>
             <p className="mt-2 text-sm text-muted-foreground">

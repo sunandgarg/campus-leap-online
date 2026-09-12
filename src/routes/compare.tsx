@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import { Button } from "@/components/ui/button";
 import {
   formatINR,
@@ -192,7 +193,7 @@ function ComparePage() {
         </div>
       </section>
 
-      <section className="container-page py-12 lg:py-16">
+      <section className="container-page py-10 lg:py-12">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -213,7 +214,7 @@ function ComparePage() {
           </span>
         </div>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <CompactRail label={`Universities available for ${program.code}`} rows={2} columns={3}>
           {offers.map(({ university, program: offer }) => {
             const selected = selectedSlugs.includes(university.slug);
             const disabled = !selected && selectedSlugs.length >= 3;
@@ -249,7 +250,7 @@ function ComparePage() {
               </button>
             );
           })}
-        </div>
+        </CompactRail>
 
         {offers.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
@@ -263,7 +264,7 @@ function ComparePage() {
           </div>
         ) : null}
 
-        <div className="mt-14">
+        <div className="mt-10">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffab73]">
               <GitCompareArrows className="h-5 w-5" />
@@ -291,8 +292,8 @@ function ComparePage() {
           )}
         </div>
 
-        <div className="mt-14 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_420px]">
-          <div className="min-w-0 rounded-[1.75rem] border border-[#bfdaf4] bg-[#f3f8ff] p-7 dark:border-[#295a85] dark:bg-[#0e263b]">
+        <div className="mt-10 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_390px]">
+          <div className="min-w-0 rounded-xl border border-[#bfdaf4] bg-[#f3f8ff] p-6 dark:border-[#295a85] dark:bg-[#0e263b]">
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="font-display text-xl font-extrabold">How to use this comparison</h2>
@@ -440,7 +441,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
   ];
 
   return (
-    <div className="mt-6 overflow-x-auto rounded-[1.75rem] border border-border bg-card shadow-[0_20px_55px_-45px_rgba(12,39,71,0.7)]">
+    <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
       <table className="w-full min-w-[760px] table-fixed text-sm">
         <thead>
           <tr className="bg-secondary/60">

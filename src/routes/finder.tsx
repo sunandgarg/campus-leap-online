@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
+import { CompactRail } from "@/components/site/compact-rail";
 import {
   formatINR,
   programCatalog,
@@ -354,7 +355,7 @@ function DegreeFinderPage() {
           </p>
 
           {!showingResults ? (
-            <div className="mt-7 overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_28px_80px_-58px_rgba(10,42,73,0.8)]">
+            <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
               <div className="border-b border-border bg-secondary/45 px-6 py-5 sm:px-8">
                 <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-[#1768cc] dark:text-[#78b9ff]">
                   Question {step + 1} of {stepLabels.length}
@@ -459,7 +460,7 @@ function DegreeFinderPage() {
             </div>
           ) : (
             <div className="mt-7">
-              <div className="flex flex-col gap-5 rounded-[2rem] border border-[#b9dfca] bg-[#effbf5] p-6 dark:border-[#285f4c] dark:bg-[#0f2b23] sm:flex-row sm:items-center sm:justify-between sm:p-8">
+              <div className="flex flex-col gap-5 rounded-xl border border-[#b9dfca] bg-[#effbf5] p-5 dark:border-[#285f4c] dark:bg-[#0f2b23] sm:flex-row sm:items-center sm:justify-between sm:p-6">
                 <div>
                   <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.13em] text-[#168258] dark:text-[#75dcb4]">
                     <BadgeCheck className="h-4 w-4" /> Your shortlist is ready
@@ -478,7 +479,7 @@ function DegreeFinderPage() {
                 </Button>
               </div>
 
-              <div className="mt-6 grid gap-5 lg:grid-cols-2">
+              <CompactRail label="Your course recommendations" rows={2} columns={2}>
                 {recommendations.map(
                   ({
                     program,
@@ -491,7 +492,7 @@ function DegreeFinderPage() {
                   }) => (
                     <article
                       key={program.slug}
-                      className="overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-card"
+                      className="overflow-hidden rounded-xl border border-border bg-card"
                     >
                       <div className="p-6">
                         <div className="flex items-start justify-between gap-4">
@@ -613,9 +614,9 @@ function DegreeFinderPage() {
                     </article>
                   ),
                 )}
-              </div>
+              </CompactRail>
 
-              <div className="mt-8 flex flex-col items-start justify-between gap-5 rounded-[1.75rem] bg-[#071c2e] p-6 text-white sm:flex-row sm:items-center sm:p-8">
+              <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl bg-[#131720] p-5 text-white sm:flex-row sm:items-center sm:p-6">
                 <div>
                   <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.13em] text-[#8bc7ff]">
                     <UserRoundSearch className="h-4 w-4" /> Optional human check

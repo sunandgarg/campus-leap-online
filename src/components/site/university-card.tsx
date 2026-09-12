@@ -22,14 +22,16 @@ export function UniversityCard({ university }: { university: University }) {
     <Link
       to="/universities/$universitySlug"
       params={{ universitySlug: university.slug }}
-      className="group flex flex-col rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lift"
+      className="group flex min-h-64 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
     >
       <div className="flex items-start justify-between gap-3">
         <UniversityLogo university={university} />
         <ArrowUpRight className="h-5 w-5 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
       </div>
 
-      <h3 className="mt-4 font-display text-lg font-bold leading-snug">{university.name}</h3>
+      <h3 className="mt-3 line-clamp-2 font-display text-base font-bold leading-snug">
+        {university.name}
+      </h3>
       <p className="mt-1 text-sm text-muted-foreground">
         {formatUniversityLocation(university)}
         {university.established ? ` · Est. ${university.established}` : ""}
@@ -48,7 +50,7 @@ export function UniversityCard({ university }: { university: University }) {
         </span>
       </div>
 
-      <div className="mt-5 flex items-end justify-between border-t border-border pt-4">
+      <div className="mt-auto flex items-end justify-between border-t border-border pt-4">
         <div>
           <p className="text-xs text-muted-foreground">
             {isDirectoryProfile || !Number.isFinite(cheapest) ? "Fee status" : "Sourced fees from"}

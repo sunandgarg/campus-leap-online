@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BadgeCheck, Building2, CircleDollarSign, Scale, ShieldCheck } from "lucide-react";
+import { CompactRail } from "@/components/site/compact-rail";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -42,7 +43,7 @@ function TermsPage() {
   return (
     <div className="bg-background">
       <section className="border-b border-border bg-[#f4f8fd] dark:bg-[#071723]">
-        <div className="container-page max-w-5xl py-16 lg:py-20">
+        <div className="container-page max-w-5xl py-10 lg:py-12">
           <Scale className="h-8 w-8 text-[#1768cc] dark:text-[#78b9ff]" />
           <h1 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.05em] sm:text-5xl">
             Terms and important disclosures
@@ -56,17 +57,17 @@ function TermsPage() {
           </p>
         </div>
       </section>
-      <section className="container-page max-w-5xl py-12 lg:py-16">
-        <div className="grid gap-5 sm:grid-cols-2">
+      <section className="container-page max-w-5xl py-10 lg:py-12">
+        <CompactRail label="Important platform disclosures" rows={2} columns={2}>
           {disclosures.map((item) => (
-            <article key={item.title} className="rounded-[1.5rem] border border-border bg-card p-6">
+            <article key={item.title} className="rounded-xl border border-border bg-card p-5">
               <item.icon className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="mt-5 font-display text-xl font-extrabold">{item.title}</h2>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.text}</p>
             </article>
           ))}
-        </div>
-        <div className="prose prose-sm mt-10 max-w-none text-muted-foreground dark:prose-invert">
+        </CompactRail>
+        <div className="prose prose-sm mt-8 max-w-none text-muted-foreground dark:prose-invert">
           <h2 className="font-display text-2xl font-extrabold text-foreground">
             Use of information
           </h2>

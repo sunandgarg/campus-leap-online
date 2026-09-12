@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UniversityCard } from "@/components/site/university-card";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import {
   formatINR,
   universities,
@@ -322,15 +323,15 @@ function UniversitiesPage() {
             </Button>
           </div>
         ) : (
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <CompactRail label="Filtered university profiles" rows={2} columns={3}>
             {list.map((u) => (
               <UniversityCard key={u.slug} university={u} />
             ))}
-          </div>
+          </CompactRail>
         )}
 
-        <div className="mt-16 grid gap-8 lg:grid-cols-[1fr_0.8fr]">
-          <div className="rounded-[1.75rem] border border-border bg-surface p-8">
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
+          <div className="rounded-xl border border-border bg-surface p-6">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-[#1768cc] shadow-sm dark:text-[#78b9ff]">
               <Building2 className="h-5 w-5" />
             </span>

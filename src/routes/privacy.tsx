@@ -50,7 +50,7 @@ function PrivacyPage() {
   return (
     <div className="bg-background">
       <section className="border-b border-border bg-[#071b2c] text-white">
-        <div className="container-page max-w-5xl py-16 lg:py-20">
+        <div className="container-page max-w-5xl py-10 lg:py-12">
           <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.15em] text-[#8bc7ff]">
             <ShieldCheck className="h-4 w-4" /> Plain-language privacy notice
           </span>
@@ -67,8 +67,8 @@ function PrivacyPage() {
         </div>
       </section>
 
-      <section className="container-page grid max-w-6xl gap-10 py-12 lg:grid-cols-[0.62fr_1.38fr] lg:py-16">
-        <aside className="h-fit rounded-[1.5rem] border border-border bg-card p-6 lg:sticky lg:top-24">
+      <section className="container-page grid max-w-6xl gap-8 py-10 lg:grid-cols-[0.62fr_1.38fr] lg:py-12">
+        <aside className="h-fit rounded-xl border border-border bg-card p-5 lg:sticky lg:top-24">
           <Database className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
           <h2 className="mt-4 font-display text-xl font-extrabold">Privacy controls</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -89,7 +89,7 @@ function PrivacyPage() {
           </div>
         </aside>
 
-        <div className="space-y-9">
+        <div className="space-y-7">
           {sections.map((section) => (
             <section key={section.title}>
               <h2 className="font-display text-2xl font-extrabold tracking-[-0.03em]">

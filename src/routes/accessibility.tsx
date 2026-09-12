@@ -7,6 +7,7 @@ import {
   Volume2,
   type LucideIcon,
 } from "lucide-react";
+import { CompactRail } from "@/components/site/compact-rail";
 
 const accessibilityCommitments: {
   icon: LucideIcon;
@@ -48,7 +49,7 @@ function AccessibilityPage() {
   return (
     <div className="bg-background">
       <section className="border-b border-border bg-[#071b2c] text-white">
-        <div className="container-page max-w-5xl py-16 lg:py-20">
+        <div className="container-page max-w-5xl py-10 lg:py-12">
           <Accessibility className="h-8 w-8 text-[#8bc7ff]" />
           <h1 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.05em] sm:text-5xl">
             Education discovery should work for everyone.
@@ -60,17 +61,17 @@ function AccessibilityPage() {
           </p>
         </div>
       </section>
-      <section className="container-page max-w-5xl py-12 lg:py-16">
-        <div className="grid gap-5 sm:grid-cols-3">
+      <section className="container-page max-w-5xl py-10 lg:py-12">
+        <CompactRail label="Accessibility commitments" columns={3}>
           {accessibilityCommitments.map(({ icon: Icon, title, text }) => (
-            <article key={title} className="rounded-[1.5rem] border border-border bg-card p-6">
+            <article key={title} className="rounded-xl border border-border bg-card p-5">
               <Icon className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="mt-5 font-display text-lg font-extrabold">{title}</h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">{text}</p>
             </article>
           ))}
-        </div>
-        <div className="mt-5 rounded-[1.5rem] border border-border bg-card p-6">
+        </CompactRail>
+        <div className="mt-5 rounded-xl border border-border bg-card p-5">
           <h2 className="font-display text-xl font-extrabold">Known review boundary</h2>
           <p className="mt-3 text-sm leading-7 text-muted-foreground">
             The public catalogue and counselling form are being improved continuously, but every
@@ -79,7 +80,7 @@ function AccessibilityPage() {
             we can reproduce and prioritise it.
           </p>
         </div>
-        <div className="mt-10 rounded-[1.75rem] border border-border bg-secondary/35 p-7">
+        <div className="mt-7 rounded-xl border border-border bg-secondary/35 p-6">
           <h2 className="font-display text-2xl font-extrabold">Report an accessibility barrier</h2>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
             Tell us the page, device, browser, assistive technology and what you were trying to do.

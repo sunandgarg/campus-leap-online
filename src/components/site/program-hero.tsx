@@ -18,7 +18,6 @@ import {
   type UniversityProgram,
 } from "@/data/universities";
 import { useComparison } from "@/hooks/use-comparison";
-import heroImage from "@/assets/program-hero.webp";
 
 interface ProgramHeroProps {
   university: University;
@@ -71,16 +70,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
 
   return (
     <section className="relative overflow-hidden bg-ink text-ink-foreground">
-      <img
-        src={heroImage}
-        alt=""
-        width={1920}
-        height={1080}
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover opacity-20"
-      />
-
-      <div className="container-page relative py-8 md:py-10">
+      <div className="container-page relative py-7 md:py-9">
         <nav aria-label="Breadcrumb" className="text-xs text-ink-foreground/65">
           <Link to="/" className="hover:text-gold">
             Home
@@ -109,7 +99,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
           </span>
         </nav>
 
-        <div className="mt-5 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 rounded-3xl lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start">
+        <div className="mt-5 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-7 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
           <div className="min-w-0 pt-2 lg:pb-8">
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-2 rounded-lg bg-ink-foreground/95 px-3 py-1.5 text-sm font-bold text-ink">
@@ -126,7 +116,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               </span>
             </div>
 
-            <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
+            <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight md:text-5xl">
               {head} <span className="text-gold">{tail}</span>{" "}
               <span className="text-gold">({p.code})</span>
             </h1>
@@ -175,7 +165,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               </button>
             </div>
 
-            <div className="mt-9 flex flex-wrap gap-x-10 gap-y-5">
+            <div className="mt-7 flex flex-wrap gap-x-8 gap-y-4">
               {stats.map((s) => (
                 <div key={s.label}>
                   <p className="font-display text-2xl font-extrabold">{s.value}</p>

@@ -10,6 +10,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -130,7 +131,7 @@ function ProgramsPage() {
         </div>
 
         {programs.length > 0 ? (
-          <div className="mt-6 grid gap-5 lg:grid-cols-2">
+          <CompactRail label="Filtered online course guides" rows={2} columns={2}>
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
               const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
@@ -144,9 +145,9 @@ function ProgramsPage() {
               return (
                 <article
                   key={program.slug}
-                  className="group overflow-hidden rounded-[1.75rem] border border-border bg-card transition hover:-translate-y-0.5 hover:border-[#80ace0] hover:shadow-xl"
+                  className="group overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-[#325dd2]"
                 >
-                  <div className="p-6 sm:p-7">
+                  <div className="p-5">
                     <div className="flex items-start justify-between gap-5">
                       <div>
                         <div className="flex flex-wrap gap-2">
@@ -168,11 +169,11 @@ function ProgramsPage() {
                         <GraduationCap className="h-5 w-5" />
                       </span>
                     </div>
-                    <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted-foreground">
+                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
                       {program.overview}
                     </p>
 
-                    <div className="mt-6 grid grid-cols-3 divide-x divide-border rounded-2xl bg-secondary/55 py-4 text-center">
+                    <div className="mt-4 grid grid-cols-3 divide-x divide-border rounded-lg bg-secondary/55 py-3 text-center">
                       <div className="px-2">
                         <p className="font-display text-base font-extrabold">{offers.length}</p>
                         <p className="mt-1 text-[10px] font-bold text-muted-foreground">
@@ -218,7 +219,7 @@ function ProgramsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 p-5 sm:px-7">
+                  <div className="flex items-center justify-between gap-4 p-4 sm:px-5">
                     <div className="flex -space-x-2">
                       {offers.slice(0, 4).map(({ university }) => (
                         <span
@@ -242,7 +243,7 @@ function ProgramsPage() {
                 </article>
               );
             })}
-          </div>
+          </CompactRail>
         ) : (
           <div className="mt-6 rounded-[1.75rem] border border-dashed border-border bg-card p-14 text-center">
             <Sparkles className="mx-auto h-7 w-7 text-muted-foreground" />
@@ -263,7 +264,7 @@ function ProgramsPage() {
           </div>
         )}
 
-        <div className="mt-16 grid gap-7 rounded-[2rem] bg-secondary/55 p-6 lg:grid-cols-[1fr_420px] lg:items-center lg:p-10">
+        <div className="mt-12 grid gap-6 rounded-xl bg-secondary/55 p-5 lg:grid-cols-[1fr_390px] lg:items-center lg:p-7">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
               <WalletCards className="h-4 w-4" /> Personal shortlist

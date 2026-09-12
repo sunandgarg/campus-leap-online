@@ -4,6 +4,7 @@ import { ArrowRight, BriefcaseBusiness, GraduationCap, Search, Target } from "lu
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import { getAllSpecialisations } from "@/data/specialisations";
 import { programCatalog } from "@/data/universities";
 
@@ -128,13 +129,13 @@ function SpecialisationsPage() {
           </p>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <CompactRail label="Filtered specialisation pathways" rows={2} columns={3}>
           {filtered.map((specialisation) => (
             <Link
               key={specialisation.slug}
               to="/specialisations/$specialisationSlug"
               params={{ specialisationSlug: specialisation.slug }}
-              className="group flex min-h-64 flex-col rounded-[1.5rem] border border-border bg-card p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:border-[#78a8df] hover:shadow-lift motion-reduce:transform-none"
+              className="group flex min-h-56 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
@@ -165,7 +166,7 @@ function SpecialisationsPage() {
               </div>
             </Link>
           ))}
-        </div>
+        </CompactRail>
 
         {filtered.length === 0 ? (
           <div className="mt-6 rounded-[1.75rem] border border-dashed border-border bg-card p-14 text-center">
@@ -177,7 +178,7 @@ function SpecialisationsPage() {
           </div>
         ) : null}
 
-        <div className="mt-16 grid gap-8 rounded-[2rem] border border-border bg-secondary/35 p-6 lg:grid-cols-[0.8fr_1.2fr] lg:p-10">
+        <div className="mt-12 grid gap-6 rounded-xl border border-border bg-secondary/35 p-5 lg:grid-cols-[0.8fr_1.2fr] lg:p-7">
           <div className="self-center">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#071b2c] text-white dark:bg-[#1768cc]">
               <BriefcaseBusiness className="h-5 w-5" />

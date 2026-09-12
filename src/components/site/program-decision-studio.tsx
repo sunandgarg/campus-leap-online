@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
+import { CompactRail } from "@/components/site/compact-rail";
 import {
   formatINR,
   isVerifiedProgramOffer,
@@ -115,7 +116,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
   return (
     <section
       id="decision-tools"
-      className="scroll-mt-32 border-b border-border bg-background py-16 lg:py-20"
+      className="scroll-mt-32 border-b border-border bg-background py-12 lg:py-14"
     >
       <div className="container-page">
         <div className="max-w-3xl">
@@ -131,9 +132,9 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
+        <div className="mt-7 grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
           <article className="overflow-hidden rounded-xl border border-border bg-card">
-            <div className="border-b border-border bg-[#edf2ff] p-6 dark:bg-[#263653] sm:p-8">
+            <div className="border-b border-border bg-[#edf2ff] p-5 dark:bg-[#263653] sm:p-6">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -149,7 +150,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               </div>
             </div>
 
-            <div className="space-y-7 p-6 sm:p-8">
+            <div className="space-y-6 p-5 sm:p-6">
               <fieldset>
                 <legend className="text-sm font-extrabold">Where are you today?</legend>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -231,7 +232,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </article>
 
           <article className="overflow-hidden rounded-xl border border-[#3b4350] bg-[#131720] text-white dark:bg-[#0b1018]">
-            <div className="border-b border-white/10 p-6 sm:p-8">
+            <div className="border-b border-white/10 p-5 sm:p-6">
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#ff9a50]">
                 Budget planner
               </p>
@@ -244,7 +245,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               </p>
             </div>
 
-            <div className="p-6 sm:p-8">
+            <div className="p-5 sm:p-6">
               <div className="flex items-end justify-between gap-4">
                 <label htmlFor="monthly-budget" className="text-sm font-bold text-white/70">
                   Monthly study budget
@@ -332,12 +333,9 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </article>
         </div>
 
-        <div className="mt-5 grid overflow-hidden rounded-xl border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
-          {trustNotes.map(([title, description, Icon], index) => (
-            <div
-              key={String(title)}
-              className={`p-5 ${index ? "border-t border-border sm:border-l sm:border-t-0" : ""} ${index === 2 ? "sm:border-t lg:border-t-0" : ""}`}
-            >
+        <CompactRail label="Decision-tool safeguards" columns={4}>
+          {trustNotes.map(([title, description, Icon]) => (
+            <div key={String(title)} className="rounded-xl border border-border bg-card p-4">
               <Icon className="h-5 w-5 text-[#1768cc] dark:text-[#78b9ff]" />
               <h3 className="mt-4 text-sm font-extrabold">{String(title)}</h3>
               <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
@@ -345,7 +343,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               </p>
             </div>
           ))}
-        </div>
+        </CompactRail>
       </div>
     </section>
   );

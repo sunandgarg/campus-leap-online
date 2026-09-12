@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import {
-  ArrowLeft,
   ArrowRight,
   BadgeCheck,
   BarChart3,
@@ -28,8 +27,9 @@ import {
   Users,
   WalletCards,
 } from "lucide-react";
-import { useRef, useState, type ReactNode, type RefObject } from "react";
+import { useState, type ReactNode } from "react";
 
+import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -370,7 +370,7 @@ export function HomePage() {
           title="What do you want to study?"
           description="Start with a broad career area. You can narrow the course and university later."
         />
-        <HorizontalRail label="Study areas" columns={3}>
+        <CompactRail label="Study areas" columns={3}>
           {studyAreas.map((area) => (
             <Link
               key={area.title}
@@ -393,7 +393,7 @@ export function HomePage() {
               </span>
             </Link>
           ))}
-        </HorizontalRail>
+        </CompactRail>
       </section>
 
       <section className="border-y border-border bg-[#f5f7fa] py-14 dark:bg-secondary/25 lg:py-20">
@@ -404,7 +404,7 @@ export function HomePage() {
             description="Two rows keep the page compact. Each card opens that university-course record so you can inspect its evidence status."
             action={<TextLink to="/programs" label="See every course" />}
           />
-          <HorizontalRail label="Online MBA and BBA university records" rows={2} columns={3}>
+          <CompactRail label="Online MBA and BBA university records" rows={2} columns={3}>
             {courseRecords.map(({ university, program }) => (
               <Link
                 key={university.slug + "-" + program.slug}
@@ -427,7 +427,7 @@ export function HomePage() {
                 <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-[#325dd2]" />
               </Link>
             ))}
-          </HorizontalRail>
+          </CompactRail>
         </div>
       </section>
 
@@ -481,7 +481,7 @@ export function HomePage() {
             description="Four compact cards stay visible on desktop. Swipe or use the arrows to continue."
             action={<TextLink to="/universities" label={"View all " + universities.length} />}
           />
-          <HorizontalRail label="Featured online university profiles" columns={4}>
+          <CompactRail label="Featured online university profiles" columns={4}>
             {featuredUniversities.map((university) => (
               <Link
                 key={university.slug}
@@ -506,7 +506,7 @@ export function HomePage() {
                 </span>
               </Link>
             ))}
-          </HorizontalRail>
+          </CompactRail>
 
           <details className="mt-5 rounded-xl border border-border bg-card">
             <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 px-4 text-sm font-extrabold marker:content-none">
@@ -539,7 +539,7 @@ export function HomePage() {
             title="Build a schedule you can sustain."
             description="Online does not mean effortless. Check the actual rhythm before you commit."
           />
-          <HorizontalRail label="Online learning schedule checks" rows={2} columns={2} dark>
+          <CompactRail label="Online learning schedule checks" rows={2} columns={2} dark>
             {scheduleCards.map((card) => (
               <article
                 key={card.title}
@@ -554,7 +554,7 @@ export function HomePage() {
                 </div>
               </article>
             ))}
-          </HorizontalRail>
+          </CompactRail>
           <div className="mt-5 grid gap-3 rounded-xl border border-white/15 bg-[#1b202a] p-4 sm:grid-cols-4">
             {[
               ["Before work", "Live class"],
@@ -582,7 +582,7 @@ export function HomePage() {
           title="A catalogue you can inspect, not a promise you must trust."
           description="Counts describe this catalogue. They are not rankings, approval claims or outcome guarantees."
         />
-        <HorizontalRail label="Catalogue coverage statistics" columns={4}>
+        <CompactRail label="Catalogue coverage statistics" columns={4}>
           {catalogueStats.map((stat) => (
             <article
               key={stat.label}
@@ -598,7 +598,7 @@ export function HomePage() {
               <p className="mt-2 text-sm font-bold text-muted-foreground">{stat.label}</p>
             </article>
           ))}
-        </HorizontalRail>
+        </CompactRail>
         <p className="mt-4 rounded-xl border border-border bg-[#f5f7fa] px-5 py-4 text-center text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
           Information can change by intake. Reconfirm entitlement, fees and dates before paying.
         </p>
@@ -611,7 +611,7 @@ export function HomePage() {
             title="Guides you can save and discuss with family."
             description="Short, practical tools for making the decision together."
           />
-          <HorizontalRail label="Online degree decision guides" columns={3}>
+          <CompactRail label="Online degree decision guides" columns={3}>
             {guides.map((guide) => (
               <Link
                 key={guide.title}
@@ -637,7 +637,7 @@ export function HomePage() {
                 </span>
               </Link>
             ))}
-          </HorizontalRail>
+          </CompactRail>
         </div>
       </section>
 
@@ -759,83 +759,6 @@ function TextLink({
     >
       {label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </Link>
-  );
-}
-
-function scrollRail(ref: RefObject<HTMLDivElement | null>, direction: -1 | 1) {
-  const rail = ref.current;
-  if (!rail) return;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  rail.scrollBy({
-    left: direction * rail.clientWidth * 0.88,
-    behavior: reduceMotion ? "auto" : "smooth",
-  });
-}
-
-function HorizontalRail({
-  label,
-  children,
-  rows = 1,
-  columns = 3,
-  dark = false,
-}: {
-  label: string;
-  children: ReactNode;
-  rows?: 1 | 2;
-  columns?: 2 | 3 | 4;
-  dark?: boolean;
-}) {
-  const railRef = useRef<HTMLDivElement>(null);
-  const columnClass = {
-    2: "auto-cols-[minmax(16rem,88%)] sm:auto-cols-[minmax(17rem,47%)]",
-    3: "auto-cols-[minmax(16rem,88%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-2rem)/3)]",
-    4: "auto-cols-[minmax(14.5rem,84%)] sm:auto-cols-[minmax(14.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]",
-  }[columns];
-
-  return (
-    <div className="mt-7 min-w-0">
-      <div className="mb-3 flex justify-end gap-2">
-        <button
-          type="button"
-          aria-label={"Scroll " + label + " backward"}
-          onClick={() => scrollRail(railRef, -1)}
-          className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-xl border transition-colors",
-            dark
-              ? "border-white/20 bg-[#1b202a] text-white hover:bg-white hover:text-[#131720]"
-              : "border-border bg-card text-foreground hover:border-[#325dd2] hover:text-[#2449ad]",
-          )}
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          aria-label={"Scroll " + label + " forward"}
-          onClick={() => scrollRail(railRef, 1)}
-          className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-xl border transition-colors",
-            dark
-              ? "border-white/20 bg-[#1b202a] text-white hover:bg-white hover:text-[#131720]"
-              : "border-border bg-card text-foreground hover:border-[#325dd2] hover:text-[#2449ad]",
-          )}
-        >
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </div>
-      <div
-        ref={railRef}
-        role="region"
-        aria-label={label}
-        tabIndex={0}
-        className={cn(
-          "grid snap-x snap-mandatory grid-flow-col gap-4 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:min-w-0 [&>*]:snap-start",
-          rows === 2 ? "grid-rows-2" : "grid-rows-1",
-          columnClass,
-        )}
-      >
-        {children}
-      </div>
-    </div>
   );
 }
 

@@ -15,6 +15,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CompactRail } from "@/components/site/compact-rail";
 
 export const Route = createFileRoute("/methodology")({
   head: () => ({
@@ -90,7 +91,7 @@ const pillars = [
 function MethodologyPage() {
   return (
     <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden border-b border-border bg-[#f3f7fc] py-16 dark:bg-[#071522] lg:py-24">
+      <section className="relative overflow-hidden border-b border-border bg-[#f3f7fc] py-12 dark:bg-[#071522] lg:py-16">
         <div className="container-page relative grid gap-10 lg:grid-cols-[1fr_360px] lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#bad5f2] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:border-[#295a85] dark:bg-[#102a42] dark:text-[#78b9ff]">
@@ -105,7 +106,7 @@ function MethodologyPage() {
               admissions.
             </p>
           </div>
-          <div className="rounded-[2rem] border border-border bg-card p-7 shadow-[0_24px_70px_-50px_rgba(12,39,71,0.7)]">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-card">
             <BadgeCheck className="h-7 w-7 text-[#168258]" />
             <p className="mt-5 font-display text-xl font-extrabold">Our comparison promise</p>
             <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
@@ -124,7 +125,7 @@ function MethodologyPage() {
         </div>
       </section>
 
-      <section className="container-page py-16 lg:py-20">
+      <section className="container-page py-12 lg:py-14">
         <div className="max-w-3xl">
           <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#1768cc] dark:text-[#78b9ff]">
             Six evaluation pillars
@@ -133,16 +134,14 @@ function MethodologyPage() {
             What belongs in a serious online-degree decision
           </h2>
         </div>
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+        <CompactRail label="DekhoCampus evaluation pillars" rows={2} columns={2}>
           {pillars.map((pillar) => (
             <article
               key={pillar.number}
-              className="rounded-[1.75rem] border border-border bg-card p-7 transition hover:-translate-y-0.5 hover:shadow-lg"
+              className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
             >
               <div className="flex items-start justify-between gap-4">
-                <span
-                  className={`${pillar.color} flex h-12 w-12 items-center justify-center rounded-2xl`}
-                >
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <pillar.icon className="h-5 w-5" />
                 </span>
                 <span className="font-display text-3xl font-extrabold text-border">
@@ -163,12 +162,12 @@ function MethodologyPage() {
               </div>
             </article>
           ))}
-        </div>
+        </CompactRail>
       </section>
 
       <section
         id="admission-safety"
-        className="scroll-mt-28 border-y border-border bg-[#131720] py-16 text-white lg:py-20"
+        className="scroll-mt-28 border-y border-border bg-[#131720] py-12 text-white lg:py-14"
       >
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
@@ -258,7 +257,7 @@ function MethodologyPage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-secondary/45 py-16">
+      <section className="border-y border-border bg-secondary/45 py-12">
         <div className="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>
             <CircleAlert className="h-8 w-8 text-[#a94300] dark:text-[#ff9a5b]" />
@@ -266,7 +265,7 @@ function MethodologyPage() {
               What we cannot decide for you
             </h2>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <CompactRail label="Decision limitations" rows={2} columns={2} className="mt-0">
             {[
               "Whether an online format suits your learning habits",
               "Whether a lender will approve your EMI application",
@@ -275,12 +274,12 @@ function MethodologyPage() {
             ].map((item) => (
               <div
                 key={item}
-                className="rounded-2xl border border-border bg-card p-5 text-sm font-bold leading-6"
+                className="rounded-xl border border-border bg-card p-4 text-sm font-bold leading-6"
               >
                 {item}
               </div>
             ))}
-          </div>
+          </CompactRail>
         </div>
       </section>
 

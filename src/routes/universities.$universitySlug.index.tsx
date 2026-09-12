@@ -24,6 +24,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/lead-form";
+import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 import {
   formatINR,
@@ -284,8 +285,8 @@ function UniversityPage() {
         </section>
       ) : null}
 
-      <section className="container-page grid gap-10 py-12 lg:grid-cols-[1fr_360px]">
-        <div>
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="min-w-0">
           <h2 id="about" className="scroll-mt-32 font-display text-2xl font-bold">
             About {u.shortName}
           </h2>
@@ -308,7 +309,7 @@ function UniversityPage() {
             </dl>
           ) : null}
 
-          <h2 id="highlights" className="mt-14 scroll-mt-32 font-display text-2xl font-bold">
+          <h2 id="highlights" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
             Catalogue notes for {u.shortName}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -316,19 +317,19 @@ function UniversityPage() {
               ? "What is currently known, and what still needs confirmation for your intake."
               : "Editorially collected themes to investigate—not independently verified benefits."}
           </p>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+          <CompactRail label={`${u.shortName} catalogue notes`} rows={2} columns={2}>
             {u.highlights.map((h) => (
-              <li
+              <article
                 key={h}
                 className="flex gap-3 rounded-xl border border-border bg-card p-4 text-sm"
               >
                 <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 {h}
-              </li>
+              </article>
             ))}
-          </ul>
+          </CompactRail>
 
-          <h2 id="programs" className="mt-14 scroll-mt-32 font-display text-2xl font-bold">
+          <h2 id="programs" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
             Course records for {u.shortName} ({programs.length})
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -339,13 +340,13 @@ function UniversityPage() {
               : "Availability, mode, curriculum, pathways and eligibility must still be confirmed for the exact intake."}
           </p>
 
-          <div className="mt-6 space-y-4">
+          <CompactRail label={`${u.shortName} course records`} rows={2} columns={2}>
             {programs.map((p) => (
               <Link
                 key={p.slug}
                 to="/universities/$universitySlug/$programSlug"
                 params={{ universitySlug: u.slug, programSlug: p.slug }}
-                className="group block rounded-2xl border border-border bg-card p-5 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lift md:p-6"
+                className="group block rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0">
@@ -371,7 +372,7 @@ function UniversityPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <p className="font-display text-lg font-bold">
                       {p.totalFeeAvailable ? formatINR(p.totalFee) : "Confirm current fee"}
                     </p>
@@ -390,9 +391,9 @@ function UniversityPage() {
                 </div>
               </Link>
             ))}
-          </div>
+          </CompactRail>
 
-          <div id="admissions" className="mt-14 scroll-mt-32">
+          <div id="admissions" className="mt-10 scroll-mt-32">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
                 <FileCheck2 className="h-5 w-5" />
@@ -407,7 +408,7 @@ function UniversityPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <CompactRail label={`${u.shortName} admission steps`} rows={2} columns={2}>
               {[
                 [
                   "01",
@@ -430,7 +431,7 @@ function UniversityPage() {
                   "Recheck entitlement, refund rules and the full fee schedule.",
                 ],
               ].map(([number, title, description]) => (
-                <article key={number} className="rounded-2xl border border-border bg-card p-5">
+                <article key={number} className="rounded-xl border border-border bg-card p-4">
                   <span className="text-xs font-extrabold text-[#a94300] dark:text-[#ff9a5b]">
                     STEP {number}
                   </span>
@@ -438,7 +439,7 @@ function UniversityPage() {
                   <p className="mt-2 text-xs leading-5 text-muted-foreground">{description}</p>
                 </article>
               ))}
-            </div>
+            </CompactRail>
 
             <div className="mt-5 rounded-[1.5rem] border border-[#f0d8c5] bg-[#fff8f1] p-6 dark:border-[#5a3b28] dark:bg-[#2b2119]">
               <div className="flex items-start gap-4">
@@ -460,7 +461,7 @@ function UniversityPage() {
             </div>
           </div>
 
-          <h2 id="placements" className="mt-14 scroll-mt-32 font-display text-2xl font-bold">
+          <h2 id="placements" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
             Placement & career support
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -484,7 +485,7 @@ function UniversityPage() {
             )}
           </div>
 
-          <div className="mt-14 grid gap-4 sm:grid-cols-3">
+          <CompactRail label={`${u.shortName} profile facts`} columns={3}>
             {[
               { icon: Building2, k: "Location", v: formatUniversityLocation(u) },
               {
@@ -507,9 +508,9 @@ function UniversityPage() {
                 <p className="mt-1 font-semibold">{s.v}</p>
               </div>
             ))}
-          </div>
+          </CompactRail>
 
-          <div id="faqs" className="mt-14 scroll-mt-32">
+          <div id="faqs" className="mt-10 scroll-mt-32">
             <div className="flex items-center gap-3">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary text-[#1768cc] dark:text-[#78b9ff]">
                 <HelpCircle className="h-5 w-5" />
@@ -585,7 +586,7 @@ function UniversityPage() {
           </div>
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:h-fit">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:h-fit">
           <LeadForm
             compact
             defaultUniversitySlug={u.slug}
