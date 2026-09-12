@@ -39,6 +39,25 @@ npm run check
 
 The CI workflow runs the combined check on every main-branch push and pull request.
 
+## Cloudflare deployment
+
+The production target is a Cloudflare Worker with static assets and TanStack Start SSR. Public
+build-time values live in `.env.production`; sensitive values are encrypted Worker secrets.
+
+```sh
+npm ci
+npm run deploy:dry
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put TURNSTILE_SECRET_KEY
+npx wrangler secret put LEAD_BUCKET_SECRET
+npm run deploy
+```
+
+`wrangler.jsonc` owns the Worker name, account, runtime bindings and the
+`online.dekhocampus.com` custom domain. Never add server secret values to that file or to a
+`VITE_` variable. The production zone also has an active, hostname-scoped rate-limit rule for
+`POST /api/leads`; keep that rule in place when changing the lead endpoint.
+
 ## Catalogue model
 
 The public experience distinguishes three different concepts:

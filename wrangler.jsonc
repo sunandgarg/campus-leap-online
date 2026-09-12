@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "dekhocampus-online",
+  "account_id": "5763dba3e739e1dbfd40501d9358caaa",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-09-12",
+  "compatibility_flags": ["nodejs_compat"],
+  "no_bundle": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".output/public"
+  },
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": ["**/*.mjs", "**/*.js"]
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "online.dekhocampus.com",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "SUPABASE_URL": "https://tzhjdxewkwjftuofaelk.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_b57f3cn7YYu3bBTylnO-Qw_L1ZcPhoT",
+    "TURNSTILE_ALLOWED_HOSTNAMES": "online.dekhocampus.com"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
