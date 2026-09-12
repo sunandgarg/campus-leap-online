@@ -4,37 +4,37 @@ import { BrandLogo } from "@/components/site/brand-logo";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-ink text-ink-foreground">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="border-t border-[#2B3340] bg-[#131720] text-white dark:bg-[#0B1018]">
+      <div className="container-page grid gap-9 py-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
         <div>
           <Link to="/" aria-label="DekhoCampus home" className="inline-flex rounded-lg">
             <BrandLogo size="lg" tone="inverse" />
           </Link>
-          <p className="mt-4 max-w-xs text-sm text-ink-foreground/70">
-            An independent education discovery and counselling platform. Programmes are offered,
-            admitted and awarded solely by the respective university.
+          <p className="mt-4 max-w-xs text-sm leading-6 text-white/70">
+            Clear information and personal guidance for choosing an online degree. Every programme
+            is offered, admitted and awarded by its university.
           </p>
           <a
-            href="https://dekhocampus.in"
+            href="https://dekhocampus.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-block text-sm font-semibold text-gold hover:underline"
+            className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-[#FF9A50] hover:underline"
           >
-            Looking for on-campus colleges? dekhocampus.in →
+            Explore all of DekhoCampus →
           </a>
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-foreground/60">
-            University profiles
+          <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-white/60">
+            Universities
           </h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-3 text-sm">
             {universities.slice(0, 6).map((u) => (
               <li key={u.slug}>
                 <Link
                   to="/universities/$universitySlug"
                   params={{ universitySlug: u.slug }}
-                  className="text-ink-foreground/75 hover:text-gold"
+                  className="inline-flex min-h-11 items-center text-white/75 transition-colors hover:text-[#FF9A50]"
                 >
                   {u.name}
                 </Link>
@@ -44,16 +44,16 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-foreground/60">
-            Popular programs
+          <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-white/60">
+            Online courses
           </h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
+          <ul className="mt-3 text-sm">
             {programCatalog.slice(0, 6).map((p) => (
               <li key={p.slug}>
                 <Link
                   to="/programs/$programSlug"
                   params={{ programSlug: p.slug }}
-                  className="text-ink-foreground/75 hover:text-gold"
+                  className="inline-flex min-h-11 items-center text-white/75 transition-colors hover:text-[#FF9A50]"
                 >
                   {p.name}
                 </Link>
@@ -63,62 +63,84 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-foreground/60">
-            Get in touch
+          <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-white/60">
+            Help and trust
           </h3>
-          <ul className="mt-4 space-y-2.5 text-sm text-ink-foreground/75">
+          <ul className="mt-3 text-sm text-white/75">
             <li>
-              <Link to="/finder" className="hover:text-gold">
-                Find my best match
+              <Link
+                to="/finder"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
+                Find the right course
               </Link>
             </li>
             <li>
-              <Link to="/specialisations" className="hover:text-gold">
+              <Link
+                to="/specialisations"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
                 Explore specialisations
               </Link>
             </li>
             <li>
-              <Link to="/methodology" className="hover:text-gold">
-                How we evaluate
+              <Link
+                to="/methodology"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
+                How we verify information
               </Link>
             </li>
             <li>
-              <Link to="/methodology" hash="admission-safety" className="hover:text-gold">
+              <Link
+                to="/methodology"
+                hash="admission-safety"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
                 Admission safety checklist
               </Link>
             </li>
             <li>
-              <Link to="/about" className="hover:text-gold">
+              <Link
+                to="/about"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
                 About DekhoCampus
               </Link>
             </li>
             <li>
-              <a href="mailto:online@dekhocampus.in" className="hover:text-gold">
+              <a
+                href="mailto:online@dekhocampus.in"
+                className="inline-flex min-h-11 items-center transition-colors hover:text-[#FF9A50]"
+              >
                 online@dekhocampus.in
               </a>
             </li>
-            <li className="flex flex-wrap gap-x-3 gap-y-1 pt-1 text-xs">
-              <Link to="/privacy" className="hover:text-gold">
+            <li className="flex min-h-11 flex-wrap items-center gap-x-4 text-xs">
+              <Link to="/privacy" className="hover:text-[#FF9A50]">
                 Privacy
               </Link>
-              <Link to="/terms" className="hover:text-gold">
+              <Link to="/terms" className="hover:text-[#FF9A50]">
                 Terms
               </Link>
-              <Link to="/accessibility" className="hover:text-gold">
+              <Link to="/accessibility" className="hover:text-[#FF9A50]">
                 Accessibility
               </Link>
             </li>
-            <li className="pt-2">
-              <Link to="/contact" className="font-semibold text-gold hover:underline">
-                Request free counselling →
+            <li>
+              <Link
+                to="/contact"
+                className="inline-flex min-h-11 items-center font-semibold text-[#FF9A50] hover:underline"
+              >
+                Talk to a counsellor →
               </Link>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-ink-foreground/10">
-        <div className="container-page flex flex-col gap-3 py-6 text-xs text-ink-foreground/55 md:flex-row md:items-start md:justify-between">
+      <div className="border-t border-white/10">
+        <div className="container-page flex flex-col gap-3 py-6 text-xs leading-5 text-white/55 md:flex-row md:items-start md:justify-between">
           <p>© {new Date().getFullYear()} DekhoCampus Online. All rights reserved.</p>
           <p className="max-w-3xl md:text-right">
             Programme entitlement, fees, admissions and outcomes can change by intake. Verify the
@@ -127,7 +149,7 @@ export function SiteFooter() {
               href="https://deb.ugc.ac.in/"
               target="_blank"
               rel="noreferrer"
-              className="font-bold text-ink-foreground/75 hover:text-gold"
+              className="font-bold text-white/80 hover:text-[#FF9A50]"
             >
               UGC-DEB portal
             </a>{" "}

@@ -8,7 +8,6 @@ import {
   GraduationCap,
   Search,
   SlidersHorizontal,
-  Sparkles,
   X,
 } from "lucide-react";
 import { UniversityCard } from "@/components/site/university-card";
@@ -109,20 +108,19 @@ function SearchPage() {
 
   return (
     <div className="bg-background">
-      <section className="relative overflow-hidden border-b border-border bg-[#eef6ff] py-14 dark:bg-[#071a2a] lg:py-20">
-        <div className="pointer-events-none absolute -right-32 -top-48 h-[30rem] w-[30rem] rounded-full bg-[#ffe7c2] blur-3xl dark:bg-[#6b4315]/20" />
-        <div className="container-page relative">
-          <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#1768cc] dark:text-[#78b9ff]">
-            <Sparkles className="h-4 w-4" /> One search, every option
+      <section className="border-b border-border bg-[#edf2ff] py-14 dark:bg-[#1b263c] lg:py-16">
+        <div className="container-page">
+          <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#2449ad] dark:text-[#b9ceff]">
+            <Search className="h-4 w-4" /> Search the whole catalogue
           </span>
           <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
-            Find the right online degree faster.
+            Find courses, universities and specialisations.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
             Search by course, career, specialisation, university, location or accreditation.
           </p>
 
-          <div className="mt-8 flex max-w-3xl items-center gap-3 rounded-2xl border border-border bg-card p-2 pl-4 shadow-[0_20px_55px_-38px_rgba(12,39,71,0.7)]">
+          <div className="mt-8 flex max-w-3xl items-center gap-3 rounded-xl border border-border bg-card p-2 pl-4 shadow-card">
             <Search className="h-5 w-5 shrink-0 text-[#1768cc] dark:text-[#78b9ff]" />
             <input
               value={query}

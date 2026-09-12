@@ -1,14 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  ArrowRight,
-  BrainCircuit,
-  BriefcaseBusiness,
-  GraduationCap,
-  Search,
-  Sparkles,
-  Target,
-} from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, GraduationCap, Search, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadForm } from "@/components/site/lead-form";
@@ -54,13 +46,11 @@ function SpecialisationsPage() {
 
   return (
     <div className="bg-background">
-      <section className="relative overflow-hidden border-b border-border bg-[#071b2c] text-white">
-        <div className="pointer-events-none absolute -right-20 -top-32 h-[30rem] w-[30rem] rounded-full bg-[#1768cc]/25 blur-3xl" />
-        <div className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-[#f47a20]/15 blur-3xl" />
-        <div className="container-page relative grid gap-10 py-16 lg:grid-cols-[1fr_0.62fr] lg:items-end lg:py-24">
+      <section className="border-b border-border bg-[#131720] text-white">
+        <div className="container-page grid gap-10 py-14 lg:grid-cols-[1fr_0.62fr] lg:items-end lg:py-16">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
-              <Sparkles className="h-4 w-4" /> Rule-based career pathway library
+            <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
+              <GraduationCap className="h-4 w-4" /> Career-focused specialisations
             </span>
             <h1 className="mt-6 max-w-4xl font-display text-4xl font-extrabold leading-[1.04] tracking-[-0.055em] sm:text-5xl lg:text-6xl">
               Choose a specialisation for the work you want to do.
@@ -76,7 +66,7 @@ function SpecialisationsPage() {
               [programCatalog.length, "degrees"],
               ["4 steps", "to shortlist"],
             ].map(([value, label]) => (
-              <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+              <div key={label} className="rounded-xl border border-white/15 bg-[#252b36] p-4">
                 <p className="font-display text-xl font-extrabold text-white">{value}</p>
                 <p className="mt-1 text-[10px] font-bold uppercase tracking-wide text-white/50">
                   {label}
@@ -88,7 +78,7 @@ function SpecialisationsPage() {
       </section>
 
       <section className="container-page py-10 lg:py-14">
-        <div className="sticky top-20 z-20 min-w-0 rounded-[1.4rem] border border-border bg-background/90 p-3 shadow-[0_18px_50px_-38px_rgba(12,39,71,0.7)] backdrop-blur-xl">
+        <div className="sticky top-20 z-20 min-w-0 rounded-xl border border-border bg-background p-3 shadow-card">
           <div className="grid min-w-0 gap-3 md:grid-cols-[1fr_0.62fr_auto]">
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -118,7 +108,7 @@ function SpecialisationsPage() {
               className="h-12 w-full min-w-0 rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
             >
               <Link to="/finder">
-                Match me <BrainCircuit className="ml-2 h-4 w-4" />
+                Help me choose <Target className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>

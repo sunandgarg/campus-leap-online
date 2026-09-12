@@ -54,18 +54,6 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin + "/auth" },
-    });
-    if (error) {
-      toast.error("Google sign-in failed.");
-      return;
-    }
-    if (data.url) window.location.assign(data.url);
-  }
-
   return (
     <section className="container-page flex min-h-[70vh] items-center justify-center py-16">
       <div className="w-full max-w-md rounded-2xl border border-border bg-card p-7 shadow-card">
@@ -108,12 +96,9 @@ function AuthPage() {
           </Button>
         </form>
 
-        <Button variant="outline" className="mt-3 w-full" onClick={handleGoogle}>
-          Continue with Google
-        </Button>
-
         <p className="mt-5 text-center text-xs leading-5 text-muted-foreground">
-          Need access? Ask an existing administrator to invite you and assign the appropriate role.
+          There is no public registration. Access is provisioned only for identity-verified
+          DekhoCampus administrators.
         </p>
       </div>
     </section>

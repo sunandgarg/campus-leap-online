@@ -68,8 +68,6 @@ function SpecialisationPage() {
   return (
     <div className="bg-background">
       <section className="relative overflow-hidden border-b border-border bg-[#f3f8ff] dark:bg-[#071723]">
-        <div className="pointer-events-none absolute -right-28 -top-32 h-[34rem] w-[34rem] rounded-full bg-[#b9dcff]/45 blur-3xl dark:bg-[#1768cc]/20" />
-        <div className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-[#ffe0c5]/60 blur-3xl dark:bg-[#f47a20]/15" />
         <div className="container-page relative py-10 lg:py-16">
           <nav
             className="flex items-center gap-1.5 text-xs text-muted-foreground"
@@ -121,7 +119,7 @@ function SpecialisationPage() {
               </div>
             </div>
 
-            <aside className="rounded-[1.75rem] border border-border bg-card/90 p-6 shadow-[0_28px_80px_-42px_rgba(18,62,108,0.65)] backdrop-blur sm:p-7">
+            <aside className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-7">
               <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#a94300] dark:text-[#ff9a5b]">
                 Decision snapshot
               </p>

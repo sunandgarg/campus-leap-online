@@ -106,7 +106,7 @@ function UniversitySectionNav() {
   return (
     <nav
       aria-label="University sections"
-      className="sticky top-[5.45rem] z-30 border-b border-border bg-card/95 backdrop-blur"
+      className="sticky top-[5.45rem] z-30 border-b border-border bg-card"
     >
       <div className="container-page flex gap-1 overflow-x-auto py-2.5 [scrollbar-width:none]">
         {universitySections.map((section) => (

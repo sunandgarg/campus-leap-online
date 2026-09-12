@@ -19,9 +19,9 @@ import { useComparison } from "@/hooks/use-comparison";
 
 const navLinks = [
   { to: "/specialisations", label: "Specialisations" },
-  { to: "/finder", label: "Degree finder" },
+  { to: "/finder", label: "Find my course" },
   { to: "/compare", label: "Compare" },
-  { to: "/methodology", label: "How it works" },
+  { to: "/methodology", label: "How we verify" },
 ] as const;
 
 type DesktopMenu = "programs" | "universities" | null;
@@ -57,7 +57,11 @@ export function SiteHeader() {
   function toggleTheme() {
     const nextDark = !dark;
     document.documentElement.classList.toggle("dark", nextDark);
-    window.localStorage.setItem("dekhocampus-theme", nextDark ? "dark" : "light");
+    try {
+      window.localStorage.setItem("dekhocampus-theme", nextDark ? "dark" : "light");
+    } catch {
+      // Theme switching still works when storage is unavailable.
+    }
     setDark(nextDark);
   }
 
@@ -72,27 +76,26 @@ export function SiteHeader() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 px-3 pt-3">
-      <div className="container-page relative flex h-16 items-center justify-between gap-4 rounded-2xl border border-border/80 bg-background/92 px-4 shadow-[0_16px_45px_-28px_rgba(18,38,62,0.58)] backdrop-blur-xl sm:px-5">
+    <header className="sticky top-0 z-50 border-b border-border bg-background">
+      <div className="container-page relative flex h-16 items-center justify-between gap-4">
         <Link
           to="/"
           aria-label="DekhoCampus home"
-          className="flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           onClick={closeNavigation}
         >
-          <BrandLogo variant="mark" size="md" className="sm:hidden" />
-          <BrandLogo size="md" className="hidden sm:inline-flex" />
+          <BrandLogo size="md" />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
           <button
             type="button"
             aria-expanded={desktopMenu === "programs"}
             aria-controls="desktop-navigation-panel"
             onClick={() => setDesktopMenu((menu) => (menu === "programs" ? null : "programs"))}
-            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
-            Programs
+            Courses
             <ChevronDown
               className={`h-3.5 w-3.5 transition ${desktopMenu === "programs" ? "rotate-180" : ""}`}
             />
@@ -104,7 +107,7 @@ export function SiteHeader() {
             onClick={() =>
               setDesktopMenu((menu) => (menu === "universities" ? null : "universities"))
             }
-            className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >
             Universities
             <ChevronDown
@@ -116,7 +119,7 @@ export function SiteHeader() {
               key={link.to}
               to={link.to}
               onClick={() => setDesktopMenu(null)}
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+              className="inline-flex h-11 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               activeProps={{ className: "bg-secondary text-foreground" }}
             >
               {link.label}
@@ -129,18 +132,18 @@ export function SiteHeader() {
             to="/search"
             search={{ q: "" }}
             aria-label="Search courses and universities"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
           >
             <Search className="h-4 w-4" />
           </Link>
           <Link
             to="/compare"
             aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="relative inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
           >
             <GitCompareArrows className="h-4 w-4" />
             {comparison.count > 0 ? (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1768cc] px-1 text-[10px] font-extrabold text-white">
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold text-primary-foreground">
                 {comparison.count}
               </span>
             ) : null}
@@ -150,16 +153,15 @@ export function SiteHeader() {
             onClick={toggleTheme}
             aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
             title={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-foreground transition hover:bg-secondary"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
           <Button
             asChild
-            size="sm"
-            className="h-10 min-w-0 rounded-xl bg-[#a94300] px-4 font-extrabold text-white hover:bg-[#8f3700]"
+            className="h-11 min-w-0 rounded-lg border border-[#C86620] bg-[#F47B25] px-4 font-extrabold text-[#111827] hover:bg-[#E56E1E] dark:border-[#FF9A50] dark:bg-[#FF9A50] dark:text-[#16100B] dark:hover:bg-[#FFAA6D]"
           >
-            <Link to="/contact">Free counselling</Link>
+            <Link to="/contact">Talk to a counsellor</Link>
           </Button>
         </div>
 
@@ -167,11 +169,11 @@ export function SiteHeader() {
           <Link
             to="/compare"
             aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background"
+            className="relative hidden h-11 w-11 items-center justify-center rounded-lg border border-border bg-background sm:inline-flex"
           >
             <GitCompareArrows className="h-4 w-4" />
             {comparison.count > 0 ? (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1768cc] px-1 text-[10px] font-extrabold text-white">
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold text-primary-foreground">
                 {comparison.count}
               </span>
             ) : null}
@@ -180,7 +182,7 @@ export function SiteHeader() {
             type="button"
             onClick={toggleTheme}
             aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-background"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background"
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
@@ -189,7 +191,7 @@ export function SiteHeader() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -198,26 +200,26 @@ export function SiteHeader() {
         {desktopMenu ? (
           <div
             id="desktop-navigation-panel"
-            className="absolute left-0 right-0 top-[4.45rem] hidden overflow-hidden rounded-[1.4rem] border border-border bg-popover shadow-[0_28px_80px_-34px_rgba(18,38,62,0.6)] xl:block"
+            className="absolute left-5 right-5 top-full hidden overflow-hidden rounded-b-xl border border-border bg-popover xl:block md:left-8 md:right-8"
           >
             {desktopMenu === "programs" ? (
               <div className="grid grid-cols-[0.76fr_2.24fr]">
-                <div className="bg-[#152238] p-7 text-white">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                <div className="border-r border-border bg-surface p-7 text-foreground">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                     <GraduationCap className="h-5 w-5" />
                   </span>
                   <p className="mt-5 font-display text-xl font-extrabold tracking-[-0.04em]">
-                    Find your online degree
+                    Explore online courses
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-white/65">
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
                     Explore by qualification, then compare fees, eligibility and universities.
                   </p>
                   <Link
                     to="/programs"
                     onClick={closeNavigation}
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#ff9a50]"
+                    className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
                   >
-                    Browse all programs <ArrowRight className="h-4 w-4" />
+                    See all courses <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
                 <div className="grid grid-cols-4 gap-6 p-7">
@@ -234,9 +236,9 @@ export function SiteHeader() {
                               to="/programs/$programSlug"
                               params={{ programSlug: program.slug }}
                               onClick={closeNavigation}
-                              className="block rounded-lg px-2 py-2 text-sm font-bold transition hover:bg-secondary hover:text-[#1768cc]"
+                              className="flex min-h-11 items-center rounded-lg px-2 text-sm font-bold transition-colors hover:bg-secondary hover:text-primary"
                             >
-                              <span className="mr-2 text-[#a94300] dark:text-[#ff9a5b]">
+                              <span className="mr-2 text-[#A94300] dark:text-[#FFAA6D]">
                                 {program.code}
                               </span>
                               <span className="text-xs font-medium text-muted-foreground">
@@ -245,7 +247,9 @@ export function SiteHeader() {
                             </Link>
                           ))
                         ) : (
-                          <p className="px-2 py-2 text-xs text-muted-foreground">Coming soon</p>
+                          <p className="flex min-h-11 items-center px-2 text-xs text-muted-foreground">
+                            Coming soon
+                          </p>
                         )}
                       </div>
                     </div>
@@ -256,17 +260,17 @@ export function SiteHeader() {
               <div className="p-7">
                 <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#A94300] dark:text-[#FFAA6D]">
                       University directory
                     </p>
                     <p className="mt-1 font-display text-xl font-extrabold tracking-[-0.035em]">
-                      Explore online-university profiles
+                      Browse online universities
                     </p>
                   </div>
                   <Link
                     to="/universities"
                     onClick={closeNavigation}
-                    className="inline-flex items-center gap-2 text-sm font-extrabold text-[#1768cc] dark:text-[#70b3ff]"
+                    className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
                   >
                     View all <ArrowRight className="h-4 w-4" />
                   </Link>
@@ -278,12 +282,9 @@ export function SiteHeader() {
                       to="/universities/$universitySlug"
                       params={{ universitySlug: university.slug }}
                       onClick={closeNavigation}
-                      className="flex items-center gap-3 rounded-xl border border-transparent p-3 transition hover:border-border hover:bg-secondary"
+                      className="flex min-h-14 items-center gap-3 rounded-lg border border-transparent p-3 transition-colors hover:border-border hover:bg-secondary"
                     >
-                      <span
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold text-white"
-                        style={{ backgroundColor: university.accentColor }}
-                      >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-extrabold text-primary-foreground">
                         {university.shortName.slice(0, 2).toUpperCase()}
                       </span>
                       <span>
@@ -305,15 +306,15 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div className="container-page mt-2 overflow-hidden rounded-2xl border border-border bg-background shadow-xl xl:hidden">
+        <div className="container-page overflow-hidden border-t border-border bg-background xl:hidden">
           <div className="flex max-h-[calc(100vh-7rem)] flex-col gap-1 overflow-y-auto p-4">
             <Link
               to="/search"
               search={{ q: "" }}
               onClick={closeNavigation}
-              className="mb-2 flex items-center gap-3 rounded-xl border border-border bg-secondary px-3 py-3 text-sm font-extrabold text-foreground"
+              className="mb-2 flex min-h-11 items-center gap-3 rounded-lg border border-border bg-card px-3 text-sm font-bold text-foreground"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card text-[#1768cc] dark:text-[#70b3ff]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-primary">
                 <Search className="h-4 w-4" />
               </span>
               Search courses and universities
@@ -324,9 +325,9 @@ export function SiteHeader() {
             <Link
               to="/programs"
               onClick={closeNavigation}
-              className="rounded-lg px-3 py-2.5 text-sm font-extrabold text-foreground hover:bg-secondary"
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-foreground hover:bg-secondary"
             >
-              All programs
+              All online courses
             </Link>
             <div className="grid grid-cols-2 gap-2 px-3 pb-3">
               {programCatalog.slice(0, 6).map((program) => (
@@ -335,7 +336,7 @@ export function SiteHeader() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   onClick={closeNavigation}
-                  className="rounded-lg bg-secondary px-3 py-2 text-xs font-bold"
+                  className="flex min-h-11 items-center rounded-lg bg-secondary px-3 text-xs font-bold"
                 >
                   {program.code}
                 </Link>
@@ -344,7 +345,7 @@ export function SiteHeader() {
             <Link
               to="/universities"
               onClick={closeNavigation}
-              className="rounded-lg px-3 py-2.5 text-sm font-extrabold text-foreground hover:bg-secondary"
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-foreground hover:bg-secondary"
             >
               Universities
             </Link>
@@ -356,17 +357,17 @@ export function SiteHeader() {
                 key={link.to}
                 to={link.to}
                 onClick={closeNavigation}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
+                className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
               >
                 {link.label}
               </Link>
             ))}
             <Button
               asChild
-              className="mt-2 w-full rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
+              className="mt-2 h-11 w-full rounded-lg border border-[#C86620] bg-[#F47B25] font-extrabold text-[#111827] hover:bg-[#E56E1E] dark:border-[#FF9A50] dark:bg-[#FF9A50] dark:text-[#16100B] dark:hover:bg-[#FFAA6D]"
             >
               <Link to="/contact" onClick={closeNavigation}>
-                Get free counselling
+                Talk to a counsellor
               </Link>
             </Button>
           </div>

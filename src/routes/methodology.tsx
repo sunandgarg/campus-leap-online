@@ -91,7 +91,6 @@ function MethodologyPage() {
   return (
     <div className="bg-background text-foreground">
       <section className="relative overflow-hidden border-b border-border bg-[#f3f7fc] py-16 dark:bg-[#071522] lg:py-24">
-        <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(rgba(30,103,189,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(30,103,189,0.06)_1px,transparent_1px)] [background-size:56px_56px]" />
         <div className="container-page relative grid gap-10 lg:grid-cols-[1fr_360px] lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-[#bad5f2] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:border-[#295a85] dark:bg-[#102a42] dark:text-[#78b9ff]">
@@ -169,7 +168,7 @@ function MethodologyPage() {
 
       <section
         id="admission-safety"
-        className="scroll-mt-28 border-y border-border bg-[#071c2e] py-16 text-white lg:py-20"
+        className="scroll-mt-28 border-y border-border bg-[#131720] py-16 text-white lg:py-20"
       >
         <div className="container-page">
           <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
@@ -190,7 +189,7 @@ function MethodologyPage() {
                   href="https://deb.ugc.ac.in/"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#ffc23f] px-5 text-sm font-extrabold text-[#10243b] transition hover:bg-[#ffd163]"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f47b25] px-5 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12]"
                 >
                   Verify on UGC-DEB <ExternalLink className="h-4 w-4" />
                 </a>
@@ -205,7 +204,7 @@ function MethodologyPage() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/12 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
+            <div className="rounded-2xl border border-white/15 bg-[#1f2631] p-6 sm:p-8">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#78ddb3]/15 text-[#78ddb3]">
                   <ListChecks className="h-5 w-5" />
@@ -285,20 +284,20 @@ function MethodologyPage() {
         </div>
       </section>
 
-      <section className="bg-[#ffc23f] py-12">
+      <section className="bg-[#325dd2] py-12 text-white">
         <div className="container-page flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#705315]">
+            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-white/80">
               Start with evidence
             </p>
-            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-[#10243b]">
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em] text-white">
               Build your own university comparison.
             </h2>
           </div>
           <Button
             asChild
             size="lg"
-            className="rounded-xl bg-[#10243b] font-extrabold text-white hover:bg-[#183b60]"
+            className="rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
           >
             <Link to="/compare">
               Compare now <ArrowRight className="ml-2 h-4 w-4" />

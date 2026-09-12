@@ -15,7 +15,6 @@ import {
   Laptop2,
   Medal,
   ShieldCheck,
-  Sparkles,
   Target,
   WalletCards,
   X,
@@ -111,27 +110,23 @@ const learningFeatures = [
     title: "Flexible online learning",
     description: "Balance live sessions, recordings and assessments around your schedule.",
     icon: Laptop2,
-    color: "bg-[#eaf3ff] text-[#1765c0]",
   },
   {
     title: "Industry-aligned curriculum",
     description:
       "Check whether the syllabus includes practical subjects, projects and case studies.",
     icon: BookOpenCheck,
-    color: "bg-[#fff0e6] text-[#a94300]",
   },
   {
     title: "Recognition checks first",
     description:
       "Use UGC-DEB and the official prospectus to verify the exact intake before paying.",
     icon: ShieldCheck,
-    color: "bg-[#eafaf3] text-[#16865b]",
   },
   {
     title: "Career-focused support",
     description: "Choose a degree and specialisation with your long-term role in mind.",
     icon: Target,
-    color: "bg-[#f3edff] text-[#7353c6]",
   },
 ];
 
@@ -212,21 +207,8 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
   return (
     <div className="bg-background text-foreground transition-colors">
-      <section className="relative overflow-hidden border-b border-[#eadfcd] bg-[#fffaf0] dark:border-border dark:bg-[#071522]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(40,48,55,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(40,48,55,0.045)_1px,transparent_1px)] [background-size:56px_56px] dark:opacity-25"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -left-32 -top-40 h-[36rem] w-[36rem] rounded-full bg-[#ffe2c8] blur-3xl dark:bg-[#6b3417]/30"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -right-40 top-8 h-[34rem] w-[34rem] rounded-full bg-[#fff0bb] blur-3xl dark:bg-[#5b3d12]/30"
-          aria-hidden="true"
-        />
-
-        <div className="container-page relative py-7 lg:py-12">
+      <section className="border-b border-border bg-surface">
+        <div className="container-page py-7 lg:py-12">
           <nav
             className="flex items-center gap-1 text-xs text-muted-foreground"
             aria-label="Breadcrumb"
@@ -247,21 +229,18 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           <div className="mt-9 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center xl:gap-20">
             <div className="min-w-0 max-w-3xl py-2 lg:py-8">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full border border-[#b9dfca] bg-white/80 px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#187a55] shadow-sm backdrop-blur dark:border-[#275e4a] dark:bg-[#113329]/80 dark:text-[#76dcb1]">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-[#aebff0] bg-card px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#2449ad] dark:border-[#56698c] dark:text-[#b9ceff]">
                   <BadgeCheck className="h-4 w-4" />
                   Category guide · intake verification required
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/75 px-3.5 py-2 text-[11px] font-bold text-muted-foreground backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3.5 py-2 text-[11px] font-bold text-muted-foreground">
                   Updated September 2026
                 </span>
               </div>
 
               <h1 className="mt-7 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.02] tracking-[-0.06em] text-foreground sm:text-5xl lg:text-[4.25rem]">
                 Online {p.name}{" "}
-                <span className="relative inline-block text-[#a94300] dark:text-[#ff9a5b]">
-                  ({p.code})
-                  <span className="absolute -bottom-1 left-0 h-1 w-full -rotate-1 rounded-full bg-[#f47a20]/35" />
-                </span>
+                <span className="inline-block text-[#325dd2] dark:text-[#7da2ff]">({p.code})</span>
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
@@ -270,11 +249,11 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               </p>
 
               <div className="mt-7 flex flex-wrap gap-2.5">
-                <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-bold">
                   <Clock3 className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.durationYears} years · {p.semesters} semesters
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/85 px-4 py-2.5 text-sm font-bold shadow-sm backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-bold">
                   <GraduationCap className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.level} degree
                 </span>
@@ -284,7 +263,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-xl bg-[#a94300] font-extrabold text-white shadow-[0_16px_34px_-16px_rgba(169,67,0,0.62)] hover:bg-[#8f3700]"
+                  className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
                 >
                   <Link to="/contact">
                     Get free counselling
@@ -295,7 +274,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="rounded-xl border-border bg-background/65 font-bold text-foreground hover:bg-secondary"
+                  className="border-border bg-background font-bold text-foreground hover:bg-secondary"
                 >
                   <a href="#universities">Compare universities</a>
                 </Button>
@@ -324,16 +303,12 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               </dl>
             </div>
 
-            <aside className="relative mx-auto min-w-0 w-full max-w-[440px]">
-              <div
-                className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-[#ffd2b1]/70 via-transparent to-[#ffe3a9]/60 blur-xl dark:from-[#f47a20]/20 dark:to-[#bd7b18]/20"
-                aria-hidden="true"
-              />
-              <div className="relative rounded-[1.75rem] border border-white/80 bg-white/90 p-6 shadow-[0_28px_80px_-36px_rgba(25,67,116,0.48)] backdrop-blur-xl dark:border-white/10 dark:bg-[#0d2134]/92 dark:shadow-[0_28px_80px_-32px_rgba(0,0,0,0.75)] sm:p-7">
+            <aside className="relative mx-auto w-full min-w-0 max-w-[440px]">
+              <div className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-7">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
-                      Your decision desk
+                      A practical checklist
                     </p>
                     <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
                       Compare before you commit.
@@ -345,8 +320,8 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </div>
 
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Get matched by budget, accreditation, learning format and your career goal—not
-                  sales pressure.
+                  Compare budget, evidence, learning format and fit at your own pace, without sales
+                  pressure.
                 </p>
 
                 <div className="mt-6 space-y-2.5">
@@ -357,7 +332,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   ].map((item) => (
                     <div
                       key={item}
-                      className="flex items-center gap-3 rounded-xl border border-border/80 bg-background/70 px-3.5 py-3 text-sm font-semibold"
+                      className="flex items-center gap-3 rounded-lg border border-border bg-background px-3.5 py-3 text-sm font-semibold"
                     >
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e8f7ef] text-[#148055] dark:bg-[#113d30] dark:text-[#67d6a7]">
                         <Check className="h-3.5 w-3.5" />
@@ -368,7 +343,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </div>
 
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-[#f1f6fc] p-4 dark:bg-[#102a42]">
+                  <div className="rounded-lg bg-secondary p-4">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       Catalogue fee guide
                     </p>
@@ -376,7 +351,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                       {comparableOffers.length ? formatINR(startingFee) : "Not mapped"}
                     </p>
                   </div>
-                  <div className="rounded-2xl bg-[#fff5df] p-4 dark:bg-[#342919]">
+                  <div className="rounded-lg bg-secondary p-4">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       Arithmetic monthly split
                     </p>
@@ -407,7 +382,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 <Button
                   asChild
                   size="lg"
-                  className="mt-5 w-full rounded-xl bg-[#a94300] font-extrabold text-white shadow-[0_14px_28px_-18px_rgba(169,67,0,0.72)] hover:bg-[#8f3700]"
+                  className="mt-5 w-full rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
                 >
                   <Link to="/contact">
                     Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
@@ -420,7 +395,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
       </section>
 
       <nav
-        className="sticky top-[5.45rem] z-40 border-b border-border bg-background/92 shadow-sm backdrop-blur-xl"
+        className="sticky top-[5.45rem] z-40 border-b border-border bg-background shadow-sm"
         aria-label="Program page sections"
       >
         <div className="container-page flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
@@ -485,11 +460,9 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             {learningFeatures.map((feature) => (
               <article
                 key={feature.title}
-                className="rounded-[1.5rem] border border-border bg-card p-6 transition hover:-translate-y-1 hover:shadow-[0_20px_45px_-30px_rgba(12,39,71,0.5)] dark:hover:border-white/20"
+                className="rounded-xl border border-border bg-card p-6 transition-colors hover:border-[#aebff0] dark:hover:border-[#56698c]"
               >
-                <span
-                  className={`${feature.color} flex h-12 w-12 items-center justify-center rounded-2xl`}
-                >
+                <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <feature.icon className="h-5 w-5" />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-extrabold tracking-[-0.03em]">
@@ -512,9 +485,9 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             description="A good decision starts with fit—not urgency. Use these signals before comparing universities."
           />
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
-            <article className="rounded-[1.75rem] border border-[#bfe4d1] bg-[#f0fbf5] p-7 dark:border-[#20543f] dark:bg-[#0e2b21] md:p-8">
+            <article className="rounded-xl border border-border bg-card p-7 md:p-8">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#168258] shadow-sm dark:bg-[#153d30] dark:text-[#69d7a9]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <Check className="h-5 w-5" />
                 </span>
                 <h3 className="font-display text-xl font-extrabold">Strong fit if you…</h3>
@@ -527,16 +500,16 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   "Can manage your time and study with consistent self-discipline",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-[#168258] dark:text-[#69d7a9]" />
+                    <Check className="mt-1 h-4 w-4 shrink-0 text-[#325dd2] dark:text-[#7da2ff]" />
                     {item}
                   </li>
                 ))}
               </ul>
             </article>
 
-            <article className="rounded-[1.75rem] border border-[#efd9b1] bg-[#fff9eb] p-7 dark:border-[#5d4624] dark:bg-[#2d2517] md:p-8">
+            <article className="rounded-xl border border-border bg-card p-7 md:p-8">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-[#a56f0b] shadow-sm dark:bg-[#45351c] dark:text-[#f4bd4f]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#fff1e7] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]">
                   <Target className="h-5 w-5" />
                 </span>
                 <h3 className="font-display text-xl font-extrabold">Compare carefully if you…</h3>
@@ -549,7 +522,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   "Are choosing only by the lowest fee instead of academic and learner support",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#b47b15] dark:bg-[#f4bd4f]" />
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#f47b25]" />
                     {item}
                   </li>
                 ))}
@@ -592,7 +565,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               description="Compare cited total fees and recognition evidence. Editorial, directory and non-current records stay outside rankings."
             />
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-              <Sparkles className="h-4 w-4" /> {displayedOffers.length} comparable options
+              <GitCompareArrows className="h-4 w-4" /> {displayedOffers.length} comparable options
             </span>
           </div>
 
@@ -613,7 +586,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           </div>
 
           {selectedOffers.length > 0 ? (
-            <div className="mt-4 overflow-hidden rounded-[1.5rem] border border-[#83b4ea] bg-card shadow-[0_20px_50px_-36px_rgba(23,104,204,0.55)] dark:border-[#2e628f]">
+            <div className="mt-4 overflow-hidden rounded-xl border border-[#aebff0] bg-card dark:border-[#56698c]">
               <div className="flex items-center justify-between border-b border-border bg-[#edf5ff] px-5 py-3 dark:bg-[#102a42]">
                 <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#155cb6] dark:text-[#70b3ff]">
                   <GitCompareArrows className="h-4 w-4" /> Live comparison
@@ -741,7 +714,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               return (
                 <article
                   key={university.slug}
-                  className="group rounded-[1.55rem] border border-border bg-card p-5 shadow-[0_12px_35px_-30px_rgba(12,39,71,0.45)] transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-[0_22px_48px_-30px_rgba(18,74,140,0.48)] sm:p-6"
+                  className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0] sm:p-6"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
@@ -984,9 +957,9 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           </div>
 
           <aside className="lg:sticky lg:top-32 lg:h-fit">
-            <div className="overflow-hidden rounded-[1.75rem] bg-[#08213d] text-white shadow-[0_28px_60px_-32px_rgba(8,33,61,0.68)] ring-1 ring-white/10">
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#131720] text-white">
               <div className="border-b border-white/10 p-6">
-                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#ffc23f]">
+                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#ff9a50]">
                   Program at a glance
                 </p>
                 <h3 className="mt-3 font-display text-2xl font-extrabold">Online {p.code}</h3>
@@ -1017,7 +990,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               <div className="p-6 pt-0">
                 <Button
                   asChild
-                  className="w-full rounded-xl bg-[#ffc23f] font-extrabold text-[#12253b] hover:bg-[#ffb819]"
+                  className="w-full rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
                 >
                   <Link to="/contact">Get free counselling</Link>
                 </Button>
@@ -1029,7 +1002,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section
         id="specialisations"
-        className="scroll-mt-32 bg-[#0b2038] py-16 text-white dark:bg-[#050d15] lg:py-20"
+        className="scroll-mt-32 bg-[#131720] py-16 text-white dark:bg-[#0b1018] lg:py-20"
       >
         <div className="container-page">
           <SectionHeading
@@ -1046,25 +1019,25 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 params={{
                   specialisationSlug: `${p.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
                 }}
-                className="group flex min-h-32 items-end justify-between rounded-[1.4rem] border border-white/10 bg-white/[0.06] p-5 transition hover:border-[#ffc23f]/40 hover:bg-white/[0.1]"
+                className="group flex min-h-32 items-end justify-between rounded-xl border border-[#3b4350] bg-[#252b36] p-5 transition-colors hover:border-[#f47b25]"
               >
                 <div>
-                  <span className="text-xs font-extrabold text-[#ffc23f]">0{index + 1}</span>
+                  <span className="text-xs font-extrabold text-[#ff9a50]">0{index + 1}</span>
                   <h3 className="mt-3 font-display text-lg font-extrabold">{specialisation}</h3>
                 </div>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 transition group-hover:bg-[#ffc23f] group-hover:text-[#102239]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#596170] transition-colors group-hover:border-[#f47b25] group-hover:bg-[#f47b25] group-hover:text-[#111827]">
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </Link>
             ))}
           </div>
-          <div className="mt-8 flex flex-col gap-5 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-6 md:flex-row md:items-center md:justify-between">
+          <div className="mt-8 flex flex-col gap-5 rounded-xl border border-[#3b4350] bg-[#252b36] p-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="font-display text-xl font-extrabold">
                 Not sure which specialisation fits you?
               </h3>
-              <p className="mt-1 text-sm text-white/60">
-                Get a career-first recommendation from an education expert.
+              <p className="mt-1 text-sm text-white/70">
+                Explore pathways by career direction, then verify the exact university curriculum.
               </p>
             </div>
             <Button
@@ -1165,7 +1138,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               title={`Where an online ${p.code} can take you`}
               description="Your outcomes depend on prior experience, skills, university support and the opportunities you pursue—not the degree alone."
             />
-            <div className="mt-7 rounded-2xl bg-[#155cb6] p-5 text-white">
+            <div className="mt-7 rounded-xl bg-[#325dd2] p-5 text-white">
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">
                 Outcome guardrail
               </p>
@@ -1180,7 +1153,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             {p.careers.map((career, index) => (
               <article
                 key={career}
-                className="flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-[#78a9df] hover:shadow-lg"
+                className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0]"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
                   <BriefcaseBusiness className="h-5 w-5" />
@@ -1207,7 +1180,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             />
             <Button
               asChild
-              className="mt-7 rounded-xl bg-[#102943] font-extrabold text-white hover:bg-[#183b60]"
+              className="mt-7 rounded-lg bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad]"
             >
               <Link to="/contact">Ask an education expert</Link>
             </Button>
@@ -1231,20 +1204,20 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section className="bg-[#ffc23f] py-12">
+      <section className="bg-[#325dd2] py-12 text-white">
         <div className="container-page flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#6e5110]">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-white/80">
               Your next step
             </p>
-            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em] text-[#10243b]">
+            <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em] text-white">
               Find the right university for your online {p.code}.
             </h2>
           </div>
           <Button
             asChild
             size="lg"
-            className="shrink-0 rounded-xl bg-[#10243b] font-extrabold text-white hover:bg-[#183b60]"
+            className="shrink-0 rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
           >
             <Link to="/contact">
               Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
@@ -1270,7 +1243,7 @@ function SectionHeading({
   return (
     <div className="max-w-3xl">
       <p
-        className={`text-xs font-extrabold uppercase tracking-[0.17em] ${dark ? "text-[#ffc23f]" : "text-[#a94300]"}`}
+        className={`text-xs font-extrabold uppercase tracking-[0.17em] ${dark ? "text-[#ff9a50]" : "text-[#a94300]"}`}
       >
         {eyebrow}
       </p>
@@ -1291,7 +1264,7 @@ function SectionHeading({
 function Fact({ icon: Icon, label, value }: { icon: typeof Clock3; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[#ffc23f]">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#252b36] text-[#ff9a50]">
         <Icon className="h-4 w-4" />
       </span>
       <div>

@@ -6,7 +6,6 @@ import {
   MessageCircle,
   Phone,
   ShieldCheck,
-  Sparkles,
   UserRound,
   UsersRound,
 } from "lucide-react";
@@ -22,9 +21,29 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { programCatalog, universities } from "@/data/universities";
-import { supabase } from "@/integrations/supabase/client";
 import { getLeadAttribution } from "@/lib/lead-attribution";
 import { cn } from "@/lib/utils";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        target: HTMLElement,
+        options: {
+          sitekey: string;
+          action: string;
+          theme: "auto";
+          size: "flexible";
+          appearance: "interaction-only";
+          callback: (token: string) => void;
+          "expired-callback": () => void;
+          "error-callback": () => void;
+        },
+      ) => string;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
 
 interface LeadFormProps {
   title?: string;
@@ -53,6 +72,14 @@ const universityShareConsentText = (universityName: string) =>
 type ContactChannel = "call" | "whatsapp" | "email";
 type ErrorField = "name" | "phone" | "email" | "contactChannel" | "consent" | "form" | null;
 
+type IntakeResponse = {
+  ok: boolean;
+  reason?: "duplicate" | "rate_limited" | "unavailable" | "verification_failed" | "invalid";
+};
+
+const TURNSTILE_SITE_KEY = import.meta.env["VITE_TURNSTILE_SITE_KEY"] as string | undefined;
+const turnstileConfigured = Boolean(TURNSTILE_SITE_KEY);
+
 const contactChannels: { value: ContactChannel; label: string; icon: typeof Phone }[] = [
   { value: "call", label: "Call", icon: Phone },
   { value: "whatsapp", label: "WhatsApp", icon: MessageCircle },
@@ -60,8 +87,8 @@ const contactChannels: { value: ContactChannel; label: string; icon: typeof Phon
 ];
 
 export function LeadForm({
-  title = "Talk to an online-degree counsellor",
-  description = "Get fees, eligibility and a university shortlist from a DekhoCampus expert.",
+  title = "Speak with a course counsellor",
+  description = "Ask about fees, eligibility or how to compare universities. A real person will respond on the channel you choose.",
   defaultProgramSlug,
   defaultUniversitySlug,
   compact = false,
@@ -84,6 +111,8 @@ export function LeadForm({
   const [errorField, setErrorField] = useState<ErrorField>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileKey, setTurnstileKey] = useState(0);
   const startedAt = useRef(Date.now());
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -170,6 +199,19 @@ export function LeadForm({
       return;
     }
 
+    if (turnstileConfigured && !turnstileToken) {
+      showError("form", "Please complete the quick security check and try again.");
+      return;
+    }
+
+    if (import.meta.env.PROD && !turnstileConfigured) {
+      showError(
+        "form",
+        "Counselling requests are temporarily unavailable. Please email online@dekhocampus.in.",
+      );
+      return;
+    }
+
     setSubmitting(true);
     const attribution = getLeadAttribution();
     const message = JSON.stringify({
@@ -179,43 +221,62 @@ export function LeadForm({
       consentVersion: CONSENT_VERSION,
     });
 
-    const { error: rpcError } = await supabase.rpc("submit_counselling_lead", {
-      p_full_name: name.trim(),
-      p_phone: phone.trim(),
-      p_email: email.trim() || null,
-      p_university_slug: selectedUniversity?.slug ?? null,
-      p_program_slug: selectedProgram?.slug ?? null,
-      p_source_path: attribution.path,
-      p_message: message,
-      p_contact_channels: [contactChannel],
-      p_consent_given: consent,
-      p_consent_text: CONSENT_TEXT,
-      p_consent_version: CONSENT_VERSION,
-      p_share_with_university: Boolean(selectedUniversity && shareWithUniversity),
-      p_university_share_consent_version:
-        selectedUniversity && shareWithUniversity ? UNIVERSITY_SHARE_CONSENT_VERSION : null,
-      p_university_share_consent_text:
-        selectedUniversity && shareWithUniversity
-          ? universityShareConsentText(selectedUniversity.name)
-          : null,
-      p_qualification: showMatchQuestions ? role : null,
-      p_goal: showMatchQuestions ? concern : null,
-      p_utm_source: attribution.utmSource || null,
-      p_utm_medium: attribution.utmMedium || null,
-      p_utm_campaign: attribution.utmCampaign || null,
-      p_referrer: attribution.referrer || null,
-    });
+    let response: IntakeResponse;
+    try {
+      const request = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: name.trim(),
+          phone: phone.trim(),
+          email: email.trim(),
+          universitySlug: selectedUniversity?.slug ?? null,
+          programSlug: selectedProgram?.slug ?? null,
+          sourcePath: attribution.path,
+          message,
+          contactChannel,
+          consentGiven: consent,
+          consentText: CONSENT_TEXT,
+          consentVersion: CONSENT_VERSION,
+          shareWithUniversity: Boolean(selectedUniversity && shareWithUniversity),
+          universityShareConsentVersion:
+            selectedUniversity && shareWithUniversity ? UNIVERSITY_SHARE_CONSENT_VERSION : null,
+          universityShareConsentText:
+            selectedUniversity && shareWithUniversity
+              ? universityShareConsentText(selectedUniversity.name)
+              : null,
+          qualification: showMatchQuestions ? role : null,
+          goal: showMatchQuestions ? concern : null,
+          utmSource: attribution.utmSource || null,
+          utmMedium: attribution.utmMedium || null,
+          utmCampaign: attribution.utmCampaign || null,
+          referrer: attribution.referrer || null,
+          turnstileToken: turnstileToken || null,
+          website,
+          elapsedMs: Date.now() - startedAt.current,
+        }),
+      });
+      response = (await request.json()) as IntakeResponse;
+    } catch {
+      response = { ok: false, reason: "unavailable" };
+    } finally {
+      setSubmitting(false);
+      if (turnstileConfigured) {
+        setTurnstileToken("");
+        setTurnstileKey((value) => value + 1);
+      }
+    }
 
-    setSubmitting(false);
-
-    if (rpcError) {
-      const duplicate = rpcError.message.includes("duplicate_recent_enquiry");
-      showError(
-        "form",
-        duplicate
-          ? "We already received this enquiry. A second submission is not needed."
-          : "We couldn't securely submit your enquiry. Please try again or email online@dekhocampus.in.",
-      );
+    if (!response.ok) {
+      const messages: Record<NonNullable<IntakeResponse["reason"]>, string> = {
+        duplicate: "We already received this enquiry. A second submission is not needed.",
+        rate_limited: "Too many requests were received. Please wait a few minutes and try again.",
+        verification_failed: "The security check expired. Please complete it again.",
+        invalid: "Please review your details and try again.",
+        unavailable:
+          "We couldn't securely submit your enquiry. Please try again or email online@dekhocampus.in.",
+      };
+      showError("form", response.reason ? messages[response.reason] : messages.unavailable);
       return;
     }
 
@@ -235,13 +296,13 @@ export function LeadForm({
 
   return (
     <div
-      className={cn("rounded-2xl border border-border bg-card p-6 shadow-card md:p-7", className)}
+      className={cn("rounded-xl border border-border bg-card p-6 shadow-card md:p-7", className)}
     >
       <div className="flex items-start justify-between gap-5">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-lg bg-[#eaf3ff] px-3 py-1.5 text-xs font-extrabold text-[#0d5cad] dark:bg-[#102a42] dark:text-[#78b9ff]">
-            <Sparkles className="h-3.5 w-3.5" />
-            Free personalised guidance
+          <div className="inline-flex items-center gap-2 rounded-md bg-[#edf2ff] px-3 py-1.5 text-xs font-extrabold text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
+            <UsersRound className="h-3.5 w-3.5" />
+            Free guidance from a person
           </div>
           <h2 className="mt-4 font-display text-xl font-extrabold tracking-[-0.035em]">{title}</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
@@ -559,10 +620,18 @@ export function LeadForm({
           </p>
         ) : null}
 
+        {turnstileConfigured ? (
+          <TurnstileWidget key={turnstileKey} onToken={setTurnstileToken} />
+        ) : import.meta.env.PROD ? (
+          <p role="alert" className="text-center text-xs font-semibold text-destructive">
+            Secure enquiries are temporarily unavailable.
+          </p>
+        ) : null}
+
         <Button
           type="submit"
-          disabled={submitting}
-          className="w-full rounded-xl bg-[#a94300] font-extrabold text-white shadow-[0_14px_28px_-16px_rgba(169,67,0,0.72)] hover:bg-[#8f3700]"
+          disabled={submitting || (import.meta.env.PROD && !turnstileConfigured)}
+          className="w-full bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
           size="lg"
         >
           {submitting ? "Sending…" : "Request free counselling"}
@@ -573,6 +642,57 @@ export function LeadForm({
           No payment is required. Your details are used only for the response you request.
         </p>
       </form>
+    </div>
+  );
+}
+
+function TurnstileWidget({ onToken }: { onToken: (token: string) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !containerRef.current) return;
+
+    const scriptId = "cloudflare-turnstile-script";
+    const renderWidget = () => {
+      if (!window.turnstile || !containerRef.current || widgetIdRef.current) return;
+      widgetIdRef.current = window.turnstile.render(containerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        action: "counselling_lead",
+        theme: "auto",
+        size: "flexible",
+        appearance: "interaction-only",
+        callback: onToken,
+        "expired-callback": () => onToken(""),
+        "error-callback": () => onToken(""),
+      });
+    };
+
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    if (window.turnstile) renderWidget();
+    else script.addEventListener("load", renderWidget, { once: true });
+
+    return () => {
+      script?.removeEventListener("load", renderWidget);
+      if (widgetIdRef.current && window.turnstile) {
+        window.turnstile.remove(widgetIdRef.current);
+      }
+      widgetIdRef.current = null;
+    };
+  }, [onToken]);
+
+  return (
+    <div className="min-h-16 rounded-lg border border-border bg-background p-2">
+      <div ref={containerRef} className="min-w-0" aria-label="Security verification" />
     </div>
   );
 }

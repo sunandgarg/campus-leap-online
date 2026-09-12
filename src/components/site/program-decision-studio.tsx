@@ -9,7 +9,6 @@ import {
   GraduationCap,
   IndianRupee,
   ShieldCheck,
-  Sparkles,
   UserRoundSearch,
   WalletCards,
 } from "lucide-react";
@@ -36,7 +35,7 @@ const profiles = [
 const priorities = [
   { value: "budget" as const, label: "Keep costs low", icon: WalletCards },
   { value: "flexibility" as const, label: "Maximum flexibility", icon: Clock3 },
-  { value: "career" as const, label: "Career lens (no rank)", icon: Sparkles },
+  { value: "career" as const, label: "Career lens (no rank)", icon: BriefcaseBusiness },
 ];
 
 const profileCopy: Record<LearnerProfile, string> = {
@@ -120,8 +119,8 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
     >
       <div className="container-page">
         <div className="max-w-3xl">
-          <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#1664c0] dark:text-[#78b9ff]">
-            <Sparkles className="h-4 w-4" /> Free decision tools
+          <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-xs font-extrabold uppercase tracking-[0.16em] text-[#2449ad] dark:text-[#b9ceff]">
+            <BadgeCheck className="h-4 w-4" /> Practical decision tools
           </span>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl">
             Make a decision that fits your life—not a sales script
@@ -133,8 +132,8 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
         </div>
 
         <div className="mt-10 grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
-          <article className="overflow-hidden rounded-[2rem] border border-border bg-card shadow-[0_24px_70px_-54px_rgba(12,39,71,0.7)]">
-            <div className="border-b border-border bg-gradient-to-r from-[#edf5ff] to-[#f8fbff] p-6 dark:from-[#102a42] dark:to-card sm:p-8">
+          <article className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="border-b border-border bg-[#edf2ff] p-6 dark:bg-[#263653] sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -144,7 +143,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                     Build your learner profile
                   </h3>
                 </div>
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-[#1768cc] shadow-sm dark:bg-[#153a5e] dark:text-[#78b9ff]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-[#325dd2] dark:bg-[#1b2942] dark:text-[#b9ceff]">
                   <UserRoundSearch className="h-5 w-5" />
                 </span>
               </div>
@@ -160,7 +159,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                       type="button"
                       aria-pressed={profile === item.value}
                       onClick={() => setProfile(item.value)}
-                      className={`flex min-h-20 flex-col items-start justify-between rounded-2xl border p-3.5 text-left text-xs font-bold transition ${
+                      className={`flex min-h-20 flex-col items-start justify-between rounded-lg border p-3.5 text-left text-xs font-bold transition-colors ${
                         profile === item.value
                           ? "border-[#1768cc] bg-[#edf5ff] text-[#155cb6] dark:bg-[#102a42] dark:text-[#78b9ff]"
                           : "border-border bg-background text-muted-foreground hover:border-[#8db8e8]"
@@ -216,7 +215,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 />
               </div>
 
-              <div className="rounded-2xl border border-[#b9d8f6] bg-[#f3f8ff] p-5 dark:border-[#295a85] dark:bg-[#0e263b]">
+              <div className="rounded-xl border border-[#aebff0] bg-[#f6f8ff] p-5 dark:border-[#56698c] dark:bg-[#1b2942]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-display text-lg font-extrabold">Your readiness: {readiness}</p>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#168258] dark:bg-[#153d30] dark:text-[#69d7a9]">
@@ -231,9 +230,9 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
             </div>
           </article>
 
-          <article className="overflow-hidden rounded-[2rem] border border-border bg-[#081c2e] text-white shadow-[0_28px_80px_-50px_rgba(6,28,48,0.95)] dark:bg-[#0b2235]">
+          <article className="overflow-hidden rounded-xl border border-[#3b4350] bg-[#131720] text-white dark:bg-[#0b1018]">
             <div className="border-b border-white/10 p-6 sm:p-8">
-              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#85c3ff]">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#ff9a50]">
                 Budget planner
               </p>
               <h3 className="mt-2 font-display text-2xl font-extrabold">
@@ -263,7 +262,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 step="250"
                 value={monthlyBudget}
                 onChange={(event) => setMonthlyBudget(Number(event.target.value))}
-                className="mt-5 w-full accent-[#ff8a3d]"
+                className="mt-5 w-full accent-[#f47b25]"
               />
               <div className="mt-2 flex justify-between text-[10px] font-bold text-white/65">
                 <span>{formatINR(minEmi)}</span>
@@ -285,7 +284,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                       : "Filtered by the labelled monthly-cost rule"}
                   </p>
                 </div>
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-[#ffab73]">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#252b36] text-[#ff9a50]">
                   <IndianRupee className="h-5 w-5" />
                 </span>
               </div>
@@ -294,7 +293,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 {affordableOffers.slice(0, 3).map(({ university, program: offer }) => (
                   <div
                     key={university.slug}
-                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.055] p-3"
+                    className="flex items-center gap-3 rounded-lg border border-[#3b4350] bg-[#252b36] p-3"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
                       <UniversityLogo university={university} size="sm" />
@@ -313,7 +312,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                   </div>
                 ))}
                 {affordableOffers.length === 0 ? (
-                  <div className="rounded-2xl border border-[#ffb27f]/25 bg-[#ff8a3d]/10 p-4 text-sm leading-6 text-white/70">
+                  <div className="rounded-lg border border-[#6b4a34] bg-[#252b36] p-4 text-sm leading-6 text-white/75">
                     No arithmetic monthly split starts within this range. Review total cost first,
                     then ask the university about a published payment plan.
                   </div>
@@ -323,7 +322,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               <Button
                 asChild
                 size="lg"
-                className="mt-6 w-full rounded-xl bg-[#ff7a24] font-extrabold text-white hover:bg-[#ee6710]"
+                className="mt-6 w-full rounded-xl bg-[#ff7a24] font-extrabold text-[#111827] hover:bg-[#ee6710]"
               >
                 <Link to="/compare">
                   Compare all fees <ArrowRight className="ml-2 h-4 w-4" />
@@ -333,7 +332,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </article>
         </div>
 
-        <div className="mt-5 grid overflow-hidden rounded-[1.5rem] border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-5 grid overflow-hidden rounded-xl border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
           {trustNotes.map(([title, description, Icon], index) => (
             <div
               key={String(title)}

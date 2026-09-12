@@ -132,11 +132,9 @@ function UniversitiesPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-border bg-[#071c2e] text-white">
-        <div className="pointer-events-none absolute -right-32 -top-40 h-[32rem] w-[32rem] rounded-full bg-[#175fa3]/35 blur-3xl" />
-        <div className="pointer-events-none absolute -left-24 bottom-0 h-64 w-64 rounded-full bg-[#a96918]/20 blur-3xl" />
-        <div className="container-page relative py-14 lg:py-20">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
+      <section className="border-b border-border bg-[#131720] text-white">
+        <div className="container-page py-14 lg:py-16">
+          <p className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
             <ShieldCheck className="h-4 w-4" /> {universities.length} university profiles
           </p>
           <h1 className="mt-6 max-w-4xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
@@ -151,7 +149,7 @@ function UniversitiesPage() {
             <Button
               asChild
               size="lg"
-              className="rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
+              className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
             >
               <Link to="/compare">
                 Open comparison <ArrowRight className="ml-2 h-4 w-4" />
@@ -161,7 +159,7 @@ function UniversitiesPage() {
               asChild
               size="lg"
               variant="outline"
-              className="rounded-xl border-white/20 bg-white/[0.06] font-bold text-white hover:bg-white/10 hover:text-white"
+              className="border-white/30 bg-transparent font-bold text-white hover:bg-white hover:text-[#131720]"
             >
               <Link to="/methodology">How we verify information</Link>
             </Button>
@@ -170,13 +168,13 @@ function UniversitiesPage() {
       </section>
 
       <section className="container-page py-10">
-        <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-[0_18px_50px_-42px_rgba(12,39,71,0.7)] md:p-5">
+        <div className="rounded-xl border border-border bg-card p-4 shadow-card md:p-5">
           <div className="mb-4 flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
               <Search className="h-4 w-4" />
             </span>
             <div>
-              <h2 className="text-sm font-extrabold">Find your best-fit university</h2>
+              <h2 className="text-sm font-extrabold">Find a university that suits you</h2>
               <p className="text-xs text-muted-foreground">
                 Search, filter and sort the catalogue.
               </p>

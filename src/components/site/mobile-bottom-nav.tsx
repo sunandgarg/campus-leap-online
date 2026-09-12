@@ -17,7 +17,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Quick navigation"
-      className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-2xl border border-border/90 bg-background/95 p-1.5 shadow-[0_20px_55px_-18px_rgba(12,30,50,0.55)] backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-xl border border-border bg-background p-1.5 shadow-card lg:hidden"
     >
       {items.map((item) => {
         const active =

@@ -5,8 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * online.dekhocampus.in design system
- * Ink navy + warm gold. All colors are oklch tokens.
+ * DekhoCampus design system
+ * Solid, high-contrast surfaces using the parent brand's Inter type,
+ * near-black ink, campus blue and action orange.
  */
 
 @theme inline {
@@ -57,91 +58,93 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --shadow-card: 0 1px 2px oklch(0.2 0.05 255 / 6%), 0 12px 32px -18px oklch(0.2 0.05 255 / 28%);
-  --shadow-lift: 0 2px 6px oklch(0.2 0.05 255 / 8%), 0 24px 48px -24px oklch(0.2 0.05 255 / 35%);
+  --font-display:
+    "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --shadow-card: 0 1px 2px rgb(19 23 32 / 5%), 0 8px 24px -18px rgb(19 23 32 / 30%);
+  --shadow-lift: 0 2px 6px rgb(19 23 32 / 7%), 0 16px 32px -22px rgb(19 23 32 / 32%);
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.995 0.003 250);
-  --foreground: oklch(0.22 0.03 255);
-  --surface: oklch(0.972 0.008 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.03 255);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.03 255);
-  --primary: oklch(0.33 0.09 256);
-  --primary-foreground: oklch(0.99 0.004 250);
-  --ink: oklch(0.22 0.055 258);
-  --ink-foreground: oklch(0.97 0.008 250);
-  --ink-soft: oklch(0.3 0.055 258);
-  --gold: oklch(0.79 0.15 82);
-  --gold-foreground: oklch(0.25 0.06 60);
-  --success: oklch(0.6 0.13 155);
-  --secondary: oklch(0.955 0.012 250);
-  --secondary-foreground: oklch(0.3 0.05 256);
-  --muted: oklch(0.955 0.012 250);
-  --muted-foreground: oklch(0.52 0.03 256);
-  --accent: oklch(0.94 0.03 240);
-  --accent-foreground: oklch(0.3 0.06 256);
+  --radius: 0.625rem;
+  --background: #fcfcfd;
+  --foreground: #131720;
+  --surface: #f5f7fa;
+  --card: #ffffff;
+  --card-foreground: #131720;
+  --popover: #ffffff;
+  --popover-foreground: #131720;
+  --primary: #325dd2;
+  --primary-foreground: #ffffff;
+  --ink: #131720;
+  --ink-foreground: #ffffff;
+  --ink-soft: #252b36;
+  --gold: #f47b25;
+  --gold-foreground: #111827;
+  --success: #14845f;
+  --secondary: #f1f3f7;
+  --secondary-foreground: #252b36;
+  --muted: #f1f3f7;
+  --muted-foreground: #667085;
+  --accent: #edf2ff;
+  --accent-foreground: #2449ad;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0.004 250);
-  --border: oklch(0.9 0.012 250);
-  --input: oklch(0.9 0.012 250);
-  --ring: oklch(0.55 0.09 256);
-  --chart-1: oklch(0.33 0.09 256);
-  --chart-2: oklch(0.79 0.15 82);
-  --chart-3: oklch(0.6 0.13 155);
+  --border: #e4e7ec;
+  --input: #d6dae2;
+  --ring: #325dd2;
+  --chart-1: #325dd2;
+  --chart-2: #f47b25;
+  --chart-3: #14845f;
   --chart-4: oklch(0.55 0.14 25);
   --chart-5: oklch(0.5 0.1 290);
-  --sidebar: oklch(0.972 0.008 250);
-  --sidebar-foreground: oklch(0.22 0.03 255);
-  --sidebar-primary: oklch(0.33 0.09 256);
-  --sidebar-primary-foreground: oklch(0.99 0.004 250);
-  --sidebar-accent: oklch(0.94 0.03 240);
-  --sidebar-accent-foreground: oklch(0.3 0.06 256);
-  --sidebar-border: oklch(0.9 0.012 250);
-  --sidebar-ring: oklch(0.55 0.09 256);
+  --sidebar: #f5f7fa;
+  --sidebar-foreground: #131720;
+  --sidebar-primary: #325dd2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #edf2ff;
+  --sidebar-accent-foreground: #2449ad;
+  --sidebar-border: #e4e7ec;
+  --sidebar-ring: #325dd2;
 }
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.17 0.03 258);
-  --foreground: oklch(0.97 0.008 250);
-  --surface: oklch(0.21 0.035 258);
-  --card: oklch(0.22 0.035 258);
-  --card-foreground: oklch(0.97 0.008 250);
-  --popover: oklch(0.22 0.035 258);
-  --popover-foreground: oklch(0.97 0.008 250);
-  --primary: oklch(0.82 0.08 250);
-  --primary-foreground: oklch(0.2 0.04 258);
-  --ink: oklch(0.14 0.03 258);
-  --ink-foreground: oklch(0.97 0.008 250);
-  --ink-soft: oklch(0.24 0.04 258);
-  --gold: oklch(0.82 0.15 82);
-  --gold-foreground: oklch(0.2 0.05 60);
-  --success: oklch(0.68 0.13 155);
-  --secondary: oklch(0.27 0.035 258);
-  --secondary-foreground: oklch(0.97 0.008 250);
-  --muted: oklch(0.27 0.035 258);
-  --muted-foreground: oklch(0.72 0.025 256);
-  --accent: oklch(0.3 0.04 250);
-  --accent-foreground: oklch(0.97 0.008 250);
+  --background: #0f141d;
+  --foreground: #f7f8fa;
+  --surface: #141a24;
+  --card: #191f2b;
+  --card-foreground: #f7f8fa;
+  --popover: #191f2b;
+  --popover-foreground: #f7f8fa;
+  --primary: #7da2ff;
+  --primary-foreground: #101727;
+  --ink: #0b1018;
+  --ink-foreground: #f7f8fa;
+  --ink-soft: #171e29;
+  --gold: #ff9a50;
+  --gold-foreground: #16100b;
+  --success: #65d5a7;
+  --secondary: #242b37;
+  --secondary-foreground: #f7f8fa;
+  --muted: #242b37;
+  --muted-foreground: #aab2c0;
+  --accent: #263653;
+  --accent-foreground: #dbe6ff;
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.97 0.008 250);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.6 0.08 256);
-  --sidebar: oklch(0.21 0.035 258);
-  --sidebar-foreground: oklch(0.97 0.008 250);
-  --sidebar-primary: oklch(0.82 0.08 250);
-  --sidebar-primary-foreground: oklch(0.2 0.04 258);
-  --sidebar-accent: oklch(0.3 0.04 250);
-  --sidebar-accent-foreground: oklch(0.97 0.008 250);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.6 0.08 256);
+  --border: #303847;
+  --input: #424b5d;
+  --ring: #8cb0ff;
+  --sidebar: #141a24;
+  --sidebar-foreground: #f7f8fa;
+  --sidebar-primary: #7da2ff;
+  --sidebar-primary-foreground: #101727;
+  --sidebar-accent: #263653;
+  --sidebar-accent-foreground: #dbe6ff;
+  --sidebar-border: #303847;
+  --sidebar-ring: #8cb0ff;
 }
 
 @layer base {
@@ -233,36 +236,13 @@
 }
 
 @utility hero-ink {
-  background-image:
-    radial-gradient(
-      120% 120% at 85% 0%,
-      color-mix(in oklab, var(--gold) 22%, transparent) 0%,
-      transparent 55%
-    ),
-    linear-gradient(160deg, var(--ink) 0%, var(--ink-soft) 100%);
+  background-color: var(--ink);
 }
 
 @utility text-gradient-gold {
-  background-image: linear-gradient(
-    100deg,
-    var(--gold) 0%,
-    color-mix(in oklab, var(--gold) 60%, white) 100%
-  );
-  background-clip: text;
-  color: transparent;
+  color: var(--gold);
 }
 
 @utility grid-lines {
-  background-image:
-    linear-gradient(
-      to right,
-      color-mix(in oklab, var(--ink-foreground) 7%, transparent) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      color-mix(in oklab, var(--ink-foreground) 7%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 64px 64px;
+  background-image: none;
 }

@@ -34,7 +34,7 @@ const sections = [
   },
   {
     title: "Security and retention today",
-    body: "Public visitors cannot read lead records; the public form can only call a validated intake function, while record access is restricted to authorised administrators. To reduce automated abuse, the intake keeps a pseudonymous network-derived rate-limit bucket and enforces a site-wide burst ceiling; stale buckets are opportunistically pruned after one day when intake traffic continues. The current build does not yet run an automatic deletion schedule for enquiries. Enquiry records remain until an authorised administrator deletes them or a verified request is handled, subject to any record that must be retained by law.",
+    body: "Public visitors cannot read lead records or call the database intake function directly. Enquiries pass through the DekhoCampus server, where fields, origin and request size are checked before submission. In production, Cloudflare Turnstile is also used to distinguish genuine interactions from automated abuse; Cloudflare may process technical request data for that security check. Before rate limiting, the server converts the client network address into a keyed pseudonymous bucket; the raw address is not stored in the lead database. The database also enforces a site-wide burst ceiling, and stale buckets are opportunistically pruned after one day when intake traffic continues. The current build does not yet run an automatic deletion schedule for enquiries. Enquiry records remain until an authorised administrator deletes them or a verified request is handled, subject to any record that must be retained by law.",
   },
   {
     title: "Your choices and requests",

@@ -67,13 +67,13 @@ export const Route = createFileRoute("/finder")({
   },
   head: () => ({
     meta: [
-      { title: "Online Degree Finder — Get Your Best-Fit Course | DekhoCampus" },
+      { title: "Online Degree Finder — Choose the Right Course | DekhoCampus" },
       {
         name: "description",
         content:
           "Find online degree and university options matched to your qualification, career direction, priorities and monthly budget—without sharing personal details.",
       },
-      { property: "og:title", content: "Find your best-fit online degree" },
+      { property: "og:title", content: "Find a suitable online degree" },
       {
         property: "og:description",
         content: "A free, private guided shortlist of online courses and universities.",
@@ -291,30 +291,28 @@ function DegreeFinderPage() {
   }
 
   return (
-    <div className="min-h-[75vh] bg-[#f7f9fc] text-foreground dark:bg-background">
-      <section className="relative overflow-hidden border-b border-border bg-[#071c2e] text-white">
-        <div className="pointer-events-none absolute -right-32 -top-40 h-[34rem] w-[34rem] rounded-full bg-[#1768cc]/30 blur-3xl" />
-        <div className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-[#f47a20]/20 blur-3xl" />
-        <div className="container-page relative grid gap-8 py-12 lg:grid-cols-[1fr_auto] lg:items-end lg:py-16">
+    <div className="min-h-[75vh] bg-surface text-foreground dark:bg-background">
+      <section className="border-b border-border bg-[#131720] text-white">
+        <div className="container-page grid gap-8 py-12 lg:grid-cols-[1fr_auto] lg:items-end lg:py-14">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
-              <Sparkles className="h-4 w-4" /> Free degree finder
+            <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
+              <GraduationCap className="h-4 w-4" /> Free degree finder
             </span>
             <h1 className="mt-6 max-w-3xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
-              Turn uncertainty into a shortlist.
+              Find a course direction that makes sense for you.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
               Answer four simple questions. We’ll match your qualification, direction and budget
               with courses and universities already in the DekhoCampus catalogue.
             </p>
             {initialGoal || audience ? (
-              <p className="mt-4 inline-flex flex-wrap items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-xs font-semibold text-white/80">
+              <p className="mt-4 inline-flex flex-wrap items-center gap-1.5 rounded-lg border border-white/15 bg-[#252b36] px-3.5 py-2 text-xs font-semibold text-white/85">
                 Starting with {initialGoal ? finderGoalDetails[initialGoal].label : "your goal"}
                 {audience ? ` · ${audience} view` : ""}. You can change every answer.
               </p>
             ) : null}
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 text-sm text-white/70 backdrop-blur">
+          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/75">
             <p className="flex items-center gap-2 font-bold text-white">
               <ShieldCheck className="h-4 w-4 text-[#78ddb3]" /> Private by design
             </p>
@@ -467,7 +465,7 @@ function DegreeFinderPage() {
                     <BadgeCheck className="h-4 w-4" /> Your shortlist is ready
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
-                    {recommendations.length} best-fit course
+                    {recommendations.length} suitable course
                     {recommendations.length === 1 ? "" : "s"}
                   </h2>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">

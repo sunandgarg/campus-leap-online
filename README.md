@@ -65,6 +65,8 @@ Apply migrations in timestamp order:
 - `20260912100000_admin_invite_only.sql` removes first-registrant admin promotion.
 - `20260912110000_catalog_verification_model.sql` adds offering evidence, specialisation mappings
   and a claim-evidence ledger.
+- `20260912120000_lead_server_proxy_only.sql` revokes direct public execution of lead intake; only
+  the trusted application server may call the RPC after Turnstile verification.
 
 Provision administrators only through trusted service-role tooling after identity verification.
 Public sign-in never grants an administrative role.
@@ -77,18 +79,24 @@ Before production launch:
    `SELECT user_id, role FROM public.user_roles WHERE role = 'admin';`. Revoke legacy bootstrap
    grants, apply the migrations, then re-provision only identity-verified administrators with
    trusted service-role tooling. The migration deliberately stops if an old admin grant remains.
-2. Disable unrestricted new-user creation in the hosted Supabase Auth settings, or replace the
-   admin OAuth entry point with an identity-allowlisted server flow. Public authentication must not
-   be usable to create unlimited non-admin accounts.
+2. Disable unrestricted new-user creation in the hosted Supabase Auth settings. The application
+   exposes password sign-in only and does not expose sign-up or OAuth account creation; provision
+   every admin identity through a trusted workflow.
 3. Complete an intake-by-intake editorial backfill. Legacy universities and offerings are
    unpublished and hidden by
    row-level security until their exact current evidence is added.
 4. Verify the exact university, programme, delivery mode and session on the official UGC-DEB source;
    verify fees separately on the university's official source.
-5. Put counselling intake behind a same-origin server or Edge Function that verifies CAPTCHA,
-   rate-limits before validation and calls Supabase with a server-only credential; then revoke direct
-   anonymous execution of the intake RPC. Configure OTP/DLT consent where applicable, CRM assignment,
-   communication suppression and withdrawal handling before outbound campaigns.
+5. Configure a hostname-restricted Cloudflare Turnstile widget and set
+   `VITE_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_ALLOWED_HOSTNAMES` and a separate
+   random `LEAD_BUCKET_SECRET` of at least 32 characters. The
+   same-origin `/api/leads` endpoint rate-limits before parsing, validates every production token,
+   sends only an HMAC-derived client bucket to the database, and calls Supabase with the service
+   role; the final migration revokes direct anonymous RPC access.
+   Also configure a Cloudflare rate-limiting rule for `/api/leads` because the in-process limiter is
+   intentionally only a first line of defence across distributed edge isolates. Configure OTP/DLT
+   consent where applicable, CRM assignment, communication suppression and withdrawal handling
+   before outbound campaigns.
 6. Replace catalogue monograms only with reviewed university-owned logo assets.
 7. Apply and smoke-test the migrations in a staging Supabase project, then run `npm run check` and
    manually test keyboard navigation, 320 px reflow, light/dark mode,

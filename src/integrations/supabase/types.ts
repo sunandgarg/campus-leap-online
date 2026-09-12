@@ -675,6 +675,32 @@ export type Database = {
         };
         Returns: string;
       };
+      submit_counselling_lead_from_server: {
+        Args: {
+          p_client_bucket: string;
+          p_contact_channels?: Json;
+          p_consent_given?: boolean;
+          p_consent_text?: string | null;
+          p_consent_version?: string | null;
+          p_email?: string | null;
+          p_full_name: string;
+          p_goal?: string | null;
+          p_message?: string | null;
+          p_phone: string;
+          p_program_slug?: string | null;
+          p_qualification?: string | null;
+          p_referrer?: string | null;
+          p_share_with_university?: boolean;
+          p_source_path?: string | null;
+          p_university_slug?: string | null;
+          p_university_share_consent_text?: string | null;
+          p_university_share_consent_version?: string | null;
+          p_utm_campaign?: string | null;
+          p_utm_medium?: string | null;
+          p_utm_source?: string | null;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       app_role: "admin" | "editor" | "user";

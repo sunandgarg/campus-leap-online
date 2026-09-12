@@ -1,17 +1,15 @@
 import { useMemo, useRef, useState, type FormEvent } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
   ArrowUp,
   BadgeCheck,
   BookOpenCheck,
-  Bot,
   ExternalLink,
   GraduationCap,
   LockKeyhole,
   Search,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 
 import {
@@ -223,7 +221,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
     return {
       eyebrow: "Admission safety check",
       title: "Verify the exact university, programme, mode and intake",
-      body: "Entitlement can change by academic session. Dekho AI does not perform a live regulatory check, so use the official UGC-DEB portal before you apply or pay.",
+      body: "Entitlement can change by academic session. Diya does not perform a live regulatory check, so use the official UGC-DEB portal before you apply or pay.",
       suggestions: [
         {
           label: "Open the official UGC-DEB portal",
@@ -420,7 +418,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
       body: "The catalogue cannot verify your weekly schedule. Compare live-class attendance, recording access, exam windows and workload directly with each university before enrolling.",
       suggestions: [
         {
-          label: "Build a private best-fit shortlist",
+          label: "Build a private course shortlist",
           detail:
             "Match qualification, direction, priority and budget without sharing contact details.",
           href: "/finder",
@@ -502,7 +500,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
         href: "/search",
       },
     ],
-    why: "The copilot only answers when it can map your words to structured catalogue fields.",
+    why: "Diya answers only when your words map to structured catalogue fields.",
   };
 }
 
@@ -514,9 +512,9 @@ export function DekhoAICopilot() {
   const inputRef = useRef<HTMLInputElement>(null);
   const detailedUniversities = useMemo(() => universities.filter(hasEditorialDepth), []);
   const [answer, setAnswer] = useState<CopilotAnswer>(() => ({
-    eyebrow: "Catalogue decision support",
-    title: "What would you like to compare?",
-    body: `Ask about a degree, budget, university, learner goal or verification step. Results use ${detailedUniversities.length} detailed catalogue profiles and never pretend to be a live UGC check.`,
+    eyebrow: "DekhoCampus course guidance",
+    title: "Hi, I’m Diya. What can I help you find?",
+    body: `Ask about a degree, budget, university or verification step. I organise ${detailedUniversities.length} detailed catalogue profiles and will tell you when something still needs an official check.`,
     suggestions: [
       {
         label: "Find my course direction",
@@ -555,18 +553,18 @@ export function DekhoAICopilot() {
       <DialogTrigger asChild>
         <button
           type="button"
-          className="group fixed bottom-[5.8rem] right-4 z-40 inline-flex h-13 items-center gap-2.5 rounded-2xl border border-white/20 bg-[#0a2741] px-3.5 text-white shadow-[0_18px_55px_-16px_rgba(3,32,58,0.78)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#0d3457] hover:shadow-[0_22px_65px_-14px_rgba(3,32,58,0.85)] lg:bottom-6 lg:right-6"
+          aria-label="Ask Diya, DekhoCampus course guide"
+          className="fixed bottom-[6.25rem] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] lg:bottom-8 lg:right-6"
         >
-          <span className="sr-only sm:hidden">Ask Dekho AI catalogue copilot</span>
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#6fb9ff] to-[#1768cc] shadow-inner">
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0a2741] bg-[#52d49e]" />
+          <span className="sr-only">Ask Diya, DekhoCampus course guide</span>
+          <span className="flex h-full w-full items-center justify-center rounded-full bg-white text-[#325dd2]">
+            <DiyaMark className="h-10 w-10" />
           </span>
-          <span className="hidden text-left sm:block">
-            <span className="block text-[10px] font-extrabold uppercase tracking-[0.12em] text-white/55">
-              Catalogue copilot
-            </span>
-            <span className="block text-xs font-extrabold">Ask Dekho AI</span>
+          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-[#f47b25] px-1 text-[8px] font-black text-[#111827]">
+            AI
+          </span>
+          <span className="pointer-events-none absolute left-1/2 top-[calc(100%+4px)] -translate-x-1/2 whitespace-nowrap text-[10px] font-extrabold text-[#325dd2] dark:text-[#8cb0ff]">
+            Diya AI
           </span>
         </button>
       </DialogTrigger>
@@ -576,33 +574,25 @@ export function DekhoAICopilot() {
           event.preventDefault();
           inputRef.current?.focus();
         }}
-        className="left-0 top-auto bottom-0 h-[min(90dvh,52rem)] w-full max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-t-[1.75rem] border-x-0 border-b-0 bg-background p-0 shadow-[0_-30px_90px_-42px_rgba(3,24,43,0.85)] [&>button:last-child]:text-white [&>button:last-child]:hover:bg-white/10 sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:h-[min(82dvh,48rem)] sm:max-w-[56rem] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[2rem] sm:border"
+        className="left-0 top-auto bottom-0 h-[min(90dvh,52rem)] w-full max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-t-2xl border-x-0 border-b-0 bg-background p-0 shadow-lift [&>button:last-child]:text-white [&>button:last-child]:hover:bg-white/10 sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:h-[min(82dvh,48rem)] sm:max-w-[56rem] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:border"
       >
-        <div className="relative overflow-hidden border-b border-white/10 bg-[#071f35] px-5 py-5 text-white sm:px-7 sm:py-6">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-16 -top-24 h-56 w-56 rounded-full bg-[#1768cc]/40 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-28 left-1/4 h-48 w-48 rounded-full bg-[#f47a20]/20 blur-3xl"
-          />
-          <div className="relative flex items-start gap-3 pr-9">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-[#8cc7ff] shadow-inner">
-              <Bot className="h-5 w-5" aria-hidden="true" />
+        <div className="border-b border-white/15 bg-[#325dd2] px-5 py-5 text-white sm:px-7 sm:py-6">
+          <div className="flex items-start gap-3 pr-9">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#325dd2]">
+              <DiyaMark className="h-9 w-9" />
             </span>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <DialogTitle className="font-display text-lg font-extrabold tracking-[-0.025em] sm:text-xl">
-                  Dekho AI
+                  Diya by DekhoCampus
                 </DialogTitle>
-                <span className="rounded-full border border-[#79c9a9]/25 bg-[#58c99a]/10 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#8be0bd]">
-                  Catalogue copilot
+                <span className="rounded-md bg-white px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#2449ad]">
+                  Course guide
                 </span>
               </div>
-              <DialogDescription className="mt-1.5 max-w-xl text-xs leading-5 text-white/60 sm:text-sm">
-                Structured decision support from DekhoCampus data—not a live UGC verification,
-                counsellor or admission decision.
+              <DialogDescription className="mt-1.5 max-w-xl text-xs leading-5 text-white/85 sm:text-sm">
+                Clear catalogue guidance from DekhoCampus. Diya is not a live UGC check, counsellor
+                or admission decision.
               </DialogDescription>
             </div>
           </div>
@@ -619,7 +609,7 @@ export function DekhoAICopilot() {
                   key={prompt.label}
                   type="button"
                   onClick={() => ask(prompt.query)}
-                  className="group flex min-h-11 w-full items-center justify-between gap-2 rounded-xl border border-transparent px-3 py-2.5 text-left text-xs font-bold text-muted-foreground transition hover:border-border hover:bg-background hover:text-foreground"
+                  className="group flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-transparent px-3 py-2.5 text-left text-xs font-bold text-muted-foreground transition-colors hover:border-border hover:bg-background hover:text-foreground"
                 >
                   <span>{prompt.label}</span>
                   <ArrowRight
@@ -630,7 +620,7 @@ export function DekhoAICopilot() {
               ))}
             </div>
 
-            <div className="mt-5 rounded-2xl border border-[#b9d8f6] bg-[#edf6ff] p-3.5 dark:border-[#285578] dark:bg-[#102a40]">
+            <div className="mt-5 rounded-xl border border-[#b9d8f6] bg-[#edf2ff] p-3.5 dark:border-[#3d5274] dark:bg-[#263653]">
               <div className="flex items-center gap-2 text-[#1768cc] dark:text-[#82c2ff]">
                 <LockKeyhole className="h-4 w-4" aria-hidden="true" />
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.1em]">
@@ -645,7 +635,7 @@ export function DekhoAICopilot() {
 
           <div className="min-h-0 overflow-y-auto">
             <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-              {askedQuery ? `Dekho AI response updated: ${answer.title}` : "Dekho AI is ready."}
+              {askedQuery ? `Diya response updated: ${answer.title}` : "Diya is ready."}
             </p>
             <div className="p-5 sm:p-7">
               <div
@@ -657,7 +647,7 @@ export function DekhoAICopilot() {
                     key={prompt.label}
                     type="button"
                     onClick={() => ask(prompt.query)}
-                    className="min-h-10 shrink-0 rounded-full border border-border bg-card px-3.5 text-[11px] font-extrabold text-muted-foreground shadow-sm transition hover:border-[#86b7e8] hover:text-foreground"
+                    className="min-h-10 shrink-0 rounded-lg border border-border bg-card px-3.5 text-[11px] font-extrabold text-muted-foreground transition-colors hover:border-[#86b7e8] hover:text-foreground"
                   >
                     {prompt.label}
                   </button>
@@ -671,8 +661,7 @@ export function DekhoAICopilot() {
               ) : null}
 
               <div className={cn("max-w-2xl", askedQuery ? "mt-5" : "mt-4 md:mt-0")}>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#edf5ff] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#1768cc] dark:bg-[#102a42] dark:text-[#83c1ff]">
-                  <Sparkles className="h-3 w-3" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-[#edf2ff] px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
                   {answer.eyebrow}
                 </span>
                 <h2 className="mt-3 font-display text-2xl font-extrabold leading-tight tracking-[-0.04em] text-foreground sm:text-3xl">
@@ -688,7 +677,7 @@ export function DekhoAICopilot() {
                     href={suggestion.href}
                     target={suggestion.external ? "_blank" : undefined}
                     rel={suggestion.external ? "noreferrer" : undefined}
-                    className="group flex min-h-16 items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-[0_10px_30px_-26px_rgba(11,43,72,0.65)] transition hover:-translate-y-0.5 hover:border-[#8db8e8] hover:shadow-[0_18px_38px_-26px_rgba(11,43,72,0.75)]"
+                    className="group flex min-h-16 items-center gap-3 rounded-xl border border-border bg-card p-3.5 transition-colors hover:border-[#8db8e8] hover:bg-surface"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary text-[#1768cc] dark:text-[#83c1ff]">
                       {suggestion.external ? (
@@ -719,7 +708,7 @@ export function DekhoAICopilot() {
                 ))}
               </div>
 
-              <div className="mt-5 rounded-2xl border border-border bg-surface/70 p-4">
+              <div className="mt-5 rounded-xl border border-border bg-surface p-4">
                 <div className="flex items-start gap-2.5">
                   <BadgeCheck
                     className="mt-0.5 h-4 w-4 shrink-0 text-[#168258] dark:text-[#65d3a3]"
@@ -734,6 +723,23 @@ export function DekhoAICopilot() {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                <Link
+                  to="/contact"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#f47b25] px-4 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12]"
+                >
+                  Talk to a counsellor <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  to="/methodology"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg border border-border bg-card px-4 text-sm font-bold text-foreground transition-colors hover:bg-surface"
+                >
+                  See how we verify
+                </Link>
               </div>
             </div>
           </div>
@@ -753,12 +759,12 @@ export function DekhoAICopilot() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Try “MBA under ₹2 lakh”"
               autoComplete="off"
-              className="h-12 min-w-0 flex-1 rounded-2xl border border-input bg-surface px-4 text-sm text-foreground shadow-inner outline-none placeholder:text-muted-foreground focus-visible:border-[#4b94d9] focus-visible:ring-2 focus-visible:ring-[#4b94d9] focus-visible:ring-offset-2"
+              className="h-12 min-w-0 flex-1 rounded-lg border border-input bg-surface px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
             />
             <button
               type="submit"
-              aria-label="Ask Dekho AI"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#1768cc] text-white shadow-[0_10px_28px_-12px_rgba(23,104,204,0.9)] transition hover:bg-[#145bab] active:scale-95"
+              aria-label="Ask Diya"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#325dd2] text-white transition-colors hover:bg-[#2449ad]"
             >
               <ArrowUp className="h-4.5 w-4.5" aria-hidden="true" />
             </button>
@@ -771,5 +777,31 @@ export function DekhoAICopilot() {
         </div>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function DiyaMark({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M24 6c1.4 5.1 6.8 8.6 6.8 15.1 0 4.8-3 8.7-6.8 8.7s-6.8-3.9-6.8-8.7C17.2 14.6 22.6 11.1 24 6Z"
+        fill="#F47B25"
+      />
+      <path
+        d="M24 14.2c.8 2.7 3.6 4.7 3.6 8 0 2.5-1.6 4.6-3.6 4.6s-3.6-2.1-3.6-4.6c0-3.3 2.8-5.3 3.6-8Z"
+        fill="white"
+      />
+      <path
+        d="M10 28.4c3.7 1.8 8.3 2.7 14 2.7s10.3-.9 14-2.7c-1 7.9-6 13.6-14 13.6s-13-5.7-14-13.6Z"
+        fill="#325DD2"
+      />
+      <path d="M13.5 34.1h21" stroke="white" strokeWidth="2" strokeLinecap="round" />
+    </svg>
   );
 }

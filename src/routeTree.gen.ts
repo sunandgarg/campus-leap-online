@@ -23,6 +23,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiLeadsRouteImport } from './routes/api.leads'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as SpecialisationsIndexRouteImport } from './routes/specialisations.index'
@@ -108,6 +109,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiLeadsRoute = ApiLeadsRouteImport.update({
+  id: '/api/leads',
+  path: '/api/leads',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
   id: '/programs/',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/leads': typeof ApiLeadsRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/api/leads': typeof ApiLeadsRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs': typeof ProgramsIndexRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/api/leads': typeof ApiLeadsRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin'
+    | '/api/leads'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
     | '/programs/'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sitemap.xml'
     | '/terms'
+    | '/api/leads'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
     | '/programs'
@@ -372,6 +383,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/_authenticated/admin'
+    | '/api/leads'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
     | '/programs/'
@@ -404,6 +416,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  ApiLeadsRoute: typeof ApiLeadsRoute
   ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
   SpecialisationsSpecialisationSlugRoute: typeof SpecialisationsSpecialisationSlugRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
@@ -512,6 +525,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/leads': {
+      id: '/api/leads'
+      path: '/api/leads'
+      fullPath: '/api/leads'
+      preLoaderRoute: typeof ApiLeadsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/programs/': {
       id: '/programs/'
@@ -682,6 +702,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  ApiLeadsRoute: ApiLeadsRoute,
   ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
   SpecialisationsSpecialisationSlugRoute:
     SpecialisationsSpecialisationSlugRoute,

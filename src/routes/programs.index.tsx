@@ -62,10 +62,9 @@ function ProgramsPage() {
 
   return (
     <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden border-b border-border bg-[#071c2e] text-white">
-        <div className="pointer-events-none absolute -right-32 -top-28 h-[32rem] w-[32rem] rounded-full bg-[#175fa3]/35 blur-3xl" />
-        <div className="container-page relative py-16 lg:py-20">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
+      <section className="border-b border-border bg-[#131720] text-white">
+        <div className="container-page py-14 lg:py-16">
+          <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
             <BookOpenCheck className="h-4 w-4" /> {programCatalog.length} online course guides
           </span>
           <h1 className="mt-6 max-w-4xl font-display text-4xl font-extrabold tracking-[-0.06em] sm:text-5xl lg:text-6xl">
@@ -79,7 +78,7 @@ function ProgramsPage() {
       </section>
 
       <section className="container-page py-10 lg:py-14">
-        <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-[0_18px_50px_-42px_rgba(12,39,71,0.7)] sm:p-5">
+        <div className="rounded-xl border border-border bg-card p-4 shadow-card sm:p-5">
           <div className="grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -88,7 +87,7 @@ function ProgramsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search course, specialisation or career"
                 aria-label="Search online courses"
-                className="h-12 w-full rounded-xl border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
+                className="h-12 w-full rounded-lg border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
@@ -99,9 +98,9 @@ function ProgramsPage() {
                     type="button"
                     aria-pressed={level === item}
                     onClick={() => setLevel(item)}
-                    className={`h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition ${
+                    className={`h-12 shrink-0 rounded-lg border px-4 text-xs font-extrabold transition-colors ${
                       level === item
-                        ? "border-[#1768cc] bg-[#1768cc] text-white"
+                        ? "border-[#325dd2] bg-[#325dd2] text-white"
                         : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
                     }`}
                   >

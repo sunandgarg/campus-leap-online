@@ -77,15 +77,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
         width={1920}
         height={1080}
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover opacity-35"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(100deg, color-mix(in oklab, var(--ink) 92%, transparent) 0%, color-mix(in oklab, var(--ink) 70%, transparent) 60%, color-mix(in oklab, var(--ink) 45%, transparent) 100%)",
-        }}
+        className="absolute inset-0 h-full w-full object-cover opacity-20"
       />
 
       <div className="container-page relative py-8 md:py-10">
@@ -264,7 +256,7 @@ export function ProgramSectionNav({ includeCompare = true }: { includeCompare?: 
   return (
     <nav
       aria-label="Programme sections"
-      className="sticky top-[5.45rem] z-30 border-b border-border bg-card/95 backdrop-blur"
+      className="sticky top-[5.45rem] z-30 border-b border-border bg-card"
     >
       <div className="container-page flex gap-1 overflow-x-auto py-2.5">
         {visibleSections.map((s) => (

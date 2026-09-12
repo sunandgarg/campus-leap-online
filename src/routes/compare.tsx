@@ -11,7 +11,6 @@ import {
   IndianRupee,
   Scale,
   ShieldCheck,
-  Sparkles,
   Trash2,
   WalletCards,
 } from "lucide-react";
@@ -103,12 +102,10 @@ function ComparePage() {
 
   return (
     <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden border-b border-border bg-[#071c2e] text-white">
-        <div className="pointer-events-none absolute -left-36 -top-40 h-[32rem] w-[32rem] rounded-full bg-[#175fa3]/35 blur-3xl" />
-        <div className="pointer-events-none absolute -right-24 top-8 h-[24rem] w-[24rem] rounded-full bg-[#a96918]/25 blur-3xl" />
-        <div className="container-page relative grid gap-10 py-16 lg:grid-cols-[1fr_380px] lg:items-center lg:py-20">
+      <section className="border-b border-border bg-[#131720] text-white">
+        <div className="container-page grid gap-10 py-14 lg:grid-cols-[1fr_380px] lg:items-center lg:py-16">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#8bc7ff]">
+            <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
               <Scale className="h-4 w-4" /> Evidence before enquiry
             </span>
             <h1 className="mt-6 max-w-3xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
@@ -119,8 +116,8 @@ function ComparePage() {
               expired records do not enter this comparison.
             </p>
           </div>
-          <div className="rounded-[1.75rem] border border-white/12 bg-white/[0.07] p-6 backdrop-blur">
-            <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-white/50">
+          <div className="rounded-xl border border-white/15 bg-[#252b36] p-6">
+            <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-white/70">
               Current comparison
             </p>
             <p className="mt-3 font-display text-2xl font-extrabold">{program.code}</p>
@@ -165,7 +162,7 @@ function ComparePage() {
               disabled={!comparison.ready}
               value={programSlug}
               onChange={(event) => changeProgram(event.target.value)}
-              className="mt-2 h-12 w-full max-w-xl rounded-xl border border-border bg-background px-4 text-sm font-extrabold text-foreground outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
+              className="mt-2 h-12 w-full max-w-xl rounded-lg border border-border bg-background px-4 text-sm font-extrabold text-foreground outline-none focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
             >
               {programCatalog.map((item) => (
                 <option key={item.slug} value={item.slug}>
@@ -185,11 +182,7 @@ function ComparePage() {
                 <Trash2 className="mr-2 h-4 w-4" /> Clear
               </Button>
             ) : null}
-            <Button
-              asChild
-              size="lg"
-              className="rounded-xl bg-[#1768cc] text-white hover:bg-[#0e57b2]"
-            >
+            <Button asChild size="lg" className="bg-[#325dd2] text-white hover:bg-[#2449ad]">
               <Link to="/programs/$programSlug" params={{ programSlug }}>
                 Course guide <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -211,7 +204,7 @@ function ComparePage() {
               Choose up to three. Your selection stays saved on this device.
             </p>
           </div>
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-muted-foreground">
+          <span className="inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-extrabold text-muted-foreground">
             <IndianRupee className="h-4 w-4 text-[#1768cc] dark:text-[#78b9ff]" />
             {lowestFee !== null && highestFee !== null
               ? `Sourced total-fee range ${formatINR(lowestFee)}–${formatINR(highestFee)}`
@@ -230,10 +223,10 @@ function ComparePage() {
                 disabled={!comparison.ready || disabled}
                 aria-pressed={selected}
                 onClick={() => comparison.toggleUniversity(programSlug, university.slug)}
-                className={`relative flex items-center gap-4 rounded-2xl border p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                className={`relative flex items-center gap-4 rounded-xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                   selected
-                    ? "border-[#1768cc] bg-[#edf5ff] shadow-[0_18px_36px_-28px_rgba(23,104,204,0.7)] dark:bg-[#102a42]"
-                    : "border-border bg-card hover:-translate-y-0.5 hover:border-[#80ace0]"
+                    ? "border-[#325dd2] bg-[#edf2ff] dark:bg-[#263653]"
+                    : "border-border bg-card hover:border-[#80ace0] hover:bg-surface"
                 }`}
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white">
@@ -439,7 +432,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
     },
     {
       label: "Offering details",
-      icon: Sparkles,
+      icon: GraduationCap,
       render: ({ program }) =>
         `${program.examMode ? `Exam mode: ${program.examMode}` : "Exam mode: confirm with university"} · ${program.specialisationsVerified ? `${program.specialisations.length} sourced pathways` : "Pathways require confirmation"}`,
     },

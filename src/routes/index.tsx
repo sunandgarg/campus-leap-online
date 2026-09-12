@@ -23,7 +23,6 @@ import {
   Search,
   Send,
   ShieldCheck,
-  Sparkles,
   Target,
   TimerReset,
   Users,
@@ -46,7 +45,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "Find Your Best-Fit Online Degree in India | DekhoCampus Online",
+        title: "Find the Right Online Degree in India | DekhoCampus Online",
       },
       {
         name: "description",
@@ -73,40 +72,40 @@ const domainCards = [
     description: "Data science, AI, business analytics and emerging technology.",
     icon: BrainCircuit,
     codes: ["MBA", "MCA"],
-    background: "bg-[#e9f2ff]",
-    iconBackground: "bg-[#d4e6ff]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
   {
     title: "Tech & Software",
     description: "Computer applications, cloud, cyber security and full-stack.",
     icon: Code2,
     codes: ["MCA", "BCA"],
-    background: "bg-[#e9fbf5]",
-    iconBackground: "bg-[#cdf3e6]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
   {
     title: "Finance & Banking",
     description: "Accounting, finance, fintech and banking leadership.",
     icon: WalletCards,
     codes: ["MBA", "B.Com"],
-    background: "bg-[#fff5df]",
-    iconBackground: "bg-[#ffe8b4]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
   {
     title: "Marketing & Digital",
     description: "Brand, performance marketing, strategy and communication.",
     icon: Megaphone,
     codes: ["MBA", "BBA"],
-    background: "bg-[#fff0eb]",
-    iconBackground: "bg-[#ffd9cc]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
   {
     title: "Business & Entrepreneurship",
     description: "Leadership, operations, startups and general management.",
     icon: BriefcaseBusiness,
     codes: ["MBA", "BBA"],
-    background: "bg-[#f1edff]",
-    iconBackground: "bg-[#ddd4ff]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
   {
     title: "Non-clinical Healthcare Operations",
@@ -114,8 +113,8 @@ const domainCards = [
       "Management-focused operations and administration; verify prohibited-domain rules.",
     icon: HeartPulse,
     codes: ["MBA"],
-    background: "bg-[#ffedf3]",
-    iconBackground: "bg-[#ffd6e4]",
+    background: "bg-card",
+    iconBackground: "bg-[#edf2ff]",
   },
 ];
 
@@ -196,52 +195,34 @@ function HomePage() {
   ];
 
   return (
-    <div className="overflow-hidden bg-[#fbfaf7] text-[#171a17] transition-colors dark:bg-background dark:text-foreground">
-      <section className="relative overflow-hidden border-b border-[#eadfd4] bg-[#fffaf2] dark:border-border dark:bg-[#081722]">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-70 [background-image:linear-gradient(rgba(32,42,57,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(32,42,57,0.045)_1px,transparent_1px)] [background-size:52px_52px] dark:opacity-20"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -left-52 top-24 h-[31rem] w-[31rem] rounded-full border-[4.5rem] border-[#f7dcc7]/55 dark:border-[#f47a20]/10"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -right-44 top-20 h-[34rem] w-[34rem] rounded-full border-[4.5rem] border-[#fee7ac]/55 dark:border-[#1768cc]/10"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_48%,rgba(255,255,255,0.92),transparent_34%)] dark:bg-[radial-gradient(circle_at_48%_48%,rgba(20,48,67,0.45),transparent_38%)]"
-          aria-hidden="true"
-        />
-
-        <div className="container-page relative grid gap-10 py-10 sm:py-12 lg:min-h-[660px] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-14 xl:gap-16">
+    <div className="overflow-hidden bg-background text-foreground">
+      <section className="border-b border-border bg-background">
+        <div className="container-page grid gap-10 py-10 sm:py-12 lg:min-h-[640px] lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-14 xl:gap-16">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffc9ac] bg-[#fff0e8]/90 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#a94300] shadow-sm backdrop-blur">
-              <GraduationCap className="h-3.5 w-3.5 text-[#17202d]" />
+            <div className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.17em] text-[#a94300] dark:text-[#ffad70]">
+              <GraduationCap className="h-3.5 w-3.5 text-foreground" />
               Independent online-degree discovery
             </div>
 
             <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#647083] dark:text-muted-foreground">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#2bc58b] shadow-[0_0_0_4px_rgba(43,197,139,0.1)]" />
-              Compare first. Speak to a human only when needed.
+              <span className="h-2.5 w-2.5 rounded-full bg-[#14845f]" />
+              Compare in private. Talk to a counsellor when you are ready.
             </div>
 
-            <h1 className="mt-6 max-w-3xl font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.055em] text-[#0d1726] dark:text-foreground sm:text-6xl lg:mt-7 lg:text-[4.15rem] lg:leading-[1]">
+            <h1 className="mt-6 max-w-3xl font-display text-[2.55rem] font-black leading-[1.03] tracking-[-0.052em] text-[#131720] dark:text-foreground sm:text-6xl lg:mt-7 lg:text-[3.9rem] lg:leading-[1]">
               Find the online degree for your{" "}
-              <span className="relative mt-2 block w-fit text-[#2864da] dark:text-[#72b4ff]">
+              <span className="mt-2 block w-fit text-[#325dd2] dark:text-[#8cb0ff]">
                 next career move.
-                <span className="absolute -bottom-2 left-1 h-1.5 w-[88%] -rotate-1 rounded-full bg-[#f47a20]" />
               </span>
             </h1>
 
             <p className="mt-7 max-w-2xl text-base leading-7 text-[#536176] dark:text-muted-foreground sm:text-lg sm:leading-8">
-              Explore online programs, source status and fees where verified in plain
-              language—before sharing your details or making a decision.
+              Compare online courses, university evidence and verified fees in plain language.
+              Browse freely, then ask a person when you need help.
             </p>
 
             <form action="/search" className="mt-6 max-w-2xl" role="search">
-              <div className="flex min-h-14 items-center gap-3 rounded-2xl border border-white bg-white p-1.5 pl-4 shadow-[0_18px_40px_-22px_rgba(43,69,104,0.42)] ring-1 ring-[#dfe6f0] dark:border-border dark:bg-card dark:ring-border sm:pl-5">
+              <div className="flex min-h-14 items-center gap-3 rounded-xl border border-input bg-card p-1.5 pl-4 shadow-card dark:border-border sm:pl-5">
                 <Search className="h-5 w-5 shrink-0 text-[#7d899b]" />
                 <input
                   name="q"
@@ -252,7 +233,7 @@ function HomePage() {
                 <button
                   type="submit"
                   aria-label="Search the degree catalogue"
-                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#a94300] px-3 text-sm font-extrabold text-white shadow-[0_10px_24px_-10px_rgba(255,118,43,0.8)] transition hover:bg-[#8f3700] sm:min-w-28 sm:px-5"
+                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:min-w-28 sm:px-5"
                 >
                   <Send className="h-4 w-4" />
                   <span className="hidden sm:inline">Search</span>
@@ -273,7 +254,7 @@ function HomePage() {
                   key={prompt.label}
                   to="/search"
                   search={{ q: prompt.query }}
-                  className="inline-flex min-h-9 items-center rounded-lg border border-[#e1e6ed] bg-white/75 px-3 py-1.5 font-semibold transition hover:border-[#f47a20] hover:text-foreground dark:border-border dark:bg-card/75"
+                  className="inline-flex min-h-9 items-center rounded-lg border border-border bg-card px-3 py-1.5 font-semibold transition-colors hover:border-[#f47b25] hover:text-foreground"
                 >
                   {prompt.label}
                 </Link>
@@ -290,10 +271,9 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[470px]">
-            <div className="absolute -inset-4 rounded-[2.8rem] bg-gradient-to-br from-[#ffd6b8]/70 via-transparent to-[#c9ddff]/65 blur-2xl dark:from-[#f47a20]/15 dark:to-[#1768cc]/20" />
-            <div className="relative rounded-[2.25rem] border border-white/90 bg-white/70 p-3 shadow-[0_34px_75px_-30px_rgba(31,55,83,0.58)] backdrop-blur dark:border-white/10 dark:bg-card/80">
-              <div className="relative h-[250px] overflow-hidden rounded-[1.7rem] sm:h-[280px]">
+          <div className="mx-auto w-full max-w-[470px]">
+            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+              <div className="relative h-[230px] overflow-hidden sm:h-[260px]">
                 <img
                   src={heroImage}
                   alt="Professionals planning their next online degree"
@@ -303,8 +283,8 @@ function HomePage() {
                   fetchPriority="high"
                   className="h-full w-full object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#101923]/75 via-transparent to-transparent" />
-                <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-[#101923]/72 px-3 py-2 text-[11px] font-extrabold text-white backdrop-blur">
+                <div className="absolute inset-0 bg-[#101923]/55" />
+                <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-lg bg-[#131720] px-3 py-2 text-[11px] font-extrabold text-white">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#8be2bb]" />
                   {universities.length} university profiles
                 </div>
@@ -313,17 +293,17 @@ function HomePage() {
                 </p>
               </div>
 
-              <div className="relative -mt-4 rounded-[1.6rem] border border-border bg-card p-5 shadow-xl sm:p-6">
+              <div className="border-t border-border bg-card p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#a94300]">
-                      <Sparkles className="h-3.5 w-3.5" /> Plan your next move
+                      <Target className="h-3.5 w-3.5" /> A simple starting point
                     </p>
                     <h2 className="mt-1.5 font-display text-xl font-extrabold tracking-[-0.04em] text-foreground">
-                      What matters most to you?
+                      What matters most right now?
                     </h2>
                   </div>
-                  <span className="rounded-full bg-[#e8fff5] px-2.5 py-1.5 text-[10px] font-extrabold text-[#268a68] dark:bg-[#123b30] dark:text-[#77ddb4]">
+                  <span className="rounded-md bg-[#e8f6ef] px-2.5 py-1.5 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
                     Free
                   </span>
                 </div>
@@ -338,9 +318,9 @@ function HomePage() {
                         type="button"
                         aria-pressed={selected}
                         onClick={() => setHeroGoal(goal.label)}
-                        className={`flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-left text-[11px] font-extrabold transition ${
+                        className={`flex min-h-11 items-center gap-2 rounded-lg border px-3 py-2 text-left text-[11px] font-extrabold transition-colors ${
                           selected
-                            ? "border-[#f47a20] bg-[#fff0e6] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]"
+                            ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
                             : "border-border bg-background text-muted-foreground hover:text-foreground"
                         }`}
                       >
@@ -355,7 +335,7 @@ function HomePage() {
                   <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground">
                     I am a
                   </p>
-                  <div className="grid grid-cols-3 rounded-xl bg-secondary p-1">
+                  <div className="grid grid-cols-3 rounded-lg bg-secondary p-1">
                     {heroRoles.map((role) => (
                       <button
                         key={role}
@@ -375,7 +355,7 @@ function HomePage() {
                   <Button
                     asChild
                     size="lg"
-                    className="mt-3 w-full rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
+                    className="mt-3 w-full bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
                   >
                     <Link
                       to="/finder"
@@ -384,7 +364,7 @@ function HomePage() {
                         audience: heroRole.toLowerCase() as Lowercase<typeof heroRole>,
                       }}
                     >
-                      See my best matches <ArrowRight className="ml-2 h-4 w-4" />
+                      View suitable courses <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </div>
@@ -462,7 +442,7 @@ function HomePage() {
           {domainCards.map((domain) => (
             <article
               key={domain.title}
-              className={`${domain.background} group rounded-[1.75rem] border border-black/[0.06] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_45px_-25px_rgba(20,30,45,0.38)] dark:border-border dark:bg-card`}
+              className={`${domain.background} group rounded-xl border border-border p-6 transition-colors hover:border-[#9bb5f1] dark:bg-card`}
             >
               <div
                 className={`${domain.iconBackground} flex h-12 w-12 items-center justify-center rounded-2xl text-[#17202d] dark:text-[#17202d]`}
@@ -507,7 +487,7 @@ function HomePage() {
                 key={program.slug}
                 to="/programs/$programSlug"
                 params={{ programSlug: program.slug }}
-                className="group rounded-[1.6rem] border border-[#dfe3dc] bg-white p-6 shadow-[0_10px_30px_-24px_rgba(23,26,23,0.4)] transition duration-300 hover:-translate-y-1 hover:border-[#adc8e8] hover:shadow-[0_24px_50px_-30px_rgba(13,92,173,0.55)] dark:border-border dark:bg-card"
+                className="group rounded-xl border border-border bg-card p-6 transition-colors hover:border-[#9bb5f1]"
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="rounded-full bg-[#eaf3ff] px-3 py-1.5 text-xs font-extrabold text-[#0d5cad]">
@@ -635,7 +615,7 @@ function HomePage() {
               href="https://deb.ugc.ac.in/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#ffc23f] px-5 text-sm font-extrabold text-[#10243b] transition hover:bg-[#ffd163]"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#f47b25] px-5 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12]"
             >
               Open official UGC-DEB portal
             </a>
@@ -675,7 +655,7 @@ function HomePage() {
               key={university.slug}
               to="/universities/$universitySlug"
               params={{ universitySlug: university.slug }}
-              className="group flex min-h-44 flex-col items-center justify-center rounded-[1.4rem] border border-[#e0e4de] bg-white p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[#b6cde8] hover:shadow-[0_18px_36px_-26px_rgba(13,92,173,0.55)] dark:border-border dark:bg-card"
+              className="group flex min-h-44 flex-col items-center justify-center rounded-xl border border-border bg-card p-5 text-center transition-colors hover:border-[#9bb5f1]"
             >
               <UniversityLogo university={university} size="lg" />
               <h3 className="mt-4 line-clamp-2 text-sm font-bold">{university.shortName}</h3>
@@ -686,28 +666,28 @@ function HomePage() {
           ))}
         </div>
 
-        <div className="mt-12 overflow-hidden rounded-[2rem] bg-[#0d5cad] text-white shadow-[0_28px_70px_-35px_rgba(13,92,173,0.72)]">
+        <div className="mt-12 overflow-hidden rounded-2xl bg-[#325dd2] text-white">
           <div className="grid gap-8 p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#ffe1cb]">
-                Personal shortlist
+                Course shortlist
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.045em] md:text-4xl">
                 So, where should you actually enrol?
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-white/85 md:text-base">
-                Get your best-fit university shortlist based on qualification, budget, career goal
-                and learning preference.
+                Answer four clear questions. We will organise relevant catalogue options around your
+                qualification, budget and study preference.
               </p>
             </div>
 
             <Button
               asChild
               size="lg"
-              className="rounded-xl bg-[#a94300] font-bold text-white hover:bg-[#8f3700]"
+              className="bg-[#f47b25] font-bold text-[#111827] hover:bg-[#d85f12]"
             >
               <Link to="/finder">
-                Build my private shortlist
+                Start the course finder
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -724,7 +704,7 @@ function HomePage() {
           />
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-[2rem] border border-[#dbe0db] bg-white p-7 dark:border-border dark:bg-card md:p-9">
+            <div className="rounded-2xl border border-border bg-card p-7 md:p-9">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#646963]">
@@ -756,12 +736,8 @@ function HomePage() {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[2rem] bg-[#0d5cad] p-7 text-white shadow-[0_28px_65px_-35px_rgba(13,92,173,0.75)] md:p-9">
-              <div
-                className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#f47a20]/30 blur-3xl"
-                aria-hidden="true"
-              />
-              <div className="relative flex items-center justify-between gap-4">
+            <div className="overflow-hidden rounded-2xl bg-[#325dd2] p-7 text-white md:p-9">
+              <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/85">
                     Always verify
@@ -775,7 +751,7 @@ function HomePage() {
                 </span>
               </div>
 
-              <div className="relative mt-8 rounded-2xl border border-white/10 bg-white/[0.07] p-5">
+              <div className="mt-8 rounded-xl border border-white/20 bg-[#2449ad] p-5">
                 <p className="font-display text-2xl font-extrabold tracking-[-0.04em] text-[#ffb078]">
                   No synthetic fee estimates
                 </p>
@@ -785,7 +761,7 @@ function HomePage() {
                 </p>
               </div>
 
-              <div className="relative mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
                   "Total tuition",
                   "Registration and exam charges",
@@ -803,7 +779,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#101713] py-20 text-white lg:py-28">
+      <section className="bg-[#131720] py-20 text-white lg:py-28">
         <div className="container-page grid gap-12 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
           <div>
             <SectionIntro
@@ -829,7 +805,7 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.055] p-6 md:p-9">
+          <div className="rounded-2xl border border-white/15 bg-[#252b36] p-6 md:p-9">
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold">One possible study plan</p>
               <span className="rounded-full bg-[#a94300] px-3 py-1 text-xs font-bold">
@@ -839,7 +815,7 @@ function HomePage() {
 
             <div className="relative mt-14">
               <div className="absolute left-0 right-0 top-4 h-1 rounded-full bg-white/10" />
-              <div className="absolute left-[18%] right-[12%] top-4 h-1 rounded-full bg-gradient-to-r from-[#4ba3ff] via-[#f47a20] to-[#ffb37d]" />
+              <div className="absolute left-[18%] right-[12%] top-4 h-1 rounded-full bg-[#f47b25]" />
 
               <div className="relative grid grid-cols-4 text-center">
                 {[
@@ -876,18 +852,15 @@ function HomePage() {
       <section className="container-page py-20 lg:py-28">
         <SectionIntro
           eyebrow="Transparent coverage"
-          title="A catalog you can inspect, not a promise you must trust."
-          description="Every figure below is calculated from the university and program information currently available on this platform."
+          title="A catalogue you can inspect, not a promise you must trust."
+          description="Every figure below comes from the university and course information currently available on this platform."
         />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {catalogStats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-[1.5rem] border border-[#e0e4de] bg-white p-6 dark:border-border dark:bg-card"
-            >
+            <div key={stat.label} className="rounded-xl border border-border bg-card p-6">
               <stat.icon className="h-5 w-5 text-[#a94300]" />
-              <p className="mt-7 font-display text-4xl font-extrabold tracking-[-0.055em] text-[#0d5cad]">
+              <p className="mt-7 font-display text-4xl font-extrabold tracking-[-0.055em] text-[#325dd2] dark:text-[#8cb0ff]">
                 {stat.value}
               </p>
               <p className="mt-3 text-sm font-semibold leading-6 text-[#686d67] dark:text-muted-foreground">
@@ -897,9 +870,9 @@ function HomePage() {
           ))}
         </div>
 
-        <div className="mt-8 rounded-[1.5rem] border border-[#e0e4de] bg-white px-6 py-5 dark:border-border dark:bg-card">
+        <div className="mt-8 rounded-xl border border-border bg-card px-6 py-5">
           <p className="text-center text-xs font-semibold leading-5 text-[#656a64] dark:text-muted-foreground">
-            Catalog information can change by intake. Reconfirm entitlement, fees and admission
+            Catalogue information can change by intake. Reconfirm entitlement, fees and admission
             dates with the university before paying.
           </p>
         </div>
@@ -917,17 +890,13 @@ function HomePage() {
             {guides.map((guide, index) => (
               <article
                 key={guide.title}
-                className="group overflow-hidden rounded-[1.75rem] border border-[#dfe4dd] bg-white dark:border-border dark:bg-card"
+                className="group overflow-hidden rounded-xl border border-border bg-card"
               >
-                <div
-                  className={`relative h-52 p-6 ${
-                    index === 0 ? "bg-[#dceaff]" : index === 1 ? "bg-[#ffe8d8]" : "bg-[#e5f5ec]"
-                  }`}
-                >
+                <div className="relative h-52 bg-[#edf2ff] p-6 dark:bg-[#263653]">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm dark:bg-card">
                     <guide.icon className="h-5 w-5 text-[#0d5cad]" />
                   </span>
-                  <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-border dark:bg-card/90">
+                  <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-black/5 bg-white p-4 dark:border-border dark:bg-card">
                     <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#a94300]">
                       DekhoCampus guide
                     </p>
@@ -964,19 +933,10 @@ function HomePage() {
       </section>
 
       <section className="container-page py-20 lg:py-28">
-        <div className="relative overflow-hidden rounded-[2.25rem] bg-[#0d5cad] px-6 py-12 text-center text-white shadow-[0_32px_80px_-38px_rgba(13,92,173,0.78)] md:px-12 md:py-16">
-          <div
-            className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#4ba3ff]/30 blur-3xl"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-[#f47a20]/35 blur-3xl"
-            aria-hidden="true"
-          />
-
-          <div className="relative mx-auto max-w-3xl">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f47a20]">
-              <Sparkles className="h-6 w-6" />
+        <div className="overflow-hidden rounded-2xl bg-[#325dd2] px-6 py-12 text-center text-white md:px-12 md:py-16">
+          <div className="mx-auto max-w-3xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-[#f47b25]">
+              <GraduationCap className="h-6 w-6" />
             </div>
             <h2 className="mt-6 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] md:text-5xl">
               Make your next degree decision with clarity.
@@ -990,7 +950,7 @@ function HomePage() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-xl bg-[#a94300] font-bold text-white hover:bg-[#8f3700]"
+                className="bg-[#f47b25] font-bold text-[#111827] hover:bg-[#d85f12]"
               >
                 <Link to="/contact">
                   Get free counselling
