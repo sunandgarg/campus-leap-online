@@ -105,7 +105,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ],
       links: [
         { rel: "stylesheet", href: appCss },
-        { rel: "icon", href: "/dekhocampus-mark.svg", type: "image/svg+xml" },
+        { rel: "icon", href: "/dekhocampus-logo.png", type: "image/png" },
+        { rel: "apple-touch-icon", href: "/dekhocampus-logo.png" },
         ...(includeCanonical ? [{ rel: "canonical", href: `${SITE_ORIGIN}${canonicalPath}` }] : []),
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

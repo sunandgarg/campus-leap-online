@@ -67,7 +67,7 @@ function AdminLayout() {
     <div className="container-page py-10">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
         <div className="min-w-0">
-          <BrandLogo size="sm" />
+          <BrandLogo variant="mark" size="sm" />
           <h1 className="mt-2 truncate font-display text-xl font-bold">Content admin</h1>
         </div>
         <Button variant="outline" size="sm" onClick={signOut}>

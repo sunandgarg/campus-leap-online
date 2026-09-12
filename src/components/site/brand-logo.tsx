@@ -9,46 +9,29 @@ type BrandLogoProps = HTMLAttributes<HTMLSpanElement> & {
 
 const sizes = {
   sm: {
-    mark: "h-7 w-8",
-    wordmark: "text-[15px]",
-    gap: "gap-0",
+    mark: "h-7 w-7",
+    full: "h-auto w-[116px]",
   },
   md: {
-    mark: "h-9 w-10",
-    wordmark: "text-[17px] sm:text-[18px]",
-    gap: "gap-0",
+    mark: "h-9 w-9",
+    full: "h-auto w-36",
   },
   lg: {
-    mark: "h-10 w-11",
-    wordmark: "text-xl sm:text-[22px]",
-    gap: "gap-0",
+    mark: "h-11 w-11",
+    full: "h-auto w-40",
   },
 } as const;
 
 export function BrandMark({ className }: { className?: string }) {
   return (
-    <svg
-      viewBox="0 0 64 54"
+    <img
+      src="/dekhocampus-logo.png"
+      alt=""
       aria-hidden="true"
-      className={cn("shrink-0 overflow-visible", className)}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M3 18.2 34 3.5 61 15.4 30.7 29.7 3 18.2Z" fill="currentColor" />
-      <path
-        d="M16.5 24.2v7.7c3.8 4.2 8.9 6.2 15.5 6.2 6.2 0 11.2-1.9 15.2-5.8v-8.9l-16.4 7.7-14.3-6.9Z"
-        fill="currentColor"
-        opacity=".96"
-      />
-      <path
-        d="M12.2 22.2v16.2c0 2.3 1.2 4.4 3.2 5.6"
-        stroke="#F47B25"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-      <path d="m11.1 46.8 4.3-3.2 4 3.2-1.7 4.1h-5l-1.6-4.1Z" fill="#F47B25" />
-      <circle cx="9.8" cy="42" r="1.7" fill="#F47B25" opacity=".72" />
-    </svg>
+      width={52}
+      height={52}
+      className={cn("shrink-0 object-contain", className)}
+    />
   );
 }
 
@@ -60,35 +43,31 @@ export function BrandLogo({
   ...props
 }: BrandLogoProps) {
   const selectedSize = sizes[size];
+  const isFull = variant === "full";
 
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center",
-        selectedSize.gap,
-        tone === "inverse" ? "text-white" : "text-[#111827] dark:text-white",
+        "inline-flex shrink-0 items-center justify-center",
+        tone === "inverse" && isFull && "rounded-lg bg-white px-2 py-1",
+        tone === "default" && isFull && "dark:rounded-lg dark:bg-white dark:px-2 dark:py-1",
         className,
       )}
       {...props}
     >
-      <BrandMark className={selectedSize.mark} />
-      {variant === "full" ? (
-        <span
-          className={cn(
-            "-ml-1 whitespace-nowrap font-display font-black leading-none tracking-[-0.045em]",
-            selectedSize.wordmark,
-          )}
-        >
-          Dekho
-          <span
-            className={tone === "inverse" ? "text-[#FF9A50]" : "text-[#F47B25] dark:text-[#FF9A50]"}
-          >
-            Campus
-          </span>
-        </span>
+      {isFull ? (
+        <img
+          src="/dekhocampus-logo-full.webp"
+          alt=""
+          aria-hidden="true"
+          width={256}
+          height={70}
+          className={cn("shrink-0 object-contain", selectedSize.full)}
+        />
       ) : (
-        <span className="sr-only">DekhoCampus</span>
+        <BrandMark className={selectedSize.mark} />
       )}
+      <span className="sr-only">DekhoCampus</span>
     </span>
   );
 }
