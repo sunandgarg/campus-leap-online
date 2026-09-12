@@ -558,8 +558,8 @@ export function DekhoAICopilot() {
           className="fixed bottom-[6.25rem] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] lg:bottom-8 lg:right-6"
         >
           <span className="sr-only">Ask Diya, DekhoCampus course guide</span>
-          <span className="flex h-full w-full items-center justify-center rounded-full bg-white text-[#325dd2]">
-            <DiyaMark className="h-10 w-10" />
+          <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white">
+            <DiyaAvatar className="h-11 w-11" />
           </span>
           <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-[#f47b25] px-1 text-[8px] font-black text-[#111827]">
             AI
@@ -579,8 +579,8 @@ export function DekhoAICopilot() {
       >
         <div className="border-b border-white/15 bg-[#325dd2] px-5 py-5 text-white sm:px-7 sm:py-6">
           <div className="flex items-start gap-3 pr-9">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#325dd2]">
-              <DiyaMark className="h-9 w-9" />
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
+              <DiyaAvatar className="h-10 w-10" />
             </span>
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -781,28 +781,8 @@ export function DekhoAICopilot() {
   );
 }
 
-function DiyaMark({ className }: { className?: string }) {
+function DiyaAvatar({ className }: { className?: string }) {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 48 48"
-      className={className}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M24 6c1.4 5.1 6.8 8.6 6.8 15.1 0 4.8-3 8.7-6.8 8.7s-6.8-3.9-6.8-8.7C17.2 14.6 22.6 11.1 24 6Z"
-        fill="#F47B25"
-      />
-      <path
-        d="M24 14.2c.8 2.7 3.6 4.7 3.6 8 0 2.5-1.6 4.6-3.6 4.6s-3.6-2.1-3.6-4.6c0-3.3 2.8-5.3 3.6-8Z"
-        fill="white"
-      />
-      <path
-        d="M10 28.4c3.7 1.8 8.3 2.7 14 2.7s10.3-.9 14-2.7c-1 7.9-6 13.6-14 13.6s-13-5.7-14-13.6Z"
-        fill="#325DD2"
-      />
-      <path d="M13.5 34.1h21" stroke="white" strokeWidth="2" strokeLinecap="round" />
-    </svg>
+    <img src="/diya-ai.webp" alt="" width={90} height={96} decoding="async" className={className} />
   );
 }
