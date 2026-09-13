@@ -171,15 +171,34 @@ function legacyBrokenLogoUrl(slug: string, auditedUrl: string): string | undefin
   return legacyUrl === auditedUrl ? undefined : legacyUrl;
 }
 
+function isLegacyGoogleFaviconUrl(value: string | undefined): boolean {
+  if (!value) return false;
+
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === "https:" &&
+      url.hostname === "www.google.com" &&
+      url.pathname === "/s2/favicons" &&
+      Boolean(url.searchParams.get("domain"))
+    );
+  } catch {
+    return false;
+  }
+}
+
 function toUniversityLogoUrl(slug: string, value: string | null | undefined): string | undefined {
   const databaseUrl = toPublicHttpUrl(value);
   const auditedUrl = universityLogoUrls[slug];
   const legacyUrl = auditedUrl ? legacyBrokenLogoUrl(slug, auditedUrl) : undefined;
 
-  // The first directory import canonicalised 50 filenames after their assets
-  // had already been uploaded. Prefer the audited, known-present v1 object for
-  // that exact legacy case, while preserving newer admin-managed or external URLs.
-  if (auditedUrl && legacyUrl && databaseUrl === legacyUrl) {
+  // Earlier catalogue imports used either Google's 128 px favicon endpoint or
+  // a slug-derived Storage filename that did not exist for 50 entries. Replace
+  // only those known legacy shapes, while preserving newer admin-managed URLs.
+  if (
+    auditedUrl &&
+    ((legacyUrl && databaseUrl === legacyUrl) || isLegacyGoogleFaviconUrl(databaseUrl))
+  ) {
     return auditedUrl;
   }
 
