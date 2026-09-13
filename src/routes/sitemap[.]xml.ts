@@ -3,7 +3,7 @@ import { resolveCatalog } from "@/data/universities";
 import { slugifySpecialisation } from "@/data/specialisations";
 import { getCatalog } from "@/lib/catalog.functions";
 
-const ORIGIN = "https://online.dekhocampus.in";
+const ORIGIN = "https://online.dekhocampus.com";
 
 function pathSegment(value: string) {
   return encodeURIComponent(value);

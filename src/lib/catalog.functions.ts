@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
+import { universityLogoUrls } from "@/data/directory-universities";
 import type {
   Catalog,
   CatalogSpecialisation,
@@ -160,6 +160,32 @@ function toPublicHttpUrl(value: string | null | undefined): string | undefined {
   }
 }
 
+const AUDITED_LOGO_STORAGE_PREFIX =
+  "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/";
+
+function legacyBrokenLogoUrl(slug: string, auditedUrl: string): string | undefined {
+  const extension = auditedUrl.match(/\.[a-z0-9]+$/i)?.[0];
+  if (!extension) return undefined;
+
+  const legacyUrl = `${AUDITED_LOGO_STORAGE_PREFIX}${slug}${extension}`;
+  return legacyUrl === auditedUrl ? undefined : legacyUrl;
+}
+
+function toUniversityLogoUrl(slug: string, value: string | null | undefined): string | undefined {
+  const databaseUrl = toPublicHttpUrl(value);
+  const auditedUrl = universityLogoUrls[slug];
+  const legacyUrl = auditedUrl ? legacyBrokenLogoUrl(slug, auditedUrl) : undefined;
+
+  // The first directory import canonicalised 50 filenames after their assets
+  // had already been uploaded. Prefer the audited, known-present v1 object for
+  // that exact legacy case, while preserving newer admin-managed or external URLs.
+  if (auditedUrl && legacyUrl && databaseUrl === legacyUrl) {
+    return auditedUrl;
+  }
+
+  return databaseUrl ?? auditedUrl;
+}
+
 function toOfficialDomain(value: string | null | undefined): string {
   if (!value) return "";
   try {
@@ -203,6 +229,10 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
     return { universities: [], programs: [], settings: {}, source: "fallback" };
   }
 
+  // Keep the database SDK behind the server-function boundary. A module-level
+  // import pulls Supabase auth, storage and realtime into the universal client
+  // entry even though the browser only ever calls the generated RPC stub.
+  const { createClient } = await import("@supabase/supabase-js");
   const supabase = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
@@ -509,7 +539,7 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
       placementPartners: [],
       highlights: u.highlights ?? [],
       about: u.about,
-      logoUrl: toPublicHttpUrl(u.logo_url),
+      logoUrl: toUniversityLogoUrl(u.slug, u.logo_url),
       heroImageUrl: toPublicHttpUrl(u.hero_image_url),
       hiringPartnerCount: undefined,
       legalName: u.legal_name ?? undefined,

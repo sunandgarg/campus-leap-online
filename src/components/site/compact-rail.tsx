@@ -77,7 +77,12 @@ export function CompactRail({
   return (
     <div className={cn("mt-6 min-w-0", className)}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className={cn("text-xs font-bold", dark ? "text-white/65" : "text-muted-foreground")}>
+        <p
+          className={cn(
+            "text-xs font-bold md:sr-only",
+            dark ? "text-white/65" : "text-muted-foreground",
+          )}
+        >
           {itemCount} {itemCount === 1 ? "item" : "items"}
           {position.hasOverflow ? " · swipe or use arrows" : ""}
         </p>

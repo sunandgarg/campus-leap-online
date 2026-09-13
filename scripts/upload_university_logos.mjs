@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -15,6 +15,24 @@ function readOption(name) {
   const value = index >= 0 ? process.argv[index + 1] : undefined;
   if (!value) throw new Error(`Missing required option: ${name}`);
   return value;
+}
+
+function resolveLocalAsset(root, file) {
+  if (typeof file !== "string" || !file) throw new Error("Manifest logo filename is missing.");
+  const target = resolve(root, file);
+  const pathFromRoot = relative(root, target);
+  if (pathFromRoot.startsWith("..") || isAbsolute(pathFromRoot)) {
+    throw new Error(`Manifest logo filename escapes the asset directory: ${file}`);
+  }
+  return target;
+}
+
+function storageObjectPath(item) {
+  const path = item.storage_path ?? (item.storage_file ? `v1/${item.storage_file}` : undefined);
+  if (typeof path !== "string" || !path || path.startsWith("/") || path.includes("..")) {
+    throw new Error("Manifest storage path is missing or unsafe.");
+  }
+  return path;
 }
 
 async function main() {
@@ -38,21 +56,22 @@ async function main() {
     const batch = manifest.slice(start, start + CONCURRENCY);
     const results = await Promise.all(
       batch.map(async (item) => {
-        const contents = await readFile(resolve(logoDirectory, item.storage_file));
-        const { error } = await supabase.storage
-          .from(BUCKET)
-          .upload(`v1/${item.storage_file}`, contents, {
-            cacheControl: CACHE_SECONDS,
-            contentType: item.content_type,
-            upsert: true,
-          });
-        return { file: item.storage_file, error };
+        const localFile = item.local_file ?? item.storage_file;
+        const objectPath = storageObjectPath(item);
+        const contents = await readFile(resolveLocalAsset(logoDirectory, localFile));
+        const { error } = await supabase.storage.from(BUCKET).upload(objectPath, contents, {
+          cacheControl: CACHE_SECONDS,
+          contentType: item.content_type,
+          upsert: true,
+        });
+        return { file: localFile, objectPath, error };
       }),
     );
 
     for (const result of results) {
-      if (result.error) failures.push(`${result.file}: ${result.error.message}`);
-      else uploaded += 1;
+      if (result.error) {
+        failures.push(`${result.file} -> ${result.objectPath}: ${result.error.message}`);
+      } else uploaded += 1;
     }
     process.stdout.write(`\rUploaded ${uploaded}/${manifest.length}`);
   }

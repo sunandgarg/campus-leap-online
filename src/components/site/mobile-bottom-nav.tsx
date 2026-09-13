@@ -1,12 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookOpenCheck, Building2, GitCompareArrows, Home, Sparkles } from "lucide-react";
+import { BookOpenCheck, Building2, GitCompareArrows, Home } from "lucide-react";
 
 const items = [
   { to: "/", label: "Home", icon: Home },
   { to: "/programs", label: "Courses", icon: BookOpenCheck },
   { to: "/universities", label: "Universities", icon: Building2 },
   { to: "/compare", label: "Compare", icon: GitCompareArrows },
-  { to: "/finder", label: "My match", icon: Sparkles },
 ] as const;
 
 export function MobileBottomNav() {
@@ -42,6 +41,18 @@ export function MobileBottomNav() {
           </Link>
         );
       })}
+      <button
+        type="button"
+        aria-label="Open Diya, DekhoCampus course guide"
+        aria-haspopup="dialog"
+        onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+        className="flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[9px] font-extrabold text-[#2449ad] transition hover:bg-[#edf2ff] dark:text-[#8cb0ff] dark:hover:bg-[#263653] sm:text-[10px]"
+      >
+        <span className="relative flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-white">
+          <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-5 w-5" />
+        </span>
+        <span className="truncate">Diya AI</span>
+      </button>
     </nav>
   );
 }

@@ -77,10 +77,10 @@ function PrivacyPage() {
             manually and we may ask for additional information to prevent unauthorised changes.
           </p>
           <a
-            href="mailto:online@dekhocampus.in?subject=Privacy%20request"
+            href="mailto:online@dekhocampus.com?subject=Privacy%20request"
             className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#1768cc] dark:text-[#78b9ff]"
           >
-            <Mail className="h-4 w-4" /> online@dekhocampus.in
+            <Mail className="h-4 w-4" /> online@dekhocampus.com
           </a>
           <div className="mt-5 rounded-xl bg-secondary/60 p-4 text-xs leading-5 text-muted-foreground">
             <Trash2 className="mb-2 h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />

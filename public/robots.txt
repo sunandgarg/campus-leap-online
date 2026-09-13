@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://online.dekhocampus.in/sitemap.xml
+Sitemap: https://online.dekhocampus.com/sitemap.xml

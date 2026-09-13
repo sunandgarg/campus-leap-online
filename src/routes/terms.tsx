@@ -95,7 +95,7 @@ function TermsPage() {
           </p>
           <h2 className="font-display text-2xl font-extrabold text-foreground">Corrections</h2>
           <p>
-            Universities and learners may request a factual correction at online@dekhocampus.in.
+            Universities and learners may request a factual correction at online@dekhocampus.com.
             Include a primary-source link so the editorial record can be reviewed.
           </p>
         </div>

@@ -15,6 +15,10 @@ function popularCourseRecords(programSlug: "online-mba" | "online-bba") {
     .slice(0, 6);
 }
 
+function providerName(name: string) {
+  return name.replace(/\s+Online$/i, "");
+}
+
 export function SiteFooter() {
   const mbaRecords = popularCourseRecords("online-mba");
   const bbaRecords = popularCourseRecords("online-bba");
@@ -62,7 +66,7 @@ export function SiteFooter() {
                   params={{ universitySlug: university.slug, programSlug: program.slug }}
                   className="footer-link"
                 >
-                  {university.shortName} Online MBA
+                  {providerName(university.shortName)} Online MBA
                 </Link>
               </li>
             ))}
@@ -85,7 +89,7 @@ export function SiteFooter() {
                   params={{ universitySlug: university.slug, programSlug: program.slug }}
                   className="footer-link"
                 >
-                  {university.shortName} Online BBA
+                  {providerName(university.shortName)} Online BBA
                 </Link>
               </li>
             ))}
@@ -162,11 +166,11 @@ export function SiteFooter() {
           <div>
             <p className="text-sm font-extrabold">Need help with your shortlist?</p>
             <a
-              href="mailto:online@dekhocampus.in"
+              href="mailto:online@dekhocampus.com"
               className="mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white/75 hover:text-[#ff9a50]"
             >
               <Mail className="h-4 w-4" aria-hidden="true" />
-              online@dekhocampus.in
+              online@dekhocampus.com
             </a>
           </div>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/65">

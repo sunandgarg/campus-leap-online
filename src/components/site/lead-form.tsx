@@ -207,7 +207,7 @@ export function LeadForm({
     if (import.meta.env.PROD && !turnstileConfigured) {
       showError(
         "form",
-        "Counselling requests are temporarily unavailable. Please email online@dekhocampus.in.",
+        "Counselling requests are temporarily unavailable. Please email online@dekhocampus.com.",
       );
       return;
     }
@@ -274,7 +274,7 @@ export function LeadForm({
         verification_failed: "The security check expired. Please complete it again.",
         invalid: "Please review your details and try again.",
         unavailable:
-          "We couldn't securely submit your enquiry. Please try again or email online@dekhocampus.in.",
+          "We couldn't securely submit your enquiry. Please try again or email online@dekhocampus.com.",
       };
       showError("form", response.reason ? messages[response.reason] : messages.unavailable);
       return;

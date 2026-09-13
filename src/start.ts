@@ -1,7 +1,17 @@
 import { createStart, createCsrfMiddleware, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+
+const attachSupabaseAuth = createMiddleware({ type: "function" }).client(async ({ next }) => {
+  // Public routes do not need the Supabase browser SDK during hydration. Load
+  // it only when a client-side server function needs an authenticated request.
+  const { supabase } = await import("@/integrations/supabase/client");
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  return next({
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+});
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {

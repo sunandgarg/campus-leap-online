@@ -1,7 +1,7 @@
 import { directoryUniversities, universityLogoUrls } from "@/data/directory-universities";
 
 /**
- * Central data layer for online.dekhocampus.in
+ * Central data layer for online.dekhocampus.com
  *
  * Everything on the site (landing page, university list, university pages and
  * course pages) is derived from these structures, so adding a university or a

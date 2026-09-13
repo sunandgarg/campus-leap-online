@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/site/brand-logo";
+import { UniversityLogo } from "@/components/site/university-logo";
 import { programCatalog, universities } from "@/data/universities";
 import { useComparison } from "@/hooks/use-comparison";
 
@@ -284,10 +285,8 @@ export function SiteHeader() {
                       onClick={closeNavigation}
                       className="flex min-h-14 items-center gap-3 rounded-lg border border-transparent p-3 transition-colors hover:border-border hover:bg-secondary"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-extrabold text-primary-foreground">
-                        {university.shortName.slice(0, 2).toUpperCase()}
-                      </span>
-                      <span>
+                      <UniversityLogo university={university} size="sm" />
+                      <span className="min-w-0">
                         <span className="block text-sm font-extrabold">{university.shortName}</span>
                         <span className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
                           <ShieldCheck className="h-3 w-3" />
@@ -319,6 +318,19 @@ export function SiteHeader() {
               </span>
               Search courses and universities
             </Link>
+            <button
+              type="button"
+              onClick={() => {
+                closeNavigation();
+                window.dispatchEvent(new Event("dekhocampus:open-diya"));
+              }}
+              className="mb-2 flex min-h-11 items-center gap-3 rounded-lg border border-border bg-card px-3 text-left text-sm font-bold text-foreground"
+            >
+              <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
+                <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-7 w-7" />
+              </span>
+              Ask Diya AI
+            </button>
             <p className="px-3 pt-1 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
               Popular courses
             </p>

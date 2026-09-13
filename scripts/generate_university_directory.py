@@ -119,7 +119,11 @@ def main() -> None:
         slug = CANONICAL_SLUGS.get(source_id, source_id)
         logo = logos[source_id]
         extension = Path(logo.get("storage_file", "")).suffix.lower()
-        storage_path = f"{ASSET_VERSION}/{slug}{extension}" if extension else None
+        # Uploads retain the optimized source filename. Some public page slugs
+        # are deliberately canonical aliases, so deriving an object name from
+        # `slug` can point at a file that was never uploaded.
+        storage_file = logo.get("storage_file", "")
+        storage_path = f"{ASSET_VERSION}/{storage_file}" if extension else None
         logo_url = (
             f"{PROJECT_URL}/storage/v1/object/public/{BUCKET}/{storage_path}"
             if storage_path

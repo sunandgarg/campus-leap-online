@@ -32,7 +32,7 @@ function AboutPage() {
             About DekhoCampus Online
           </h1>
           <p className="mt-4 max-w-2xl text-ink-foreground/75">
-            A dedicated portal for online universities, built by the team behind dekhocampus.in.
+            A dedicated portal for online universities, built by the team behind dekhocampus.com.
           </p>
         </div>
       </section>
@@ -83,8 +83,8 @@ function AboutPage() {
               covers Indian colleges, entrance exams and campus admissions.
             </p>
             <Button asChild variant="outline" className="mt-4 w-full">
-              <a href="https://dekhocampus.in" target="_blank" rel="noopener noreferrer">
-                Visit dekhocampus.in
+              <a href="https://dekhocampus.com" target="_blank" rel="noopener noreferrer">
+                Visit dekhocampus.com
               </a>
             </Button>
           </div>

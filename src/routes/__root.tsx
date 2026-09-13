@@ -18,7 +18,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { getCatalog } from "@/lib/catalog.functions";
 import { setCatalog, siteSettings } from "@/data/universities";
 
-const SITE_ORIGIN = "https://online.dekhocampus.in";
+const SITE_ORIGIN = "https://online.dekhocampus.com";
 
 function NotFoundComponent() {
   return (

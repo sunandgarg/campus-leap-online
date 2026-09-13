@@ -9,14 +9,16 @@ const SIZES = {
 } as const;
 
 function initialsOf(name: string) {
-  return name
-    .replace(/Online|University|Jaipur/g, "")
+  const initials = name
+    .replace(/\b(?:Online|University|Jaipur)\b/gi, "")
     .trim()
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((w) => w[0])
     .join("");
+
+  return initials || "U";
 }
 
 /**
@@ -28,14 +30,20 @@ function initialsOf(name: string) {
 export function UniversityLogo({
   university,
   size = "md",
+  priority = false,
   className,
 }: {
   university: University;
   size?: "sm" | "md" | "lg";
+  priority?: boolean;
   className?: string;
 }) {
-  const [failed, setFailed] = useState(false);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
   const s = SIZES[size];
+  const logoUrl = university.logoUrl;
+  const failed = !logoUrl || failedUrl === logoUrl;
+  const loaded = loadedUrl === logoUrl;
 
   const tile = cn(
     "inline-flex shrink-0 items-center justify-center overflow-hidden border font-display font-bold tracking-tight",
@@ -43,10 +51,13 @@ export function UniversityLogo({
     className,
   );
 
-  if (failed || !university.logoUrl) {
+  if (failed) {
     return (
       <span
-        aria-hidden="true"
+        role="img"
+        aria-label={`${university.name} logo unavailable`}
+        title={university.name}
+        data-university-logo="fallback"
         className={cn(tile, s.text)}
         style={{
           color: `color-mix(in oklab, ${university.accentColor} 55%, #101923)`,
@@ -61,19 +72,44 @@ export function UniversityLogo({
 
   return (
     <span
-      className={cn(tile, "border-border bg-white")}
+      className={cn(tile, "relative border-border bg-white")}
+      title={university.name}
+      data-university-logo="image"
       style={{ borderColor: `color-mix(in oklab, ${university.accentColor} 20%, transparent)` }}
     >
+      {!loaded ? (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "absolute inset-0 flex items-center justify-center bg-[#f4f6fa] font-display font-bold text-[#536176]",
+            s.text,
+          )}
+        >
+          {initialsOf(university.name)}
+        </span>
+      ) : null}
       <img
-        src={university.logoUrl}
+        src={logoUrl}
         alt={`${university.name} logo`}
         width={s.px}
         height={s.px}
-        loading="lazy"
+        loading={priority || size === "lg" ? "eager" : "lazy"}
+        fetchPriority={priority || size === "lg" ? "high" : "auto"}
         decoding="async"
         referrerPolicy="no-referrer"
-        className="h-[70%] w-[70%] object-contain"
-        onError={() => setFailed(true)}
+        draggable={false}
+        className={cn(
+          "relative block h-full w-full object-contain p-[8%] transition-opacity duration-200",
+          loaded ? "opacity-100" : "opacity-0",
+        )}
+        onError={() => setFailedUrl(logoUrl)}
+        onLoad={(event) => {
+          if (event.currentTarget.naturalWidth < 2 || event.currentTarget.naturalHeight < 2) {
+            setFailedUrl(logoUrl);
+            return;
+          }
+          setLoadedUrl(logoUrl);
+        }}
       />
     </span>
   );

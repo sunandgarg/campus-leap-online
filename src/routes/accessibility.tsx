@@ -88,10 +88,10 @@ function AccessibilityPage() {
             accessible format where practical.
           </p>
           <a
-            href="mailto:online@dekhocampus.in?subject=Accessibility%20barrier"
+            href="mailto:online@dekhocampus.com?subject=Accessibility%20barrier"
             className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#1768cc] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:text-[#78b9ff]"
           >
-            <Mail className="h-4 w-4" /> online@dekhocampus.in
+            <Mail className="h-4 w-4" /> online@dekhocampus.com
           </a>
           <p className="mt-6 text-xs text-muted-foreground">
             Statement reviewed 12 September 2026.

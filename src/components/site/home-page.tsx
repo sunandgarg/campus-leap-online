@@ -146,10 +146,10 @@ const heroRoles = ["Student", "Parent", "Professional"] as const;
 
 const featuredUniversityOrder = [
   "amity-university-online",
-  "manipal-university-jaipur",
+  "manipal-university-online",
   "jain-university-online",
   "chandigarh-university-online",
-  "lovely-professional-university-punjab",
+  "lpu-online",
   "gla-university-uttar-pradesh",
 ];
 
@@ -182,6 +182,7 @@ export function HomePage() {
   const totalSpecialisations = getSpecialisationCount();
   const [heroGoal, setHeroGoal] = useState<(typeof heroGoals)[number]["label"]>("Online degree");
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
+  const [directoryOpen, setDirectoryOpen] = useState(false);
   const selectedHeroGoal = heroGoals.find((goal) => goal.label === heroGoal) ?? heroGoals[0];
   const featuredUniversities = orderedUniversities().slice(0, 16);
   const courseRecords = featuredCourseRecords();
@@ -194,10 +195,10 @@ export function HomePage() {
 
   return (
     <div className="overflow-hidden bg-background text-foreground">
-      <section className="border-b border-border bg-[#fcfcfd] dark:bg-background">
-        <div className="container-page grid gap-9 py-10 sm:py-12 lg:min-h-[610px] lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-14 lg:py-14">
-          <div className="max-w-[780px]">
-            <div className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ffad70]">
+      <section className="border-b border-border bg-[#f7f8fb] dark:bg-background">
+        <div className="container-page grid gap-9 py-10 sm:py-12 xl:min-h-[640px] xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,0.78fr)] xl:items-center xl:gap-16 xl:py-14">
+          <div className="max-w-[760px]">
+            <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
               <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
               Online degrees, explained clearly
             </div>
@@ -206,8 +207,8 @@ export function HomePage() {
               Compare privately. Ask a human when you need one.
             </p>
 
-            <h1 className="mt-6 max-w-[760px] font-display text-[2.65rem] font-black leading-[1.02] tracking-[-0.052em] text-[#131720] dark:text-foreground sm:text-6xl lg:text-[4.3rem]">
-              Choose an online degree with
+            <h1 className="mt-6 max-w-[740px] font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.045em] text-[#131720] dark:text-foreground sm:text-[3.65rem] xl:text-[4.1rem]">
+              Choose an online degree with{" "}
               <span className="block text-[#325dd2] dark:text-[#8cb0ff]">
                 clarity, not pressure.
               </span>
@@ -218,7 +219,7 @@ export function HomePage() {
             </p>
 
             <form action="/search" className="mt-6 max-w-2xl" role="search">
-              <div className="flex min-h-14 items-center gap-3 rounded-xl border border-input bg-card p-1.5 pl-4 shadow-card sm:pl-5">
+              <div className="flex min-h-16 items-center gap-3 rounded-2xl border border-input bg-card p-1.5 pl-4 shadow-card sm:pl-5">
                 <Search className="h-5 w-5 shrink-0 text-[#667386]" aria-hidden="true" />
                 <input
                   name="q"
@@ -229,7 +230,7 @@ export function HomePage() {
                 <button
                   type="submit"
                   aria-label="Search the online degree catalogue"
-                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:min-w-28 sm:px-5"
+                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:min-w-28 sm:px-5"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
                   <span className="hidden sm:inline">Search</span>
@@ -263,7 +264,7 @@ export function HomePage() {
           </div>
 
           <aside
-            className="mx-auto w-full max-w-[440px] rounded-2xl border border-[#cfd9ec] bg-card p-5 shadow-card sm:p-6"
+            className="mx-auto w-full max-w-[440px] overflow-hidden rounded-[1.75rem] border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-5 shadow-lift sm:p-7"
             aria-label="Free counselling starter"
           >
             <div className="flex items-center justify-between gap-4">
@@ -277,11 +278,11 @@ export function HomePage() {
               </div>
             </div>
 
-            <p className="mt-5 flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ffad70]">
+            <p className="brand-kicker mt-5">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
               Personal guidance desk
             </p>
-            <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em]">
+            <h2 className="mt-2 font-display text-[1.65rem] font-extrabold leading-tight tracking-[-0.035em]">
               What matters most right now?
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -299,7 +300,7 @@ export function HomePage() {
                     aria-pressed={selected}
                     onClick={() => setHeroGoal(goal.label)}
                     className={cn(
-                      "flex min-h-12 items-center gap-2 rounded-xl border px-3 text-left text-[11px] font-extrabold transition-colors",
+                      "flex min-h-13 items-center gap-2.5 rounded-xl border px-3 text-left text-xs font-bold transition-colors",
                       index === heroGoals.length - 1 && "col-span-2",
                       selected
                         ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
@@ -364,74 +365,89 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-14 lg:py-20">
+      <section className="container-page py-12 lg:py-16">
         <SectionIntro
           eyebrow="Choose your direction"
           title="What do you want to study?"
           description="Start with a broad career area. You can narrow the course and university later."
         />
         <CompactRail label="Study areas" columns={3}>
-          {studyAreas.map((area) => (
+          {studyAreas.map((area, index) => (
             <Link
               key={area.title}
               to="/search"
               search={{ q: area.codes[0] }}
-              className="group flex h-full min-h-52 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
+              className="brand-card brand-card-interactive group flex h-full min-h-52 flex-col p-5"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
-                <area.icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-4 font-display text-lg font-extrabold tracking-[-0.03em]">
+              <span className="absolute inset-x-0 top-0 h-1 bg-[#325dd2]" aria-hidden="true" />
+              <div className="flex items-start justify-between">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#325dd2] text-white">
+                  <area.icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="font-display text-3xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="mt-4 font-display text-lg font-bold tracking-[-0.025em]">
                 {area.title}
               </h3>
               <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
                 {area.description}
               </p>
-              <span className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+              <span className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs font-bold text-[#2449ad] dark:text-[#8cb0ff]">
                 {area.codes.join(" · ")}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#edf2ff] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653]">
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
               </span>
             </Link>
           ))}
         </CompactRail>
       </section>
 
-      <section className="border-y border-border bg-[#f5f7fa] py-14 dark:bg-secondary/25 lg:py-20">
+      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
         <div className="container-page">
           <SectionIntro
             eyebrow="Popular course records"
-            title="MBA and BBA options, university by university."
+            title="Popular online MBA & BBA programmes"
             description="Two rows keep the page compact. Each card opens that university-course record so you can inspect its evidence status."
             action={<TextLink to="/programs" label="See every course" />}
           />
           <CompactRail label="Online MBA and BBA university records" rows={2} columns={3}>
-            {courseRecords.map(({ university, program }) => (
+            {courseRecords.map(({ university, program }, index) => (
               <Link
                 key={university.slug + "-" + program.slug}
                 to="/universities/$universitySlug/$programSlug"
                 params={{ universitySlug: university.slug, programSlug: program.slug }}
-                className="group flex min-h-36 items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                className="brand-card brand-card-interactive group flex min-h-34 items-center gap-4 p-4"
               >
-                <UniversityLogo university={university} size="md" />
+                <UniversityLogo
+                  university={university}
+                  size="md"
+                  priority={index < 4}
+                  className="h-16 w-20 rounded-xl bg-white"
+                />
                 <span className="min-w-0 flex-1">
                   <span className="block text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#a94300] dark:text-[#ffad70]">
                     Online {program.code}
                   </span>
-                  <span className="mt-1.5 line-clamp-2 block font-display text-base font-extrabold leading-5">
+                  <span className="mt-1.5 line-clamp-2 block font-display text-base font-bold leading-5">
                     {university.shortName}
                   </span>
                   <span className="mt-2 block text-[11px] leading-4 text-muted-foreground">
                     View course record · confirm current intake
                   </span>
                 </span>
-                <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-[#325dd2]" />
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground transition-colors group-hover:bg-[#325dd2] group-hover:text-white">
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </span>
               </Link>
             ))}
           </CompactRail>
         </div>
       </section>
 
-      <section className="container-page py-14 lg:py-20">
+      <section className="container-page py-12 lg:py-16">
         <SectionIntro
           eyebrow="Admission verification"
           title="Two checks before you apply."
@@ -458,7 +474,7 @@ export function HomePage() {
             primary
           />
         </div>
-        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-[#f5f7fa] p-4 text-xs leading-5 text-muted-foreground dark:bg-secondary/30 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4 text-xs leading-5 text-muted-foreground dark:bg-secondary/30 sm:flex-row sm:items-center sm:justify-between">
           <span>
             Keep screenshots or PDFs of the official entitlement, fee schedule and refund policy.
           </span>
@@ -473,31 +489,39 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-[#f5f7fa] py-14 dark:bg-secondary/25 lg:py-20">
+      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
         <div className="container-page">
           <SectionIntro
             eyebrow="University directory"
-            title="Compare familiar names with visible data status."
+            title="Compare leading online universities"
             description="Four compact cards stay visible on desktop. Swipe or use the arrows to continue."
             action={<TextLink to="/universities" label={"View all " + universities.length} />}
           />
           <CompactRail label="Featured online university profiles" columns={4}>
-            {featuredUniversities.map((university) => (
+            {featuredUniversities.map((university, index) => (
               <Link
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="group flex min-h-40 flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                className="brand-card brand-card-interactive group flex min-h-48 flex-col p-4"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <UniversityLogo university={university} size="md" />
+                  <UniversityLogo
+                    university={university}
+                    size="md"
+                    priority={index < 4}
+                    className="h-16 w-24 rounded-xl bg-white"
+                  />
                   <span className="rounded-md bg-secondary px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.08em] text-muted-foreground">
                     {university.profileDepth === "directory" ? "Directory" : "Editorial"}
                   </span>
                 </div>
-                <h3 className="mt-3 line-clamp-2 font-display text-base font-extrabold leading-5">
+                <h3 className="mt-3 line-clamp-2 font-display text-base font-bold leading-5">
                   {university.shortName}
                 </h3>
+                <p className="mt-1 line-clamp-1 text-[11px] text-muted-foreground">
+                  {university.state || "India"}
+                </p>
                 <span className="mt-auto flex items-center justify-between pt-3 text-[11px] font-bold text-muted-foreground">
                   {university.programs.length > 0
                     ? String(university.programs.length) + " course records"
@@ -508,30 +532,41 @@ export function HomePage() {
             ))}
           </CompactRail>
 
-          <details className="mt-5 rounded-xl border border-border bg-card">
+          <details
+            className="brand-card mt-5"
+            onToggle={(event) => setDirectoryOpen(event.currentTarget.open)}
+          >
             <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 px-4 text-sm font-extrabold marker:content-none">
               Browse all {universities.length} university names
               <span className="text-xs font-bold text-[#2449ad] dark:text-[#8cb0ff]">
                 Open directory
               </span>
             </summary>
-            <div className="grid max-h-96 gap-x-6 overflow-y-auto border-t border-border p-4 sm:grid-cols-2 lg:grid-cols-4">
-              {orderedUniversities().map((university) => (
-                <Link
-                  key={university.slug}
-                  to="/universities/$universitySlug"
-                  params={{ universitySlug: university.slug }}
-                  className="flex min-h-10 items-center text-xs font-semibold text-muted-foreground hover:text-[#2449ad] dark:hover:text-[#8cb0ff]"
-                >
-                  {university.name}
-                </Link>
-              ))}
-            </div>
+            {directoryOpen ? (
+              <div className="grid max-h-96 gap-x-6 overflow-y-auto border-t border-border p-4 sm:grid-cols-2 lg:grid-cols-4">
+                {orderedUniversities().map((university, index) => (
+                  <Link
+                    key={university.slug}
+                    to="/universities/$universitySlug"
+                    params={{ universitySlug: university.slug }}
+                    className="flex min-h-11 items-center gap-2.5 text-xs font-semibold text-muted-foreground hover:text-[#2449ad] dark:hover:text-[#8cb0ff]"
+                  >
+                    <UniversityLogo
+                      university={university}
+                      size="sm"
+                      priority={index < 16}
+                      className="h-7 w-7 rounded-md"
+                    />
+                    <span className="min-w-0 leading-4">{university.name}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : null}
           </details>
         </div>
       </section>
 
-      <section className="bg-[#131720] py-14 text-white lg:py-20">
+      <section className="bg-[#131720] py-12 text-white lg:py-16">
         <div className="container-page">
           <SectionIntro
             dark
@@ -543,19 +578,19 @@ export function HomePage() {
             {scheduleCards.map((card) => (
               <article
                 key={card.title}
-                className="flex min-h-36 gap-4 rounded-xl border border-white/15 bg-[#1b202a] p-4"
+                className="flex min-h-36 gap-4 rounded-2xl border border-white/15 bg-[#1b202a] p-5"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f47b25] text-[#111827]">
                   <card.icon className="h-4.5 w-4.5" aria-hidden="true" />
                 </span>
                 <div>
-                  <h3 className="font-display text-base font-extrabold">{card.title}</h3>
+                  <h3 className="font-display text-base font-bold">{card.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-white/70">{card.description}</p>
                 </div>
               </article>
             ))}
           </CompactRail>
-          <div className="mt-5 grid gap-3 rounded-xl border border-white/15 bg-[#1b202a] p-4 sm:grid-cols-4">
+          <div className="mt-5 grid gap-3 rounded-2xl border border-white/15 bg-[#1b202a] p-4 sm:grid-cols-4">
             {[
               ["Before work", "Live class"],
               ["Lunch break", "Short lesson"],
@@ -576,57 +611,58 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-14 lg:py-20">
+      <section className="container-page py-12 lg:py-16">
         <SectionIntro
           eyebrow="Transparent coverage"
-          title="A catalogue you can inspect, not a promise you must trust."
+          title="The DekhoCampus catalogue, clearly explained"
           description="Counts describe this catalogue. They are not rankings, approval claims or outcome guarantees."
         />
         <CompactRail label="Catalogue coverage statistics" columns={4}>
           {catalogueStats.map((stat) => (
             <article
               key={stat.label}
-              className="min-h-40 rounded-xl border border-border bg-card p-5"
+              className="brand-card min-h-40 border-t-4 border-t-[#f47b25] p-5"
             >
               <stat.icon
                 className="h-5 w-5 text-[#a94300] dark:text-[#ffad70]"
                 aria-hidden="true"
               />
-              <p className="mt-5 font-display text-4xl font-black tracking-[-0.055em] text-[#325dd2] dark:text-[#8cb0ff]">
+              <p className="mt-5 font-display text-4xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm font-bold text-muted-foreground">{stat.label}</p>
             </article>
           ))}
         </CompactRail>
-        <p className="mt-4 rounded-xl border border-border bg-[#f5f7fa] px-5 py-4 text-center text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
+        <p className="mt-4 rounded-2xl border border-border bg-surface px-5 py-4 text-center text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
           Information can change by intake. Reconfirm entitlement, fees and dates before paying.
         </p>
       </section>
 
-      <section className="border-y border-border bg-[#f5f7fa] py-14 dark:bg-secondary/25 lg:py-20">
+      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
         <div className="container-page">
           <SectionIntro
             eyebrow="Decision guides"
-            title="Guides you can save and discuss with family."
+            title="Practical guides for you and your family"
             description="Short, practical tools for making the decision together."
           />
           <CompactRail label="Online degree decision guides" columns={3}>
-            {guides.map((guide) => (
+            {guides.map((guide, index) => (
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="group flex min-h-56 flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
+                className="brand-card brand-card-interactive group flex min-h-56 flex-col p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#325dd2] text-white">
                     <guide.icon className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
-                    {guide.meta}
+                  <span className="font-display text-3xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="mt-5 font-display text-xl font-extrabold tracking-[-0.035em]">
+                <p className="brand-kicker mt-5">{guide.meta}</p>
+                <h3 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
                   {guide.title}
                 </h3>
                 <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
@@ -641,12 +677,12 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-14 lg:py-20">
-        <div className="rounded-2xl bg-[#325dd2] px-6 py-10 text-center text-white md:px-12 md:py-12">
+      <section className="container-page py-12 lg:py-16">
+        <div className="rounded-[1.75rem] bg-[#325dd2] px-6 py-10 text-center text-white shadow-lift md:px-12 md:py-12">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#f47b25] text-[#111827]">
             <BadgeCheck className="h-5 w-5" aria-hidden="true" />
           </span>
-          <h2 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.045em] md:text-4xl">
+          <h2 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.035em] md:text-4xl">
             Shortlist calmly. Verify carefully. Apply confidently.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/85 md:text-base">
@@ -689,7 +725,7 @@ export function HomePage() {
 function HeroMetric({ value, label }: { value: string; label: string }) {
   return (
     <div>
-      <p className="font-display text-xl font-black text-[#131720] dark:text-foreground sm:text-2xl">
+      <p className="font-display text-xl font-extrabold text-[#131720] dark:text-foreground sm:text-2xl">
         {value}
       </p>
       <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-muted-foreground sm:text-[11px]">
@@ -715,17 +751,10 @@ function SectionIntro({
   return (
     <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
       <div className="max-w-3xl">
-        <p
-          className={cn(
-            "text-[11px] font-extrabold uppercase tracking-[0.17em]",
-            dark ? "text-[#ffad70]" : "text-[#a94300] dark:text-[#ffad70]",
-          )}
-        >
-          {eyebrow}
-        </p>
+        <p className={cn("brand-kicker", dark && "text-[#ffad70]")}>{eyebrow}</p>
         <h2
           className={cn(
-            "mt-2.5 font-display text-3xl font-extrabold leading-tight tracking-[-0.045em] md:text-4xl",
+            "mt-2.5 font-display text-[1.85rem] font-extrabold leading-[1.12] tracking-[-0.035em] md:text-[2.35rem]",
             dark ? "text-white" : "text-[#131720] dark:text-foreground",
           )}
         >
@@ -778,7 +807,7 @@ function VerificationCard({
   return (
     <article
       className={cn(
-        "rounded-xl border p-5",
+        "overflow-hidden rounded-2xl border p-5 shadow-card",
         primary
           ? "border-[#325dd2] bg-[#325dd2] text-white"
           : "border-border bg-card text-foreground",
@@ -787,8 +816,8 @@ function VerificationCard({
       <div className="flex items-center gap-3">
         <span
           className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-xl",
-            primary ? "bg-white text-[#2449ad]" : "bg-[#edf2ff] text-[#2449ad]",
+            "flex h-11 w-11 items-center justify-center rounded-xl",
+            primary ? "bg-white text-[#2449ad]" : "bg-[#325dd2] text-white",
           )}
         >
           <Icon className="h-4.5 w-4.5" aria-hidden="true" />
@@ -802,7 +831,7 @@ function VerificationCard({
           >
             {step}
           </p>
-          <h3 className="mt-0.5 font-display text-lg font-extrabold">{title}</h3>
+          <h3 className="mt-0.5 font-display text-lg font-bold">{title}</h3>
         </div>
       </div>
       <ul className="mt-4 grid gap-2 sm:grid-cols-3">

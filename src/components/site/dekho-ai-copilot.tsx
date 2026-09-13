@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -511,6 +511,8 @@ export function DekhoAICopilot() {
   const [query, setQuery] = useState("");
   const [askedQuery, setAskedQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
   const detailedUniversities = useMemo(() => universities.filter(hasEditorialDepth), []);
   const [answer, setAnswer] = useState<CopilotAnswer>(() => ({
     eyebrow: "DekhoCampus course guidance",
@@ -530,6 +532,16 @@ export function DekhoAICopilot() {
     ],
     why: "Your question stays in this browser tab and is not sent to an external AI service.",
   }));
+
+  useEffect(() => {
+    const openDiya = () => {
+      returnFocusRef.current =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      setOpen(true);
+    };
+    window.addEventListener("dekhocampus:open-diya", openDiya);
+    return () => window.removeEventListener("dekhocampus:open-diya", openDiya);
+  }, []);
 
   if (pathname.startsWith("/admin") || pathname === "/auth") return null;
 
@@ -553,9 +565,13 @@ export function DekhoAICopilot() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
+          ref={launcherRef}
           type="button"
           aria-label="Ask Diya, DekhoCampus course guide"
-          className="fixed bottom-[6.25rem] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] lg:bottom-8 lg:right-6"
+          onClick={() => {
+            returnFocusRef.current = launcherRef.current;
+          }}
+          className="fixed bottom-8 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] xl:flex"
         >
           <span className="sr-only">Ask Diya, DekhoCampus course guide</span>
           <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white">
@@ -574,6 +590,12 @@ export function DekhoAICopilot() {
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           inputRef.current?.focus();
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          const returnTarget = returnFocusRef.current ?? launcherRef.current;
+          window.requestAnimationFrame(() => returnTarget?.focus());
+          returnFocusRef.current = null;
         }}
         className="left-0 top-auto bottom-0 h-[min(90dvh,52rem)] w-full max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-t-2xl border-x-0 border-b-0 bg-background p-0 shadow-lift [&>button:last-child]:text-white [&>button:last-child]:hover:bg-white/10 sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:h-[min(82dvh,48rem)] sm:max-w-[56rem] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:border"
       >

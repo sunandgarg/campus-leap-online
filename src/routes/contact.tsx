@@ -39,7 +39,7 @@ function ContactPage() {
       <section className="container-page grid gap-8 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:py-12">
         <div className="space-y-4">
           <a
-            href="mailto:online@dekhocampus.in"
+            href="mailto:online@dekhocampus.com"
             className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-ink-foreground">
@@ -49,7 +49,7 @@ function ContactPage() {
               <span className="block text-xs uppercase tracking-wide text-muted-foreground">
                 Email support
               </span>
-              <span className="block font-semibold">online@dekhocampus.in</span>
+              <span className="block font-semibold">online@dekhocampus.com</span>
             </span>
           </a>
 
