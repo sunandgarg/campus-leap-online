@@ -3,7 +3,7 @@
   "name": "dekhocampus-online",
   "account_id": "5763dba3e739e1dbfd40501d9358caaa",
   "main": ".output/server/index.mjs",
-  "compatibility_date": "2026-09-14",
+  "compatibility_date": "2026-09-13",
   "compatibility_flags": ["nodejs_compat"],
   "no_bundle": true,
   "assets": {
