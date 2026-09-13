@@ -36,20 +36,20 @@ function ContactPage() {
         </div>
       </section>
 
-      <section className="container-page grid gap-8 py-10 lg:grid-cols-[0.8fr_1.2fr] lg:py-12">
-        <div className="space-y-4">
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:py-12">
+        <div className="min-w-0 space-y-4">
           <a
             href="mailto:online@dekhocampus.com"
-            className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:gap-4"
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-ink-foreground">
               <Mail className="h-5 w-5" />
             </span>
-            <span>
+            <span className="min-w-0">
               <span className="block text-xs uppercase tracking-wide text-muted-foreground">
                 Email support
               </span>
-              <span className="block font-semibold">online@dekhocampus.com</span>
+              <span className="block break-all font-semibold">online@dekhocampus.com</span>
             </span>
           </a>
 
@@ -77,6 +77,7 @@ function ContactPage() {
         <LeadForm
           title="Request free counselling"
           description="Tell us what you are exploring. Program and university preferences are optional."
+          className="min-w-0"
         />
       </section>
     </>
