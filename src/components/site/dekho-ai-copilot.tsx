@@ -333,7 +333,7 @@ function buildAnswer(rawQuery: string, catalogueUniversities: University[]): Cop
         },
       ],
       why: asksForBudget
-        ? `Matched “${directProgram.code}” and ranked only profiles with the required sourced fee field.`
+        ? `Matched “${directProgram.code}” and ranked only catalogue records with the required sourced fee field.`
         : `Matched “${directProgram.code}” and ordered catalogue records alphabetically without inventing a “best” ranking.`,
     };
   }
