@@ -30,6 +30,7 @@ import { Route as SpecialisationsIndexRouteImport } from './routes/specialisatio
 import { Route as SpecialisationsSpecialisationSlugRouteImport } from './routes/specialisations.$specialisationSlug'
 import { Route as UniversitiesIndexRouteImport } from './routes/universities.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminCatalogueReviewRouteImport } from './routes/_authenticated/admin.catalogue-review'
 import { Route as AuthenticatedAdminClaimsRouteImport } from './routes/_authenticated/admin.claims'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
 import { Route as AuthenticatedAdminOfferingSpecialisationsRouteImport } from './routes/_authenticated/admin.offering-specialisations'
@@ -146,6 +147,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCatalogueReviewRoute =
+  AuthenticatedAdminCatalogueReviewRouteImport.update({
+    id: '/catalogue-review',
+    path: '/catalogue-review',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminClaimsRoute =
   AuthenticatedAdminClaimsRouteImport.update({
     id: '/claims',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/programs/': typeof ProgramsIndexRoute
   '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/admin/catalogue-review': typeof AuthenticatedAdminCatalogueReviewRoute
   '/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
@@ -257,6 +265,7 @@ export interface FileRoutesByTo {
   '/programs': typeof ProgramsIndexRoute
   '/specialisations': typeof SpecialisationsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
+  '/admin/catalogue-review': typeof AuthenticatedAdminCatalogueReviewRoute
   '/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
@@ -291,6 +300,7 @@ export interface FileRoutesById {
   '/programs/': typeof ProgramsIndexRoute
   '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
+  '/_authenticated/admin/catalogue-review': typeof AuthenticatedAdminCatalogueReviewRoute
   '/_authenticated/admin/claims': typeof AuthenticatedAdminClaimsRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/offering-specialisations': typeof AuthenticatedAdminOfferingSpecialisationsRoute
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/specialisations/'
     | '/universities/'
+    | '/admin/catalogue-review'
     | '/admin/claims'
     | '/admin/leads'
     | '/admin/offering-specialisations'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/specialisations'
     | '/universities'
+    | '/admin/catalogue-review'
     | '/admin/claims'
     | '/admin/leads'
     | '/admin/offering-specialisations'
@@ -389,6 +401,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/specialisations/'
     | '/universities/'
+    | '/_authenticated/admin/catalogue-review'
     | '/_authenticated/admin/claims'
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/offering-specialisations'
@@ -575,6 +588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/catalogue-review': {
+      id: '/_authenticated/admin/catalogue-review'
+      path: '/catalogue-review'
+      fullPath: '/admin/catalogue-review'
+      preLoaderRoute: typeof AuthenticatedAdminCatalogueReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/claims': {
       id: '/_authenticated/admin/claims'
       path: '/claims'
@@ -649,6 +669,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCatalogueReviewRoute: typeof AuthenticatedAdminCatalogueReviewRoute
   AuthenticatedAdminClaimsRoute: typeof AuthenticatedAdminClaimsRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminOfferingSpecialisationsRoute: typeof AuthenticatedAdminOfferingSpecialisationsRoute
@@ -661,6 +682,8 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCatalogueReviewRoute:
+    AuthenticatedAdminCatalogueReviewRoute,
   AuthenticatedAdminClaimsRoute: AuthenticatedAdminClaimsRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminOfferingSpecialisationsRoute:

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/accordion";
 import { ProgramHero, ProgramSectionNav } from "@/components/site/program-hero";
 import { CompactRail } from "@/components/site/compact-rail";
+import { AuthorityVerification } from "@/components/site/authority-verification";
 import { LeadForm } from "@/components/site/lead-form";
 import { UniversityLogo } from "@/components/site/university-logo";
 
@@ -326,7 +327,8 @@ function ProgramPage() {
             <a
               href={sourceUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Open cited source (opens in new tab)"
               className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 text-xs font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:text-[#b9ceff]"
             >
               Open cited source <ExternalLink className="h-3.5 w-3.5" />
@@ -525,7 +527,8 @@ function ProgramPage() {
                   <a
                     href={p.feeSourceUrl}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    aria-label={`Open fee source checked ${p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
                     className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                   >
                     Fee source · checked {p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
@@ -536,7 +539,8 @@ function ProgramPage() {
                   <a
                     href={p.refundPolicyUrl}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    aria-label="Open reviewed refund-policy link (opens in new tab)"
                     className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                   >
                     Reviewed refund-policy link <ExternalLink className="h-3.5 w-3.5" />
@@ -580,7 +584,8 @@ function ProgramPage() {
                     <a
                       href={p.universityProgramUrl}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
+                      aria-label="Open official programme page (opens in new tab)"
                       className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                     >
                       Official programme page <ExternalLink className="h-3.5 w-3.5" />
@@ -590,7 +595,8 @@ function ProgramPage() {
                     <a
                       href={p.officialApplicationUrl}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
+                      aria-label="Open official application route (opens in new tab)"
                       className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                     >
                       Official application route <ExternalLink className="h-3.5 w-3.5" />
@@ -598,6 +604,7 @@ function ProgramPage() {
                   ) : null}
                 </div>
               ) : null}
+              <AuthorityVerification compact className="mt-5 border-t border-border pt-5" />
             </article>
 
             <article

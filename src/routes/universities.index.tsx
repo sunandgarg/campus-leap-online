@@ -134,22 +134,21 @@ function UniversitiesPage() {
   return (
     <>
       <section className="border-b border-border bg-[#131720] text-white">
-        <div className="container-page py-14 lg:py-16">
+        <div className="container-page py-10 lg:py-12">
           <p className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
             <ShieldCheck className="h-4 w-4" /> {universities.length} university profiles
           </p>
-          <h1 className="mt-6 max-w-4xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.055em] sm:text-4xl lg:text-5xl">
             Compare online universities with confidence.
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:text-base">
             Filter by course, location, research depth and source-backed fee when available.
             Editorial and directory profiles clearly show what still needs intake-level
             confirmation.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-2">
             <Button
               asChild
-              size="lg"
               className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
             >
               <Link to="/compare">
@@ -158,7 +157,6 @@ function UniversitiesPage() {
             </Button>
             <Button
               asChild
-              size="lg"
               variant="outline"
               className="border-white/30 bg-transparent font-bold text-white hover:bg-white hover:text-[#131720]"
             >
@@ -168,10 +166,10 @@ function UniversitiesPage() {
         </div>
       </section>
 
-      <section className="container-page py-10">
-        <div className="rounded-xl border border-border bg-card p-4 shadow-card md:p-5">
-          <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
+      <section className="container-page py-8 lg:py-10">
+        <div className="rounded-xl border border-border bg-card p-3 shadow-card md:p-4">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
               <Search className="h-4 w-4" />
             </span>
             <div>
@@ -188,7 +186,7 @@ function UniversitiesPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search university, city or state"
-                className="h-12 w-full min-w-0 rounded-xl pl-10"
+                className="h-10 w-full min-w-0 rounded-lg pl-10"
                 aria-label="Search universities"
               />
             </div>
@@ -196,7 +194,7 @@ function UniversitiesPage() {
               value={program}
               onChange={(e) => setProgram(e.target.value)}
               aria-label="Filter by program"
-              className="h-12 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
+              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
             >
               <option value="all">All programs</option>
               {programCatalog.map((p) => (
@@ -209,7 +207,7 @@ function UniversitiesPage() {
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
               aria-label="Sort universities"
-              className="h-12 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
+              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
             >
               <option value="rating">Sort: Highest sourced rating</option>
               <option value="feeLow">Sort: Fees low to high</option>
@@ -222,7 +220,7 @@ function UniversitiesPage() {
                 value={stateFilter}
                 onChange={(event) => setStateFilter(event.target.value)}
                 aria-label="Filter by state"
-                className="h-12 w-full min-w-0 appearance-none rounded-xl border border-input bg-background pl-10 pr-3 text-sm font-semibold"
+                className="h-10 w-full min-w-0 appearance-none rounded-lg border border-input bg-background pl-10 pr-3 text-sm font-semibold"
               >
                 <option value="all">All locations</option>
                 {stateOptions.map((state) => (
@@ -236,7 +234,7 @@ function UniversitiesPage() {
               value={profileFilter}
               onChange={(event) => setProfileFilter(event.target.value as ProfileFilter)}
               aria-label="Filter by profile depth"
-              className="h-12 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
+              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
             >
               <option value="all">All data depths</option>
               <option value="complete">Complete profiles</option>
@@ -252,7 +250,7 @@ function UniversitiesPage() {
             {maximumCatalogFee > 0 ? (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#fff1e7] text-[#df651b] dark:bg-[#392418] dark:text-[#ffad70]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff1e7] text-[#df651b] dark:bg-[#392418] dark:text-[#ffad70]">
                     <IndianRupee className="h-4 w-4" />
                   </span>
                   <div>
@@ -323,24 +321,29 @@ function UniversitiesPage() {
             </Button>
           </div>
         ) : (
-          <CompactRail label="Filtered university profiles" rows={2} columns={3}>
-            {list.map((u) => (
-              <UniversityCard key={u.slug} university={u} />
+          <CompactRail
+            label="Filtered university profiles"
+            rows={2}
+            columns={4}
+            railClassName="auto-cols-[calc((100%_-_1rem)/2)] sm:auto-cols-[calc((100%_-_3rem)/4)] xl:auto-cols-[calc((100%_-_5rem)/6)]"
+          >
+            {list.map((u, index) => (
+              <UniversityCard key={u.slug} university={u} priority={index < 12} />
             ))}
           </CompactRail>
         )}
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
-          <div className="rounded-xl border border-border bg-surface p-6">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-[#1768cc] shadow-sm dark:text-[#78b9ff]">
+        <div className="mt-10 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
+          <div className="rounded-xl border border-border bg-surface p-5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-card text-[#1768cc] shadow-sm dark:text-[#78b9ff]">
               <Building2 className="h-5 w-5" />
             </span>
-            <h2 className="mt-5 font-display text-2xl font-bold">Not sure which one fits?</h2>
+            <h2 className="mt-4 font-display text-xl font-bold">Not sure which one fits?</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               Compare entitlement status, exam formats, learner support and EMI plans for your
               specific course. Ask a counsellor only when you need additional clarity.
             </p>
-            <ul className="mt-6 space-y-3 text-sm font-semibold">
+            <ul className="mt-4 grid gap-2 text-xs font-semibold sm:grid-cols-3 lg:grid-cols-1">
               {[
                 "No payment required",
                 "Used for your requested response",

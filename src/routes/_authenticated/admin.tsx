@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
   Building2,
+  Database,
   FileText,
   GraduationCap,
   IndianRupee,
@@ -33,6 +34,12 @@ const nav = [
     exact: false,
   },
   { to: "/admin/claims", label: "Claim evidence", icon: BadgeCheck, exact: false },
+  {
+    to: "/admin/catalogue-review",
+    label: "Research queue",
+    icon: Database,
+    exact: false,
+  },
   { to: "/admin/leads", label: "Enquiries", icon: Inbox, exact: false },
   { to: "/admin/settings", label: "Site settings", icon: Settings, exact: false },
 ] as const;

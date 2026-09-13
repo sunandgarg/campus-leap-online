@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowRight,
+  Award,
   BadgeCheck,
   Building2,
   CalendarDays,
@@ -25,16 +26,19 @@ import {
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/site/lead-form";
 import { CompactRail } from "@/components/site/compact-rail";
+import { AuthorityVerification } from "@/components/site/authority-verification";
 import { UniversityLogo } from "@/components/site/university-logo";
 import {
   formatINR,
   formatUniversityLocation,
   getUniversityApprovalClaims,
+  getUniversityRankingClaims,
   getUniversity,
   getUniversityPrograms,
   type University,
   type UniversityProgram,
 } from "@/data/universities";
+import { classifyEvidenceSource, evidenceSourceLinkLabel } from "@/lib/evidence-source";
 
 export const Route = createFileRoute("/universities/$universitySlug/")({
   loader: ({ params }): { university: University; programs: UniversityProgram[] } => {
@@ -133,6 +137,8 @@ function UniversityPage() {
   const isDirectoryProfile = u.profileDepth === "directory";
   const hasDirectorySource = Boolean(u.verificationSourceUrl && u.verificationAcademicYear);
   const approvalClaims = getUniversityApprovalClaims(u);
+  const rankingClaims = getUniversityRankingClaims(u);
+  const verificationSourceKind = classifyEvidenceSource(u.verificationSourceUrl, u.domain);
 
   return (
     <>
@@ -167,13 +173,19 @@ function UniversityPage() {
                   {formatUniversityLocation(u)}
                   {u.established ? ` · Established ${u.established}` : ""}
                   {approvalClaims.length
-                    ? ` · ${approvalClaims.length} current recognition record${approvalClaims.length === 1 ? "" : "s"}`
+                    ? ` · ${approvalClaims.length} current institutional evidence record${approvalClaims.length === 1 ? "" : "s"}`
                     : ""}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {approvalClaims.length
                     ? approvalClaims.slice(0, 3).map((claim) => (
-                        <a key={claim.id} href={claim.sourceUrl} target="_blank" rel="noreferrer">
+                        <a
+                          key={claim.id}
+                          href={claim.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${claim.renderedClaim} (opens in new tab)`}
+                        >
                           <Badge className="border-gold/30 bg-gold/15 text-gold hover:bg-gold/15">
                             <BadgeCheck className="mr-1 h-3 w-3" /> {claim.renderedClaim}
                             <ExternalLink className="ml-1 h-3 w-3" />
@@ -256,10 +268,12 @@ function UniversityPage() {
               <a
                 href={u.verificationSourceUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label={`${evidenceSourceLinkLabel(verificationSourceKind)} (opens in new tab)`}
                 className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#73aa91] bg-white px-4 text-xs font-extrabold text-[#115f41] transition hover:bg-[#f7fffa] dark:border-[#39755e] dark:bg-[#12392c] dark:text-[#8ae5bd]"
               >
-                Open UGC-DEB source <ExternalLink className="h-3.5 w-3.5" />
+                {evidenceSourceLinkLabel(verificationSourceKind)}
+                <ExternalLink className="h-3.5 w-3.5" />
               </a>
             ) : null}
           </div>
@@ -284,6 +298,12 @@ function UniversityPage() {
           </div>
         </section>
       ) : null}
+
+      <section className="border-b border-border bg-surface dark:bg-secondary/25">
+        <div className="container-page py-6">
+          <AuthorityVerification compact />
+        </div>
+      </section>
 
       <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0">
@@ -495,12 +515,21 @@ function UniversityPage() {
               },
               {
                 icon: BadgeCheck,
-                k: isDirectoryProfile ? "Source year" : "Accreditation",
+                k: isDirectoryProfile ? "Directory reference" : "Institutional context",
                 v: isDirectoryProfile
-                  ? `UGC-DEB ${u.verificationAcademicYear ?? "source"}`
+                  ? `Historical ${u.verificationAcademicYear ?? "source date not recorded"}`
                   : (approvalClaims.find((claim) => claim.claimType === "accreditation")
-                      ?.renderedClaim ?? "No current accreditation evidence mapped"),
+                      ?.renderedClaim ?? "No current institutional evidence mapped"),
               },
+              ...(rankingClaims[0]
+                ? [
+                    {
+                      icon: Award,
+                      k: "Annual ranking context",
+                      v: rankingClaims[0].renderedClaim,
+                    },
+                  ]
+                : []),
             ].map((s) => (
               <div key={s.k} className="rounded-xl border border-border bg-card p-5">
                 <s.icon className="h-4 w-4 text-muted-foreground" />
@@ -542,7 +571,8 @@ function UniversityPage() {
                           <a
                             href={claim.sourceUrl}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
+                            aria-label={`${claim.renderedClaim} (opens in new tab)`}
                             className="font-semibold text-[#1768cc] underline-offset-4 hover:underline dark:text-[#78b9ff]"
                           >
                             {claim.renderedClaim}

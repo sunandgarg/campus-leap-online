@@ -1496,6 +1496,8 @@ export function getProgramTemplate(slug: string): ProgramTemplate | undefined {
 }
 
 const APPROVAL_CLAIM_TYPES = new Set(["recognition", "accreditation"]);
+const PROGRAM_CONTEXT_CLAIM_TYPES = new Set(["recognition"]);
+const RANKING_CLAIM_TYPES = new Set(["ranking"]);
 
 function isPublicEvidenceUrl(value: string): boolean {
   try {
@@ -1529,9 +1531,22 @@ export function getUniversityApprovalClaims(university: University): ClaimEviden
   );
 }
 
+/** Current university-wide ranking context; never treat a ranking as approval or entitlement. */
+export function getUniversityRankingClaims(university: University): ClaimEvidence[] {
+  return (university.claimEvidence ?? []).filter(
+    (claim) =>
+      claim.universitySlug === university.slug &&
+      !claim.programSlug &&
+      !claim.offeringId &&
+      RANKING_CLAIM_TYPES.has(claim.claimType) &&
+      isCurrentClaim(claim),
+  );
+}
+
 /**
- * Approval evidence applicable to an exact program offering. University-wide
- * records are inherited; narrower records must match this program/offering.
+ * Recognition evidence applicable to an exact programme offering. Broad
+ * university-level accreditation (for example NAAC) is intentionally not
+ * inherited because institutional context is not programme entitlement.
  */
 export function getProgramApprovalClaims(
   university: University,
@@ -1540,10 +1555,11 @@ export function getProgramApprovalClaims(
   return (university.claimEvidence ?? []).filter(
     (claim) =>
       claim.universitySlug === university.slug &&
+      Boolean(claim.programSlug || claim.offeringId) &&
       (!claim.programSlug || claim.programSlug === program.slug) &&
       (!claim.offeringId || claim.offeringId === program.offeringId) &&
       (!claim.academicSession || claim.academicSession === program.academicSession) &&
-      APPROVAL_CLAIM_TYPES.has(claim.claimType) &&
+      PROGRAM_CONTEXT_CLAIM_TYPES.has(claim.claimType) &&
       isCurrentClaim(claim),
   );
 }

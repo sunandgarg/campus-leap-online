@@ -30,8 +30,10 @@ import {
 import { useState, type ReactNode } from "react";
 
 import { CompactRail } from "@/components/site/compact-rail";
+import { AuthorityVerification } from "@/components/site/authority-verification";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
+import { catalogueImportSummary } from "@/data/catalogue-import-summary";
 import {
   getSpecialisationCount,
   getTotalProgramCount,
@@ -365,36 +367,36 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-12 lg:py-16">
+      <section className="container-page py-10 lg:py-12">
         <SectionIntro
           eyebrow="Choose your direction"
           title="What do you want to study?"
           description="Start with a broad career area. You can narrow the course and university later."
         />
-        <CompactRail label="Study areas" columns={3}>
+        <CompactRail label="Study areas" columns={4}>
           {studyAreas.map((area, index) => (
             <Link
               key={area.title}
               to="/search"
               search={{ q: area.codes[0] }}
-              className="brand-card brand-card-interactive group flex h-full min-h-52 flex-col p-5"
+              className="brand-card brand-card-interactive group flex h-full min-h-44 flex-col p-4"
             >
               <span className="absolute inset-x-0 top-0 h-1 bg-[#325dd2]" aria-hidden="true" />
               <div className="flex items-start justify-between">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#325dd2] text-white">
-                  <area.icon className="h-5 w-5" aria-hidden="true" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#325dd2] text-white">
+                  <area.icon className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <span className="font-display text-3xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
+                <span className="font-display text-2xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h3 className="mt-4 font-display text-lg font-bold tracking-[-0.025em]">
+              <h3 className="mt-3 font-display text-base font-bold tracking-[-0.025em]">
                 {area.title}
               </h3>
-              <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+              <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">
                 {area.description}
               </p>
-              <span className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs font-bold text-[#2449ad] dark:text-[#8cb0ff]">
+              <span className="mt-3 flex items-center justify-between border-t border-border pt-2.5 text-[11px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
                 {area.codes.join(" · ")}
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#edf2ff] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653]">
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -405,7 +407,7 @@ export function HomePage() {
         </CompactRail>
       </section>
 
-      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
+      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
             eyebrow="Popular course records"
@@ -413,28 +415,28 @@ export function HomePage() {
             description="Two rows keep the page compact. Each card opens that university-course record so you can inspect its evidence status."
             action={<TextLink to="/programs" label="See every course" />}
           />
-          <CompactRail label="Online MBA and BBA university records" rows={2} columns={3}>
+          <CompactRail label="Online MBA and BBA university records" rows={2} columns={4}>
             {courseRecords.map(({ university, program }, index) => (
               <Link
                 key={university.slug + "-" + program.slug}
                 to="/universities/$universitySlug/$programSlug"
                 params={{ universitySlug: university.slug, programSlug: program.slug }}
-                className="brand-card brand-card-interactive group flex min-h-34 items-center gap-4 p-4"
+                className="brand-card brand-card-interactive group flex min-h-28 items-center gap-3 p-3"
               >
                 <UniversityLogo
                   university={university}
                   size="md"
                   priority={index < 4}
-                  className="h-16 w-20 rounded-xl bg-white"
+                  className="h-14 w-18 rounded-lg bg-white"
                 />
                 <span className="min-w-0 flex-1">
                   <span className="block text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#a94300] dark:text-[#ffad70]">
                     Online {program.code}
                   </span>
-                  <span className="mt-1.5 line-clamp-2 block font-display text-base font-bold leading-5">
+                  <span className="mt-1 line-clamp-2 block font-display text-sm font-bold leading-4">
                     {university.shortName}
                   </span>
-                  <span className="mt-2 block text-[11px] leading-4 text-muted-foreground">
+                  <span className="mt-1.5 block text-[10px] leading-4 text-muted-foreground">
                     View course record · confirm current intake
                   </span>
                 </span>
@@ -447,7 +449,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-12 lg:py-16">
+      <section className="container-page py-10 lg:py-12">
         <SectionIntro
           eyebrow="Admission verification"
           title="Two checks before you apply."
@@ -474,22 +476,13 @@ export function HomePage() {
             primary
           />
         </div>
-        <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4 text-xs leading-5 text-muted-foreground dark:bg-secondary/30 sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            Keep screenshots or PDFs of the official entitlement, fee schedule and refund policy.
-          </span>
-          <a
-            href="https://deb.ugc.ac.in/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-10 shrink-0 items-center font-extrabold text-[#2449ad] hover:underline dark:text-[#8cb0ff]"
-          >
-            Open UGC-DEB <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
+        <div className="mt-4 rounded-xl border border-border bg-surface p-4 text-xs leading-5 text-muted-foreground dark:bg-secondary/30">
+          Keep screenshots or PDFs of the official entitlement, fee schedule and refund policy.
         </div>
+        <AuthorityVerification compact className="mt-6" />
       </section>
 
-      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
+      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
             eyebrow="University directory"
@@ -503,14 +496,14 @@ export function HomePage() {
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="brand-card brand-card-interactive group flex min-h-48 flex-col p-4"
+                className="brand-card brand-card-interactive group flex min-h-40 flex-col p-3.5"
               >
                 <div className="flex items-start justify-between gap-3">
                   <UniversityLogo
                     university={university}
                     size="md"
                     priority={index < 4}
-                    className="h-16 w-24 rounded-xl bg-white"
+                    className="h-14 w-20 rounded-lg bg-white"
                   />
                   <span className="rounded-md bg-secondary px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.08em] text-muted-foreground">
                     {university.profileDepth === "directory" ? "Directory" : "Editorial"}
@@ -566,7 +559,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#131720] py-12 text-white lg:py-16">
+      <section className="bg-[#131720] py-10 text-white lg:py-12">
         <div className="container-page">
           <SectionIntro
             dark
@@ -574,11 +567,11 @@ export function HomePage() {
             title="Build a schedule you can sustain."
             description="Online does not mean effortless. Check the actual rhythm before you commit."
           />
-          <CompactRail label="Online learning schedule checks" rows={2} columns={2} dark>
+          <CompactRail label="Online learning schedule checks" columns={4} dark>
             {scheduleCards.map((card) => (
               <article
                 key={card.title}
-                className="flex min-h-36 gap-4 rounded-2xl border border-white/15 bg-[#1b202a] p-5"
+                className="flex min-h-28 gap-3 rounded-xl border border-white/15 bg-[#1b202a] p-4"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f47b25] text-[#111827]">
                   <card.icon className="h-4.5 w-4.5" aria-hidden="true" />
@@ -611,7 +604,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-12 lg:py-16">
+      <section className="container-page py-10 lg:py-12">
         <SectionIntro
           eyebrow="Transparent coverage"
           title="The DekhoCampus catalogue, clearly explained"
@@ -621,54 +614,62 @@ export function HomePage() {
           {catalogueStats.map((stat) => (
             <article
               key={stat.label}
-              className="brand-card min-h-40 border-t-4 border-t-[#f47b25] p-5"
+              className="brand-card min-h-32 border-t-4 border-t-[#f47b25] p-4"
             >
               <stat.icon
                 className="h-5 w-5 text-[#a94300] dark:text-[#ffad70]"
                 aria-hidden="true"
               />
-              <p className="mt-5 font-display text-4xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
+              <p className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
                 {stat.value}
               </p>
-              <p className="mt-2 text-sm font-bold text-muted-foreground">{stat.label}</p>
+              <p className="mt-1.5 text-xs font-bold text-muted-foreground">{stat.label}</p>
             </article>
           ))}
         </CompactRail>
-        <p className="mt-4 rounded-2xl border border-border bg-surface px-5 py-4 text-center text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
-          Information can change by intake. Reconfirm entitlement, fees and dates before paying.
-        </p>
+        <div className="mt-4 grid gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30 sm:grid-cols-2">
+          <p>
+            Information can change by intake. Reconfirm entitlement, fees and dates before paying.
+          </p>
+          <p>
+            Research intake, 13 Sep 2026:{" "}
+            {catalogueImportSummary.recordCount.toLocaleString("en-IN")} draft rows ·{" "}
+            {catalogueImportSummary.candidateCount.toLocaleString("en-IN")} candidates ·{" "}
+            <strong className="text-foreground">0 auto-published</strong>.
+          </p>
+        </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-12 dark:bg-secondary/25 lg:py-16">
+      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
             eyebrow="Decision guides"
             title="Practical guides for you and your family"
             description="Short, practical tools for making the decision together."
           />
-          <CompactRail label="Online degree decision guides" columns={3}>
+          <CompactRail label="Online degree decision guides" columns={4}>
             {guides.map((guide, index) => (
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="brand-card brand-card-interactive group flex min-h-56 flex-col p-5"
+                className="brand-card brand-card-interactive group flex min-h-48 flex-col p-4"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#325dd2] text-white">
-                    <guide.icon className="h-5 w-5" aria-hidden="true" />
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#325dd2] text-white">
+                    <guide.icon className="h-4 w-4" aria-hidden="true" />
                   </span>
-                  <span className="font-display text-3xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
+                  <span className="font-display text-2xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <p className="brand-kicker mt-5">{guide.meta}</p>
-                <h3 className="mt-2 font-display text-xl font-bold tracking-[-0.025em]">
+                <p className="brand-kicker mt-3">{guide.meta}</p>
+                <h3 className="mt-1.5 font-display text-base font-bold tracking-[-0.025em]">
                   {guide.title}
                 </h3>
-                <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
+                <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">
                   {guide.description}
                 </p>
-                <span className="mt-4 flex items-center gap-2 border-t border-border pt-3 text-xs font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                <span className="mt-3 flex items-center gap-2 border-t border-border pt-2.5 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
                   Open guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </span>
               </Link>
@@ -807,7 +808,7 @@ function VerificationCard({
   return (
     <article
       className={cn(
-        "overflow-hidden rounded-2xl border p-5 shadow-card",
+        "overflow-hidden rounded-xl border p-4",
         primary
           ? "border-[#325dd2] bg-[#325dd2] text-white"
           : "border-border bg-card text-foreground",
@@ -816,7 +817,7 @@ function VerificationCard({
       <div className="flex items-center gap-3">
         <span
           className={cn(
-            "flex h-11 w-11 items-center justify-center rounded-xl",
+            "flex h-9 w-9 items-center justify-center rounded-lg",
             primary ? "bg-white text-[#2449ad]" : "bg-[#325dd2] text-white",
           )}
         >
@@ -831,10 +832,10 @@ function VerificationCard({
           >
             {step}
           </p>
-          <h3 className="mt-0.5 font-display text-lg font-bold">{title}</h3>
+          <h3 className="mt-0.5 font-display text-base font-bold">{title}</h3>
         </div>
       </div>
-      <ul className="mt-4 grid gap-2 sm:grid-cols-3">
+      <ul className="mt-3 grid gap-2 sm:grid-cols-3">
         {items.map((item) => (
           <li key={item} className="flex items-center gap-2 text-xs font-semibold">
             <Check

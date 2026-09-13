@@ -22,6 +22,7 @@ const fields: FieldDef[] = [
       "outcome",
     ],
     required: true,
+    help: "Accreditation and ranking are institution-wide context only. Programme records may use recognition only when the evidence names the exact programme scope.",
   },
   {
     name: "university_slug",
@@ -29,8 +30,20 @@ const fields: FieldDef[] = [
     type: "text",
     nullable: true,
   },
-  { name: "program_slug", label: "Program slug (optional)", type: "text", nullable: true },
-  { name: "offering_id", label: "Offering ID (optional)", type: "text", nullable: true },
+  {
+    name: "program_slug",
+    label: "Program slug (optional)",
+    type: "text",
+    nullable: true,
+    help: "Do not attach institutional NAAC accreditation or NIRF ranking to a programme.",
+  },
+  {
+    name: "offering_id",
+    label: "Offering ID (optional)",
+    type: "text",
+    nullable: true,
+    help: "Use only when the cited record applies to this exact offering.",
+  },
   { name: "academic_session", label: "Academic session", type: "text", nullable: true },
   { name: "source_url", label: "Primary source URL", type: "text", required: true, wide: true },
   {

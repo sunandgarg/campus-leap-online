@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import {
   formatINR,
   getUniversityApprovalClaims,
+  getUniversityRankingClaims,
   programCatalog,
   universities,
   universitiesOfferingProgram,
@@ -80,6 +81,7 @@ function SearchPage() {
         matches(university.city) ||
         matches(university.state) ||
         getUniversityApprovalClaims(university).some((claim) => matches(claim.renderedClaim)) ||
+        getUniversityRankingClaims(university).some((claim) => matches(claim.renderedClaim)) ||
         university.highlights.some(matches),
     );
 

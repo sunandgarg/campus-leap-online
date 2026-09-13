@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CompactRail } from "@/components/site/compact-rail";
+import { AuthorityVerification } from "@/components/site/authority-verification";
 
 export const Route = createFileRoute("/methodology")({
   head: () => ({
@@ -233,6 +234,8 @@ function MethodologyPage() {
               </ol>
             </div>
           </div>
+
+          <AuthorityVerification dark compact className="mt-8 border-t border-white/15 pt-7" />
 
           <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#f2b06f]/30 bg-[#f47a20]/10 p-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex max-w-4xl items-start gap-3">

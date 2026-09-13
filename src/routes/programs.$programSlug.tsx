@@ -710,7 +710,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </div>
           ) : null}
 
-          <CompactRail label={`Comparable ${p.code} university records`} rows={2} columns={2}>
+          <CompactRail label={`Comparable ${p.code} university records`} rows={2} columns={3}>
             {displayedOffers.map(({ university, program }, index) => {
               const approvalClaims = getProgramApprovalClaims(university, program);
               return (
@@ -807,7 +807,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                         ))
                       ) : (
                         <span className="text-[10px] font-semibold text-muted-foreground">
-                          No separate recognition evidence mapped
+                          No programme-scoped context source mapped
                         </span>
                       )}
                     </div>

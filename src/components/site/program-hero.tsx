@@ -249,10 +249,11 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 <a
                   href={approvalClaims[0].sourceUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
+                  aria-label="View cited programme evidence (opens in new tab)"
                   className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                 >
-                  View cited recognition source
+                  View cited programme evidence
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               ) : null}

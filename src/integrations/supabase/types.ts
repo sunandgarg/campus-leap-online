@@ -8,6 +8,391 @@ export type Database = {
   };
   public: {
     Tables: {
+      catalogue_import_batches: {
+        Row: {
+          acceptance_invariants: Json;
+          dataset_id: string;
+          failure_reason: string | null;
+          field_dictionary: Json;
+          import_id: string;
+          import_status: string;
+          imported_at: string;
+          merged_on: string | null;
+          money_encoding: string;
+          publication_default: string;
+          ready_at: string | null;
+          schema_version: string;
+          scope: string;
+          source_file_sha256: string;
+          source_precedence: string;
+          statistics: Json;
+        };
+        Insert: {
+          acceptance_invariants?: Json;
+          dataset_id: string;
+          failure_reason?: string | null;
+          field_dictionary?: Json;
+          import_id: string;
+          import_status?: string;
+          imported_at?: string;
+          merged_on?: string | null;
+          money_encoding: string;
+          publication_default: string;
+          ready_at?: string | null;
+          schema_version: string;
+          scope: string;
+          source_file_sha256: string;
+          source_precedence: string;
+          statistics?: Json;
+        };
+        Update: {
+          acceptance_invariants?: Json;
+          dataset_id?: string;
+          failure_reason?: string | null;
+          field_dictionary?: Json;
+          import_id?: string;
+          import_status?: string;
+          imported_at?: string;
+          merged_on?: string | null;
+          money_encoding?: string;
+          publication_default?: string;
+          ready_at?: string | null;
+          schema_version?: string;
+          scope?: string;
+          source_file_sha256?: string;
+          source_precedence?: string;
+          statistics?: Json;
+        };
+        Relationships: [];
+      };
+      catalogue_research_fee_quotes: {
+        Row: {
+          archived_quote_id: string;
+          import_id: string;
+          raw_record: Json;
+          source_id: string;
+          source_quote_id: string | null;
+          source_snapshot: string | null;
+          usage: string;
+        };
+        Insert: {
+          archived_quote_id: string;
+          import_id: string;
+          raw_record: Json;
+          source_id: string;
+          source_quote_id?: string | null;
+          source_snapshot?: string | null;
+          usage: string;
+        };
+        Update: {
+          archived_quote_id?: string;
+          import_id?: string;
+          raw_record?: Json;
+          source_id?: string;
+          source_quote_id?: string | null;
+          source_snapshot?: string | null;
+          usage?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogue_research_fee_quotes_import_id_fkey";
+            columns: ["import_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_import_batches";
+            referencedColumns: ["import_id"];
+          },
+          {
+            foreignKeyName: "catalogue_research_fee_quotes_import_id_source_id_fkey";
+            columns: ["import_id", "source_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_research_sources";
+            referencedColumns: ["import_id", "source_id"];
+          },
+        ];
+      };
+      catalogue_research_record_sources: {
+        Row: {
+          course_row_id: string;
+          import_id: string;
+          source_id: string;
+        };
+        Insert: {
+          course_row_id: string;
+          import_id: string;
+          source_id: string;
+        };
+        Update: {
+          course_row_id?: string;
+          import_id?: string;
+          source_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogue_research_record_sources_import_id_course_row_id_fkey";
+            columns: ["import_id", "course_row_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_research_records";
+            referencedColumns: ["import_id", "course_row_id"];
+          },
+          {
+            foreignKeyName: "catalogue_research_record_sources_import_id_source_id_fkey";
+            columns: ["import_id", "source_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_research_sources";
+            referencedColumns: ["import_id", "source_id"];
+          },
+        ];
+      };
+      catalogue_research_records: {
+        Row: {
+          audit_disposition: string | null;
+          audit_reason: string | null;
+          canonical_university_slug: string;
+          catalogue_candidate: boolean;
+          catalogue_evidence_url: string | null;
+          checked_on: string | null;
+          collaboration_partner: string | null;
+          course: string;
+          course_level: string | null;
+          course_row_id: string;
+          current_intake_approval_status: string | null;
+          evidence_status: string | null;
+          evidence_type: string | null;
+          fee_checked_on: string | null;
+          fee_display_note: string | null;
+          fee_evidence_status: string | null;
+          fee_source_url: string | null;
+          full_course_fee_inr: number | null;
+          import_bucket: string;
+          import_id: string;
+          is_published: boolean;
+          legal_university_name: string | null;
+          online_mode_evidence_status: string | null;
+          parent_programme_id: string | null;
+          parent_programme_title: string | null;
+          per_semester_fee_inr: number | null;
+          per_year_fee_inr: number | null;
+          programme_source_url_current: string | null;
+          publication_ready: string | null;
+          publication_status: string;
+          quality_flags: string[];
+          raw_record: Json;
+          raw_source_row_sha256: string;
+          record_kind: string | null;
+          reference_session: string | null;
+          regulatory_session_clearance: string | null;
+          search_document: unknown;
+          selected_fee_quote_id: string | null;
+          source_ids: string[];
+          specialisation: string | null;
+          state_ut: string | null;
+          track_name: string | null;
+          university_display_name: string;
+          university_id: string;
+        };
+        Insert: {
+          audit_disposition?: string | null;
+          audit_reason?: string | null;
+          canonical_university_slug: string;
+          catalogue_candidate?: boolean;
+          catalogue_evidence_url?: string | null;
+          checked_on?: string | null;
+          collaboration_partner?: string | null;
+          course: string;
+          course_level?: string | null;
+          course_row_id: string;
+          current_intake_approval_status?: string | null;
+          evidence_status?: string | null;
+          evidence_type?: string | null;
+          fee_checked_on?: string | null;
+          fee_display_note?: string | null;
+          fee_evidence_status?: string | null;
+          fee_source_url?: string | null;
+          full_course_fee_inr?: number | null;
+          import_bucket: string;
+          import_id: string;
+          is_published?: boolean;
+          legal_university_name?: string | null;
+          online_mode_evidence_status?: string | null;
+          parent_programme_id?: string | null;
+          parent_programme_title?: string | null;
+          per_semester_fee_inr?: number | null;
+          per_year_fee_inr?: number | null;
+          programme_source_url_current?: string | null;
+          publication_ready?: string | null;
+          publication_status?: string;
+          quality_flags?: string[];
+          raw_record: Json;
+          raw_source_row_sha256: string;
+          record_kind?: string | null;
+          reference_session?: string | null;
+          regulatory_session_clearance?: string | null;
+          selected_fee_quote_id?: string | null;
+          source_ids?: string[];
+          specialisation?: string | null;
+          state_ut?: string | null;
+          track_name?: string | null;
+          university_display_name: string;
+          university_id: string;
+        };
+        Update: {
+          audit_disposition?: string | null;
+          audit_reason?: string | null;
+          canonical_university_slug?: string;
+          catalogue_candidate?: boolean;
+          catalogue_evidence_url?: string | null;
+          checked_on?: string | null;
+          collaboration_partner?: string | null;
+          course?: string;
+          course_level?: string | null;
+          course_row_id?: string;
+          current_intake_approval_status?: string | null;
+          evidence_status?: string | null;
+          evidence_type?: string | null;
+          fee_checked_on?: string | null;
+          fee_display_note?: string | null;
+          fee_evidence_status?: string | null;
+          fee_source_url?: string | null;
+          full_course_fee_inr?: number | null;
+          import_bucket?: string;
+          import_id?: string;
+          is_published?: boolean;
+          legal_university_name?: string | null;
+          online_mode_evidence_status?: string | null;
+          parent_programme_id?: string | null;
+          parent_programme_title?: string | null;
+          per_semester_fee_inr?: number | null;
+          per_year_fee_inr?: number | null;
+          programme_source_url_current?: string | null;
+          publication_ready?: string | null;
+          publication_status?: string;
+          quality_flags?: string[];
+          raw_record?: Json;
+          raw_source_row_sha256?: string;
+          record_kind?: string | null;
+          reference_session?: string | null;
+          regulatory_session_clearance?: string | null;
+          selected_fee_quote_id?: string | null;
+          source_ids?: string[];
+          specialisation?: string | null;
+          state_ut?: string | null;
+          track_name?: string | null;
+          university_display_name?: string;
+          university_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogue_research_records_import_id_university_id_fkey";
+            columns: ["import_id", "university_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_research_universities";
+            referencedColumns: ["import_id", "university_id"];
+          },
+        ];
+      };
+      catalogue_research_sources: {
+        Row: {
+          course_row_ids: string[];
+          freshly_fetched_in_this_merge: boolean;
+          import_id: string;
+          raw_record: Json;
+          recorded_checked_on_dates: string[];
+          roles: string[];
+          source_id: string;
+          source_status: string;
+          url: string;
+        };
+        Insert: {
+          course_row_ids?: string[];
+          freshly_fetched_in_this_merge?: boolean;
+          import_id: string;
+          raw_record: Json;
+          recorded_checked_on_dates?: string[];
+          roles?: string[];
+          source_id: string;
+          source_status: string;
+          url: string;
+        };
+        Update: {
+          course_row_ids?: string[];
+          freshly_fetched_in_this_merge?: boolean;
+          import_id?: string;
+          raw_record?: Json;
+          recorded_checked_on_dates?: string[];
+          roles?: string[];
+          source_id?: string;
+          source_status?: string;
+          url?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogue_research_sources_import_id_fkey";
+            columns: ["import_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_import_batches";
+            referencedColumns: ["import_id"];
+          },
+        ];
+      };
+      catalogue_research_universities: {
+        Row: {
+          canonical_slug: string;
+          current_intake_approval_certified: boolean;
+          identity_rechecked_on: string | null;
+          import_id: string;
+          is_published: boolean;
+          legal_university_name: string | null;
+          publication_status: string;
+          raw_record: Json;
+          registry_status: string | null;
+          source_reference_period: string | null;
+          source_url: string | null;
+          state_ut: string | null;
+          university_display_name: string;
+          university_id: string;
+        };
+        Insert: {
+          canonical_slug: string;
+          current_intake_approval_certified?: boolean;
+          identity_rechecked_on?: string | null;
+          import_id: string;
+          is_published?: boolean;
+          legal_university_name?: string | null;
+          publication_status?: string;
+          raw_record: Json;
+          registry_status?: string | null;
+          source_reference_period?: string | null;
+          source_url?: string | null;
+          state_ut?: string | null;
+          university_display_name: string;
+          university_id: string;
+        };
+        Update: {
+          canonical_slug?: string;
+          current_intake_approval_certified?: boolean;
+          identity_rechecked_on?: string | null;
+          import_id?: string;
+          is_published?: boolean;
+          legal_university_name?: string | null;
+          publication_status?: string;
+          raw_record?: Json;
+          registry_status?: string | null;
+          source_reference_period?: string | null;
+          source_url?: string | null;
+          state_ut?: string | null;
+          university_display_name?: string;
+          university_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalogue_research_universities_import_id_fkey";
+            columns: ["import_id"];
+            isOneToOne: false;
+            referencedRelation: "catalogue_import_batches";
+            referencedColumns: ["import_id"];
+          },
+        ];
+      };
       claim_evidence: {
         Row: {
           academic_session: string | null;
@@ -649,6 +1034,20 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      fail_catalogue_research_import: {
+        Args: {
+          p_failure_reason: string;
+          p_import_id: string;
+        };
+        Returns: Json;
+      };
+      finalize_catalogue_research_import: {
+        Args: {
+          p_import_id: string;
+          p_source_file_sha256: string;
+        };
+        Returns: Json;
+      };
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"];

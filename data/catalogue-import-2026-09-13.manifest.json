@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "india-online-catalogue-consolidated-2026-09-13-v1",
+  "merged_on": "2026-09-13",
+  "source_file_sha256": "3962434a8f243d1fa6d7b50309fff3420ee23d47e0fa5a75b9697c9247745f8b",
+  "compressed_file_sha256": "cf2ce778a90e2ee4fe04e069a9d210d9132f8779801c8989fb9d9262e6fcc51a",
+  "university_crosswalk_sha256": "62263108bbd8680af17ca2cca82e970048600b7f1818fdd3697e75a832a11946",
+  "source_bytes": 11319996,
+  "compressed_bytes": 417998,
+  "university_crosswalk_bytes": 54080,
+  "counts": {
+    "universities": 140,
+    "records": 1521,
+    "sources": 392,
+    "historical_fee_quotes": 433,
+    "catalogue_candidates": 649,
+    "source_links": 2272,
+    "university_crosswalk": 140
+  },
+  "publication_default": "draft; all is_published=false; held candidates and out-of-scope product types require separate private queues"
+}

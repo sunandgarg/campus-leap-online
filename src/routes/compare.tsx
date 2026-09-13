@@ -358,7 +358,8 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
             <a
               href={program.entitlementSourceUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
+              aria-label="Open entitlement source (opens in new tab)"
               className="mt-1 flex items-center gap-1 text-xs text-[#1768cc] dark:text-[#78b9ff]"
             >
               Open entitlement source <ExternalLink className="h-3 w-3" />
@@ -380,7 +381,8 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
           <a
             href={program.feeSourceUrl}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
+            aria-label={`Open fee source checked ${program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
             className="inline-flex items-center gap-1 text-[#1768cc] dark:text-[#78b9ff]"
           >
             Source checked {program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
@@ -409,7 +411,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
         `${program.durationVerified ? "Offering duration" : "Typical course duration"}: ${program.durationYears} years · ${program.semesters} semesters`,
     },
     {
-      label: "Separate accreditation evidence",
+      label: "Cited programme-context sources",
       icon: BadgeCheck,
       render: ({ university, program }) => {
         const claims = getProgramApprovalClaims(university, program);
@@ -420,7 +422,8 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
                 key={claim.id}
                 href={claim.sourceUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label={`${claim.renderedClaim} (opens in new tab)`}
                 className="inline-flex items-start gap-1 text-[#1768cc] dark:text-[#78b9ff]"
               >
                 {claim.renderedClaim} <ExternalLink className="mt-1 h-3 w-3 shrink-0" />
@@ -428,7 +431,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
             ))}
           </span>
         ) : (
-          "No current, scope-matched recognition evidence mapped"
+          "No current programme-scoped recognition evidence mapped"
         );
       },
     },

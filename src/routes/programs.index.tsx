@@ -64,22 +64,22 @@ function ProgramsPage() {
   return (
     <div className="bg-background text-foreground">
       <section className="border-b border-border bg-[#131720] text-white">
-        <div className="container-page py-14 lg:py-16">
+        <div className="container-page py-10 lg:py-12">
           <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
             <BookOpenCheck className="h-4 w-4" /> {programCatalog.length} online course guides
           </span>
-          <h1 className="mt-6 max-w-4xl font-display text-4xl font-extrabold tracking-[-0.06em] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.06em] sm:text-4xl lg:text-5xl">
             Start with the course. Then compare every university.
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:text-base">
             Explore category-level eligibility, curriculum themes, career direction and clearly
             labelled fee status before choosing where to enrol.
           </p>
         </div>
       </section>
 
-      <section className="container-page py-10 lg:py-14">
-        <div className="rounded-xl border border-border bg-card p-4 shadow-card sm:p-5">
+      <section className="container-page py-8 lg:py-10">
+        <div className="rounded-xl border border-border bg-card p-3 shadow-card sm:p-4">
           <div className="grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -88,7 +88,7 @@ function ProgramsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search course, specialisation or career"
                 aria-label="Search online courses"
-                className="h-12 w-full rounded-lg border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                className="h-10 w-full rounded-lg border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
@@ -99,7 +99,7 @@ function ProgramsPage() {
                     type="button"
                     aria-pressed={level === item}
                     onClick={() => setLevel(item)}
-                    className={`h-12 shrink-0 rounded-lg border px-4 text-xs font-extrabold transition-colors ${
+                    className={`h-10 shrink-0 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
                       level === item
                         ? "border-[#325dd2] bg-[#325dd2] text-white"
                         : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
@@ -113,7 +113,7 @@ function ProgramsPage() {
           </div>
         </div>
 
-        <div className="mt-7 flex items-center justify-between gap-4">
+        <div className="mt-5 flex items-center justify-between gap-4">
           <p
             role="status"
             aria-live="polite"
@@ -131,7 +131,7 @@ function ProgramsPage() {
         </div>
 
         {programs.length > 0 ? (
-          <CompactRail label="Filtered online course guides" rows={2} columns={2}>
+          <CompactRail label="Filtered online course guides" rows={2} columns={4}>
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
               const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
@@ -145,72 +145,72 @@ function ProgramsPage() {
               return (
                 <article
                   key={program.slug}
-                  className="group overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-[#325dd2]"
+                  className="group flex min-h-[19rem] flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-[#325dd2]"
                 >
-                  <div className="p-5">
-                    <div className="flex items-start justify-between gap-5">
-                      <div>
-                        <div className="flex flex-wrap gap-2">
-                          <span className="rounded-full bg-[#edf5ff] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
+                  <div className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className="rounded-full bg-[#edf5ff] px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
                             {program.level}
                           </span>
-                          <span className="rounded-full bg-secondary px-3 py-1 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+                          <span className="rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
                             {program.durationYears} years
                           </span>
                         </div>
-                        <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.15em] text-[#a94300] dark:text-[#ff9a5b]">
+                        <p className="mt-3 text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#a94300] dark:text-[#ff9a5b]">
                           Online {program.code}
                         </p>
-                        <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em]">
+                        <h2 className="mt-1 line-clamp-2 font-display text-lg font-extrabold leading-tight tracking-[-0.03em]">
                           {program.name}
                         </h2>
                       </div>
-                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-[#1768cc] dark:text-[#78b9ff]">
-                        <GraduationCap className="h-5 w-5" />
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-[#1768cc] dark:text-[#78b9ff]">
+                        <GraduationCap className="h-4 w-4" aria-hidden="true" />
                       </span>
                     </div>
-                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
                       {program.overview}
                     </p>
 
-                    <div className="mt-4 grid grid-cols-3 divide-x divide-border rounded-lg bg-secondary/55 py-3 text-center">
+                    <div className="mt-3 grid grid-cols-3 divide-x divide-border rounded-lg bg-secondary py-2.5 text-center">
                       <div className="px-2">
-                        <p className="font-display text-base font-extrabold">{offers.length}</p>
-                        <p className="mt-1 text-[10px] font-bold text-muted-foreground">
-                          Catalogue records
+                        <p className="font-display text-sm font-extrabold">{offers.length}</p>
+                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
+                          Records
                         </p>
                       </div>
                       <div className="px-2">
-                        <p className="font-display text-base font-extrabold">
+                        <p className="font-display text-sm font-extrabold">
                           {program.specialisations.length}
                         </p>
-                        <p className="mt-1 text-[10px] font-bold text-muted-foreground">
-                          Pathway themes
+                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
+                          Pathways
                         </p>
                       </div>
                       <div className="px-2">
-                        <p className="font-display text-base font-extrabold">{program.semesters}</p>
-                        <p className="mt-1 text-[10px] font-bold text-muted-foreground">
+                        <p className="font-display text-sm font-extrabold">{program.semesters}</p>
+                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
                           Semesters
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 border-y border-border bg-background">
-                    <div className="p-4 sm:px-6">
+                  <div className="mt-auto grid grid-cols-2 border-y border-border bg-background">
+                    <div className="p-3">
                       <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                         Sourced fee from
                       </p>
-                      <p className="mt-1 font-display text-lg font-extrabold">
+                      <p className="mt-1 font-display text-sm font-extrabold">
                         {lowest !== null ? formatINR(lowest) : "Confirm current fee"}
                       </p>
                     </div>
-                    <div className="border-l border-border p-4 sm:px-6">
+                    <div className="border-l border-border p-3">
                       <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                        Published monthly amount from
+                        Published monthly from
                       </p>
-                      <p className="mt-1 font-display text-lg font-extrabold text-[#1768cc] dark:text-[#78b9ff]">
+                      <p className="mt-1 font-display text-sm font-extrabold text-[#1768cc] dark:text-[#78b9ff]">
                         {lowestEmi !== null ? formatINR(lowestEmi) : "Not mapped"}
                         {lowestEmi !== null ? (
                           <span className="text-[10px] text-muted-foreground">/mo</span>
@@ -219,9 +219,9 @@ function ProgramsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 p-4 sm:px-5">
+                  <div className="flex items-center justify-between gap-2 p-3">
                     <div className="flex -space-x-2">
-                      {offers.slice(0, 4).map(({ university }) => (
+                      {offers.slice(0, 3).map(({ university }) => (
                         <span
                           key={university.slug}
                           title={university.shortName}
@@ -233,10 +233,15 @@ function ProgramsPage() {
                     </div>
                     <Button
                       asChild
-                      className="rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                      size="sm"
+                      className="rounded-lg bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
                     >
-                      <Link to="/programs/$programSlug" params={{ programSlug: program.slug }}>
-                        View course details <ArrowRight className="ml-2 h-4 w-4" />
+                      <Link
+                        to="/programs/$programSlug"
+                        params={{ programSlug: program.slug }}
+                        aria-label={`View ${program.name} course details`}
+                      >
+                        Details <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
                       </Link>
                     </Button>
                   </div>
@@ -264,19 +269,19 @@ function ProgramsPage() {
           </div>
         )}
 
-        <div className="mt-12 grid gap-6 rounded-xl bg-secondary/55 p-5 lg:grid-cols-[1fr_390px] lg:items-center lg:p-7">
+        <div className="mt-10 grid gap-5 rounded-xl bg-secondary p-5 lg:grid-cols-[1fr_390px] lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
               <WalletCards className="h-4 w-4" /> Personal shortlist
             </span>
-            <h2 className="mt-4 max-w-xl font-display text-3xl font-extrabold tracking-[-0.045em]">
+            <h2 className="mt-3 max-w-xl font-display text-2xl font-extrabold tracking-[-0.045em]">
               Not sure which course fits your profile?
             </h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
+            <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
               Share your qualification, budget and career goal. We’ll help you narrow the course and
               university combination—without requiring payment.
             </p>
-            <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-muted-foreground">
+            <div className="mt-4 flex flex-wrap gap-4 text-xs font-bold text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Clock3 className="h-4 w-4" /> Free session
               </span>

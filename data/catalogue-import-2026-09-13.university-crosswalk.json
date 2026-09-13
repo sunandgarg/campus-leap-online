@@ -1,0 +1,1122 @@
+[
+  {
+    "source_university_serial": "2",
+    "source_university_id": "adichunchanagiri-university-karnataka",
+    "source_display_name": "Adichunchanagiri University",
+    "canonical_slug": "adichunchanagiri-university-online",
+    "canonical_display_name": "Adichunchanagiri University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "3",
+    "source_university_id": "ajeenkya-d-y-patil-university-maharashtra",
+    "source_display_name": "Ajeenkya D. Y. Patil University Online",
+    "canonical_slug": "ajeenkya-d-y-patil-university-maharashtra",
+    "canonical_display_name": "Ajeenkya D. Y. Patil University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "4",
+    "source_university_id": "alagappa-university-tamil-nadu",
+    "source_display_name": "Alagappa University Online",
+    "canonical_slug": "alagappa-university-tamil-nadu",
+    "canonical_display_name": "Alagappa University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "5",
+    "source_university_id": "aligarh-muslim-university-uttar-pradesh",
+    "source_display_name": "Aligarh Muslim University",
+    "canonical_slug": "aligarh-muslim-university-uttar-pradesh",
+    "canonical_display_name": "Aligarh Muslim University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "6",
+    "source_university_id": "alliance-university-karnataka",
+    "source_display_name": "Alliance University Online",
+    "canonical_slug": "alliance-university-online",
+    "canonical_display_name": "Alliance University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "1",
+    "source_university_id": "academy-of-maritime-education-and-training-tamil-nadu",
+    "source_display_name": "AMET Online",
+    "canonical_slug": "academy-of-maritime-education-and-training-tamil-nadu",
+    "canonical_display_name": "Academy of Maritime Education and Training",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "8",
+    "source_university_id": "amity-university-uttar-pradesh-uttar-pradesh",
+    "source_display_name": "Amity Online",
+    "canonical_slug": "amity-university-online",
+    "canonical_display_name": "Amity University Uttar Pradesh",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "7",
+    "source_university_id": "amity-university-rajasthan-rajasthan",
+    "source_display_name": "Amity University Rajasthan",
+    "canonical_slug": "amity-university-rajasthan-rajasthan",
+    "canonical_display_name": "Amity University Rajasthan",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "9",
+    "source_university_id": "amrita-vishwa-vidyapeetham-tamil-nadu",
+    "source_display_name": "Amrita Online",
+    "canonical_slug": "amrita-vishwa-vidyapeetham-tamil-nadu",
+    "canonical_display_name": "Amrita Vishwa Vidyapeetham",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "10",
+    "source_university_id": "andhra-university-andhra-pradesh",
+    "source_display_name": "Andhra University",
+    "canonical_slug": "andhra-university-online",
+    "canonical_display_name": "Andhra University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "11",
+    "source_university_id": "anna-university-tamil-nadu",
+    "source_display_name": "Anna University",
+    "canonical_slug": "anna-university-tamil-nadu",
+    "canonical_display_name": "Anna University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "12",
+    "source_university_id": "arka-jain-university-jharkhand",
+    "source_display_name": "Arka Jain University",
+    "canonical_slug": "arka-jain-university-jharkhand",
+    "canonical_display_name": "Arka Jain University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "13",
+    "source_university_id": "assam-don-bosco-university-assam",
+    "source_display_name": "Assam Don Bosco University",
+    "canonical_slug": "assam-don-bosco-university-assam",
+    "canonical_display_name": "Assam Don Bosco University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "14",
+    "source_university_id": "assam-down-town-university-assam",
+    "source_display_name": "Assam Down Town University",
+    "canonical_slug": "assam-down-town-university-online",
+    "canonical_display_name": "Assam Down Town University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "15",
+    "source_university_id": "b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu",
+    "source_display_name": "B. S. Abdur Rahman Crescent Institute of Science and Technology",
+    "canonical_slug": "b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu",
+    "canonical_display_name": "B. S. Abdur Rahman Crescent Institute of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "16",
+    "source_university_id": "banasthali-vidyapith-rajasthan",
+    "source_display_name": "Banasthali Vidyapith",
+    "canonical_slug": "banasthali-vidyapith-rajasthan",
+    "canonical_display_name": "Banasthali Vidyapith",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "17",
+    "source_university_id": "bangalore-university-karnataka",
+    "source_display_name": "Bangalore University",
+    "canonical_slug": "bangalore-university-online",
+    "canonical_display_name": "Bangalore University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "18",
+    "source_university_id": "bennett-university-uttar-pradesh",
+    "source_display_name": "Bennett University",
+    "canonical_slug": "bennett-university-uttar-pradesh",
+    "canonical_display_name": "Bennett University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "19",
+    "source_university_id": "bharath-institute-of-higher-education-and-research-tamil-nadu",
+    "source_display_name": "Bharath Institute of Higher Education and Research",
+    "canonical_slug": "bharath-institute-of-higher-education-and-research-tamil-nadu",
+    "canonical_display_name": "Bharath Institute of Higher Education and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "20",
+    "source_university_id": "bharathiar-university-tamil-nadu",
+    "source_display_name": "Bharathiar University",
+    "canonical_slug": "bharathiar-university-tamil-nadu",
+    "canonical_display_name": "Bharathiar University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "21",
+    "source_university_id": "bharathidasan-university-tamil-nadu",
+    "source_display_name": "Bharathidasan University",
+    "canonical_slug": "bharathidasan-university-tamil-nadu",
+    "canonical_display_name": "Bharathidasan University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "22",
+    "source_university_id": "bharati-vidyapeeth-deemed-to-be-university-maharashtra",
+    "source_display_name": "Bharati Vidyapeeth (Deemed to be University)",
+    "canonical_slug": "bharati-vidyapeeth-deemed-to-be-university-maharashtra",
+    "canonical_display_name": "Bharati Vidyapeeth (Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "23",
+    "source_university_id": "birla-institute-of-technology-jharkhand",
+    "source_display_name": "Birla Institute of Technology",
+    "canonical_slug": "bit-mesra-online",
+    "canonical_display_name": "Birla Institute of Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "24",
+    "source_university_id": "birla-institute-of-technology-and-science-pilani-rajasthan",
+    "source_display_name": "BITS Pilani Online",
+    "canonical_slug": "birla-institute-of-technology-and-science-pilani-rajasthan",
+    "canonical_display_name": "Birla Institute of Technology and Science, Pilani",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "25",
+    "source_university_id": "bml-munjal-university-haryana",
+    "source_display_name": "BML Munjal University",
+    "canonical_slug": "bml-munjal-university-haryana",
+    "canonical_display_name": "BML Munjal University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "26",
+    "source_university_id": "central-sanskrit-university-delhi",
+    "source_display_name": "Central Sanskrit University",
+    "canonical_slug": "central-sanskrit-university-delhi",
+    "canonical_display_name": "Central Sanskrit University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "27",
+    "source_university_id": "central-university-of-himachal-pradesh-himachal-pradesh",
+    "source_display_name": "Central University of Himachal Pradesh",
+    "canonical_slug": "central-university-himachal-online",
+    "canonical_display_name": "Central University of Himachal Pradesh",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "28",
+    "source_university_id": "central-university-of-tamil-nadu-tamil-nadu",
+    "source_display_name": "Central University of Tamil Nadu Online",
+    "canonical_slug": "central-university-of-tamil-nadu-tamil-nadu",
+    "canonical_display_name": "Central University of Tamil Nadu",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "29",
+    "source_university_id": "centurion-university-of-technology-and-management-odisha",
+    "source_display_name": "Centurion University of Technology and Management",
+    "canonical_slug": "centurion-university-of-technology-and-management-odisha",
+    "canonical_display_name": "Centurion University of Technology and Management",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "30",
+    "source_university_id": "chandigarh-university-punjab",
+    "source_display_name": "Chandigarh University Online",
+    "canonical_slug": "chandigarh-university-online",
+    "canonical_display_name": "Chandigarh University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "31",
+    "source_university_id": "charotar-university-of-science-and-technology-gujarat",
+    "source_display_name": "Charotar University of Science and Technology",
+    "canonical_slug": "charusat-online",
+    "canonical_display_name": "Charotar University of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "32",
+    "source_university_id": "chaudhary-charan-singh-university-uttar-pradesh",
+    "source_display_name": "Chaudhary Charan Singh University",
+    "canonical_slug": "chaudhary-charan-singh-university-uttar-pradesh",
+    "canonical_display_name": "Chaudhary Charan Singh University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "33",
+    "source_university_id": "chhatrapati-shahu-ji-maharaj-university-uttar-pradesh",
+    "source_display_name": "Chhatrapati Shahu Ji Maharaj University",
+    "canonical_slug": "chhatrapati-shahu-ji-maharaj-university-uttar-pradesh",
+    "canonical_display_name": "Chhatrapati Shahu Ji Maharaj University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "34",
+    "source_university_id": "chitkara-university-punjab",
+    "source_display_name": "Chitkara University",
+    "canonical_slug": "chitkara-university-punjab",
+    "canonical_display_name": "Chitkara University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "35",
+    "source_university_id": "christ-deemed-to-be-university-karnataka",
+    "source_display_name": "Christ (Deemed to be University)",
+    "canonical_slug": "christ-university-online",
+    "canonical_display_name": "Christ (Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "36",
+    "source_university_id": "d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra",
+    "source_display_name": "D. Y. Patil University Navi Mumbai Online",
+    "canonical_slug": "d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra",
+    "canonical_display_name": "D. Y. Patil (Deemed to be University), Navi Mumbai",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "37",
+    "source_university_id": "datta-meghe-institute-of-higher-education-and-research-maharashtra",
+    "source_display_name": "Datta Meghe Institute of Higher Education and Research",
+    "canonical_slug": "datta-meghe-institute-of-higher-education-and-research-maharashtra",
+    "canonical_display_name": "Datta Meghe Institute of Higher Education and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "38",
+    "source_university_id": "dayalbagh-educational-institute-uttar-pradesh",
+    "source_display_name": "Dayalbagh Educational Institute",
+    "canonical_slug": "dayalbagh-educational-institute-uttar-pradesh",
+    "canonical_display_name": "Dayalbagh Educational Institute",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "39",
+    "source_university_id": "dayananda-sagar-university-karnataka",
+    "source_display_name": "Dayananda Sagar University",
+    "canonical_slug": "dayananda-sagar-university-online",
+    "canonical_display_name": "Dayananda Sagar University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "40",
+    "source_university_id": "deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh",
+    "source_display_name": "Deen Dayal Upadhyaya Gorakhpur University",
+    "canonical_slug": "deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh",
+    "canonical_display_name": "Deen Dayal Upadhyaya Gorakhpur University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "41",
+    "source_university_id": "desh-bhagat-university-punjab",
+    "source_display_name": "Desh Bhagat University",
+    "canonical_slug": "desh-bhagat-university-punjab",
+    "canonical_display_name": "Desh Bhagat University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "42",
+    "source_university_id": "devi-ahilya-vishwavidyalaya-madhya-pradesh",
+    "source_display_name": "Devi Ahilya Vishwavidyalaya",
+    "canonical_slug": "devi-ahilya-vishwavidyalaya-online",
+    "canonical_display_name": "Devi Ahilya Vishwavidyalaya",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "43",
+    "source_university_id": "dr-b-r-ambedkar-open-university-telangana",
+    "source_display_name": "Dr. B. R. Ambedkar Open University",
+    "canonical_slug": "dr-b-r-ambedkar-open-university-telangana",
+    "canonical_display_name": "Dr. B. R. Ambedkar Open University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "44",
+    "source_university_id": "dr-babasaheb-ambedkar-open-university-gujarat",
+    "source_display_name": "Dr. Babasaheb Ambedkar Open University",
+    "canonical_slug": "baou-online",
+    "canonical_display_name": "Dr. Babasaheb Ambedkar Open University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "45",
+    "source_university_id": "dr-d-y-patil-vidyapeeth-pune-maharashtra",
+    "source_display_name": "Dr. D. Y. Patil Vidyapeeth Pune Online",
+    "canonical_slug": "dy-patil-university-online",
+    "canonical_display_name": "Dr. D. Y. Patil Vidyapeeth, Pune",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "46",
+    "source_university_id": "dr-m-g-r-educational-and-research-institute-tamil-nadu",
+    "source_display_name": "Dr. M.G.R. Educational and Research Institute",
+    "canonical_slug": "dr-m-g-r-educational-and-research-institute-tamil-nadu",
+    "canonical_display_name": "Dr. M.G.R. Educational and Research Institute",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "47",
+    "source_university_id": "galgotias-university-uttar-pradesh",
+    "source_display_name": "Galgotias University",
+    "canonical_slug": "galgotias-university-uttar-pradesh",
+    "canonical_display_name": "Galgotias University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "48",
+    "source_university_id": "ganpat-university-gujarat",
+    "source_display_name": "Ganpat University",
+    "canonical_slug": "ganpat-university-gujarat",
+    "canonical_display_name": "Ganpat University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "49",
+    "source_university_id": "gla-university-uttar-pradesh",
+    "source_display_name": "GLA University",
+    "canonical_slug": "gla-university-uttar-pradesh",
+    "canonical_display_name": "GLA University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "50",
+    "source_university_id": "gls-university-gujarat",
+    "source_display_name": "GLS University",
+    "canonical_slug": "gls-university-online",
+    "canonical_display_name": "GLS University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "51",
+    "source_university_id": "graphic-era-deemed-to-be-university-uttarakhand",
+    "source_display_name": "Graphic Era (Deemed to be University)",
+    "canonical_slug": "graphic-era-deemed-to-be-university-uttarakhand",
+    "canonical_display_name": "Graphic Era (Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "52",
+    "source_university_id": "gujarat-technological-university-gujarat",
+    "source_display_name": "Gujarat Technological University",
+    "canonical_slug": "gujarat-technological-university-online",
+    "canonical_display_name": "Gujarat Technological University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "53",
+    "source_university_id": "gujarat-university-gujarat",
+    "source_display_name": "Gujarat University",
+    "canonical_slug": "gujarat-university-online",
+    "canonical_display_name": "Gujarat University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "54",
+    "source_university_id": "guru-ghasidas-vishwavidyalaya-chhattisgarh",
+    "source_display_name": "Guru Ghasidas Vishwavidyalaya",
+    "canonical_slug": "guru-ghasidas-vishwavidyalaya-online",
+    "canonical_display_name": "Guru Ghasidas Vishwavidyalaya",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "55",
+    "source_university_id": "guru-gobind-singh-indraprastha-university-delhi",
+    "source_display_name": "Guru Gobind Singh Indraprastha University",
+    "canonical_slug": "ggsipu-online",
+    "canonical_display_name": "Guru Gobind Singh Indraprastha University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "56",
+    "source_university_id": "guru-jambheshwar-university-of-science-and-technology-haryana",
+    "source_display_name": "Guru Jambheshwar University of Science and Technology",
+    "canonical_slug": "gjust-online",
+    "canonical_display_name": "Guru Jambheshwar University of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "57",
+    "source_university_id": "guru-kashi-university-punjab",
+    "source_display_name": "Guru Kashi University",
+    "canonical_slug": "guru-kashi-university-punjab",
+    "canonical_display_name": "Guru Kashi University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "58",
+    "source_university_id": "guru-nanak-dev-university-punjab",
+    "source_display_name": "Guru Nanak Dev University",
+    "canonical_slug": "guru-nanak-dev-university-punjab",
+    "canonical_display_name": "Guru Nanak Dev University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "59",
+    "source_university_id": "hindustan-institute-of-technology-and-science-tamil-nadu",
+    "source_display_name": "Hindustan Institute of Technology and Science",
+    "canonical_slug": "hindustan-institute-of-technology-and-science-tamil-nadu",
+    "canonical_display_name": "Hindustan Institute of Technology and Science",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "60",
+    "source_university_id": "icfai-foundation-for-higher-education-telangana",
+    "source_display_name": "ICFAI Foundation for Higher Education",
+    "canonical_slug": "icfai-foundation-for-higher-education-telangana",
+    "canonical_display_name": "ICFAI Foundation for Higher Education",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "62",
+    "source_university_id": "indira-gandhi-national-open-university-delhi",
+    "source_display_name": "IGNOU Online",
+    "canonical_slug": "indira-gandhi-national-open-university-delhi",
+    "canonical_display_name": "Indira Gandhi National Open University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "61",
+    "source_university_id": "indian-institute-of-foreign-trade-delhi",
+    "source_display_name": "Indian Institute of Foreign Trade",
+    "canonical_slug": "iift-online",
+    "canonical_display_name": "Indian Institute of Foreign Trade",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "63",
+    "source_university_id": "integral-university-uttar-pradesh",
+    "source_display_name": "Integral University",
+    "canonical_slug": "integral-university-uttar-pradesh",
+    "canonical_display_name": "Integral University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "64",
+    "source_university_id": "international-institute-of-information-technology-hyderabad-telangana",
+    "source_display_name": "International Institute of Information Technology Hyderabad",
+    "canonical_slug": "international-institute-of-information-technology-hyderabad-telangana",
+    "canonical_display_name": "International Institute of Information Technology Hyderabad",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "65",
+    "source_university_id": "jagannath-university-rajasthan",
+    "source_display_name": "Jagannath University",
+    "canonical_slug": "jagannath-university-rajasthan",
+    "canonical_display_name": "Jagannath University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "66",
+    "source_university_id": "jain-deemed-to-be-university-karnataka",
+    "source_display_name": "JAIN Online",
+    "canonical_slug": "jain-university-online",
+    "canonical_display_name": "Jain (Deemed-to-be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "67",
+    "source_university_id": "jaipur-national-university-rajasthan",
+    "source_display_name": "Jaipur National University",
+    "canonical_slug": "jaipur-national-university-rajasthan",
+    "canonical_display_name": "Jaipur National University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "68",
+    "source_university_id": "jamia-hamdard-delhi",
+    "source_display_name": "Jamia Hamdard",
+    "canonical_slug": "jamia-hamdard-online",
+    "canonical_display_name": "Jamia Hamdard",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "69",
+    "source_university_id": "jamia-millia-islamia-delhi",
+    "source_display_name": "Jamia Millia Islamia",
+    "canonical_slug": "jamia-millia-islamia-online",
+    "canonical_display_name": "Jamia Millia Islamia",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "70",
+    "source_university_id": "jawaharlal-nehru-university-delhi",
+    "source_display_name": "Jawaharlal Nehru University",
+    "canonical_slug": "jawaharlal-nehru-university-delhi",
+    "canonical_display_name": "Jawaharlal Nehru University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "71",
+    "source_university_id": "jaypee-institute-of-information-technology-uttar-pradesh",
+    "source_display_name": "Jaypee Institute of Information Technology",
+    "canonical_slug": "jaypee-institute-of-information-technology-uttar-pradesh",
+    "canonical_display_name": "Jaypee Institute of Information Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "72",
+    "source_university_id": "jss-academy-of-higher-education-and-research-karnataka",
+    "source_display_name": "JSS Academy of Higher Education and Research",
+    "canonical_slug": "jss-academy-of-higher-education-and-research-karnataka",
+    "canonical_display_name": "JSS Academy of Higher Education and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "73",
+    "source_university_id": "kalasalingam-academy-of-research-and-education-tamil-nadu",
+    "source_display_name": "Kalasalingam Academy of Research and Education",
+    "canonical_slug": "kalasalingam-academy-of-research-and-education-tamil-nadu",
+    "canonical_display_name": "Kalasalingam Academy of Research and Education",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "74",
+    "source_university_id": "kalinga-institute-of-industrial-technology-odisha",
+    "source_display_name": "Kalinga Institute of Industrial Technology",
+    "canonical_slug": "kalinga-institute-of-industrial-technology-odisha",
+    "canonical_display_name": "Kalinga Institute of Industrial Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "75",
+    "source_university_id": "karnataka-state-open-university-karnataka",
+    "source_display_name": "Karnataka State Open University",
+    "canonical_slug": "karnataka-state-open-university-online",
+    "canonical_display_name": "Karnataka State Open University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "76",
+    "source_university_id": "karunya-institute-of-technology-and-sciences-tamil-nadu",
+    "source_display_name": "Karunya Institute of Technology and Sciences",
+    "canonical_slug": "karunya-institute-of-technology-and-sciences-tamil-nadu",
+    "canonical_display_name": "Karunya Institute of Technology and Sciences",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "77",
+    "source_university_id": "koneru-lakshmaiah-education-foundation-andhra-pradesh",
+    "source_display_name": "Koneru Lakshmaiah Education Foundation",
+    "canonical_slug": "kl-university-online",
+    "canonical_display_name": "Koneru Lakshmaiah Education Foundation",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "78",
+    "source_university_id": "kurukshetra-university-haryana",
+    "source_display_name": "Kurukshetra University",
+    "canonical_slug": "kurukshetra-university-online",
+    "canonical_display_name": "Kurukshetra University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "79",
+    "source_university_id": "lovely-professional-university-punjab",
+    "source_display_name": "LPU Online",
+    "canonical_slug": "lpu-online",
+    "canonical_display_name": "Lovely Professional University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "80",
+    "source_university_id": "madurai-kamaraj-university-tamil-nadu",
+    "source_display_name": "Madurai Kamaraj University",
+    "canonical_slug": "madurai-kamaraj-university-tamil-nadu",
+    "canonical_display_name": "Madurai Kamaraj University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "81",
+    "source_university_id": "maharishi-markandeshwar-deemed-to-be-university-haryana",
+    "source_display_name": "Maharishi Markandeshwar (Deemed to be University)",
+    "canonical_slug": "maharishi-markandeshwar-online",
+    "canonical_display_name": "Maharishi Markandeshwar (Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "82",
+    "source_university_id": "maharshi-dayanand-university-haryana",
+    "source_display_name": "Maharshi Dayanand University",
+    "canonical_slug": "maharshi-dayanand-university-online",
+    "canonical_display_name": "Maharshi Dayanand University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "83",
+    "source_university_id": "mahatma-gandhi-university-kerala",
+    "source_display_name": "Mahatma Gandhi University",
+    "canonical_slug": "mahatma-gandhi-university-online",
+    "canonical_display_name": "Mahatma Gandhi University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "84",
+    "source_university_id": "mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh",
+    "source_display_name": "Mahatma Jyotiba Phule Rohilkhand University",
+    "canonical_slug": "mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh",
+    "canonical_display_name": "Mahatma Jyotiba Phule Rohilkhand University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "85",
+    "source_university_id": "manav-rachna-international-institute-of-research-and-studies-haryana",
+    "source_display_name": "Manav Rachna International Institute of Research and Studies",
+    "canonical_slug": "manav-rachna-online",
+    "canonical_display_name": "Manav Rachna International Institute of Research and Studies",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "86",
+    "source_university_id": "mangalayatan-university-uttar-pradesh",
+    "source_display_name": "Mangalayatan University",
+    "canonical_slug": "mangalayatan-university-uttar-pradesh",
+    "canonical_display_name": "Mangalayatan University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "87",
+    "source_university_id": "manipal-academy-of-higher-education-karnataka",
+    "source_display_name": "Manipal Academy of Higher Education (MAHE) Online",
+    "canonical_slug": "manipal-academy-of-higher-education-karnataka",
+    "canonical_display_name": "Manipal Academy of Higher Education",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "88",
+    "source_university_id": "manipal-university-jaipur-rajasthan",
+    "source_display_name": "Manipal University Jaipur (MUJ) Online",
+    "canonical_slug": "manipal-university-online",
+    "canonical_display_name": "Manipal University Jaipur",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "89",
+    "source_university_id": "manonmaniam-sundaranar-university-tamil-nadu",
+    "source_display_name": "Manonmaniam Sundaranar University",
+    "canonical_slug": "manonmaniam-sundaranar-university-tamil-nadu",
+    "canonical_display_name": "Manonmaniam Sundaranar University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "90",
+    "source_university_id": "marwadi-university-gujarat",
+    "source_display_name": "Marwadi University",
+    "canonical_slug": "marwadi-university-online",
+    "canonical_display_name": "Marwadi University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "91",
+    "source_university_id": "mats-university-chhattisgarh",
+    "source_display_name": "MATS University",
+    "canonical_slug": "mats-university-online",
+    "canonical_display_name": "MATS University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "92",
+    "source_university_id": "meenakshi-academy-of-higher-education-and-research-tamil-nadu",
+    "source_display_name": "Meenakshi Academy of Higher Education and Research",
+    "canonical_slug": "meenakshi-academy-of-higher-education-and-research-tamil-nadu",
+    "canonical_display_name": "Meenakshi Academy of Higher Education and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "93",
+    "source_university_id": "mizoram-university-mizoram",
+    "source_display_name": "Mizoram University",
+    "canonical_slug": "mizoram-university-mizoram",
+    "canonical_display_name": "Mizoram University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "94",
+    "source_university_id": "mody-university-of-science-and-technology-rajasthan",
+    "source_display_name": "Mody University of Science and Technology",
+    "canonical_slug": "mody-university-of-science-and-technology-rajasthan",
+    "canonical_display_name": "Mody University of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "95",
+    "source_university_id": "mohan-babu-university-andhra-pradesh",
+    "source_display_name": "Mohan Babu University",
+    "canonical_slug": "mohan-babu-university-online",
+    "canonical_display_name": "Mohan Babu University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "120",
+    "source_university_id": "svkm-s-narsee-monjee-institute-of-management-studies-maharashtra",
+    "source_display_name": "NMIMS Online",
+    "canonical_slug": "svkm-s-narsee-monjee-institute-of-management-studies-maharashtra",
+    "canonical_display_name": "SVKM's Narsee Monjee Institute of Management Studies",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "96",
+    "source_university_id": "noida-international-university-uttar-pradesh",
+    "source_display_name": "Noida International University",
+    "canonical_slug": "noida-international-university-uttar-pradesh",
+    "canonical_display_name": "Noida International University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "97",
+    "source_university_id": "o-p-jindal-global-university-haryana",
+    "source_display_name": "O. P. Jindal Global University Online",
+    "canonical_slug": "o-p-jindal-global-university-haryana",
+    "canonical_display_name": "O. P. Jindal Global University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "98",
+    "source_university_id": "p-p-savani-university-gujarat",
+    "source_display_name": "P. P. Savani University",
+    "canonical_slug": "pp-savani-university-online",
+    "canonical_display_name": "P. P. Savani University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "99",
+    "source_university_id": "parul-university-gujarat",
+    "source_display_name": "Parul University Online",
+    "canonical_slug": "parul-university-online",
+    "canonical_display_name": "Parul University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "100",
+    "source_university_id": "pt-sundarlal-sharma-open-university-chhattisgarh",
+    "source_display_name": "Pt. Sundarlal Sharma (Open) University",
+    "canonical_slug": "pt-sundarlal-sharma-open-university-chhattisgarh",
+    "canonical_display_name": "Pt. Sundarlal Sharma (Open) University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "101",
+    "source_university_id": "sage-university-madhya-pradesh",
+    "source_display_name": "SAGE University",
+    "canonical_slug": "sage-university-online",
+    "canonical_display_name": "SAGE University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "102",
+    "source_university_id": "sandip-university-maharashtra",
+    "source_display_name": "Sandip University",
+    "canonical_slug": "sandip-university-maharashtra",
+    "canonical_display_name": "Sandip University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "103",
+    "source_university_id": "sathyabama-institute-of-science-and-technology-tamil-nadu",
+    "source_display_name": "Sathyabama Institute of Science and Technology",
+    "canonical_slug": "sathyabama-institute-of-science-and-technology-tamil-nadu",
+    "canonical_display_name": "Sathyabama Institute of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "104",
+    "source_university_id": "savitribai-phule-pune-university-maharashtra",
+    "source_display_name": "Savitribai Phule Pune University",
+    "canonical_slug": "savitribai-phule-pune-university-maharashtra",
+    "canonical_display_name": "Savitribai Phule Pune University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "105",
+    "source_university_id": "shanmugha-arts-science-technology-and-research-academy-tamil-nadu",
+    "source_display_name": "Shanmugha Arts, Science, Technology and Research Academy",
+    "canonical_slug": "shanmugha-arts-science-technology-and-research-academy-tamil-nadu",
+    "canonical_display_name": "Shanmugha Arts, Science, Technology and Research Academy",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "106",
+    "source_university_id": "sharda-university-uttar-pradesh",
+    "source_display_name": "Sharda Online",
+    "canonical_slug": "sharda-university-uttar-pradesh",
+    "canonical_display_name": "Sharda University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "107",
+    "source_university_id": "shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh",
+    "source_display_name": "Shiv Nadar (Institution of Eminence Deemed to be University)",
+    "canonical_slug": "shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh",
+    "canonical_display_name": "Shiv Nadar (Institution of Eminence Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "108",
+    "source_university_id": "shivaji-university-maharashtra",
+    "source_display_name": "Shivaji University",
+    "canonical_slug": "shivaji-university-maharashtra",
+    "canonical_display_name": "Shivaji University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "109",
+    "source_university_id": "shobhit-institute-of-engineering-and-technology-uttar-pradesh",
+    "source_display_name": "Shobhit Deemed University Meerut Online",
+    "canonical_slug": "shobhit-institute-of-engineering-and-technology-uttar-pradesh",
+    "canonical_display_name": "Shobhit Institute of Engineering and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "110",
+    "source_university_id": "shoolini-university-of-biotechnology-and-management-sciences-himachal-pradesh",
+    "source_display_name": "Shoolini University Online",
+    "canonical_slug": "shoolini-university-online",
+    "canonical_display_name": "Shoolini University of Biotechnology and Management Sciences",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "111",
+    "source_university_id": "shree-guru-gobind-singh-tricentenary-university-haryana",
+    "source_display_name": "Shree Guru Gobind Singh Tricentenary University",
+    "canonical_slug": "sgt-university-online",
+    "canonical_display_name": "Shree Guru Gobind Singh Tricentenary University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "112",
+    "source_university_id": "shri-ramasamy-memorial-university-sikkim-sikkim",
+    "source_display_name": "Shri Ramasamy Memorial University, Sikkim",
+    "canonical_slug": "shri-ramasamy-memorial-university-sikkim-sikkim",
+    "canonical_display_name": "Shri Ramasamy Memorial University, Sikkim",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "113",
+    "source_university_id": "sikkim-manipal-university-sikkim",
+    "source_display_name": "Sikkim Manipal University (SMU) Online",
+    "canonical_slug": "sikkim-manipal-university-online",
+    "canonical_display_name": "Sikkim Manipal University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "114",
+    "source_university_id": "silver-oak-university-gujarat",
+    "source_display_name": "Silver Oak University",
+    "canonical_slug": "silver-oak-university-gujarat",
+    "canonical_display_name": "Silver Oak University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "115",
+    "source_university_id": "sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu",
+    "source_display_name": "Sri Ramachandra Institute of Higher Education and Research",
+    "canonical_slug": "sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu",
+    "canonical_display_name": "Sri Ramachandra Institute of Higher Education and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "116",
+    "source_university_id": "sri-siddhartha-academy-of-higher-education-karnataka",
+    "source_display_name": "Sri Siddhartha Academy of Higher Education",
+    "canonical_slug": "sri-siddhartha-academy-of-higher-education-karnataka",
+    "canonical_display_name": "Sri Siddhartha Academy of Higher Education",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "117",
+    "source_university_id": "sri-venkateswara-university-andhra-pradesh",
+    "source_display_name": "Sri Venkateswara University Tirupati Online",
+    "canonical_slug": "sri-venkateswara-university-andhra-pradesh",
+    "canonical_display_name": "Sri Venkateswara University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "118",
+    "source_university_id": "srinivas-university-karnataka",
+    "source_display_name": "Srinivas University",
+    "canonical_slug": "srinivas-university-karnataka",
+    "canonical_display_name": "Srinivas University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "119",
+    "source_university_id": "srm-institute-of-science-and-technology-tamil-nadu",
+    "source_display_name": "SRM Institute of Science and Technology",
+    "canonical_slug": "srm-institute-of-science-and-technology-tamil-nadu",
+    "canonical_display_name": "SRM Institute of Science and Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "121",
+    "source_university_id": "swami-rama-himalayan-university-uttarakhand",
+    "source_display_name": "Swami Rama Himalayan University Online",
+    "canonical_slug": "swami-rama-himalayan-university-uttarakhand",
+    "canonical_display_name": "Swami Rama Himalayan University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "122",
+    "source_university_id": "swami-vivekanand-subharti-university-uttar-pradesh",
+    "source_display_name": "Swami Vivekanand Subharti University",
+    "canonical_slug": "swami-vivekanand-subharti-university-uttar-pradesh",
+    "canonical_display_name": "Swami Vivekanand Subharti University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "123",
+    "source_university_id": "symbiosis-international-deemed-university-maharashtra",
+    "source_display_name": "Symbiosis International University Online",
+    "canonical_slug": "symbiosis-international-deemed-university-maharashtra",
+    "canonical_display_name": "Symbiosis International (Deemed University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "124",
+    "source_university_id": "teerthanker-mahaveer-university-uttar-pradesh",
+    "source_display_name": "Teerthanker Mahaveer University",
+    "canonical_slug": "teerthanker-mahaveer-university-uttar-pradesh",
+    "canonical_display_name": "Teerthanker Mahaveer University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "125",
+    "source_university_id": "the-northcap-university-haryana",
+    "source_display_name": "The NorthCap University",
+    "canonical_slug": "the-northcap-university-haryana",
+    "canonical_display_name": "The NorthCap University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "126",
+    "source_university_id": "university-of-calicut-kerala",
+    "source_display_name": "University of Calicut Online",
+    "canonical_slug": "university-of-calicut-kerala",
+    "canonical_display_name": "University of Calicut",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "127",
+    "source_university_id": "university-of-jammu-jammu-and-kashmir",
+    "source_display_name": "University of Jammu",
+    "canonical_slug": "university-of-jammu-online",
+    "canonical_display_name": "University of Jammu",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "128",
+    "source_university_id": "university-of-kerala-kerala",
+    "source_display_name": "University of Kerala",
+    "canonical_slug": "university-of-kerala-online",
+    "canonical_display_name": "University of Kerala",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "129",
+    "source_university_id": "university-of-lucknow-uttar-pradesh",
+    "source_display_name": "University of Lucknow",
+    "canonical_slug": "university-of-lucknow-uttar-pradesh",
+    "canonical_display_name": "University of Lucknow",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "130",
+    "source_university_id": "university-of-madras-tamil-nadu",
+    "source_display_name": "University of Madras",
+    "canonical_slug": "university-of-madras-tamil-nadu",
+    "canonical_display_name": "University of Madras",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "131",
+    "source_university_id": "university-of-mumbai-maharashtra",
+    "source_display_name": "University of Mumbai",
+    "canonical_slug": "university-of-mumbai-maharashtra",
+    "canonical_display_name": "University of Mumbai",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "132",
+    "source_university_id": "university-of-mysore-karnataka",
+    "source_display_name": "University of Mysore",
+    "canonical_slug": "university-of-mysore-online",
+    "canonical_display_name": "University of Mysore",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "133",
+    "source_university_id": "university-of-petroleum-and-energy-studies-uttarakhand",
+    "source_display_name": "UPES Online",
+    "canonical_slug": "university-of-petroleum-and-energy-studies-uttarakhand",
+    "canonical_display_name": "University of Petroleum and Energy Studies",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "134",
+    "source_university_id": "uttaranchal-university-uttarakhand",
+    "source_display_name": "Uttaranchal University",
+    "canonical_slug": "uttaranchal-university-online",
+    "canonical_display_name": "Uttaranchal University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "135",
+    "source_university_id": "vellore-institute-of-technology-tamil-nadu",
+    "source_display_name": "Vellore Institute of Technology",
+    "canonical_slug": "vellore-institute-of-technology-tamil-nadu",
+    "canonical_display_name": "Vellore Institute of Technology",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "136",
+    "source_university_id": "vels-institute-of-science-technology-and-advanced-studies-tamil-nadu",
+    "source_display_name": "Vels Institute of Science, Technology and Advanced Studies",
+    "canonical_slug": "vels-institute-of-science-technology-and-advanced-studies-tamil-nadu",
+    "canonical_display_name": "Vels Institute of Science, Technology and Advanced Studies",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "137",
+    "source_university_id": "vignan-s-foundation-for-science-technology-and-research-andhra-pradesh",
+    "source_display_name": "Vignan's Foundation for Science, Technology and Research",
+    "canonical_slug": "vignan-university-online",
+    "canonical_display_name": "Vignan's Foundation for Science, Technology and Research",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "138",
+    "source_university_id": "visvesvaraya-technological-university-karnataka",
+    "source_display_name": "Visvesvaraya Technological University",
+    "canonical_slug": "vtu-online",
+    "canonical_display_name": "Visvesvaraya Technological University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "139",
+    "source_university_id": "vivekananda-global-university-rajasthan",
+    "source_display_name": "Vivekananda Global University",
+    "canonical_slug": "vivekananda-global-university-rajasthan",
+    "canonical_display_name": "Vivekananda Global University",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  },
+  {
+    "source_university_serial": "140",
+    "source_university_id": "yenepoya-deemed-to-be-university-karnataka",
+    "source_display_name": "Yenepoya (Deemed to be University)",
+    "canonical_slug": "yenepoya-university-online",
+    "canonical_display_name": "Yenepoya (Deemed to be University)",
+    "mapping_basis": "reviewed directory serial and institution identity"
+  }
+]
