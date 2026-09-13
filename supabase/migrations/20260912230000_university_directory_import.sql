@@ -168,24 +168,6 @@ VALUES
   ('vtu-online', 'Visvesvaraya Technological University', 'Visvesvaraya Technological University', 'VTU', '', 'Karnataka', NULL, NULL, 'https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vtu-online.webp', NULL, '#325DD2', ARRAY['UGC-entitled list - secondary compilation', 'Reference period: AY 2025-26; February 2026', 'Programme and intake-specific verification required']::text[], 'Visvesvaraya Technological University is included in the DekhoCampus researched directory of Indian universities with evidence of online degree provision. This record covers AY 2025-26; February 2026; it does not confirm that every programme or the latest intake is currently approved or open. Verify the exact programme, online mode, academic session and official application route before applying or paying.', 'directory', 'https://careerbracket.com/verify-university/', 'AY 2025-26; February 2026', '2026-09-12T12:00:00+05:30', '2026-10-12T23:59:59+05:30', 138, TRUE),
   ('vivekananda-global-university-rajasthan', 'Vivekananda Global University', 'Vivekananda Global University', 'VGU', '', 'Rajasthan', NULL, NULL, 'https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vivekananda-global-university-rajasthan.webp', NULL, '#325DD2', ARRAY['UGC-entitled list - secondary compilation', 'Reference period: AY 2025-26; February 2026', 'Programme and intake-specific verification required']::text[], 'Vivekananda Global University is included in the DekhoCampus researched directory of Indian universities with evidence of online degree provision. This record covers AY 2025-26; February 2026; it does not confirm that every programme or the latest intake is currently approved or open. Verify the exact programme, online mode, academic session and official application route before applying or paying.', 'directory', 'https://careerbracket.com/verify-university/', 'AY 2025-26; February 2026', '2026-09-12T12:00:00+05:30', '2026-10-12T23:59:59+05:30', 139, TRUE),
   ('yenepoya-university-online', 'Yenepoya (Deemed to be University)', 'Yenepoya (Deemed to be University)', 'Yenepoya', '', 'Karnataka', NULL, NULL, 'https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/yenepoya-university-online.webp', NULL, '#325DD2', ARRAY['UGC-entitled list - secondary compilation', 'Reference period: AY 2025-26; February 2026', 'Programme and intake-specific verification required']::text[], 'Yenepoya (Deemed to be University) is included in the DekhoCampus researched directory of Indian universities with evidence of online degree provision. This record covers AY 2025-26; February 2026; it does not confirm that every programme or the latest intake is currently approved or open. Verify the exact programme, online mode, academic session and official application route before applying or paying.', 'directory', 'https://careerbracket.com/verify-university/', 'AY 2025-26; February 2026', '2026-09-12T12:00:00+05:30', '2026-10-12T23:59:59+05:30', 140, TRUE)
-ON CONFLICT (slug) DO UPDATE SET
-  name = EXCLUDED.name,
-  legal_name = EXCLUDED.legal_name,
-  short_name = EXCLUDED.short_name,
-  city = EXCLUDED.city,
-  state = EXCLUDED.state,
-  established = EXCLUDED.established,
-  domain = EXCLUDED.domain,
-  logo_url = EXCLUDED.logo_url,
-  hero_image_url = EXCLUDED.hero_image_url,
-  accent_color = EXCLUDED.accent_color,
-  highlights = EXCLUDED.highlights,
-  about = EXCLUDED.about,
-  profile_depth = EXCLUDED.profile_depth,
-  verification_source_url = EXCLUDED.verification_source_url,
-  verification_academic_session = EXCLUDED.verification_academic_session,
-  verified_at = EXCLUDED.verified_at,
-  next_review_at = EXCLUDED.next_review_at,
-  sort_order = EXCLUDED.sort_order,
-  published = EXCLUDED.published,
-  updated_at = now();
+-- Never downgrade or overwrite a university that an administrator has already
+-- curated. The directory is additive discovery data only.
+ON CONFLICT (slug) DO NOTHING;

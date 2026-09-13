@@ -142,11 +142,13 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               intake-specific claim is labelled so your family can decide with clarity.
             </p>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="mt-6 grid grid-cols-[minmax(0,1fr)_3rem] gap-3 sm:flex sm:flex-row sm:flex-wrap">
               <Button
                 asChild
                 size="lg"
-                className="w-full bg-[#f47b25] text-[#111827] hover:bg-[#d85f12] sm:w-auto"
+                className={`min-w-0 bg-[#f47b25] px-3 text-[#111827] hover:bg-[#d85f12] sm:w-auto sm:px-6 ${
+                  requiresVerification ? "" : "col-span-2 sm:col-span-1"
+                }`}
               >
                 <a href="#apply">
                   Get free course guidance
@@ -178,7 +180,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-bold transition-colors hover:border-[#325dd2] hover:text-[#2449ad] dark:hover:text-[#b9ceff] sm:w-12 sm:px-0"
               >
                 <Share2 className="h-4 w-4" />
-                <span className="sm:sr-only">Share course</span>
+                <span className="sr-only">Share course</span>
               </button>
             </div>
 

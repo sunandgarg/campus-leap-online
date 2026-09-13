@@ -226,6 +226,7 @@ export function EntityManager({
           />
           {allowCreate ? (
             <Button
+              disabled={rowsQuery.isError}
               onClick={() => {
                 setDraft(emptyDraft(fields));
                 setEditingId(null);
@@ -273,6 +274,7 @@ export function EntityManager({
                   <div className="flex h-10 items-center">
                     <Switch
                       id={`f-${f.name}`}
+                      aria-describedby={f.help ? `f-${f.name}-help` : undefined}
                       checked={Boolean(draft[f.name])}
                       onCheckedChange={(v) => updateField(f, v)}
                     />
@@ -280,6 +282,7 @@ export function EntityManager({
                 ) : f.type === "select" ? (
                   <select
                     id={`f-${f.name}`}
+                    aria-describedby={f.help ? `f-${f.name}-help` : undefined}
                     value={String(draft[f.name] ?? "")}
                     onChange={(e) => updateField(f, e.target.value)}
                     required={f.required}
@@ -299,6 +302,7 @@ export function EntityManager({
                 ) : f.type === "textarea" || f.type === "list" || f.type === "json" ? (
                   <Textarea
                     id={`f-${f.name}`}
+                    aria-describedby={f.help ? `f-${f.name}-help` : undefined}
                     value={toInputValue(f, draft[f.name])}
                     onChange={(e) => updateField(f, e.target.value)}
                     required={f.required}
@@ -308,6 +312,7 @@ export function EntityManager({
                 ) : (
                   <Input
                     id={`f-${f.name}`}
+                    aria-describedby={f.help ? `f-${f.name}-help` : undefined}
                     type={f.type === "number" ? "number" : "text"}
                     min={f.type === "number" ? f.min : undefined}
                     step={f.type === "number" ? (f.step ?? "any") : undefined}
@@ -316,14 +321,18 @@ export function EntityManager({
                     required={f.required}
                   />
                 )}
-                {f.help && <p className="text-xs text-muted-foreground">{f.help}</p>}
+                {f.help && (
+                  <p id={`f-${f.name}-help`} className="text-xs text-muted-foreground">
+                    {f.help}
+                  </p>
+                )}
               </div>
             ))}
           </div>
 
           <Button
             type="submit"
-            disabled={save.isPending}
+            disabled={save.isPending || rowsQuery.isError}
             className="mt-6 bg-ink text-ink-foreground hover:bg-ink-soft"
           >
             {save.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -347,6 +356,27 @@ export function EntityManager({
             </tr>
           </thead>
           <tbody>
+            {rowsQuery.isError && (
+              <tr>
+                <td colSpan={listColumns.length + 1} className="px-4 py-8 text-center">
+                  <div role="alert" className="mx-auto max-w-lg text-sm text-destructive">
+                    <p className="font-semibold">Could not load these records.</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Check the database migration and your admin session before editing.
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => void rowsQuery.refetch()}
+                    >
+                      Try again
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            )}
             {rowsQuery.isLoading && (
               <tr>
                 <td colSpan={listColumns.length + 1} className="px-4 py-8 text-center">
@@ -354,7 +384,7 @@ export function EntityManager({
                 </td>
               </tr>
             )}
-            {!rowsQuery.isLoading && rows.length === 0 && (
+            {!rowsQuery.isLoading && !rowsQuery.isError && rows.length === 0 && (
               <tr>
                 <td
                   colSpan={listColumns.length + 1}

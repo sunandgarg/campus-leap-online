@@ -13,7 +13,13 @@ const fields: FieldDef[] = [
     options: ["new", "contacted", "qualified", "enrolled", "lost"],
     defaultValue: "new",
   },
-  { name: "message", label: "Notes", type: "textarea" },
+  {
+    name: "internal_notes",
+    label: "Internal notes",
+    type: "textarea",
+    help: "Visible to authorised staff only. The learner's original enquiry remains unchanged.",
+    nullable: true,
+  },
 ];
 
 function AdminLeads() {
@@ -43,6 +49,8 @@ function AdminLeads() {
         { name: "consent_version", label: "Disclosure version" },
         { name: "consent_text", label: "Exact disclosure", maxLength: 220 },
         { name: "source_path", label: "Source" },
+        { name: "message", label: "Original enquiry", maxLength: 220 },
+        { name: "internal_notes", label: "Internal notes", maxLength: 220 },
         { name: "status", label: "Status" },
       ]}
     />

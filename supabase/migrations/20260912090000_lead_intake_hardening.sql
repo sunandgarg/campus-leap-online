@@ -315,14 +315,11 @@ $$;
 
 REVOKE ALL ON FUNCTION public.submit_counselling_lead(
   TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB, BOOLEAN, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT
-) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.submit_counselling_lead(
-  TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB, BOOLEAN, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT
-) TO anon, authenticated;
+) FROM PUBLIC, anon, authenticated, service_role;
 
 COMMENT ON FUNCTION public.submit_counselling_lead(
   TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, JSONB, BOOLEAN, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT, TEXT
-) IS 'Validated, consent-aware public counselling intake. Workflow fields cannot be set by the caller.';
+) IS 'Private validated counselling-intake implementation. It is never exposed directly to browser roles.';
 
 COMMENT ON TABLE public.lead_intake_rate_limits IS
   'Pseudonymous network-derived buckets used only to throttle public counselling intake abuse; stale rows are opportunistically pruned.';

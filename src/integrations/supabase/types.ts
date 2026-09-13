@@ -98,6 +98,7 @@ export type Database = {
           email: string | null;
           full_name: string;
           id: string;
+          internal_notes: string | null;
           message: string | null;
           phone: string;
           program_slug: string | null;
@@ -125,6 +126,7 @@ export type Database = {
           email?: string | null;
           full_name: string;
           id?: string;
+          internal_notes?: string | null;
           message?: string | null;
           phone: string;
           program_slug?: string | null;
@@ -152,6 +154,7 @@ export type Database = {
           email?: string | null;
           full_name?: string;
           id?: string;
+          internal_notes?: string | null;
           message?: string | null;
           phone?: string;
           program_slug?: string | null;
@@ -508,6 +511,7 @@ export type Database = {
           fee_verified_at: string | null;
           fees_verified: boolean;
           id: string;
+          legacy_unverified_data: Json;
           next_review_at: string | null;
           official_application_url: string | null;
           official_programme_name: string | null;
@@ -545,6 +549,7 @@ export type Database = {
           fee_verified_at?: string | null;
           fees_verified?: boolean;
           id?: string;
+          legacy_unverified_data?: Json;
           next_review_at?: string | null;
           official_application_url?: string | null;
           official_programme_name?: string | null;
@@ -582,6 +587,7 @@ export type Database = {
           fee_verified_at?: string | null;
           fees_verified?: boolean;
           id?: string;
+          legacy_unverified_data?: Json;
           next_review_at?: string | null;
           official_application_url?: string | null;
           official_programme_name?: string | null;

@@ -128,14 +128,14 @@ function offerHref(offer: CatalogueOffer) {
   return `/universities/${offer.university.slug}/${offer.program.slug}`;
 }
 
-function detailedOffers(programSlug: string): CatalogueOffer[] {
-  return universitiesOfferingProgram(programSlug).filter(({ university }) =>
-    hasEditorialDepth(university),
-  );
+function catalogueOffers(programSlug: string): CatalogueOffer[] {
+  return universitiesOfferingProgram(programSlug);
 }
 
 function reviewedFeeOffers(programSlug: string): CatalogueOffer[] {
-  return detailedOffers(programSlug).filter(({ program }) => hasReviewedFee(program));
+  return catalogueOffers(programSlug).filter(
+    ({ university, program }) => hasEditorialDepth(university) && hasReviewedFee(program),
+  );
 }
 
 function catalogueFeeDetail(offer: CatalogueOffer) {
@@ -214,7 +214,7 @@ function feeLimitFromQuery(query: string) {
   return value;
 }
 
-function buildAnswer(rawQuery: string, detailedUniversities: University[]): CopilotAnswer {
+function buildAnswer(rawQuery: string, catalogueUniversities: University[]): CopilotAnswer {
   const query = normalise(rawQuery);
   const allReviewedFeeOffers = programCatalog.flatMap((program) => reviewedFeeOffers(program.slug));
 
@@ -246,7 +246,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
     };
   }
 
-  const matchedUniversity = universityMatch(query, detailedUniversities)[0]?.university;
+  const matchedUniversity = universityMatch(query, catalogueUniversities)[0]?.university;
   if (matchedUniversity) {
     const matchedPrograms = matchedUniversity.programs
       .map((reference) => programCatalog.find((program) => program.slug === reference.slug))
@@ -256,7 +256,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
     return {
       eyebrow: "Catalogue match",
       title: `Explore ${matchedUniversity.name}`,
-      body: `I found this university in DekhoCampus's detailed catalogue. Review programme-specific details, then re-check the current session on the university and UGC-DEB websites.`,
+      body: `I found this university in the DekhoCampus catalogue. Review its evidence status and programme details, then re-check the current session on the university and UGC-DEB websites.`,
       suggestions: [
         {
           label: `${matchedUniversity.name} profile`,
@@ -269,7 +269,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
           href: `/universities/${matchedUniversity.slug}/${program.slug}`,
         })),
       ],
-      why: "Matched against university name and location fields in detailed catalogue profiles.",
+      why: "Matched against university name and location fields in the current catalogue.",
     };
   }
 
@@ -290,7 +290,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
     (explicitlyNamesProgramme(query, directProgram) || directProgramMatch.score >= 2) &&
     (!asksBroadlyForTechnology || explicitlyNamesProgramme(query, directProgram))
   ) {
-    const catalogueOffers = detailedOffers(directProgram.slug);
+    const matchedCatalogueOffers = catalogueOffers(directProgram.slug);
     const pricedOffers = reviewedFeeOffers(directProgram.slug);
     const feeLimit = asksForBudget ? feeLimitFromQuery(query) : null;
     const queryLooksMonthly =
@@ -299,7 +299,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
       ? pricedOffers.filter(({ program }) =>
           queryLooksMonthly ? hasReviewedMonthlyPayment(program) : true,
         )
-      : catalogueOffers;
+      : matchedCatalogueOffers;
     const eligibleOffers = feeLimit
       ? offers.filter(({ program }) =>
           queryLooksMonthly ? program.emiPerMonth <= feeLimit : program.totalFee <= feeLimit,
@@ -314,12 +314,12 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
 
     return {
       eyebrow: asksForBudget ? "Fee-first catalogue view" : "Programme match",
-      title: `${directProgram.code}: ${catalogueOffers.length} detailed ${catalogueOffers.length === 1 ? "profile" : "profiles"}`,
+      title: `${directProgram.code}: ${matchedCatalogueOffers.length} catalogue ${matchedCatalogueOffers.length === 1 ? "record" : "records"}`,
       body: asksForBudget
         ? pricedOffers.length
           ? `${eligibleOffers.length ? "These sourced-fee options fit" : "No sourced-fee option fits"} the amount in your question. Fees, taxes, scholarships and payment terms can change.`
-          : "No detailed profile has a current sourced fee for this comparison, so I will not estimate or rank a provider by price."
-        : `Compare the programme structure across ${catalogueOffers.length} detailed university profiles. Current entitlement, fees and admission terms still require an intake check.`,
+          : "No catalogue record has a current sourced fee for this comparison, so I will not estimate or rank a provider by price."
+        : `Compare the available catalogue records for this programme. Directory records are discovery aids; current entitlement, fees and admission terms still require an intake check.`,
       suggestions: [
         ...rankedOffers.slice(0, 3).map((offer) => ({
           label: `${offer.program.code} · ${offer.university.shortName}`,
@@ -334,7 +334,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
       ],
       why: asksForBudget
         ? `Matched “${directProgram.code}” and ranked only profiles with the required sourced fee field.`
-        : `Matched “${directProgram.code}” and ordered detailed profiles alphabetically without inventing a “best” ranking.`,
+        : `Matched “${directProgram.code}” and ordered catalogue records alphabetically without inventing a “best” ranking.`,
     };
   }
 
@@ -347,7 +347,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
   ) {
     const bachelors = programCatalog
       .filter((program) => program.level === "Bachelors")
-      .map((program) => ({ program, count: detailedOffers(program.slug).length }))
+      .map((program) => ({ program, count: catalogueOffers(program.slug).length }))
       .filter(({ count }) => count > 0)
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
@@ -359,7 +359,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
       suggestions: [
         ...bachelors.map(({ program, count }) => ({
           label: `${program.code} · ${program.name}`,
-          detail: `${count} detailed university ${count === 1 ? "option" : "options"}`,
+          detail: `${count} catalogue university ${count === 1 ? "record" : "records"}`,
           href: programmeHref(program),
         })),
         {
@@ -375,19 +375,19 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
   if (asksBroadlyForTechnology) {
     const technologyPrograms = programCatalog
       .filter((program) => ["MCA", "BCA", "PGD DS", "M.Sc DS"].includes(program.code))
-      .map((program) => ({ program, count: detailedOffers(program.slug).length }))
+      .map((program) => ({ program, count: catalogueOffers(program.slug).length }))
       .filter(({ count }) => count > 0)
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
 
     return {
       eyebrow: "Career-direction match",
-      title: "Technology and data paths in the detailed catalogue",
+      title: "Technology and data paths in the catalogue",
       body: "Choose by entry qualification and the work you want to practise—not by a trendy specialisation name alone.",
       suggestions: [
         ...technologyPrograms.map(({ program, count }) => ({
           label: `${program.code} · ${program.name}`,
-          detail: `${count} detailed university ${count === 1 ? "option" : "options"}`,
+          detail: `${count} catalogue university ${count === 1 ? "record" : "records"}`,
           href: programmeHref(program),
         })),
         {
@@ -408,7 +408,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
   ) {
     const masters = programCatalog
       .filter((program) => program.level === "Masters")
-      .map((program) => ({ program, count: detailedOffers(program.slug).length }))
+      .map((program) => ({ program, count: catalogueOffers(program.slug).length }))
       .filter(({ count }) => count > 0)
       .sort((a, b) => b.count - a.count)
       .slice(0, 3);
@@ -426,7 +426,7 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
         },
         ...masters.slice(0, 2).map(({ program, count }) => ({
           label: `Explore ${program.code}`,
-          detail: `${count} detailed university ${count === 1 ? "option" : "options"}`,
+          detail: `${count} catalogue university ${count === 1 ? "record" : "records"}`,
           href: programmeHref(program),
         })),
       ],
@@ -505,19 +505,11 @@ function buildAnswer(rawQuery: string, detailedUniversities: University[]): Copi
   };
 }
 
-export function DekhoAICopilot() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [askedQuery, setAskedQuery] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  const returnFocusRef = useRef<HTMLElement | null>(null);
-  const detailedUniversities = useMemo(() => universities.filter(hasEditorialDepth), []);
-  const [answer, setAnswer] = useState<CopilotAnswer>(() => ({
+function welcomeAnswer(catalogueUniversityCount: number): CopilotAnswer {
+  return {
     eyebrow: "DekhoCampus course guidance",
     title: "Hi, I’m Diya. What can I help you find?",
-    body: `Ask about a degree, budget, university or verification step. I organise ${detailedUniversities.length} detailed catalogue profiles and will tell you when something still needs an official check.`,
+    body: `Ask about a degree, budget, university or verification step. I can search ${catalogueUniversityCount} catalogue university ${catalogueUniversityCount === 1 ? "record" : "records"} and will tell you when something still needs an official check.`,
     suggestions: [
       {
         label: "Find my course direction",
@@ -531,7 +523,32 @@ export function DekhoAICopilot() {
       },
     ],
     why: "Your question stays in this browser tab and is not sent to an external AI service.",
-  }));
+  };
+}
+
+export function DekhoAICopilot({
+  catalogueUniversities = universities,
+}: {
+  catalogueUniversities?: University[];
+}) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [askedQuery, setAskedQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const currentCatalogueUniversities = useMemo(
+    () => catalogueUniversities.filter((university) => university.name.trim()),
+    [catalogueUniversities],
+  );
+  const [answer, setAnswer] = useState<CopilotAnswer>(() =>
+    welcomeAnswer(currentCatalogueUniversities.length),
+  );
+
+  useEffect(() => {
+    if (!askedQuery) setAnswer(welcomeAnswer(currentCatalogueUniversities.length));
+  }, [askedQuery, currentCatalogueUniversities.length]);
 
   useEffect(() => {
     const openDiya = () => {
@@ -553,7 +570,7 @@ export function DekhoAICopilot() {
     }
     setQuery(cleanedQuery);
     setAskedQuery(cleanedQuery);
-    setAnswer(buildAnswer(cleanedQuery, detailedUniversities));
+    setAnswer(buildAnswer(cleanedQuery, currentCatalogueUniversities));
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {

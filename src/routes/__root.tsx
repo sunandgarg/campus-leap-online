@@ -16,7 +16,7 @@ import { MobileBottomNav } from "@/components/site/mobile-bottom-nav";
 import { DekhoAICopilot } from "@/components/site/dekho-ai-copilot";
 import { Toaster } from "@/components/ui/sonner";
 import { getCatalog } from "@/lib/catalog.functions";
-import { setCatalog, siteSettings } from "@/data/universities";
+import { setCatalog, siteSettings, universities } from "@/data/universities";
 
 const SITE_ORIGIN = "https://online.dekhocampus.com";
 
@@ -257,7 +257,7 @@ function RootComponent() {
         <SiteFooter />
       </div>
       <MobileBottomNav />
-      <DekhoAICopilot />
+      <DekhoAICopilot catalogueUniversities={universities} />
       <Toaster />
     </QueryClientProvider>
   );

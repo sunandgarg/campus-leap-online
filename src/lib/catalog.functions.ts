@@ -241,10 +241,30 @@ function toOfficialUniversityUrl(
     : undefined;
 }
 
-export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Promise<Catalog> => {
+const DATABASE_CATALOG_TTL_MS = 60_000;
+const FALLBACK_CATALOG_TTL_MS = 10_000;
+const CATALOG_REQUEST_TIMEOUT_MS = 6_000;
+const loggedCatalogFailures = new Set<string>();
+let catalogCache: { catalog: Catalog; expiresAt: number } | undefined;
+let catalogRequest: Promise<Catalog> | undefined;
+
+function logCatalogFailure(stage: string, codes: Array<string | undefined>) {
+  const safeCodes = codes.filter((code): code is string => Boolean(code)).slice(0, 8);
+  const signature = `${stage}:${safeCodes.join(",") || "unknown"}`;
+  if (loggedCatalogFailures.has(signature)) return;
+  if (loggedCatalogFailures.size >= 20) loggedCatalogFailures.clear();
+  loggedCatalogFailures.add(signature);
+  console.error("catalog_load_failure", { stage, codes: safeCodes });
+}
+
+async function loadCatalogFromDatabase(): Promise<Catalog> {
   const url = process.env["SUPABASE_URL"];
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
   if (!url || !key) {
+    logCatalogFailure("configuration", [
+      !url ? "missing_url" : undefined,
+      !key ? "missing_key" : undefined,
+    ]);
     return { universities: [], programs: [], settings: {}, source: "fallback" };
   }
 
@@ -267,49 +287,48 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
   });
 
   const nowIso = new Date().toISOString();
-  const [
-    uniRes,
-    progRes,
-    offerRes,
-    offeringSpecialisationRes,
-    specialisationRes,
-    claimRes,
-    settingsRes,
-  ] = await Promise.all([
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), CATALOG_REQUEST_TIMEOUT_MS);
+  const responses = await Promise.all([
     supabase
       .from("universities")
       .select(
         "slug,name,legal_name,hei_id,short_name,city,state,established,domain,logo_url,hero_image_url,accent_color,highlights,about,profile_depth,verification_source_url,verification_academic_session,verified_at,next_review_at",
       )
       .eq("published", true)
-      .order("sort_order"),
+      .order("sort_order")
+      .abortSignal(controller.signal),
     supabase
       .from("programs")
       .select(
         "slug,code,name,level,duration_years,semesters,eligibility,overview,hero_image_url,specialisations,curriculum,careers",
       )
       .eq("published", true)
-      .order("sort_order"),
+      .order("sort_order")
+      .abortSignal(controller.signal),
     supabase
       .from("university_programs")
       .select(
         "id,university_slug,program_slug,total_fee,per_semester_fee,emi_per_month,official_programme_name,delivery_mode,academic_session,entitlement_status,entitlement_source_url,university_programme_url,official_application_url,verified_at,next_review_at,fees_verified,per_semester_fee_verified,emi_per_month_verified,fee_source_url,fee_verified_at,fee_next_review_at,refund_policy_url,duration_years,semesters,eligibility,exam_mode,curriculum,updated_at,sort_order",
       )
       .eq("published", true)
-      .order("sort_order"),
+      .order("sort_order")
+      .abortSignal(controller.signal),
     supabase
       .from("offering_specialisations")
       .select(
         "offering_id,specialisation_id,university_label,availability_status,academic_session,source_url,verified_at,next_review_at,specialisations(name)",
       )
       .eq("published", true)
-      .eq("availability_status", "verified"),
+      .eq("availability_status", "verified")
+      .abortSignal(controller.signal),
     supabase
       .from("specialisations")
       .select("id,slug,name,program_slug,category,summary,skills,career_directions,sort_order")
       .eq("published", true)
       .order("sort_order")
-      .order("name"),
+      .order("name")
+      .abortSignal(controller.signal),
     supabase
       .from("claim_evidence")
       .select(
@@ -318,12 +337,44 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
       .eq("published", true)
       .lte("verified_at", nowIso)
       .gt("expires_at", nowIso)
-      .order("verified_at", { ascending: false }),
-    supabase.from("site_settings").select("key,value"),
-  ]);
+      .order("verified_at", { ascending: false })
+      .abortSignal(controller.signal),
+    supabase.from("site_settings").select("key,value").abortSignal(controller.signal),
+  ])
+    .catch((error: unknown) => {
+      logCatalogFailure("request", [error instanceof Error ? error.name : "unknown"]);
+      return null;
+    })
+    .finally(() => clearTimeout(timeout));
+
+  if (!responses) return { universities: [], programs: [], settings: {}, source: "fallback" };
+
+  const [
+    uniRes,
+    progRes,
+    offerRes,
+    offeringSpecialisationRes,
+    specialisationRes,
+    claimRes,
+    settingsRes,
+  ] = responses;
 
   if (uniRes.error || progRes.error || offerRes.error || settingsRes.error) {
+    logCatalogFailure("core_schema", [
+      uniRes.error?.code,
+      progRes.error?.code,
+      offerRes.error?.code,
+      settingsRes.error?.code,
+    ]);
     return { universities: [], programs: [], settings: {}, source: "fallback" };
+  }
+
+  if (offeringSpecialisationRes.error || specialisationRes.error || claimRes.error) {
+    logCatalogFailure("optional_schema", [
+      offeringSpecialisationRes.error?.code,
+      specialisationRes.error?.code,
+      claimRes.error?.code,
+    ]);
   }
 
   const dbUniversities = (uniRes.data ?? []) as unknown as DbUniversity[];
@@ -680,4 +731,30 @@ export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Pr
     settings,
     source: "database",
   };
+}
+
+export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Promise<Catalog> => {
+  const now = Date.now();
+  if (catalogCache && catalogCache.expiresAt > now) return catalogCache.catalog;
+  if (catalogRequest) return catalogRequest;
+
+  catalogRequest = loadCatalogFromDatabase()
+    .catch((error: unknown) => {
+      logCatalogFailure("unexpected", [error instanceof Error ? error.name : "unknown"]);
+      return { universities: [], programs: [], settings: {}, source: "fallback" } as Catalog;
+    })
+    .then((catalog) => {
+      catalogCache = {
+        catalog,
+        expiresAt:
+          Date.now() +
+          (catalog.source === "database" ? DATABASE_CATALOG_TTL_MS : FALLBACK_CATALOG_TTL_MS),
+      };
+      return catalog;
+    })
+    .finally(() => {
+      catalogRequest = undefined;
+    });
+
+  return catalogRequest;
 });

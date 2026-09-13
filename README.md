@@ -28,6 +28,18 @@ npm run dev -- --host 127.0.0.1 --port 8086
 The browser-safe Supabase URL and publishable key need `VITE_` prefixes. The service-role key is
 server-only and must never use a `VITE_` prefix.
 
+To preview the built Cloudflare Worker locally, build first and then start the Worker-compatible
+preview (the standard Vite preview server cannot run this Nitro output):
+
+```sh
+npm run build
+npm run preview -- --port 8087
+```
+
+The production Turnstile site key is restricted to `online.dekhocampus.com`, so it must not be
+relaxed to make localhost work. Use Cloudflare's published test site/secret key pair in an untracked
+local environment when exercising the complete enquiry flow locally.
+
 ## Quality commands
 
 ```sh
@@ -81,11 +93,17 @@ Apply migrations in timestamp order:
 
 - `20260912090000_lead_intake_hardening.sql` replaces anonymous table inserts with a validated,
   consent-aware RPC and duplicate protection.
+- `20260912093000_lead_fail_closed.sql` revokes the browser RPC before the administrator review
+  gate, so a partially completed migration push fails closed.
 - `20260912100000_admin_invite_only.sql` removes first-registrant admin promotion.
 - `20260912110000_catalog_verification_model.sql` adds offering evidence, specialisation mappings
   and a claim-evidence ledger.
 - `20260912120000_lead_server_proxy_only.sql` revokes direct public execution of lead intake; only
   the trusted application server may call the RPC after Turnstile verification.
+- `20260912230000_university_directory_import.sql` imports the reviewed directory without
+  overwriting curated conflicts.
+- `20260913183000_release_safety_fixes.sql` applies additive ACL, review-expiry and staff-note
+  safeguards to databases that received an earlier September migration revision.
 
 Provision administrators only through trusted service-role tooling after identity verification.
 Public sign-in never grants an administrative role.
@@ -120,6 +138,10 @@ Before production launch:
 7. Apply and smoke-test the migrations in a staging Supabase project, then run `npm run check` and
    manually test keyboard navigation, 320 px reflow, light/dark mode,
    reduced motion and lead delivery in a staging project.
+8. Review the Supabase migration ledger before production. If an older revision of a migration is
+   already recorded as applied, use a new forward-only migration; editing the old local file does
+   not change that database. Refresh directory evidence before its 12 October 2026 review expiry,
+   and validate the deferred legacy constraints after the cleanup is complete.
 
 Programme entitlement, fees, dates, scholarships and outcomes can change. DekhoCampus is a discovery
 and counselling platform; admission and payment remain with the relevant university.

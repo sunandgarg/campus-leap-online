@@ -1,6 +1,5 @@
 import "./lib/error-capture";
 
-import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
 type ServerEntry = {
@@ -9,12 +8,30 @@ type ServerEntry = {
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "connect-src 'self' https://tzhjdxewkwjftuofaelk.supabase.co wss://tzhjdxewkwjftuofaelk.supabase.co https://challenges.cloudflare.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "frame-src https://challenges.cloudflare.com",
+  "img-src 'self' data: blob: https:",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  // TanStack Start serialises request-specific hydration state into inline
+  // scripts. Keep that framework requirement explicit while preventing scripts
+  // from every origin other than this app and Cloudflare Turnstile.
+  "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+  "script-src-attr 'none'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "worker-src 'self' blob:",
+  "upgrade-insecure-requests",
+].join("; ");
+
 function withSecurityHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
-  headers.set(
-    "Content-Security-Policy",
-    "base-uri 'self'; object-src 'none'; frame-ancestors 'none'",
-  );
+  headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
@@ -39,7 +56,10 @@ async function getServerEntry(): Promise<ServerEntry> {
 
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
+async function normalizeCatastrophicSsrResponse(
+  request: Request,
+  response: Response,
+): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
@@ -47,7 +67,8 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   const body = await response.clone().text();
   if (!isH3SwallowedErrorBody(body)) return response;
 
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  const cfRay = request.headers.get("cf-ray")?.match(/^[a-zA-Z0-9-]{1,80}$/)?.[0] ?? "missing";
+  console.error("ssr_response_failure", { cfRay, status: response.status });
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
@@ -68,7 +89,7 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(request, response));
     } catch (error) {
       console.error(error);
       return withSecurityHeaders(

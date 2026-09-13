@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { University } from "@/data/universities";
 
@@ -44,6 +44,41 @@ export function UniversityLogo({
   const logoUrl = university.logoUrl;
   const failed = !logoUrl || failedUrl === logoUrl;
   const loaded = loadedUrl === logoUrl;
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const syncCompletedImage = useCallback(
+    (image: HTMLImageElement | null) => {
+      if (!image?.complete) return;
+
+      if (image.naturalWidth < 2 || image.naturalHeight < 2) {
+        setFailedUrl(logoUrl ?? null);
+        return;
+      }
+
+      setLoadedUrl(logoUrl ?? null);
+    },
+    [logoUrl],
+  );
+
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image) return;
+
+    const handleLoad = () => syncCompletedImage(image);
+    const handleError = () => setFailedUrl(logoUrl ?? null);
+
+    image.addEventListener("load", handleLoad);
+    image.addEventListener("error", handleError);
+
+    // During hydration a cached image can finish before React's onLoad handler
+    // is attached. Read the browser's completed state once listeners are live.
+    if (image.complete) handleLoad();
+
+    return () => {
+      image.removeEventListener("load", handleLoad);
+      image.removeEventListener("error", handleError);
+    };
+  }, [logoUrl, syncCompletedImage]);
 
   const tile = cn(
     "inline-flex shrink-0 items-center justify-center overflow-hidden border font-display font-bold tracking-tight",
@@ -89,6 +124,7 @@ export function UniversityLogo({
         </span>
       ) : null}
       <img
+        ref={imageRef}
         src={logoUrl}
         alt={`${university.name} logo`}
         width={s.px}

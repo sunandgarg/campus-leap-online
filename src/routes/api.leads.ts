@@ -74,6 +74,7 @@ const rateWindows = new Map<string, RateWindow>();
 const WINDOW_MS = 10 * 60 * 1_000;
 const MAX_ATTEMPTS_PER_WINDOW = 12;
 const MAX_BODY_BYTES = 12_000;
+const MAX_RATE_BUCKETS = 2_000;
 
 function json(result: IntakeResult, status = 200) {
   return Response.json(result, {
@@ -151,11 +152,53 @@ function isRateLimited(bucket: string) {
 }
 
 function pruneRateWindows() {
-  if (rateWindows.size < 1_000) return;
+  if (rateWindows.size <= MAX_RATE_BUCKETS) return;
   const oldestAllowed = Date.now() - WINDOW_MS;
   for (const [key, value] of rateWindows) {
     if (value.startedAt < oldestAllowed) rateWindows.delete(key);
   }
+
+  if (rateWindows.size <= MAX_RATE_BUCKETS) return;
+  const excess = rateWindows.size - MAX_RATE_BUCKETS;
+  const oldest = [...rateWindows.entries()]
+    .sort(([, left], [, right]) => left.startedAt - right.startedAt)
+    .slice(0, excess);
+  for (const [key] of oldest) rateWindows.delete(key);
+}
+
+type BodyReadResult =
+  { ok: true; body: string } | { ok: false; reason: "too_large" | "read_error" };
+
+async function readBodyWithLimit(request: Request, maximumBytes: number): Promise<BodyReadResult> {
+  if (!request.body) return { ok: true, body: "" };
+
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let body = "";
+  let bytesRead = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytesRead += value.byteLength;
+      if (bytesRead > maximumBytes) {
+        await reader.cancel("request body exceeds the intake limit");
+        return { ok: false, reason: "too_large" };
+      }
+      body += decoder.decode(value, { stream: true });
+    }
+    return { ok: true, body: body + decoder.decode() };
+  } catch {
+    return { ok: false, reason: "read_error" };
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+function logIntakeFailure(request: Request, code: string) {
+  const cfRay = request.headers.get("cf-ray")?.match(/^[a-zA-Z0-9-]{1,80}$/)?.[0] ?? "missing";
+  console.error("lead_intake_failure", { code, cfRay });
 }
 
 function isSameOrigin(request: Request) {
@@ -201,7 +244,10 @@ async function verifyTurnstile(request: Request, token: string | null) {
       body: formData,
       signal: controller.signal,
     });
-    if (!response.ok) return false;
+    if (!response.ok) {
+      logIntakeFailure(request, "turnstile_unavailable");
+      return false;
+    }
 
     const result = (await response.json()) as TurnstileResponse;
     if (!result.success || result.action !== "counselling_lead") return false;
@@ -215,6 +261,7 @@ async function verifyTurnstile(request: Request, token: string | null) {
 
     return Boolean(result.hostname && allowedHostnames.has(result.hostname.toLowerCase()));
   } catch {
+    logIntakeFailure(request, "turnstile_unreachable");
     return false;
   } finally {
     clearTimeout(timeout);
@@ -245,19 +292,17 @@ export const Route = createFileRoute("/api/leads")({
         if (isRateLimited(bucket)) return json({ ok: false, reason: "rate_limited" }, 429);
         pruneRateWindows();
 
-        let rawBody: string;
-        try {
-          rawBody = await request.text();
-        } catch {
-          return json({ ok: false, reason: "invalid" }, 400);
-        }
-        if (new TextEncoder().encode(rawBody).byteLength > MAX_BODY_BYTES) {
-          return json({ ok: false, reason: "invalid" }, 413);
+        const bodyRead = await readBodyWithLimit(request, MAX_BODY_BYTES);
+        if (!bodyRead.ok) {
+          return json(
+            { ok: false, reason: "invalid" },
+            bodyRead.reason === "too_large" ? 413 : 400,
+          );
         }
 
         let parsedJson: unknown;
         try {
-          parsedJson = JSON.parse(rawBody);
+          parsedJson = JSON.parse(bodyRead.body);
         } catch {
           return json({ ok: false, reason: "invalid" }, 400);
         }
@@ -276,36 +321,42 @@ export const Route = createFileRoute("/api/leads")({
         const clientBucket = await createDatabaseClientBucket(request);
         if (!clientBucket) return json({ ok: false, reason: "unavailable" }, 503);
 
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const { error } = await supabaseAdmin.rpc("submit_counselling_lead_from_server", {
-          p_client_bucket: clientBucket,
-          p_full_name: parsed.data.fullName,
-          p_phone: parsed.data.phone,
-          p_email: parsed.data.email || null,
-          p_university_slug: parsed.data.universitySlug,
-          p_program_slug: parsed.data.programSlug,
-          p_source_path: parsed.data.sourcePath,
-          p_message: parsed.data.message,
-          p_contact_channels: [parsed.data.contactChannel],
-          p_consent_given: parsed.data.consentGiven,
-          p_consent_text: parsed.data.consentText,
-          p_consent_version: parsed.data.consentVersion,
-          p_share_with_university: parsed.data.shareWithUniversity,
-          p_university_share_consent_version: parsed.data.universityShareConsentVersion,
-          p_university_share_consent_text: parsed.data.universityShareConsentText,
-          p_qualification: parsed.data.qualification,
-          p_goal: parsed.data.goal,
-          p_utm_source: parsed.data.utmSource,
-          p_utm_medium: parsed.data.utmMedium,
-          p_utm_campaign: parsed.data.utmCampaign,
-          p_referrer: parsed.data.referrer,
-        });
+        try {
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+          const { error } = await supabaseAdmin.rpc("submit_counselling_lead_from_server", {
+            p_client_bucket: clientBucket,
+            p_full_name: parsed.data.fullName,
+            p_phone: parsed.data.phone,
+            p_email: parsed.data.email || null,
+            p_university_slug: parsed.data.universitySlug,
+            p_program_slug: parsed.data.programSlug,
+            p_source_path: parsed.data.sourcePath,
+            p_message: parsed.data.message,
+            p_contact_channels: [parsed.data.contactChannel],
+            p_consent_given: parsed.data.consentGiven,
+            p_consent_text: parsed.data.consentText,
+            p_consent_version: parsed.data.consentVersion,
+            p_share_with_university: parsed.data.shareWithUniversity,
+            p_university_share_consent_version: parsed.data.universityShareConsentVersion,
+            p_university_share_consent_text: parsed.data.universityShareConsentText,
+            p_qualification: parsed.data.qualification,
+            p_goal: parsed.data.goal,
+            p_utm_source: parsed.data.utmSource,
+            p_utm_medium: parsed.data.utmMedium,
+            p_utm_campaign: parsed.data.utmCampaign,
+            p_referrer: parsed.data.referrer,
+          });
 
-        if (error) {
-          const failure = mapRpcFailure(error.message);
-          const status =
-            failure.reason === "rate_limited" ? 429 : failure.reason === "duplicate" ? 409 : 503;
-          return json(failure, status);
+          if (error) {
+            const failure = mapRpcFailure(error.message);
+            if (failure.reason === "unavailable") logIntakeFailure(request, "rpc_rejected");
+            const status =
+              failure.reason === "rate_limited" ? 429 : failure.reason === "duplicate" ? 409 : 503;
+            return json(failure, status);
+          }
+        } catch {
+          logIntakeFailure(request, "rpc_unreachable");
+          return json({ ok: false, reason: "unavailable" }, 503);
         }
 
         return json({ ok: true });

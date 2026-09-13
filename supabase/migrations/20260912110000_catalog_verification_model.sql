@@ -13,18 +13,6 @@ ALTER TABLE public.universities
   ADD COLUMN IF NOT EXISTS verified_at TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS next_review_at TIMESTAMPTZ;
 
-ALTER TABLE public.universities
-  ADD CONSTRAINT universities_slug_format CHECK (
-    slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
-  ) NOT VALID,
-  ADD CONSTRAINT universities_public_urls_are_http CHECK (
-    (verification_source_url IS NULL OR verification_source_url ~* '^https?://')
-    AND (logo_url IS NULL OR logo_url = '' OR logo_url ~* '^https?://')
-    AND (hero_image_url IS NULL OR hero_image_url = '' OR hero_image_url ~* '^https?://')
-  ) NOT VALID,
-  ADD CONSTRAINT universities_domain_is_hostname CHECK (
-    domain IS NULL OR domain = '' OR lower(domain) ~ '^[a-z0-9.-]+\.[a-z]{2,}$'
-  ) NOT VALID;
 ALTER TABLE public.programs
   ADD CONSTRAINT programs_slug_format CHECK (
     slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
@@ -47,6 +35,22 @@ ALTER TABLE public.programs
 UPDATE public.universities
 SET published = FALSE
 WHERE published = TRUE;
+
+-- Add guardrails only after the fail-closed publication update. NOT VALID
+-- preserves legacy rows for administrator cleanup without allowing a bad URL,
+-- domain or slug on any future insert/update.
+ALTER TABLE public.universities
+  ADD CONSTRAINT universities_slug_format CHECK (
+    slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'
+  ) NOT VALID,
+  ADD CONSTRAINT universities_public_urls_are_http CHECK (
+    (verification_source_url IS NULL OR verification_source_url ~* '^https?://')
+    AND (logo_url IS NULL OR logo_url = '' OR logo_url ~* '^https?://')
+    AND (hero_image_url IS NULL OR hero_image_url = '' OR hero_image_url ~* '^https?://')
+  ) NOT VALID,
+  ADD CONSTRAINT universities_domain_is_hostname CHECK (
+    domain IS NULL OR domain = '' OR lower(domain) ~ '^[a-z0-9.-]+\.[a-z]{2,}$'
+  ) NOT VALID;
 
 -- Anonymous catalogue readers receive only fields that are safe to present as
 -- editorial or source-backed facts. Legacy ratings, outcomes and approval
@@ -105,6 +109,8 @@ CREATE POLICY "public read published universities"
     AND nullif(trim(coalesce(verification_academic_session, '')), '') IS NOT NULL
     AND verified_at IS NOT NULL
     AND verified_at <= now()
+    AND next_review_at IS NOT NULL
+    AND next_review_at > now()
   );
 DROP POLICY IF EXISTS "public read published programs" ON public.programs;
 CREATE POLICY "public read published programs"
@@ -150,7 +156,8 @@ ALTER TABLE public.university_programs
   ADD COLUMN IF NOT EXISTS eligibility TEXT,
   ADD COLUMN IF NOT EXISTS exam_mode TEXT,
   ADD COLUMN IF NOT EXISTS curriculum JSONB,
-  ADD COLUMN IF NOT EXISTS scholarship_summary TEXT;
+  ADD COLUMN IF NOT EXISTS scholarship_summary TEXT,
+  ADD COLUMN IF NOT EXISTS legacy_unverified_data JSONB NOT NULL DEFAULT '{}'::jsonb;
 
 REVOKE SELECT ON public.university_programs FROM anon;
 GRANT SELECT (
@@ -185,6 +192,28 @@ GRANT SELECT (
   exam_mode,
   curriculum
 ) ON public.university_programs TO anon;
+
+-- Preserve pre-verification values for administrator review before public
+-- fields are scrubbed. This column is intentionally absent from anon grants.
+UPDATE public.university_programs
+SET legacy_unverified_data = jsonb_strip_nulls(jsonb_build_object(
+  'total_fee', total_fee,
+  'per_semester_fee', per_semester_fee,
+  'emi_per_month', emi_per_month,
+  'seats_filled_percent', seats_filled_percent,
+  'entitlement_source_url', entitlement_source_url,
+  'university_programme_url', university_programme_url,
+  'official_application_url', official_application_url,
+  'fee_source_url', fee_source_url,
+  'refund_policy_url', refund_policy_url,
+  'duration_years', duration_years,
+  'semesters', semesters,
+  'eligibility', eligibility,
+  'exam_mode', exam_mode,
+  'curriculum', curriculum,
+  'scholarship_summary', scholarship_summary
+))
+WHERE legacy_unverified_data = '{}'::jsonb;
 
 -- Existing legacy rows need an editorial migration before these constraints can
 -- be validated. NOT VALID still enforces them for every new or changed row.

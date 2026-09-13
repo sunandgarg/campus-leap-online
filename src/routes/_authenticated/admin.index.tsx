@@ -20,6 +20,15 @@ function AdminDashboard() {
         db.from("specialisations").select("id", { count: "exact", head: true }),
         db.from("leads").select("id", { count: "exact", head: true }),
       ]);
+      if (
+        universities.error ||
+        programs.error ||
+        offerings.error ||
+        specialisations.error ||
+        leads.error
+      ) {
+        throw new Error("Admin catalogue statistics are unavailable.");
+      }
       return {
         universities: universities.count ?? 0,
         programs: programs.count ?? 0,
@@ -49,6 +58,25 @@ function AdminDashboard() {
         Manage catalogue records, offering evidence and enquiries. A saved record appears publicly
         only when it is explicitly published and passes the page’s source-status rules.
       </p>
+
+      {stats.isError ? (
+        <div
+          role="alert"
+          className="mt-6 rounded-xl border border-destructive/35 bg-destructive/5 p-4 text-sm"
+        >
+          <p className="font-semibold text-destructive">Could not load database statistics.</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Confirm the production migrations and your admin access before making catalogue changes.
+          </p>
+          <button
+            type="button"
+            onClick={() => void stats.refetch()}
+            className="mt-3 h-10 rounded-lg border border-border bg-background px-4 text-xs font-bold text-foreground"
+          >
+            Try again
+          </button>
+        </div>
+      ) : null}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {cards.map((c) => (
