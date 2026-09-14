@@ -33,7 +33,6 @@ import { CompactRail } from "@/components/site/compact-rail";
 import { AuthorityVerification } from "@/components/site/authority-verification";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
-import { catalogueImportSummary } from "@/data/catalogue-import-summary";
 import {
   getSpecialisationCount,
   getTotalProgramCount,
@@ -136,12 +135,48 @@ const guides = [
   },
 ] as const;
 
+const decisionTools = [
+  {
+    title: "Find my course",
+    description: "Answer four questions and see an ungated shortlist.",
+    icon: Target,
+    to: "/finder" as const,
+  },
+  {
+    title: "Compare universities",
+    description: "Save three records; sourced facts stay clearly labelled.",
+    icon: BarChart3,
+    to: "/compare" as const,
+  },
+  {
+    title: "Learn how to verify",
+    description: "Check the institution, programme, mode and session.",
+    icon: ShieldCheck,
+    to: "/methodology" as const,
+  },
+] as const;
+
 const heroGoals = [
   { label: "Online degree", value: "flexible-study", icon: Laptop2 },
-  { label: "MBA & management", value: "career-growth", icon: BriefcaseBusiness },
-  { label: "After Class 12", value: "career-growth", icon: GraduationCap },
+  {
+    label: "MBA & management",
+    value: "career-growth",
+    education: "graduate",
+    field: "business",
+    icon: BriefcaseBusiness,
+  },
+  { label: "After Class 12", value: "career-growth", education: "12th", icon: GraduationCap },
   { label: "Affordable options", value: "lower-fees", icon: IndianRupee },
-  { label: "Career clarity", value: "career-switch", icon: Target },
+  { label: "Career clarity", value: "career-switch", field: "unsure", icon: Target },
+] as const;
+
+const heroUtilities = [
+  { label: "Universities", to: "/universities" as const, icon: Building2 },
+  { label: "Courses", to: "/programs" as const, icon: GraduationCap },
+  { label: "Specialisations", to: "/specialisations" as const, icon: Target },
+  { label: "Course finder", to: "/finder" as const, icon: Sparkles },
+  { label: "Compare", to: "/compare" as const, icon: BarChart3 },
+  { label: "Verify", to: "/methodology" as const, icon: ShieldCheck },
 ] as const;
 
 const heroRoles = ["Student", "Parent", "Professional"] as const;
@@ -197,27 +232,33 @@ export function HomePage() {
 
   return (
     <div className="overflow-hidden bg-background text-foreground">
-      <section className="border-b border-border bg-[#f7f8fb] dark:bg-background">
-        <div className="container-page grid gap-9 py-10 sm:py-12 xl:min-h-[640px] xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,0.78fr)] xl:items-center xl:gap-16 xl:py-14">
-          <div className="max-w-[760px]">
+      <section className="relative isolate overflow-hidden border-b border-[#d8e0f1] bg-[#eff4ff] dark:border-border dark:bg-background">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#f47b25]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute -right-24 top-0 h-[34rem] w-[34rem] rounded-full bg-[#dbe7ff] blur-3xl dark:bg-[#1d2c4a]"
+          aria-hidden="true"
+        />
+        <div className="container-page relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-9 py-10 sm:py-12 xl:min-h-[640px] xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,0.78fr)] xl:items-center xl:gap-16 xl:py-14">
+          <div className="min-w-0 max-w-[760px]">
             <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
               <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
-              Online degrees, explained clearly
+              DekhoCampus Online degree desk
             </div>
             <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#536176] dark:text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-[#168258]" />
-              Compare privately. Ask a human when you need one.
+              Browse first. Ask a human when you need one.
             </p>
 
-            <h1 className="mt-6 max-w-[740px] font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.045em] text-[#131720] dark:text-foreground sm:text-[3.65rem] xl:text-[4.1rem]">
-              Choose an online degree with{" "}
-              <span className="block text-[#325dd2] dark:text-[#8cb0ff]">
-                clarity, not pressure.
-              </span>
+            <h1 className="mt-6 max-w-[740px] font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.045em] text-[#131720] dark:text-foreground sm:text-[3.65rem] xl:text-[4.7rem]">
+              Discover Your Ideal{" "}
+              <span className="block text-[#325dd2] dark:text-[#8cb0ff]">Path.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-[#536176] dark:text-muted-foreground sm:text-lg sm:leading-8">
-              Explore courses and university records, see what has a source, and understand what
-              still needs confirmation before you apply or pay.
+              Search university and course records, compare the details available today, and see
+              what to confirm directly before you apply or pay.
             </p>
 
             <form action="/search" className="mt-6 max-w-2xl" role="search">
@@ -241,7 +282,7 @@ export function HomePage() {
             </form>
 
             <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-muted-foreground">Popular:</span>
+              <span className="text-xs font-bold text-muted-foreground">Start with:</span>
               {[
                 { label: "Online MBA", query: "MBA" },
                 { label: "Online BBA", query: "BBA" },
@@ -259,20 +300,36 @@ export function HomePage() {
             </div>
 
             <div className="mt-6 grid max-w-2xl grid-cols-3 gap-3 border-t border-border pt-5">
-              <HeroMetric value={String(universities.length)} label="universities" />
+              <HeroMetric value={String(universities.length)} label="university profiles" />
               <HeroMetric value={String(programCatalog.length)} label="course guides" />
-              <HeroMetric value="Free" label="private shortlist" />
+              <HeroMetric value="Ungated" label="catalogue browsing" />
             </div>
+
+            <nav
+              aria-label="Online degree tools"
+              className="mt-5 grid w-full min-w-0 max-w-2xl grid-flow-col auto-cols-[7.25rem] gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:grid-flow-row sm:grid-cols-6 sm:overflow-visible [&::-webkit-scrollbar]:hidden"
+            >
+              {heroUtilities.map((utility) => (
+                <Link
+                  key={utility.label}
+                  to={utility.to}
+                  className="flex min-h-[4.75rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-2 text-center text-[10px] font-extrabold text-foreground transition-colors hover:border-[#325dd2] hover:text-[#2449ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                >
+                  <utility.icon className="h-5 w-5 text-[#a94300]" aria-hidden="true" />
+                  {utility.label}
+                </Link>
+              ))}
+            </nav>
           </div>
 
           <aside
-            className="mx-auto w-full max-w-[440px] overflow-hidden rounded-[1.75rem] border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-5 shadow-lift sm:p-7"
+            className="mx-auto w-full min-w-0 max-w-[440px] overflow-hidden rounded-[1.75rem] border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-5 shadow-lift sm:p-7"
             aria-label="Free counselling starter"
           >
             <div className="flex items-center justify-between gap-4">
               <span className="inline-flex min-h-8 items-center gap-2 rounded-lg bg-[#eaf7f1] px-3 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                Free expert guidance
+                Guidance, if you want it
               </span>
               <div className="flex gap-1.5" aria-hidden="true">
                 <span className="h-1.5 w-8 rounded-full bg-[#325dd2]" />
@@ -282,13 +339,13 @@ export function HomePage() {
 
             <p className="brand-kicker mt-5">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Personal guidance desk
+              Your degree starting point
             </p>
             <h2 className="mt-2 font-display text-[1.65rem] font-extrabold leading-tight tracking-[-0.035em]">
-              What matters most right now?
+              What are you exploring?
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Choose one goal and we will shape a focused starting point.
+              Pick a goal and who you are. We will take you to a more useful starting point.
             </p>
 
             <fieldset className="mt-5 grid grid-cols-2 gap-2">
@@ -355,13 +412,17 @@ export function HomePage() {
                 search={{
                   goal: selectedHeroGoal.value,
                   audience: heroRole.toLowerCase() as Lowercase<typeof heroRole>,
+                  ...("education" in selectedHeroGoal
+                    ? { education: selectedHeroGoal.education }
+                    : {}),
+                  ...("field" in selectedHeroGoal ? { field: selectedHeroGoal.field } : {}),
                 }}
               >
                 Show my best-fit options <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <p className="mt-3 text-center text-[10px] font-semibold text-muted-foreground">
-              About 60 seconds · No personal details required
+              No form needed to see your starting options
             </p>
           </aside>
         </div>
@@ -414,9 +475,9 @@ export function HomePage() {
       <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
-            eyebrow="Popular course records"
-            title="Popular online MBA & BBA programmes"
-            description="Two rows keep the page compact. Each card opens that university-course record so you can inspect its evidence status."
+            eyebrow="Course discovery"
+            title="Explore online MBA & BBA programmes"
+            description="Start with a course, then open the relevant university record to inspect the details and evidence status."
             action={<TextLink to="/programs" label="See every course" />}
           />
           <CompactRail
@@ -445,9 +506,9 @@ export function HomePage() {
                     <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
                       Course record
                     </span>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[8px] font-bold uppercase tracking-[0.06em] text-muted-foreground">
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-[0.04em] text-muted-foreground">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#f47b25]" aria-hidden="true" />
-                      Check intake
+                      Verify details
                     </span>
                   </span>
                   <span className="mt-1 block font-display text-base font-extrabold leading-5 tracking-[-0.02em]">
@@ -469,6 +530,8 @@ export function HomePage() {
           </CompactRail>
         </div>
       </section>
+
+      <DecisionToolsSection />
 
       <section className="container-page py-10 lg:py-12">
         <SectionIntro
@@ -507,8 +570,8 @@ export function HomePage() {
         <div className="container-page">
           <SectionIntro
             eyebrow="University directory"
-            title="Compare leading online universities"
-            description="Four compact cards stay visible on desktop. Swipe or use the arrows to continue."
+            title="Browse online university profiles"
+            description="Use the logo rail to open a profile, review its course records and make a considered shortlist."
             action={<TextLink to="/universities" label={"View all " + universities.length} />}
           />
           <CompactRail
@@ -646,7 +709,7 @@ export function HomePage() {
         <SectionIntro
           eyebrow="Transparent coverage"
           title="The DekhoCampus catalogue, clearly explained"
-          description="Counts describe this catalogue. They are not rankings, approval claims or outcome guarantees."
+          description="These figures describe the profiles and course relationships available to browse here. They are not rankings, approval claims or outcome guarantees."
         />
         <CompactRail
           label="Catalogue coverage statistics"
@@ -672,16 +735,9 @@ export function HomePage() {
             </article>
           ))}
         </CompactRail>
-        <div className="mt-4 grid gap-2 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30 sm:grid-cols-2">
-          <p>
-            Information can change by intake. Reconfirm entitlement, fees and dates before paying.
-          </p>
-          <p>
-            Research intake, 13 Sep 2026:{" "}
-            {catalogueImportSummary.recordCount.toLocaleString("en-IN")} draft rows ·{" "}
-            {catalogueImportSummary.candidateCount.toLocaleString("en-IN")} candidates ·{" "}
-            <strong className="text-foreground">0 auto-published</strong>.
-          </p>
+        <div className="mt-4 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
+          Information can change by academic session. Reconfirm entitlement, fees and dates through
+          the university&apos;s official process before paying.
         </div>
       </section>
 
@@ -785,6 +841,60 @@ function HeroMetric({ value, label }: { value: string; label: string }) {
         {label}
       </p>
     </div>
+  );
+}
+
+function DecisionToolsSection() {
+  return (
+    <section className="container-page py-10 lg:py-12">
+      <SectionIntro
+        eyebrow="Decision tools"
+        title="Do the useful checks in one place"
+        description="Shortlist and compare before a form asks for your details. Diya can help you navigate the same catalogue."
+      />
+      <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {decisionTools.map((tool) => (
+          <Link
+            key={tool.title}
+            to={tool.to}
+            className="brand-card brand-card-interactive group flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#325dd2] p-4"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
+              <tool.icon className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-extrabold">{tool.title}</span>
+              <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+                {tool.description}
+              </span>
+            </span>
+            <ArrowRight
+              className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]"
+              aria-hidden="true"
+            />
+          </Link>
+        ))}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+          className="brand-card brand-card-interactive group flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#f47b25] p-4 text-left"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
+            <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-9 w-9" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold">Ask Diya</span>
+            <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
+              Search catalogue records in plain language.
+            </span>
+          </span>
+          <ArrowRight
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#a94300]"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
+    </section>
   );
 }
 

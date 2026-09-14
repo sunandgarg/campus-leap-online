@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ComponentType } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -35,7 +35,12 @@ type Field = "business" | "technology" | "commerce" | "media" | "unsure";
 type Priority = "affordability" | "career" | "flexibility" | "reputation";
 type FinderGoal = "career-growth" | "career-switch" | "lower-fees" | "flexible-study";
 type FinderAudience = "student" | "parent" | "professional";
-type FinderSearch = { goal?: FinderGoal; audience?: FinderAudience };
+type FinderSearch = {
+  goal?: FinderGoal;
+  audience?: FinderAudience;
+  education?: Education;
+  field?: Field;
+};
 
 const finderGoals: FinderGoal[] = [
   "career-growth",
@@ -44,6 +49,8 @@ const finderGoals: FinderGoal[] = [
   "flexible-study",
 ];
 const finderAudiences: FinderAudience[] = ["student", "parent", "professional"];
+const finderEducation: Education[] = ["12th", "graduate", "postgraduate", "diploma"];
+const finderFields: Field[] = ["business", "technology", "commerce", "media", "unsure"];
 
 const finderGoalDetails: Record<FinderGoal, { label: string; priority: Priority }> = {
   "career-growth": { label: "Career growth", priority: "career" },
@@ -63,6 +70,15 @@ export const Route = createFileRoute("/finder")({
       finderAudiences.includes(search["audience"] as FinderAudience)
     ) {
       validated.audience = search["audience"] as FinderAudience;
+    }
+    if (
+      typeof search["education"] === "string" &&
+      finderEducation.includes(search["education"] as Education)
+    ) {
+      validated.education = search["education"] as Education;
+    }
+    if (typeof search["field"] === "string" && finderFields.includes(search["field"] as Field)) {
+      validated.field = search["field"] as Field;
     }
     return validated;
   },
@@ -202,21 +218,29 @@ const codesByField: Record<Exclude<Field, "unsure">, string[]> = {
 const stepLabels = ["Qualification", "Direction", "Priority", "Budget"];
 
 function DegreeFinderPage() {
-  const { goal: initialGoal, audience } = Route.useSearch();
+  const {
+    goal: initialGoal,
+    audience,
+    education: initialEducation,
+    field: initialField,
+  } = Route.useSearch();
   const initialPriority = initialGoal ? finderGoalDetails[initialGoal].priority : null;
   const [step, setStep] = useState(0);
-  const [education, setEducation] = useState<Education | null>(null);
-  const [field, setField] = useState<Field | null>(null);
+  const [education, setEducation] = useState<Education | null>(initialEducation ?? null);
+  const [field, setField] = useState<Field | null>(initialField ?? null);
   const [priority, setPriority] = useState<Priority | null>(initialPriority);
   const [budget, setBudget] = useState<number | null>(null);
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const previousStepRef = useRef(step);
 
   useEffect(() => {
     setStep(0);
-    setEducation(null);
-    setField(null);
+    setEducation(initialEducation ?? null);
+    setField(initialField ?? null);
     setPriority(initialGoal ? finderGoalDetails[initialGoal].priority : null);
     setBudget(null);
-  }, [audience, initialGoal]);
+  }, [audience, initialEducation, initialField, initialGoal]);
 
   const recommendations = useMemo(() => {
     if (!education || !field || !priority || budget === null) return [];
@@ -283,10 +307,18 @@ function DegreeFinderPage() {
   const currentComplete = selections[step] !== null;
   const showingResults = step === stepLabels.length;
 
+  useEffect(() => {
+    if (previousStepRef.current === step) return;
+    previousStepRef.current = step;
+    window.requestAnimationFrame(() => {
+      (showingResults ? resultsHeadingRef.current : questionHeadingRef.current)?.focus();
+    });
+  }, [showingResults, step]);
+
   function reset() {
     setStep(0);
-    setEducation(null);
-    setField(null);
+    setEducation(initialEducation ?? null);
+    setField(initialField ?? null);
     setPriority(initialGoal ? finderGoalDetails[initialGoal].priority : null);
     setBudget(null);
   }
@@ -294,26 +326,28 @@ function DegreeFinderPage() {
   return (
     <div className="min-h-[75vh] bg-surface text-foreground dark:bg-background">
       <section className="border-b border-border bg-[#131720] text-white">
-        <div className="container-page grid gap-8 py-12 lg:grid-cols-[1fr_auto] lg:items-end lg:py-14">
+        <div className="container-page grid gap-5 py-8 sm:py-10 lg:grid-cols-[1fr_auto] lg:items-end lg:py-12">
           <div>
             <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
               <GraduationCap className="h-4 w-4" /> Free degree finder
             </span>
-            <h1 className="mt-6 max-w-3xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.05em] sm:text-4xl lg:text-5xl">
               Find a course direction that makes sense for you.
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70 sm:text-base sm:leading-7">
               Answer four simple questions. We’ll match your qualification, direction and budget
               with courses and universities already in the DekhoCampus catalogue.
             </p>
             {initialGoal || audience ? (
               <p className="mt-4 inline-flex flex-wrap items-center gap-1.5 rounded-lg border border-white/15 bg-[#252b36] px-3.5 py-2 text-xs font-semibold text-white/85">
                 Starting with {initialGoal ? finderGoalDetails[initialGoal].label : "your goal"}
+                {initialField ? ` · ${initialField} direction` : ""}
+                {initialEducation ? ` · ${initialEducation} qualification` : ""}
                 {audience ? ` · ${audience} view` : ""}. You can change every answer.
               </p>
             ) : null}
           </div>
-          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/75">
+          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/75 lg:max-w-xs">
             <p className="flex items-center gap-2 font-bold text-white">
               <ShieldCheck className="h-4 w-4 text-[#78ddb3]" /> Private by design
             </p>
@@ -355,12 +389,16 @@ function DegreeFinderPage() {
           </p>
 
           {!showingResults ? (
-            <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card">
-              <div className="border-b border-border bg-secondary/45 px-6 py-5 sm:px-8">
+            <div className="mt-6 rounded-xl border border-border bg-card">
+              <div className="rounded-t-xl border-b border-border bg-secondary/45 px-6 py-5 sm:px-8">
                 <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-[#1768cc] dark:text-[#78b9ff]">
                   Question {step + 1} of {stepLabels.length}
                 </p>
-                <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] sm:text-3xl">
+                <h2
+                  ref={questionHeadingRef}
+                  tabIndex={-1}
+                  className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] outline-none sm:text-3xl"
+                >
                   {step === 0 && "What have you completed?"}
                   {step === 1 && "Where do you want to grow?"}
                   {step === 2 && "What matters most in your decision?"}
@@ -410,7 +448,7 @@ function DegreeFinderPage() {
                       type="button"
                       aria-pressed={budget === choice.value}
                       onClick={() => setBudget(choice.value)}
-                      className={`flex min-h-28 items-center justify-between gap-4 rounded-2xl border p-5 text-left transition ${
+                      className={`flex min-h-24 items-center justify-between gap-4 rounded-xl border p-4 text-left transition ${
                         budget === choice.value
                           ? "border-[#f47a20] bg-[#fff3ea] ring-2 ring-[#f47a20]/15 dark:bg-[#382317]"
                           : "border-border bg-background hover:border-[#edaa79] hover:bg-secondary/50"
@@ -437,7 +475,7 @@ function DegreeFinderPage() {
                   ))}
               </div>
 
-              <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4 sm:px-8">
+              <div className="sticky bottom-[5.25rem] z-20 flex items-center justify-between gap-4 rounded-b-xl border-t border-border bg-card px-5 py-4 shadow-[0_-12px_24px_-24px_rgba(19,23,32,0.7)] sm:static sm:px-8 sm:shadow-none">
                 <Button
                   type="button"
                   variant="ghost"
@@ -465,7 +503,11 @@ function DegreeFinderPage() {
                   <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.13em] text-[#168258] dark:text-[#75dcb4]">
                     <BadgeCheck className="h-4 w-4" /> Your shortlist is ready
                   </p>
-                  <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em]">
+                  <h2
+                    ref={resultsHeadingRef}
+                    tabIndex={-1}
+                    className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em] outline-none"
+                  >
                     {recommendations.length} suitable course
                     {recommendations.length === 1 ? "" : "s"}
                   </h2>
@@ -660,14 +702,14 @@ function FinderChoice<T extends string>({
       type="button"
       aria-pressed={selected}
       onClick={onSelect}
-      className={`group flex min-h-32 items-start gap-4 rounded-2xl border p-5 text-left transition ${
+      className={`group flex min-h-24 items-start gap-3 rounded-xl border p-4 text-left transition ${
         selected
           ? "border-[#f47a20] bg-[#fff3ea] ring-2 ring-[#f47a20]/15 dark:bg-[#382317]"
           : "border-border bg-background hover:border-[#edaa79] hover:bg-secondary/50"
       }`}
     >
       <span
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
           selected
             ? "bg-[#a94300] text-white"
             : "bg-secondary text-[#1768cc] group-hover:bg-[#edf5ff] dark:text-[#78b9ff]"

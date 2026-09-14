@@ -20,12 +20,10 @@ import { useComparison } from "@/hooks/use-comparison";
 
 const navLinks = [
   { to: "/specialisations", label: "Specialisations" },
-  { to: "/finder", label: "Find my course" },
-  { to: "/compare", label: "Compare" },
-  { to: "/methodology", label: "How we verify" },
+  { to: "/about", label: "About" },
 ] as const;
 
-type DesktopMenu = "programs" | "universities" | null;
+type DesktopMenu = "programs" | "universities" | "tools" | null;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -113,6 +111,18 @@ export function SiteHeader() {
             Universities
             <ChevronDown
               className={`h-3.5 w-3.5 transition ${desktopMenu === "universities" ? "rotate-180" : ""}`}
+            />
+          </button>
+          <button
+            type="button"
+            aria-expanded={desktopMenu === "tools"}
+            aria-controls="desktop-navigation-panel"
+            onClick={() => setDesktopMenu((menu) => (menu === "tools" ? null : "tools"))}
+            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Tools
+            <ChevronDown
+              className={`h-3.5 w-3.5 transition ${desktopMenu === "tools" ? "rotate-180" : ""}`}
             />
           </button>
           {navLinks.map((link) => (
@@ -257,7 +267,7 @@ export function SiteHeader() {
                   ))}
                 </div>
               </div>
-            ) : (
+            ) : desktopMenu === "universities" ? (
               <div className="p-7">
                 <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
                   <div>
@@ -297,6 +307,94 @@ export function SiteHeader() {
                       </span>
                     </Link>
                   ))}
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-[0.76fr_2.24fr]">
+                <div className="border-r border-border bg-surface p-7 text-foreground">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#325dd2] text-white">
+                    <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <p className="mt-5 font-display text-xl font-extrabold tracking-[-0.04em]">
+                    Decide with clarity
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Shortlist privately, compare cited facts and verify the exact intake before you
+                    enquire.
+                  </p>
+                  <Link
+                    to="/methodology"
+                    onClick={closeNavigation}
+                    className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
+                  >
+                    How our evidence works <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-3 p-7">
+                  <Link
+                    to="/finder"
+                    onClick={closeNavigation}
+                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#8db8e8] hover:bg-secondary"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653]">
+                      <GraduationCap className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-extrabold">Course finder</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        Get an ungated shortlist
+                      </span>
+                    </span>
+                  </Link>
+                  <Link
+                    to="/compare"
+                    onClick={closeNavigation}
+                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#8db8e8] hover:bg-secondary"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653]">
+                      <GitCompareArrows className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-extrabold">Compare options</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        Review up to three records
+                      </span>
+                    </span>
+                  </Link>
+                  <Link
+                    to="/search"
+                    search={{ q: "" }}
+                    onClick={closeNavigation}
+                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#edaa79] hover:bg-secondary"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]">
+                      <Search className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-extrabold">Search catalogue</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        Courses, universities and topics
+                      </span>
+                    </span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeNavigation();
+                      window.dispatchEvent(new Event("dekhocampus:open-diya"));
+                    }}
+                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 text-left transition-colors hover:border-[#edaa79] hover:bg-secondary"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
+                      <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-9 w-9" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-extrabold">Ask Diya</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        Navigate the catalogue in plain language
+                      </span>
+                    </span>
+                  </button>
                 </div>
               </div>
             )}
@@ -360,6 +458,30 @@ export function SiteHeader() {
               className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-foreground hover:bg-secondary"
             >
               Universities
+            </Link>
+            <p className="mt-2 px-3 pt-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
+              Decision tools
+            </p>
+            <Link
+              to="/finder"
+              onClick={closeNavigation}
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
+            >
+              Find my course
+            </Link>
+            <Link
+              to="/compare"
+              onClick={closeNavigation}
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
+            >
+              Compare universities
+            </Link>
+            <Link
+              to="/methodology"
+              onClick={closeNavigation}
+              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
+            >
+              How we verify
             </Link>
             <p className="mt-2 px-3 pt-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
               More

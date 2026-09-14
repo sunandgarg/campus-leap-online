@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpenCheck, Building2, GitCompareArrows, Home } from "lucide-react";
+import { useComparison } from "@/hooks/use-comparison";
 
 const items = [
   { to: "/", label: "Home", icon: Home },
@@ -10,6 +11,7 @@ const items = [
 
 export function MobileBottomNav() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const comparison = useComparison();
 
   if (pathname.startsWith("/admin") || pathname === "/auth") return null;
 
@@ -36,7 +38,14 @@ export function MobileBottomNav() {
                 : "text-muted-foreground hover:bg-secondary hover:text-foreground"
             }`}
           >
-            <Icon className="h-4.5 w-4.5" />
+            <span className="relative">
+              <Icon className="h-4.5 w-4.5" />
+              {item.to === "/compare" && comparison.count > 0 ? (
+                <span className="absolute -right-3 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#325dd2] px-1 text-[8px] font-black text-white">
+                  {comparison.count}
+                </span>
+              ) : null}
+            </span>
             <span className="truncate">{item.label}</span>
           </Link>
         );

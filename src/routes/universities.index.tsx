@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   Building2,
@@ -43,6 +43,7 @@ export const Route = createFileRoute("/universities/")({
 
 type SortKey = "rating" | "feeLow" | "feeHigh" | "name";
 type ProfileFilter = "all" | "complete" | "directory";
+const DIRECTORY_PAGE_SIZE = 20;
 
 function UniversitiesPage() {
   const stateOptions = useMemo(
@@ -63,6 +64,13 @@ function UniversitiesPage() {
   const [profileFilter, setProfileFilter] = useState<ProfileFilter>("all");
   const [feeCeiling, setFeeCeiling] = useState(maximumCatalogFee);
   const [sort, setSort] = useState<SortKey>("name");
+  const [page, setPage] = useState(0);
+  const quickPrograms = useMemo(() => {
+    const preferredCodes = ["MBA", "BBA", "MCA", "BCA", "M.COM", "B.COM"];
+    return preferredCodes
+      .map((code) => programCatalog.find((item) => item.code.toUpperCase() === code))
+      .filter((item): item is (typeof programCatalog)[number] => Boolean(item));
+  }, []);
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -115,6 +123,17 @@ function UniversitiesPage() {
     });
   }, [feeCeiling, maximumCatalogFee, profileFilter, program, query, sort, stateFilter]);
 
+  const pageCount = Math.max(1, Math.ceil(list.length / DIRECTORY_PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedList = list.slice(
+    safePage * DIRECTORY_PAGE_SIZE,
+    (safePage + 1) * DIRECTORY_PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setPage(0);
+  }, [feeCeiling, profileFilter, program, query, sort, stateFilter]);
+
   const filtersAreActive =
     query.trim().length > 0 ||
     program !== "all" ||
@@ -129,19 +148,20 @@ function UniversitiesPage() {
     setProfileFilter("all");
     setFeeCeiling(maximumCatalogFee);
     setSort("name");
+    setPage(0);
   }
 
   return (
     <>
       <section className="border-b border-border bg-[#f6f8fc] dark:bg-[#121722]">
-        <div className="container-page py-8 lg:py-10">
+        <div className="container-page py-7 lg:py-9">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
             <div>
               <p className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#2449ad] dark:text-[#b9ceff]">
                 <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Independent catalogue
               </p>
-              <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.05em] text-[#131720] dark:text-foreground sm:text-4xl lg:text-[2.75rem]">
-                Find an online university you can examine clearly.
+              <h1 className="mt-3 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.05em] text-[#131720] dark:text-foreground sm:text-4xl lg:text-[2.55rem]">
+                Explore online universities by course.
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
                 Start with the course and location that suit you. Every profile tells you whether
@@ -164,7 +184,7 @@ function UniversitiesPage() {
             </div>
           </div>
 
-          <dl className="mt-6 flex flex-wrap gap-x-9 gap-y-3 border-t border-border pt-4">
+          <dl className="mt-5 flex flex-wrap gap-x-9 gap-y-3 border-t border-border pt-4">
             <div>
               <dt className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Profiles to explore
@@ -193,14 +213,16 @@ function UniversitiesPage() {
         </div>
       </section>
 
-      <section className="container-page py-7 lg:py-9">
-        <div className="overflow-hidden rounded-[1.5rem] border border-border border-t-[3px] border-t-[#f47b25] bg-card p-3 shadow-card md:p-4">
+      <section className="container-page py-6 lg:py-8">
+        <div className="overflow-hidden rounded-xl border border-border border-t-[3px] border-t-[#f47b25] bg-card p-3 shadow-card md:p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <Search className="h-4 w-4 text-[#325dd2] dark:text-[#8cb0ff]" aria-hidden="true" />
               <div>
-                <h2 className="text-sm font-extrabold">Search the university directory</h2>
-                <p className="text-xs text-muted-foreground">Use only the filters that matter.</p>
+                <h2 className="text-sm font-extrabold">Find your university</h2>
+                <p className="text-xs text-muted-foreground">
+                  Search first, then narrow the results.
+                </p>
               </div>
             </div>
             <Button
@@ -214,6 +236,44 @@ function UniversitiesPage() {
               <SlidersHorizontal className="mr-1 h-4 w-4" /> Clear filters
             </Button>
           </div>
+
+          <div
+            className="mb-3 flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            role="group"
+            aria-label="Quick course filters"
+          >
+            <span className="shrink-0 text-[10px] font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
+              Popular
+            </span>
+            <button
+              type="button"
+              aria-pressed={program === "all"}
+              onClick={() => setProgram("all")}
+              className={`h-8 shrink-0 rounded-full border px-3 text-[11px] font-extrabold transition-colors ${
+                program === "all"
+                  ? "border-[#325dd2] bg-[#325dd2] text-white"
+                  : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
+              }`}
+            >
+              All courses
+            </button>
+            {quickPrograms.map((item) => (
+              <button
+                key={item.slug}
+                type="button"
+                aria-pressed={program === item.slug}
+                onClick={() => setProgram(item.slug)}
+                className={`h-8 shrink-0 rounded-full border px-3 text-[11px] font-extrabold transition-colors ${
+                  program === item.slug
+                    ? "border-[#325dd2] bg-[#325dd2] text-white"
+                    : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
+                }`}
+              >
+                {item.code}
+              </button>
+            ))}
+          </div>
+
           <div className="grid min-w-0 grid-cols-2 gap-2.5 xl:grid-cols-[1.35fr_1fr_0.95fr_1fr_1fr]">
             <div className="relative col-span-2 min-w-0 xl:col-span-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -314,7 +374,7 @@ function UniversitiesPage() {
           )}
         </div>
 
-        <div className="mt-7 flex items-end justify-between gap-4">
+        <div className="mt-6 flex items-end justify-between gap-4">
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#2449ad] dark:text-[#b9ceff]">
               Explore your options
@@ -328,7 +388,7 @@ function UniversitiesPage() {
               aria-atomic="true"
               className="mt-1 text-xs font-semibold text-muted-foreground"
             >
-              Showing {list.length} of {universities.length} profiles
+              {list.length} of {universities.length} profiles matched
             </p>
           </div>
           <Link
@@ -351,17 +411,50 @@ function UniversitiesPage() {
           </div>
         ) : (
           <CompactRail
+            key={`university-page-${safePage}`}
             label="Filtered university profiles"
             rows={2}
             columns={4}
             className="mt-3"
-            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[calc((100%_-_2rem)/3)] lg:auto-cols-[calc((100%_-_3rem)/4)] xl:auto-cols-[calc((100%_-_4rem)/5)]"
+            railClassName="gap-3 auto-cols-[minmax(16rem,90%)] min-[360px]:auto-cols-[calc((100%_-_0.75rem)/2)] sm:auto-cols-[calc((100%_-_1.5rem)/3)] lg:auto-cols-[calc((100%_-_3rem)/5)]"
           >
-            {list.map((u, index) => (
+            {pagedList.map((u, index) => (
               <UniversityCard key={u.slug} university={u} priority={index < 12} />
             ))}
           </CompactRail>
         )}
+
+        {list.length > DIRECTORY_PAGE_SIZE ? (
+          <nav
+            aria-label="University result pages"
+            className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-2"
+          >
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={safePage === 0}
+              onClick={() => setPage((value) => Math.max(0, value - 1))}
+            >
+              Previous 20
+            </Button>
+            <p
+              className="text-center text-xs font-extrabold text-muted-foreground"
+              aria-live="polite"
+            >
+              Page {safePage + 1} of {pageCount}
+            </p>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={safePage >= pageCount - 1}
+              onClick={() => setPage((value) => Math.min(pageCount - 1, value + 1))}
+            >
+              Next 20
+            </Button>
+          </nav>
+        ) : null}
 
         <div className="mt-9 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
           <div className="rounded-[1.5rem] border border-border bg-[#f6f8fc] p-5 dark:bg-[#151b26]">

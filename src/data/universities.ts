@@ -1448,7 +1448,12 @@ export function universitiesOfferingProgram(programSlug: string) {
 
 export type ProgramOffer = { university: University; program: UniversityProgram };
 
-/** Directory records never participate in price/rating recommendations or comparisons. */
+/**
+ * Evidence-ready comparison gate. Directory and non-current records never
+ * participate in price/rating rankings or sourced-fee comparisons. They may
+ * still appear in an explicitly unranked catalogue shortlist where every
+ * unsupported field is hidden.
+ */
 export function isComparableProgramOffer(offer: ProgramOffer): boolean {
   return (
     offer.university.profileDepth !== "directory" &&

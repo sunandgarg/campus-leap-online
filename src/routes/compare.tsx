@@ -22,8 +22,9 @@ import {
   formatINR,
   formatUniversityLocation,
   getProgramApprovalClaims,
+  isComparableProgramOffer,
   programCatalog,
-  comparableUniversitiesOfferingProgram,
+  universitiesOfferingProgram,
   type University,
   type UniversityProgram,
 } from "@/data/universities";
@@ -38,13 +39,13 @@ export const Route = createFileRoute("/compare")({
       {
         name: "description",
         content:
-          "Build a side-by-side comparison of current source-backed online offerings, cited total fees and clearly labelled derived payment splits.",
+          "Build a private side-by-side comparison of online university catalogue records, with cited facts separated from details that still need verification.",
       },
       { property: "og:title", content: "Compare Online Universities in India" },
       {
         property: "og:description",
         content:
-          "Compare source-backed offerings and cited total fees; directory and expired records remain excluded.",
+          "Compare online university catalogue records without sign-in; missing and unverified fields stay clearly labelled.",
       },
     ],
   }),
@@ -53,6 +54,12 @@ export const Route = createFileRoute("/compare")({
 
 function ComparePage() {
   const comparison = useComparison();
+  const {
+    ready: comparisonReady,
+    programSlug: savedProgramSlug,
+    universitySlugs: savedUniversitySlugs,
+    replaceUniversities,
+  } = comparison;
   const [programSlug, setProgramSlug] = useState(programCatalog[0]?.slug ?? "");
   const [programChosen, setProgramChosen] = useState(false);
 
@@ -67,16 +74,37 @@ function ComparePage() {
     }
   }, [comparison.programSlug, comparison.ready, programChosen]);
 
-  const offers = useMemo(() => comparableUniversitiesOfferingProgram(programSlug), [programSlug]);
+  const offers = useMemo(() => universitiesOfferingProgram(programSlug), [programSlug]);
+  const sourcedOffers = useMemo(() => offers.filter(isComparableProgramOffer), [offers]);
   const program = programCatalog.find((item) => item.slug === programSlug);
-  const selectedSlugs = comparison.programSlug === programSlug ? comparison.universitySlugs : [];
+  const savedSelectedSlugs = savedProgramSlug === programSlug ? savedUniversitySlugs : [];
+  const selectedSlugs = savedSelectedSlugs.filter((slug) =>
+    offers.some(({ university }) => university.slug === slug),
+  );
   const selectedOffers = offers.filter(({ university }) => selectedSlugs.includes(university.slug));
-  const lowestFee = offers.length
-    ? Math.min(...offers.map(({ program: offer }) => offer.totalFee))
+  const lowestFee = sourcedOffers.length
+    ? Math.min(...sourcedOffers.map(({ program: offer }) => offer.totalFee))
     : null;
-  const highestFee = offers.length
-    ? Math.max(...offers.map(({ program: offer }) => offer.totalFee))
+  const highestFee = sourcedOffers.length
+    ? Math.max(...sourcedOffers.map(({ program: offer }) => offer.totalFee))
     : null;
+
+  useEffect(() => {
+    if (
+      comparisonReady &&
+      savedProgramSlug === programSlug &&
+      selectedSlugs.length !== savedSelectedSlugs.length
+    ) {
+      replaceUniversities(programSlug, selectedSlugs);
+    }
+  }, [
+    comparisonReady,
+    programSlug,
+    replaceUniversities,
+    savedProgramSlug,
+    savedSelectedSlugs.length,
+    selectedSlugs,
+  ]);
 
   function changeProgram(nextSlug: string) {
     setProgramChosen(true);
@@ -114,13 +142,13 @@ function ComparePage() {
               Compare online universities side by side.
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/65">
-              Select one course and up to three source-backed offerings. Directory, editorial and
-              expired records do not enter this comparison.
+              Select one course and up to three catalogue records. We show source-backed facts when
+              available and mark every missing or unverified field clearly.
             </p>
           </div>
           <div className="rounded-xl border border-white/15 bg-[#252b36] p-6">
             <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-white/70">
-              Current comparison
+              Current shortlist
             </p>
             <p className="mt-3 font-display text-2xl font-extrabold">{program.code}</p>
             <div className="mt-4 flex items-center gap-3">
@@ -197,20 +225,20 @@ function ComparePage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
-              Step 1 · Build your comparison
+              Step 1 · Build your catalogue shortlist
             </p>
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]">
-              Select universities for {program.code}
+              Select university records for {program.code}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Choose up to three. Your selection stays saved on this device.
+              Choose up to three. Your selection stays on this device and never requires sign-in.
             </p>
           </div>
           <span className="inline-flex w-fit items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-xs font-extrabold text-muted-foreground">
             <IndianRupee className="h-4 w-4 text-[#1768cc] dark:text-[#78b9ff]" />
             {lowestFee !== null && highestFee !== null
               ? `Sourced total-fee range ${formatINR(lowestFee)}–${formatINR(highestFee)}`
-              : "No priced comparison profiles yet"}
+              : "No current sourced fee range yet"}
           </span>
         </div>
 
@@ -239,7 +267,11 @@ function ComparePage() {
                     {university.shortName}
                   </span>
                   <span className="mt-1 block text-[11px] text-muted-foreground">
-                    Sourced total fee · {formatINR(offer.totalFee)}
+                    {isComparableProgramOffer({ university, program: offer })
+                      ? `Sourced total fee · ${formatINR(offer.totalFee)}`
+                      : university.profileDepth === "directory"
+                        ? "Directory record · verify this intake"
+                        : "Catalogue record · fee not currently cited"}
                   </span>
                 </span>
                 <span
@@ -255,11 +287,11 @@ function ComparePage() {
         {offers.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
             <p className="font-display text-lg font-extrabold">
-              No source-backed comparison data yet
+              No catalogue relationship is mapped yet
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Directory, editorial and expired records are intentionally excluded until a current
-              offering and cited total fee are mapped.
+              Try another course or browse the university directory. We do not infer a university–
+              course relationship from its name alone.
             </p>
           </div>
         ) : null}
@@ -271,9 +303,11 @@ function ComparePage() {
             </span>
             <div>
               <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-muted-foreground">
-                Step 2 · Review trade-offs
+                Step 2 · Review available facts
               </p>
-              <h2 className="font-display text-2xl font-extrabold">Your side-by-side matrix</h2>
+              <h2 className="font-display text-2xl font-extrabold">
+                Your side-by-side evidence table
+              </h2>
             </div>
           </div>
 
@@ -344,71 +378,104 @@ function ComparePage() {
 }
 
 function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlug: string }) {
-  const cheapestSlug = [...offers].sort((a, b) => a.program.totalFee - b.program.totalFee)[0]
-    ?.university.slug;
+  const sourcedFeeOffers = offers.filter(isComparableProgramOffer);
+  const cheapestSlug = [...sourcedFeeOffers].sort(
+    (a, b) => a.program.totalFee - b.program.totalFee,
+  )[0]?.university.slug;
 
   const rows: { label: string; icon: typeof ShieldCheck; render: (offer: Offer) => ReactNode }[] = [
     {
+      label: "Catalogue record",
+      icon: GraduationCap,
+      render: ({ university }) =>
+        university.profileDepth === "directory"
+          ? university.verificationSourceUrl && university.verificationAcademicYear
+            ? `Historical directory record · ${university.verificationAcademicYear}`
+            : "Directory research record · source review needed"
+          : "Editorial profile · not an official prospectus",
+    },
+    {
+      label: "University location",
+      icon: GraduationCap,
+      render: ({ university }) => formatUniversityLocation(university),
+    },
+    {
       label: "Offering evidence",
       icon: ShieldCheck,
-      render: ({ program }) => (
-        <span>
-          {program.deliveryMode ?? "ONLINE"} · {program.academicSession ?? "Session cited"}
-          {program.entitlementSourceUrl ? (
-            <a
-              href={program.entitlementSourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open entitlement source (opens in new tab)"
-              className="mt-1 flex items-center gap-1 text-xs text-[#1768cc] dark:text-[#78b9ff]"
-            >
-              Open entitlement source <ExternalLink className="h-3 w-3" />
-            </a>
-          ) : null}
-        </span>
-      ),
+      render: ({ university, program }) => {
+        const currentEvidence =
+          university.verificationCurrent === true &&
+          program.entitlementStatus === "verified" &&
+          Boolean(program.entitlementSourceUrl) &&
+          Boolean(program.academicSession?.trim());
+        return (
+          <span>
+            {currentEvidence
+              ? `${program.deliveryMode ?? "ONLINE"} · ${program.academicSession}`
+              : "No current programme–mode–session evidence mapped"}
+            {currentEvidence && program.entitlementSourceUrl ? (
+              <a
+                href={program.entitlementSourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open entitlement source (opens in new tab)"
+                className="mt-1 flex items-center gap-1 text-xs text-[#1768cc] dark:text-[#78b9ff]"
+              >
+                Open entitlement source <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : null}
+          </span>
+        );
+      },
     },
     {
       label: "Sourced total fee",
       icon: IndianRupee,
-      render: ({ program }) => `${formatINR(program.totalFee)} (sourced catalogue value)`,
+      render: (offer) =>
+        isComparableProgramOffer(offer)
+          ? `${formatINR(offer.program.totalFee)} (cited catalogue value)`
+          : "No current cited total fee",
     },
     {
       label: "Fee citation",
       icon: BadgeCheck,
-      render: ({ program }) =>
-        program.feeSourceUrl ? (
+      render: (offer) =>
+        isComparableProgramOffer(offer) && offer.program.feeSourceUrl ? (
           <a
-            href={program.feeSourceUrl}
+            href={offer.program.feeSourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open fee source checked ${program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
+            aria-label={`Open fee source checked ${offer.program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
             className="inline-flex items-center gap-1 text-[#1768cc] dark:text-[#78b9ff]"
           >
-            Source checked {program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
+            Source checked {offer.program.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         ) : (
-          "Fee source unavailable—do not rely on this value"
+          "No current fee citation"
         ),
     },
     {
       label: "Per semester",
       icon: WalletCards,
-      render: ({ program }) =>
-        `${formatINR(program.perSemesterFee)} (${program.perSemesterFeeVerified ? "sourced" : "derived from total"})`,
+      render: (offer) =>
+        isComparableProgramOffer(offer)
+          ? `${formatINR(offer.program.perSemesterFee)} (${offer.program.perSemesterFeeVerified ? "cited" : "arithmetic split from cited total"})`
+          : "Not shown without a cited total fee",
     },
     {
       label: "Estimated monthly payment",
       icon: IndianRupee,
-      render: ({ program }) =>
-        `${formatINR(program.emiPerMonth)} / month (${program.emiPerMonthVerified ? "published monthly amount" : "arithmetic split, not a lender quote"})`,
+      render: (offer) =>
+        isComparableProgramOffer(offer)
+          ? `${formatINR(offer.program.emiPerMonth)} / month (${offer.program.emiPerMonthVerified ? "published monthly amount" : "arithmetic split, not a lender quote"})`
+          : "Not shown without a cited total fee",
     },
     {
       label: "Duration",
       icon: GraduationCap,
       render: ({ program }) =>
-        `${program.durationVerified ? "Offering duration" : "Typical course duration"}: ${program.durationYears} years · ${program.semesters} semesters`,
+        `${program.durationVerified ? "Offering duration" : "Typical course-category duration"}: ${program.durationYears} years · ${program.semesters} semesters`,
     },
     {
       label: "Cited programme-context sources",
@@ -439,7 +506,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
       label: "Offering details",
       icon: GraduationCap,
       render: ({ program }) =>
-        `${program.examMode ? `Exam mode: ${program.examMode}` : "Exam mode: confirm with university"} · ${program.specialisationsVerified ? `${program.specialisations.length} sourced pathways` : "Pathways require confirmation"}`,
+        `${program.examMode && program.universityProgramUrl ? `Exam mode: ${program.examMode}` : "Exam mode: confirm with university"} · ${program.specialisationsVerified ? `${program.specialisations.length} cited pathways` : "Pathways require confirmation"}`,
     },
   ];
 
@@ -511,9 +578,9 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
         </tbody>
       </table>
       <div className="flex items-start gap-3 border-t border-border bg-[#fff9eb] p-4 text-xs leading-5 text-[#785914] dark:bg-[#2d2517] dark:text-[#e5bd62]">
-        <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" /> Total fees link to their catalogue
-        source; arithmetic semester or monthly splits are labelled as derived. Fees, recognition and
-        support policies can change by intake, so reconfirm before payment.
+        <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" /> A blank cell is intentional. Exact fees
+        appear only with current cited evidence; arithmetic semester or monthly splits are labelled
+        as derived. Reconfirm fees, recognition and support policies for your intake before payment.
       </div>
     </div>
   );

@@ -13,18 +13,18 @@ function emptyComparison(programSlug = ""): ComparisonState {
   return { programSlug, universitySlugs: [] };
 }
 
-function readComparison(): ComparisonState {
-  if (typeof window === "undefined") return emptyComparison();
+function readComparison(fallback = emptyComparison()): ComparisonState {
+  if (typeof window === "undefined") return fallback;
   try {
-    const parsed = JSON.parse(
-      window.localStorage.getItem(STORAGE_KEY) ?? "null",
-    ) as ComparisonState | null;
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) return fallback;
+    const parsed = JSON.parse(stored) as ComparisonState | null;
     if (
       !parsed ||
       typeof parsed.programSlug !== "string" ||
       !Array.isArray(parsed.universitySlugs)
     ) {
-      return emptyComparison();
+      return fallback;
     }
     return {
       programSlug: parsed.programSlug,
@@ -33,7 +33,7 @@ function readComparison(): ComparisonState {
         .slice(0, MAX_UNIVERSITIES),
     };
   } catch {
-    return emptyComparison();
+    return fallback;
   }
 }
 
@@ -92,23 +92,37 @@ export function useComparison(defaultProgramSlug = "") {
     };
   }, [defaultProgramSlug]);
 
-  const toggleUniversity = useCallback((programSlug: string, universitySlug: string) => {
-    const current = readComparison();
-    const working = current.programSlug === programSlug ? current : emptyComparison(programSlug);
-    const exists = working.universitySlugs.includes(universitySlug);
-    const universitySlugs = exists
-      ? working.universitySlugs.filter((slug) => slug !== universitySlug)
-      : working.universitySlugs.length < MAX_UNIVERSITIES
-        ? [...working.universitySlugs, universitySlug]
-        : working.universitySlugs;
-    const next = { programSlug, universitySlugs };
-    persistComparison(next);
-    setComparison(next);
-    return !exists && universitySlugs.includes(universitySlug);
-  }, []);
+  const toggleUniversity = useCallback(
+    (programSlug: string, universitySlug: string) => {
+      // Fall back to React state when localStorage is blocked or unavailable so
+      // a private-browser comparison remains usable for the current tab.
+      const current = readComparison(comparison);
+      const working = current.programSlug === programSlug ? current : emptyComparison(programSlug);
+      const exists = working.universitySlugs.includes(universitySlug);
+      const universitySlugs = exists
+        ? working.universitySlugs.filter((slug) => slug !== universitySlug)
+        : working.universitySlugs.length < MAX_UNIVERSITIES
+          ? [...working.universitySlugs, universitySlug]
+          : working.universitySlugs;
+      const next = { programSlug, universitySlugs };
+      persistComparison(next);
+      setComparison(next);
+      return !exists && universitySlugs.includes(universitySlug);
+    },
+    [comparison],
+  );
 
   const changeProgram = useCallback((programSlug: string) => {
     const next = emptyComparison(programSlug);
+    persistComparison(next);
+    setComparison(next);
+  }, []);
+
+  const replaceUniversities = useCallback((programSlug: string, universitySlugs: string[]) => {
+    const next = {
+      programSlug,
+      universitySlugs: [...new Set(universitySlugs)].slice(0, MAX_UNIVERSITIES),
+    };
     persistComparison(next);
     setComparison(next);
   }, []);
@@ -126,6 +140,7 @@ export function useComparison(defaultProgramSlug = "") {
     maxUniversities: MAX_UNIVERSITIES,
     toggleUniversity,
     changeProgram,
+    replaceUniversities,
     clearComparison,
   };
 }

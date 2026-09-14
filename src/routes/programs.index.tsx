@@ -43,6 +43,14 @@ export const Route = createFileRoute("/programs/")({
 
 type LevelFilter = "All" | ProgramLevel;
 
+const levelTabs: { value: LevelFilter; label: string }[] = [
+  { value: "All", label: "All courses" },
+  { value: "Bachelors", label: "Undergraduate" },
+  { value: "Masters", label: "Postgraduate" },
+  { value: "Diploma", label: "Diplomas" },
+  { value: "Certificate", label: "Certificates" },
+];
+
 function ProgramsPage() {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<LevelFilter>("All");
@@ -64,12 +72,12 @@ function ProgramsPage() {
   return (
     <div className="bg-background text-foreground">
       <section className="border-b border-border bg-[#131720] text-white">
-        <div className="container-page py-10 lg:py-12">
+        <div className="container-page py-8 lg:py-10">
           <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
             <BookOpenCheck className="h-4 w-4" /> {programCatalog.length} online course guides
           </span>
-          <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.06em] sm:text-4xl lg:text-5xl">
-            Start with the course. Then compare every university.
+          <h1 className="mt-3 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.055em] sm:text-4xl lg:text-[2.65rem]">
+            Browse online degrees by your study level.
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:text-base">
             Explore category-level eligibility, curriculum themes, career direction and clearly
@@ -78,7 +86,7 @@ function ProgramsPage() {
         </div>
       </section>
 
-      <section className="container-page py-8 lg:py-10">
+      <section className="container-page py-6 lg:py-8">
         <div className="rounded-xl border border-border bg-card p-3 shadow-card sm:p-4">
           <div className="grid gap-3 md:grid-cols-[1fr_auto]">
             <div className="relative">
@@ -91,24 +99,26 @@ function ProgramsPage() {
                 className="h-10 w-full rounded-lg border border-border bg-background pl-11 pr-4 text-sm outline-none focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
               />
             </div>
-            <div className="flex gap-2 overflow-x-auto [scrollbar-width:none]">
-              {(["All", "Bachelors", "Masters", "Diploma", "Certificate"] as LevelFilter[]).map(
-                (item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    aria-pressed={level === item}
-                    onClick={() => setLevel(item)}
-                    className={`h-10 shrink-0 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
-                      level === item
-                        ? "border-[#325dd2] bg-[#325dd2] text-white"
-                        : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ),
-              )}
+            <div
+              className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              role="group"
+              aria-label="Filter courses by study level"
+            >
+              {levelTabs.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  aria-pressed={level === item.value}
+                  onClick={() => setLevel(item.value)}
+                  className={`h-10 shrink-0 rounded-lg border px-3 text-xs font-extrabold transition-colors ${
+                    level === item.value
+                      ? "border-[#325dd2] bg-[#325dd2] text-white"
+                      : "border-border bg-background text-muted-foreground hover:border-[#80ace0]"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -135,7 +145,7 @@ function ProgramsPage() {
             label="Filtered online course guides"
             rows={2}
             columns={3}
-            railClassName="auto-cols-[92%] sm:auto-cols-[minmax(20rem,48%)] lg:auto-cols-[calc((100%-2rem)/3)]"
+            railClassName="gap-3 auto-cols-[minmax(16rem,90%)] min-[360px]:auto-cols-[calc((100%_-_0.75rem)/2)] sm:auto-cols-[calc((100%_-_1.5rem)/3)] lg:auto-cols-[calc((100%_-_3rem)/5)]"
           >
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
@@ -147,104 +157,83 @@ function ProgramsPage() {
               const lowestEmi = monthlyOffers.length
                 ? Math.min(...monthlyOffers.map(({ program: offer }) => offer.emiPerMonth))
                 : null;
+              const exampleUniversity = verifiedOffers[0]?.university ?? offers[0]?.university;
               return (
                 <article
                   key={program.slug}
-                  className="group relative flex h-44 flex-col overflow-hidden rounded-[1.25rem] border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-lift focus-within:border-[#325dd2]"
+                  className="group relative flex h-[12rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_26px_-24px_rgba(19,23,32,0.58)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-[0_16px_34px_-24px_rgba(50,93,210,0.55)] focus-within:border-[#325dd2]"
                 >
-                  <div className="h-1 shrink-0 bg-[#325dd2]" aria-hidden="true" />
-                  <div className="flex min-w-0 items-start gap-2.5 px-3 pt-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#131720] text-white dark:bg-[#325dd2]">
-                      <GraduationCap className="h-4 w-4" aria-hidden="true" />
+                  <div className="flex min-w-0 items-start gap-2 border-b border-border bg-[#f6f8fc] px-2.5 py-2 dark:bg-[#171d28]">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#131720] text-white dark:bg-[#325dd2]">
+                      <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
-                        <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#a94300] dark:text-[#ff9a5b]">
-                          Online {program.code}
-                        </p>
-                        <span
-                          className="hidden h-1 w-1 rounded-full bg-border sm:block"
-                          aria-hidden="true"
+                      <p className="hidden truncate text-[10px] font-bold uppercase tracking-[0.06em] text-muted-foreground sm:block">
+                        {program.level}
+                      </p>
+                      <p className="truncate text-xs font-extrabold text-[#a94300] dark:text-[#ffad70]">
+                        {program.code}
+                      </p>
+                    </div>
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] font-extrabold text-foreground">
+                      <Clock3 className="h-3 w-3 text-[#1768cc]" aria-hidden="true" />
+                      {program.durationYears}
+                      <span className="sm:hidden">y</span>
+                      <span className="hidden sm:inline"> yr</span>
+                    </span>
+                  </div>
+
+                  <div className="flex min-h-0 flex-1 flex-col px-2.5 py-2">
+                    <h2 className="line-clamp-2 min-h-8 font-display text-[0.78rem] font-extrabold leading-4 tracking-[-0.018em] sm:text-[0.82rem]">
+                      {program.name}
+                    </h2>
+                    <p className="mt-1 truncate text-[10px] font-bold text-muted-foreground">
+                      {offers.length} universities · {program.specialisations.length} paths
+                    </p>
+                    <div className="mt-auto flex min-w-0 items-center gap-1.5 border-t border-border pt-1.5">
+                      {exampleUniversity ? (
+                        <UniversityLogo
+                          university={exampleUniversity}
+                          size="sm"
+                          className="h-7 w-7 rounded-md"
                         />
-                        <p className="hidden truncate text-[10px] font-bold uppercase tracking-wide text-muted-foreground sm:block">
-                          {program.level}
-                        </p>
-                        <span className="ml-auto inline-flex shrink-0 items-center gap-1 text-[10px] font-extrabold text-foreground">
-                          <Clock3 className="h-3 w-3 text-[#1768cc]" aria-hidden="true" />
-                          {program.durationYears} yr
+                      ) : (
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-secondary">
+                          <BookOpenCheck className="h-3.5 w-3.5" aria-hidden="true" />
                         </span>
-                      </div>
-                      <h2 className="mt-1 line-clamp-2 font-display text-[0.95rem] font-extrabold leading-[1.16] tracking-[-0.025em] sm:text-base">
-                        {program.name}
-                      </h2>
-                    </div>
-                  </div>
-
-                  <dl className="mx-3 mt-2 grid grid-cols-3 divide-x divide-border rounded-xl bg-secondary px-1 py-1.5 text-center">
-                    <div className="flex flex-col px-1.5">
-                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
-                        Records
-                      </dt>
-                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
-                        {offers.length}
-                      </dd>
-                    </div>
-                    <div className="flex flex-col px-1.5">
-                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
-                        Pathways
-                      </dt>
-                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
-                        {program.specialisations.length}
-                      </dd>
-                    </div>
-                    <div className="flex flex-col px-1.5">
-                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
-                        Semesters
-                      </dt>
-                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
-                        {program.semesters}
-                      </dd>
-                    </div>
-                  </dl>
-
-                  <div className="mt-auto flex min-w-0 items-center gap-2 border-t border-border px-3 py-2">
-                    <div className="flex shrink-0 -space-x-2" aria-label="Example universities">
-                      {offers.slice(0, 1).map(({ university }) => (
-                        <span
-                          key={university.slug}
-                          title={university.shortName}
-                          className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-card bg-white"
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="truncate text-[10px] font-extrabold text-foreground"
+                          title={
+                            lowest !== null
+                              ? `Source-backed fee from ${formatINR(lowest)}`
+                              : undefined
+                          }
                         >
-                          <UniversityLogo
-                            university={university}
-                            size="sm"
-                            className="h-8 w-8 rounded-full border-0"
-                          />
-                        </span>
-                      ))}
+                          {lowest !== null ? `Sourced: ${formatINR(lowest)}` : "Fee check"}
+                        </p>
+                        <p className="truncate text-[10px] font-semibold text-muted-foreground">
+                          {lowestEmi !== null
+                            ? `EMI: ${formatINR(lowestEmi)}/month`
+                            : "Verify current intake"}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p
-                        className="truncate font-display text-[11px] font-extrabold"
-                        title={lowest !== null ? `Sourced fee ${formatINR(lowest)}` : undefined}
-                      >
-                        {lowest !== null ? `Sourced: ${formatINR(lowest)}` : "Confirm current fee"}
-                      </p>
-                      <p className="truncate text-[10px] font-semibold text-muted-foreground">
-                        {lowestEmi !== null
-                          ? `${formatINR(lowestEmi)}/month · published plan`
-                          : "Verify before applying"}
-                      </p>
-                    </div>
-                    <Link
-                      to="/programs/$programSlug"
-                      params={{ programSlug: program.slug }}
-                      aria-label={`View ${program.name} course details`}
-                      className="inline-flex h-8 shrink-0 items-center justify-center rounded-full bg-[#325dd2] px-2 text-[10px] font-extrabold text-white transition-colors hover:bg-[#2449ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2 sm:px-2.5 sm:text-[11px]"
-                    >
-                      Explore <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
-                    </Link>
                   </div>
+
+                  <Link
+                    to="/programs/$programSlug"
+                    params={{ programSlug: program.slug }}
+                    aria-label={`View ${program.name} course details`}
+                    className="flex h-8 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-2 text-[10px] font-extrabold text-white transition-colors hover:bg-[#2449ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-inset"
+                  >
+                    View course
+                    <ArrowRight
+                      className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </Link>
                 </article>
               );
             })}
