@@ -588,14 +588,11 @@ export function DekhoAICopilot({
           onClick={() => {
             returnFocusRef.current = launcherRef.current;
           }}
-          className="fixed bottom-8 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] lg:flex"
+          className="fixed bottom-8 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-[transform,background-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:bg-[#2449ad] hover:shadow-lift active:scale-95 motion-safe:animate-[diya-breathe_3.6s_ease-in-out_infinite] motion-reduce:transform-none lg:flex"
         >
           <span className="sr-only">Ask Diya, DekhoCampus course guide</span>
           <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white">
             <DiyaAvatar className="h-11 w-11" />
-          </span>
-          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-[#f47b25] px-1 text-[8px] font-black text-[#111827]">
-            AI
           </span>
           <span className="pointer-events-none absolute left-1/2 top-[calc(100%+4px)] -translate-x-1/2 whitespace-nowrap text-[10px] font-extrabold text-[#325dd2] dark:text-[#8cb0ff]">
             Diya AI

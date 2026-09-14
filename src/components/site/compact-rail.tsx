@@ -79,8 +79,8 @@ export function CompactRail({
       <div className="mb-3 flex items-center justify-between gap-3">
         <p
           className={cn(
-            "text-xs font-bold md:sr-only",
-            dark ? "text-white/65" : "text-muted-foreground",
+            "inline-flex min-h-8 items-center rounded-full px-3 text-[11px] font-bold md:sr-only",
+            dark ? "bg-white/10 text-white/75" : "bg-secondary text-muted-foreground",
           )}
         >
           {itemCount} {itemCount === 1 ? "item" : "items"}
@@ -93,7 +93,7 @@ export function CompactRail({
             disabled={!position.canGoBack}
             onClick={() => scroll(-1)}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed",
+              "flex h-10 w-10 items-center justify-center rounded-lg border transition-[transform,border-color,background-color,color,box-shadow] duration-200 ease-out enabled:hover:-translate-y-0.5 enabled:hover:shadow-card enabled:active:scale-95 disabled:cursor-not-allowed motion-reduce:transform-none",
               buttonClass,
             )}
           >
@@ -105,7 +105,7 @@ export function CompactRail({
             disabled={!position.canGoForward}
             onClick={() => scroll(1)}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed",
+              "flex h-10 w-10 items-center justify-center rounded-lg border transition-[transform,border-color,background-color,color,box-shadow] duration-200 ease-out enabled:hover:-translate-y-0.5 enabled:hover:shadow-card enabled:active:scale-95 disabled:cursor-not-allowed motion-reduce:transform-none",
               buttonClass,
             )}
           >
@@ -120,7 +120,7 @@ export function CompactRail({
         aria-label={label}
         tabIndex={0}
         className={cn(
-          "grid snap-x snap-mandatory grid-flow-col gap-4 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:min-w-0 [&>*]:snap-start",
+          "grid touch-pan-x snap-x snap-mandatory scroll-px-1 grid-flow-col gap-4 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:min-w-0 [&>*]:snap-start",
           rows === 2 ? "grid-rows-2" : "grid-rows-1",
           columnClass,
           railClassName,

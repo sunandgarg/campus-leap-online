@@ -197,7 +197,7 @@ function ProgramsPage() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore ${program.name}`}
-                  className="group flex h-[12.25rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#9db9f6] hover:shadow-[0_16px_34px_-26px_rgba(50,93,210,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                  className="group flex h-[12.25rem] min-w-0 flex-col overflow-hidden rounded-xl border border-t-2 border-border border-t-[#325dd2] bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-[0_18px_38px_-24px_rgba(50,93,210,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
                 >
                   <div className="flex min-h-9 items-center justify-between gap-1.5 px-2.5 pt-2">
                     <span className="rounded-full bg-[#edf2ff] px-2 py-1 text-[10px] font-extrabold text-[#2449ad] dark:bg-[#243352] dark:text-[#b9ceff]">
@@ -210,7 +210,7 @@ function ProgramsPage() {
 
                   <div className="flex min-h-0 flex-1 flex-col px-2.5 pb-2 pt-1.5">
                     <div className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#325dd2] text-[11px] font-black text-white">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#325dd2] text-[11px] font-black text-white transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:transform-none">
                         {program.code.slice(0, 4)}
                       </span>
                       <h3 className="line-clamp-3 min-h-10 min-w-0 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
@@ -252,7 +252,11 @@ function ProgramsPage() {
                   </div>
 
                   <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors group-hover:bg-[#2449ad]">
-                    View course options <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    View course options
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
                   </span>
                 </Link>
               );

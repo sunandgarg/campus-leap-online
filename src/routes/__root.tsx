@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -233,6 +234,7 @@ function getSafeInternalHref(value: string | undefined) {
 
 function RootComponent() {
   const { queryClient, catalog } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   // The server runs beforeLoad before nested loaders. During client hydration,
   // TanStack restores that context without rerunning beforeLoad, so synchronise
@@ -252,7 +254,9 @@ function RootComponent() {
         <SiteHeader />
         <main id="main-content" className="flex-1" tabIndex={-1}>
           {/* Required: nested routes render here. */}
-          <Outlet />
+          <div key={pathname} className="route-stage min-h-full">
+            <Outlet />
+          </div>
         </main>
         <SiteFooter />
       </div>

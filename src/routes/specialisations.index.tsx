@@ -210,7 +210,7 @@ function SpecialisationsPage() {
                 to="/specialisations/$specialisationSlug"
                 params={{ specialisationSlug: specialisation.slug }}
                 aria-label={`Explore ${specialisation.name} specialisation`}
-                className="group flex h-[11.6rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#9db9f6] hover:shadow-[0_16px_34px_-26px_rgba(50,93,210,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                className="group flex h-[11.6rem] min-w-0 flex-col overflow-hidden rounded-xl border border-t-2 border-border border-t-[#f47b25] bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 hover:-translate-y-1 hover:border-[#e69a66] hover:shadow-[0_18px_38px_-24px_rgba(244,123,37,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
               >
                 <div className="flex min-h-9 items-center justify-between gap-1.5 px-2.5 pt-2">
                   <span className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-[#fff1e8] px-2 py-1 text-[10px] font-extrabold text-[#a94300] dark:bg-[#3a261c] dark:text-[#ffad70]">
@@ -224,7 +224,7 @@ function SpecialisationsPage() {
                 </div>
 
                 <div className="flex min-h-0 flex-1 flex-col px-2.5 pb-2 pt-1.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#325dd2] text-white">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#325dd2] text-white transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:transform-none">
                     <BriefcaseBusiness className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <h3 className="mt-1.5 line-clamp-2 min-h-8 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">

@@ -32,12 +32,42 @@ import {
   getSpecialisationCount,
   programCatalog,
   universities,
-  type ProgramLevel,
+  universitiesOfferingProgram,
   type University,
 } from "@/data/universities";
 import { cn } from "@/lib/utils";
 
-const courseTabs = ["Masters", "Bachelors", "Diploma"] as const satisfies ProgramLevel[];
+const courseTabs = ["Popular", "Masters", "Bachelors", "Diploma"] as const;
+type CourseTab = (typeof courseTabs)[number];
+
+// Demand-led ordering for the first browse view. MBA remains the dominant
+// online degree category, while MCA/BCA and BBA are the next high-intent
+// technology and management directions in the current India market.
+const popularCourseOrder = [
+  "MBA",
+  "MCA",
+  "BCA",
+  "BBA",
+  "M.Com",
+  "B.Com",
+  "MSc Data Science",
+  "BA",
+  "MA JMC",
+  "MA English",
+  "PGD DS",
+  "MA Economics",
+  "MA Political Science",
+  "MSW",
+] as const;
+
+const popularCourseRank = new Map(popularCourseOrder.map((code, index) => [code, index]));
+
+function courseMark(code: string) {
+  if (code === "MSc Data Science") return "MSc";
+  if (code === "PGD DS") return "PGD";
+  if (code.startsWith("MA ")) return "MA";
+  return code;
+}
 
 const heroGoals = [
   { label: "Online degree", value: "flexible-study", icon: Laptop2 },
@@ -177,10 +207,21 @@ function currentProgramCount(university: University) {
 export function HomePage() {
   const [heroGoal, setHeroGoal] = useState<(typeof heroGoals)[number]["label"]>("Online degree");
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
-  const [courseLevel, setCourseLevel] = useState<(typeof courseTabs)[number]>("Masters");
+  const [courseLevel, setCourseLevel] = useState<CourseTab>("Popular");
 
   const selectedHeroGoal = heroGoals.find((goal) => goal.label === heroGoal) ?? heroGoals[0];
-  const visibleCourses = programCatalog.filter((program) => program.level === courseLevel);
+  const visibleCourses = useMemo(() => {
+    const courses =
+      courseLevel === "Popular"
+        ? [...programCatalog]
+        : programCatalog.filter((program) => program.level === courseLevel);
+    return courses.sort(
+      (a, b) =>
+        (popularCourseRank.get(a.code as (typeof popularCourseOrder)[number]) ?? 999) -
+          (popularCourseRank.get(b.code as (typeof popularCourseOrder)[number]) ?? 999) ||
+        a.name.localeCompare(b.name),
+    );
+  }, [courseLevel]);
   const featuredUniversities = useMemo(() => orderedUniversities().slice(0, 12), []);
   const featuredSpecialisations = useMemo(() => getAllSpecialisations().slice(0, 14), []);
 
@@ -203,7 +244,7 @@ export function HomePage() {
             <Link
               key={item.label}
               to={item.to}
-              className="group flex min-h-[4.5rem] items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
+              className="group flex min-h-[4.5rem] items-center gap-3 rounded-xl px-3 py-2.5 transition-[transform,background-color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:bg-secondary hover:shadow-card active:scale-[0.985] motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
                 <item.icon className="h-5 w-5" aria-hidden="true" />
@@ -223,7 +264,7 @@ export function HomePage() {
         <SectionIntro
           eyebrow="Popular courses"
           title="What would you like to study?"
-          description="Choose a level, understand the course and explore university profiles with clear availability checks."
+          description="Start with MBA and MCA, then swipe through other degree directions people explore online."
           action={<TextLink to="/programs" label="View all courses" />}
         />
 
@@ -241,7 +282,10 @@ export function HomePage() {
                 const selected = courseLevel === tab;
                 const label =
                   tab === "Masters" ? "Postgraduate" : tab === "Bachelors" ? "Undergraduate" : tab;
-                const count = programCatalog.filter((program) => program.level === tab).length;
+                const count =
+                  tab === "Popular"
+                    ? programCatalog.length
+                    : programCatalog.filter((program) => program.level === tab).length;
 
                 return (
                   <button
@@ -282,46 +326,89 @@ export function HomePage() {
             rows={2}
             columns={4}
             className="mt-2 lg:mt-0"
-            railClassName="auto-cols-[calc((100%-1rem)/3)] gap-2 sm:auto-cols-[calc((100%-1.5rem)/4)] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
+            railClassName="auto-cols-[88%] gap-3 sm:auto-cols-[47%] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
           >
-            {visibleCourses.map((program, index) => (
-              <Link
-                key={program.slug}
-                to="/programs/$programSlug"
-                params={{ programSlug: program.slug }}
-                aria-label={`Explore Online ${program.code}, ${program.name}`}
-                className="group flex min-h-[8rem] flex-col rounded-2xl border border-border bg-card p-2.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.5rem] sm:p-3"
-              >
-                <span className="flex items-start justify-between gap-1">
-                  <span
-                    className={cn(
-                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-                      index % 2
-                        ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
-                        : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
-                    )}
-                  >
-                    {index % 2 === 0 ? (
-                      <GraduationCap className="h-4.5 w-4.5" aria-hidden="true" />
-                    ) : (
-                      <BookOpenCheck className="h-4.5 w-4.5" aria-hidden="true" />
-                    )}
+            {visibleCourses.map((program, index) => {
+              const offers = universitiesOfferingProgram(program.slug);
+              const logoUniversities = offers.slice(0, 3).map(({ university }) => university);
+              const isPriorityCourse = program.code === "MBA" || program.code === "MCA";
+
+              return (
+                <Link
+                  key={program.slug}
+                  to="/programs/$programSlug"
+                  params={{ programSlug: program.slug }}
+                  aria-label={`Explore Online ${program.code}, ${program.name}`}
+                  className="group flex min-h-[9.5rem] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:-translate-y-1 hover:border-[#7699ee] hover:shadow-lift"
+                  style={{ animationDelay: `${Math.min(index, 7) * 45}ms` }}
+                >
+                  <span className="flex min-h-0 flex-1 flex-col p-3">
+                    <span className="flex items-start justify-between gap-2">
+                      <span className="flex min-w-0 items-center gap-2.5">
+                        <span
+                          className={cn(
+                            "flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-transform duration-300 group-hover:scale-105",
+                            program.code === "MBA" || program.code === "BBA"
+                              ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
+                              : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+                          )}
+                        >
+                          {courseMark(program.code)}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block font-display text-base font-extrabold leading-5">
+                            Online {program.code}
+                          </span>
+                          <span className="mt-0.5 block text-[11px] font-semibold text-muted-foreground">
+                            {program.level}
+                          </span>
+                        </span>
+                      </span>
+                      <span className="shrink-0 rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold leading-none text-muted-foreground">
+                        {program.durationYears} yr
+                      </span>
+                    </span>
+
+                    <span className="mt-2 line-clamp-1 text-xs font-semibold leading-4 text-muted-foreground">
+                      {program.name}
+                    </span>
+
+                    <span className="mt-auto flex min-w-0 items-end justify-between gap-2 pt-2">
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className="flex shrink-0 -space-x-1.5" aria-hidden="true">
+                          {logoUniversities.map((university, logoIndex) => (
+                            <UniversityLogo
+                              key={university.slug}
+                              university={university}
+                              size="sm"
+                              priority={index < 2 && logoIndex === 0}
+                              className="h-6 w-6 rounded-full border-2 border-white dark:border-[#191f2b]"
+                            />
+                          ))}
+                        </span>
+                        <span className="truncate text-[10px] font-bold text-muted-foreground sm:text-[11px]">
+                          {offers.length
+                            ? `${offers.length} university profiles`
+                            : "Explore course options"}
+                        </span>
+                      </span>
+                      {isPriorityCourse ? (
+                        <span className="shrink-0 rounded-full bg-[#fff0e6] px-2 py-1 text-[9px] font-black uppercase tracking-[0.06em] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]">
+                          Popular
+                        </span>
+                      ) : null}
+                    </span>
                   </span>
-                  <span className="rounded-full bg-secondary px-1.5 py-1 text-[10px] font-extrabold leading-none text-muted-foreground">
-                    {program.durationYears} yr
+                  <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#2449ad]">
+                    Explore options
+                    <ChevronRight
+                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
                   </span>
-                </span>
-                <span className="mt-2 block font-display text-sm font-extrabold leading-4 sm:text-base sm:leading-5">
-                  Online {program.code}
-                </span>
-                <span className="mt-1 line-clamp-2 text-[10px] leading-3.5 text-muted-foreground sm:text-[11px] sm:leading-4">
-                  {program.name}
-                </span>
-                <span className="mt-auto flex items-center gap-0.5 pt-2 text-[10px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
-                  Explore <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5" />
-                </span>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </CompactRail>
         </div>
       </section>
@@ -341,7 +428,7 @@ export function HomePage() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-            className="mt-4 flex min-h-[4.5rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-colors hover:bg-[#2449ad]"
+            className="mt-4 flex min-h-[4.5rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-[transform,background-color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#2449ad] hover:shadow-lift active:scale-[0.99] motion-reduce:transform-none"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
               <img
@@ -383,7 +470,7 @@ export function HomePage() {
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8rem] sm:p-3.5"
+                className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8rem] sm:p-3.5"
               >
                 <span className="flex items-start justify-between gap-2">
                   <UniversityLogo
@@ -454,7 +541,7 @@ export function HomePage() {
                 key={specialisation.slug}
                 to="/specialisations/$specialisationSlug"
                 params={{ specialisationSlug: specialisation.slug }}
-                className="group flex min-h-[6.75rem] items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8]"
+                className="group flex min-h-[6.75rem] items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none"
               >
                 <span
                   className={cn(
@@ -536,7 +623,7 @@ export function HomePage() {
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-4 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
+                className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-4 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none"
               >
                 <span className="flex items-start justify-between gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
@@ -843,7 +930,7 @@ function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisio
   return (
     <Link
       to={to}
-      className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.25rem] sm:p-4"
+      className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8.25rem] sm:p-4"
     >
       <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", colorClass)}>
         <Icon className="h-5 w-5" aria-hidden="true" />

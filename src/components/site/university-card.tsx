@@ -37,7 +37,8 @@ export function UniversityCard({
           ? `Explore ${university.name} and its current online courses`
           : `Explore ${university.name} profile and check course availability`
       }
-      className="group flex h-[12rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#9db9f6] hover:shadow-[0_16px_34px_-26px_rgba(50,93,210,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+      className="group flex h-[12rem] min-w-0 flex-col overflow-hidden rounded-xl border border-t-2 border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-[0_18px_38px_-24px_rgba(50,93,210,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+      style={{ borderTopColor: university.accentColor }}
     >
       <div className="flex min-h-8 items-center justify-between gap-2 px-3 pt-2.5">
         <p className="line-clamp-1 text-[10px] font-extrabold text-[#2449ad] dark:text-[#a9c0ff]">
@@ -55,7 +56,7 @@ export function UniversityCard({
           university={university}
           size="md"
           priority={priority}
-          className="h-14 w-[94%] max-w-[8.6rem] rounded-lg border-0 bg-white"
+          className="h-14 w-[94%] max-w-[8.6rem] rounded-lg border-0 bg-white transition-transform duration-300 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
         />
       </div>
 
@@ -70,7 +71,11 @@ export function UniversityCard({
       </div>
 
       <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 border-t border-border bg-[#f7f9ff] px-3 text-[11px] font-extrabold text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#1b2230] dark:text-[#b9ceff]">
-        View university <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        View university
+        <ArrowRight
+          className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
+          aria-hidden="true"
+        />
       </span>
     </Link>
   );

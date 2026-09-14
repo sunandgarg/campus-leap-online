@@ -36,7 +36,7 @@ export function MobileBottomNav() {
           onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
           className="group -mt-5 flex min-h-[3.75rem] min-w-0 flex-col items-center justify-end gap-0.5 rounded-xl px-1 text-[10px] font-extrabold text-[#2449ad] dark:text-[#b9ceff]"
         >
-          <span className="relative flex h-13 w-13 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-[#325dd2] shadow-lift transition-transform group-active:scale-95">
+          <span className="relative flex h-13 w-13 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-[#325dd2] shadow-lift transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[0_12px_28px_-12px_rgba(50,93,210,0.65)] group-active:scale-95 motion-safe:animate-[diya-breathe_3.6s_ease-in-out_infinite]">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white">
               <img
                 src="/diya-ai.webp"
@@ -45,9 +45,6 @@ export function MobileBottomNav() {
                 height={96}
                 className="h-11 w-11 object-cover"
               />
-            </span>
-            <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f47b25] px-1 text-[7px] font-black text-[#111827]">
-              AI
             </span>
           </span>
           <span>Ask Diya</span>
