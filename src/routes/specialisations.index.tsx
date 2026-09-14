@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, BriefcaseBusiness, Clock3, GraduationCap, Search, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadForm } from "@/components/site/lead-form";
-import { CompactRail } from "@/components/site/compact-rail";
 import { getAllSpecialisations } from "@/data/specialisations";
 import { programCatalog } from "@/data/universities";
 
@@ -24,12 +23,15 @@ export const Route = createFileRoute("/specialisations/")({
   component: SpecialisationsPage,
 });
 
+const SPECIALISATION_PAGE_SIZE = 24;
+
 function SpecialisationsPage() {
   const allSpecialisations = useMemo(() => getAllSpecialisations(), []);
   const [query, setQuery] = useState("");
   const [programSlug, setProgramSlug] = useState(
     () => programCatalog.find((program) => program.code.toUpperCase() === "MBA")?.slug ?? "all",
   );
+  const [page, setPage] = useState(0);
   const quickPrograms = useMemo(() => {
     const preferredCodes = ["MBA", "BBA", "MCA", "BCA", "M.COM", "B.COM"];
     return preferredCodes
@@ -53,6 +55,16 @@ function SpecialisationsPage() {
       return matchesProgram && matchesQuery;
     });
   }, [allSpecialisations, programSlug, query]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / SPECIALISATION_PAGE_SIZE));
+  const safePage = Math.min(page, pageCount - 1);
+  const pagedSpecialisations = filtered.slice(
+    safePage * SPECIALISATION_PAGE_SIZE,
+    (safePage + 1) * SPECIALISATION_PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setPage(0);
+  }, [programSlug, query]);
 
   return (
     <div className="bg-background">
@@ -87,7 +99,7 @@ function SpecialisationsPage() {
               <dt className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                 Finder
               </dt>
-              <dd className="mt-1 font-display text-lg font-extrabold">4 steps</dd>
+              <dd className="mt-1 font-display text-lg font-extrabold">3 steps</dd>
             </div>
           </dl>
         </div>
@@ -188,25 +200,21 @@ function SpecialisationsPage() {
         </div>
 
         {filtered.length > 0 ? (
-          <CompactRail
-            label="Online degree specialisation options"
-            rows={2}
-            columns={3}
-            className="mt-3"
-            railClassName="gap-2 auto-cols-[calc((100%_-_0.5rem)/2)] sm:auto-cols-[calc((100%_-_1rem)/3)] lg:auto-cols-[calc((100%_-_2rem)/5)]"
+          <div
+            aria-label="Online degree specialisation options"
+            className="mt-3 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           >
-            {filtered.map((specialisation) => (
+            {pagedSpecialisations.map((specialisation) => (
               <Link
                 key={specialisation.slug}
                 to="/specialisations/$specialisationSlug"
                 params={{ specialisationSlug: specialisation.slug }}
                 aria-label={`Explore ${specialisation.name} specialisation`}
-                className="group relative flex h-[11.35rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_9px_25px_-24px_rgba(19,23,32,0.65)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#80ace0] hover:shadow-[0_14px_30px_-22px_rgba(50,93,210,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                className="group flex h-[11.6rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#9db9f6] hover:shadow-[0_16px_34px_-26px_rgba(50,93,210,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
               >
-                <span className="h-1 shrink-0 bg-[#f47b25]" aria-hidden="true" />
-                <div className="flex items-center justify-between gap-1.5 border-b border-border bg-[#f8faff] px-2.5 py-2 dark:bg-[#171d28]">
-                  <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-extrabold text-[#2449ad] dark:text-[#a9c0ff]">
-                    <Target className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <div className="flex min-h-9 items-center justify-between gap-1.5 px-2.5 pt-2">
+                  <span className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-[#fff1e8] px-2 py-1 text-[10px] font-extrabold text-[#a94300] dark:bg-[#3a261c] dark:text-[#ffad70]">
+                    <Target className="h-3 w-3 shrink-0" aria-hidden="true" />
                     <span className="truncate">{specialisation.program.code}</span>
                   </span>
                   <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-muted-foreground">
@@ -215,34 +223,28 @@ function SpecialisationsPage() {
                   </span>
                 </div>
 
-                <div className="flex min-h-0 flex-1 flex-col p-2.5">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.06em] text-[#a94300] dark:text-[#ffad70]">
-                    Specialisation
-                  </p>
-                  <h3 className="mt-1 line-clamp-2 min-h-8 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
+                <div className="flex min-h-0 flex-1 flex-col px-2.5 pb-2 pt-1.5">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#325dd2] text-white">
+                    <BriefcaseBusiness className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-1.5 line-clamp-2 min-h-8 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
                     {specialisation.name}
                   </h3>
-                  <p className="mt-1.5 line-clamp-2 text-[10px] font-semibold leading-3.5 text-muted-foreground">
+                  <p className="mt-1 line-clamp-1 text-[10px] font-semibold leading-4 text-muted-foreground">
                     For {specialisation.careerDirections[0]}
                   </p>
-
-                  <div className="mt-auto flex min-w-0 items-center justify-between gap-1.5 border-t border-border pt-1.5">
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-extrabold text-foreground">
-                        {specialisation.universityCount
-                          ? `${specialisation.universityCount} options`
-                          : "Options pending"}
-                      </p>
-                      <p className="text-[10px] font-semibold text-muted-foreground">Fees vary</p>
-                    </div>
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#243352] dark:text-[#a9c0ff]">
-                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </span>
-                  </div>
+                  <p className="mt-auto text-[10px] font-extrabold text-foreground">
+                    {specialisation.universityCount
+                      ? `${specialisation.universityCount} university options`
+                      : "Explore this pathway"}
+                  </p>
                 </div>
+                <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors group-hover:bg-[#2449ad]">
+                  View details <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
               </Link>
             ))}
-          </CompactRail>
+          </div>
         ) : (
           <div className="mt-5 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
             <GraduationCap className="mx-auto h-7 w-7 text-muted-foreground" />
@@ -262,6 +264,40 @@ function SpecialisationsPage() {
             </Button>
           </div>
         )}
+
+        {filtered.length > SPECIALISATION_PAGE_SIZE ? (
+          <nav
+            aria-label="Specialisation result pages"
+            className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-card p-2"
+          >
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={safePage === 0}
+              onClick={() => setPage((value) => Math.max(0, value - 1))}
+              className="min-h-10 px-3"
+            >
+              Previous
+            </Button>
+            <p
+              className="text-center text-xs font-extrabold text-muted-foreground"
+              aria-live="polite"
+            >
+              {safePage + 1} / {pageCount}
+            </p>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={safePage >= pageCount - 1}
+              onClick={() => setPage((value) => Math.min(pageCount - 1, value + 1))}
+              className="min-h-10 px-3"
+            >
+              Next
+            </Button>
+          </nav>
+        ) : null}
 
         <div className="mt-8 grid gap-4 rounded-2xl border border-border bg-[#f6f8fc] p-4 dark:bg-[#151b26] sm:p-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>

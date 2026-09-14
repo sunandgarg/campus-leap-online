@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UniversityCard } from "@/components/site/university-card";
 import { LeadForm } from "@/components/site/lead-form";
-import { CompactRail } from "@/components/site/compact-rail";
 import {
   formatINR,
   universities,
@@ -391,18 +390,15 @@ function UniversitiesPage() {
             </Button>
           </div>
         ) : (
-          <CompactRail
+          <div
             key={`university-page-${safePage}`}
-            label="Online university options"
-            rows={2}
-            columns={4}
-            className="mt-3"
-            railClassName="gap-2 auto-cols-[calc((100%_-_0.5rem)/2)] sm:auto-cols-[calc((100%_-_1rem)/3)] lg:auto-cols-[calc((100%_-_2.5rem)/6)]"
+            aria-label="Online university options"
+            className="mt-3 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
           >
             {pagedList.map((university, index) => (
               <UniversityCard key={university.slug} university={university} priority={index < 12} />
             ))}
-          </CompactRail>
+          </div>
         )}
 
         {list.length > DIRECTORY_PAGE_SIZE ? (

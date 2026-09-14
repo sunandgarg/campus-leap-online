@@ -11,7 +11,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { LeadForm } from "@/components/site/lead-form";
-import { CompactRail } from "@/components/site/compact-rail";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -180,12 +179,9 @@ function ProgramsPage() {
         </div>
 
         {programs.length > 0 ? (
-          <CompactRail
-            label="Online course options"
-            rows={2}
-            columns={3}
-            className="mt-3"
-            railClassName="gap-2 auto-cols-[calc((100%_-_0.5rem)/2)] sm:auto-cols-[calc((100%_-_1rem)/3)] lg:auto-cols-[calc((100%_-_2rem)/5)]"
+          <div
+            aria-label="Online course options"
+            className="mt-3 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           >
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
@@ -201,28 +197,28 @@ function ProgramsPage() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore ${program.name}`}
-                  className="group relative flex h-[12.25rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_9px_25px_-24px_rgba(19,23,32,0.65)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#80ace0] hover:shadow-[0_14px_30px_-22px_rgba(50,93,210,0.48)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                  className="group flex h-[12.25rem] min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#9db9f6] hover:shadow-[0_16px_34px_-26px_rgba(50,93,210,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
                 >
-                  <span className="h-1 shrink-0 bg-[#325dd2]" aria-hidden="true" />
-                  <div className="flex items-center justify-between gap-1.5 border-b border-border bg-[#f8faff] px-2.5 py-2 dark:bg-[#171d28]">
-                    <span className="inline-flex min-w-0 items-center gap-1.5 text-xs font-extrabold text-[#2449ad] dark:text-[#a9c0ff]">
-                      <GraduationCap className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                      <span className="truncate">{program.code}</span>
+                  <div className="flex min-h-9 items-center justify-between gap-1.5 px-2.5 pt-2">
+                    <span className="rounded-full bg-[#edf2ff] px-2 py-1 text-[10px] font-extrabold text-[#2449ad] dark:bg-[#243352] dark:text-[#b9ceff]">
+                      {program.level}
                     </span>
                     <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-muted-foreground">
                       <Clock3 className="h-3 w-3" aria-hidden="true" /> {program.durationYears} yr
                     </span>
                   </div>
 
-                  <div className="flex min-h-0 flex-1 flex-col p-2.5">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.06em] text-[#a94300] dark:text-[#ffad70]">
-                      {program.level}
-                    </p>
-                    <h3 className="mt-1 line-clamp-3 min-h-12 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
-                      {program.name}
-                    </h3>
+                  <div className="flex min-h-0 flex-1 flex-col px-2.5 pb-2 pt-1.5">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#325dd2] text-[11px] font-black text-white">
+                        {program.code.slice(0, 4)}
+                      </span>
+                      <h3 className="line-clamp-3 min-h-10 min-w-0 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
+                        {program.name}
+                      </h3>
+                    </div>
 
-                    <div className="mt-2 flex min-w-0 items-center gap-2">
+                    <div className="mt-2.5 flex min-w-0 items-center gap-2 border-t border-border pt-2">
                       <div className="flex shrink-0 -space-x-1.5" aria-hidden="true">
                         {logoUniversities.length ? (
                           logoUniversities.map((university, index) => (
@@ -240,31 +236,28 @@ function ProgramsPage() {
                           </span>
                         )}
                       </div>
-                      <p className="min-w-0 text-[10px] font-bold text-muted-foreground">
-                        {offers.length} {offers.length === 1 ? "option" : "options"}
-                      </p>
-                    </div>
-
-                    <div className="mt-auto flex min-w-0 items-center justify-between gap-1.5 border-t border-border pt-1.5">
                       <div className="min-w-0">
                         <p className="truncate text-[10px] font-extrabold text-foreground">
+                          {offers.length} {offers.length === 1 ? "university" : "universities"}
+                        </p>
+                        <p className="truncate text-[10px] font-semibold text-muted-foreground">
                           {program.specialisations.length} pathways
                         </p>
-                        <p className="line-clamp-2 text-[10px] font-semibold leading-3 text-muted-foreground">
-                          {lowest !== null
-                            ? `Fee from ${formatINR(lowest)}`
-                            : "Current fee unavailable"}
-                        </p>
                       </div>
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#243352] dark:text-[#a9c0ff]">
-                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </span>
                     </div>
+
+                    <p className="mt-auto truncate text-[10px] font-semibold text-muted-foreground">
+                      {lowest !== null ? `Fee from ${formatINR(lowest)}` : "Check the current fee"}
+                    </p>
                   </div>
+
+                  <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors group-hover:bg-[#2449ad]">
+                    View course options <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </span>
                 </Link>
               );
             })}
-          </CompactRail>
+          </div>
         ) : (
           <div className="mt-5 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
             <Sparkles className="mx-auto h-7 w-7 text-muted-foreground" />

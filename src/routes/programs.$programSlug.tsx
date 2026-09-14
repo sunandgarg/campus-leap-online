@@ -98,11 +98,12 @@ export const Route = createFileRoute("/programs/$programSlug")({
 
 const pageNav = [
   { label: "Overview", href: "#overview" },
-  { label: "Compare", href: "#decision-tools" },
-  { label: "Universities", href: "#universities" },
+  { label: "Fit & compare", href: "#decision-tools" },
+  { label: "Universities & fees", href: "#universities" },
   { label: "Curriculum", href: "#curriculum" },
   { label: "Specialisations", href: "#specialisations" },
   { label: "Eligibility", href: "#eligibility" },
+  { label: "Admissions", href: "#admissions" },
   { label: "Careers", href: "#careers" },
   { label: "FAQs", href: "#faqs" },
 ];
@@ -210,7 +211,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
   return (
     <div className="bg-background text-foreground transition-colors">
       <section className="border-b border-border bg-surface">
-        <div className="container-page py-6 sm:py-8 lg:py-10">
+        <div className="container-page py-4 sm:py-7 lg:py-8">
           <nav
             className="flex items-center gap-1 text-xs text-muted-foreground"
             aria-label="Breadcrumb"
@@ -228,8 +229,8 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </span>
           </nav>
 
-          <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-7 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center lg:gap-10 xl:gap-14">
-            <div className="min-w-0 max-w-3xl py-2 lg:py-8">
+          <div className="mt-4 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center lg:gap-8 xl:gap-12">
+            <div className="min-w-0 max-w-3xl py-1 lg:py-5">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-2 rounded-lg border border-[#aebff0] bg-card px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#2449ad] dark:border-[#56698c] dark:text-[#b9ceff]">
                   <BadgeCheck className="h-4 w-4" />
@@ -240,11 +241,11 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </span>
               </div>
 
-              <h1 className="mt-5 max-w-3xl font-display text-[2.25rem] font-extrabold leading-[1.04] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[4rem]">
+              <h1 className="mt-4 max-w-3xl font-display text-[2rem] font-extrabold leading-[1.04] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[3.65rem]">
                 Online {p.code} <span className="text-[#325dd2] dark:text-[#7da2ff]">Course</span>
               </h1>
 
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-lg sm:leading-8">
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-lg sm:leading-8">
                 <span className="font-semibold text-foreground">{p.name}. </span>
                 {p.overview}
               </p>
@@ -260,7 +261,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </span>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
+              <div className="mt-4 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
                 <Button
                   asChild
                   size="lg"
@@ -281,7 +282,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </Button>
               </div>
 
-              <dl className="mt-7 grid max-w-2xl grid-cols-2 gap-4 border-t border-border pt-5 sm:grid-cols-4">
+              <dl className="mt-5 grid max-w-2xl grid-cols-2 gap-3 border-t border-border pt-4 sm:grid-cols-4">
                 {[
                   [offers.length.toString(), "University profiles"],
                   [p.specialisations.length.toString(), "Specialisations"],
@@ -299,13 +300,13 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </div>
 
             <aside className="relative mx-auto w-full min-w-0 max-w-[440px]">
-              <div className="rounded-2xl border border-border bg-card p-5 shadow-card sm:p-7">
+              <div className="rounded-2xl border border-border bg-card p-4 shadow-card sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
                       A practical checklist
                     </p>
-                    <h2 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
+                    <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.04em] text-foreground sm:text-2xl">
                       Compare before you commit.
                     </h2>
                   </div>
@@ -314,12 +315,12 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   </span>
                 </div>
 
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                <p className="mt-3 hidden text-sm leading-6 text-muted-foreground sm:block">
                   Compare budget, current details, learning format and fit at your own pace, without
                   sales pressure.
                 </p>
 
-                <div className="mt-6 space-y-2.5">
+                <div className="mt-5 hidden space-y-2.5 sm:block">
                   {[
                     `${offers.length} university profiles to explore`,
                     "Compare up to three without signing in",
@@ -337,7 +338,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   ))}
                 </div>
 
-                <div className="mt-5 grid grid-cols-2 gap-3">
+                <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-3">
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                       Typical duration
@@ -356,7 +357,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-between gap-4 border-t border-border pt-5">
+                <div className="mt-5 hidden items-center justify-between gap-4 border-t border-border pt-5 sm:flex">
                   <div className="flex -space-x-2">
                     {comparableOffers.slice(0, 3).map(({ university }) => (
                       <span
@@ -377,7 +378,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 <Button
                   asChild
                   size="lg"
-                  className="mt-5 w-full rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
+                  className="mt-5 hidden w-full rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12] sm:inline-flex"
                 >
                   <Link to="/contact">
                     Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
@@ -390,24 +391,33 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
       </section>
 
       <nav
-        className="sticky top-[5.45rem] z-40 border-b border-border bg-background shadow-sm"
+        className="sticky top-14 z-40 border-b border-border bg-background shadow-sm sm:top-16"
         aria-label="Program page sections"
       >
-        <div className="container-page flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
-          {pageNav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="inline-flex min-h-10 shrink-0 items-center rounded-lg px-4 py-2 text-xs font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-            >
-              {item.label}
-            </a>
-          ))}
+        <div className="container-page flex min-w-0 items-center gap-2 py-2">
+          <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {pageNav.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="inline-flex min-h-10 shrink-0 items-center rounded-lg px-3 py-2 text-xs font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground sm:px-4"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <Button
+            asChild
+            size="sm"
+            className="hidden shrink-0 bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12] sm:inline-flex"
+          >
+            <Link to="/contact">Get guidance</Link>
+          </Button>
         </div>
       </nav>
 
       <section className="border-b border-border bg-card">
-        <div className="container-page grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <div className="container-page grid grid-cols-3 divide-x divide-border">
           {[
             {
               icon: ShieldCheck,
@@ -427,14 +437,18 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           ].map((item) => (
             <div
               key={item.title}
-              className="flex items-center gap-3 py-5 sm:px-5 first:pl-0 last:pr-0"
+              className="flex min-w-0 flex-col items-center gap-2 px-2 py-3 text-center sm:flex-row sm:gap-3 sm:px-5 sm:py-5 sm:text-left first:pl-0 last:pr-0"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary text-[#1768cc] dark:text-[#70b3ff]">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-[#1768cc] dark:text-[#70b3ff] sm:h-10 sm:w-10 sm:rounded-xl">
                 <item.icon className="h-4.5 w-4.5" />
               </span>
               <div>
-                <h2 className="text-sm font-extrabold">{item.title}</h2>
-                <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{item.text}</p>
+                <h2 className="text-[10px] font-extrabold leading-3 sm:text-sm sm:leading-5">
+                  {item.title}
+                </h2>
+                <p className="mt-0.5 hidden text-xs leading-5 text-muted-foreground sm:block">
+                  {item.text}
+                </p>
               </div>
             </div>
           ))}
@@ -443,7 +457,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section
         id="overview"
-        className="scroll-mt-32 border-b border-border bg-background py-12 lg:py-14"
+        className="scroll-mt-32 border-b border-border bg-background py-9 lg:py-12"
       >
         <div className="container-page">
           <SectionHeading
@@ -472,7 +486,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section className="border-b border-border bg-background py-12 lg:py-14">
+      <section className="border-b border-border bg-background py-9 lg:py-12">
         <div className="container-page">
           <SectionHeading
             eyebrow="Honest decision guide"
@@ -480,7 +494,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             description="A good decision starts with fit—not urgency. Use these signals before comparing universities."
           />
           <CompactRail label={`Online ${p.code} fit checks`} columns={2}>
-            <article className="rounded-xl border border-border bg-card p-7 md:p-8">
+            <article className="rounded-xl border border-border bg-card p-5 md:p-7">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <Check className="h-5 w-5" />
@@ -502,7 +516,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               </ul>
             </article>
 
-            <article className="rounded-xl border border-border bg-card p-7 md:p-8">
+            <article className="rounded-xl border border-border bg-card p-5 md:p-7">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#fff1e7] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]">
                   <Target className="h-5 w-5" />
@@ -562,7 +576,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </section>
       )}
 
-      <section id="universities" className="scroll-mt-32 bg-secondary/55 py-12 lg:py-14">
+      <section id="universities" className="scroll-mt-32 bg-secondary/55 py-9 lg:py-12">
         <div className="container-page">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionHeading
@@ -635,7 +649,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                         </div>
                         <dl className="mt-5 grid grid-cols-2 gap-3">
                           <div>
-                            <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                            <dt className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                               Total fee
                             </dt>
                             <dd className="mt-1 font-display text-base font-extrabold">
@@ -643,7 +657,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                             </dd>
                           </div>
                           <div>
-                            <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                            <dt className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                               {program.emiPerMonthVerified
                                 ? "Published monthly amount"
                                 : "Arithmetic monthly split"}
@@ -743,7 +757,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                                 {university.shortName}
                               </h3>
                               {index === 0 && sortBy === "fee" ? (
-                                <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
+                                <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#168258]">
                                   Lowest listed total fee
                                 </span>
                               ) : null}
@@ -928,7 +942,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="curriculum" className="scroll-mt-32 bg-background py-12 lg:py-14">
+      <section id="curriculum" className="scroll-mt-32 bg-background py-9 lg:py-12">
         <div className="container-page grid gap-10 lg:grid-cols-[1fr_350px] xl:gap-16">
           <div>
             <SectionHeading
@@ -991,17 +1005,19 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 />
                 <Fact
                   icon={IndianRupee}
-                  label="Fee guide from"
-                  value={comparableOffers.length ? formatINR(startingFee) : "Not mapped"}
+                  label="Listed fee from"
+                  value={comparableOffers.length ? formatINR(startingFee) : "Not available"}
                 />
                 <Fact
                   icon={WalletCards}
                   label="Arithmetic monthly split from"
-                  value={comparableOffers.length ? `${formatINR(startingEmi)}/month` : "Not mapped"}
+                  value={
+                    comparableOffers.length ? `${formatINR(startingEmi)}/month` : "Not available"
+                  }
                 />
                 <Fact
                   icon={Building2}
-                  label="Current fee records"
+                  label="Listed fee profiles"
                   value={`${comparableOffers.length} options`}
                 />
               </div>
@@ -1020,7 +1036,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section
         id="specialisations"
-        className="scroll-mt-32 bg-[#131720] py-12 text-white dark:bg-[#0b1018] lg:py-14"
+        className="scroll-mt-32 bg-[#131720] py-9 text-white dark:bg-[#0b1018] lg:py-12"
       >
         <div className="container-page">
           <SectionHeading
@@ -1068,7 +1084,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="eligibility" className="scroll-mt-32 bg-background py-12 lg:py-14">
+      <section id="eligibility" className="scroll-mt-32 bg-background py-9 lg:py-12">
         <div className="container-page grid gap-6 lg:grid-cols-2">
           <div className="rounded-xl border border-border bg-card p-6">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
@@ -1119,7 +1135,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section className="bg-background py-12 lg:py-14">
+      <section id="admissions" className="scroll-mt-32 bg-background py-9 lg:py-12">
         <div className="container-page">
           <SectionHeading
             eyebrow="Simple and supported"
@@ -1148,7 +1164,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="careers" className="scroll-mt-32 bg-secondary/55 py-12 lg:py-14">
+      <section id="careers" className="scroll-mt-32 bg-secondary/55 py-9 lg:py-12">
         <div className="container-page grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center xl:gap-16">
           <div>
             <SectionHeading
@@ -1188,7 +1204,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section id="faqs" className="scroll-mt-32 bg-background py-12 lg:py-14">
+      <section id="faqs" className="scroll-mt-32 bg-background py-9 lg:py-12">
         <div className="container-page grid gap-10 lg:grid-cols-[0.72fr_1.28fr] xl:gap-20">
           <div>
             <SectionHeading
@@ -1222,7 +1238,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
         </div>
       </section>
 
-      <section className="bg-[#325dd2] py-12 text-white">
+      <section className="bg-[#325dd2] py-9 text-white lg:py-12">
         <div className="container-page flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-white/85">
@@ -1243,6 +1259,22 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           </Button>
         </div>
       </section>
+
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <div className="fixed inset-x-0 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 px-3 lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3 rounded-2xl border border-border bg-card p-2.5 shadow-lift">
+          <div className="min-w-0 flex-1 pl-1">
+            <p className="truncate text-xs font-extrabold">Online {p.code}</p>
+            <p className="truncate text-[10px] text-muted-foreground">Browse university profiles</p>
+          </div>
+          <Button
+            asChild
+            className="h-11 shrink-0 bg-[#f47b25] px-4 font-extrabold text-[#111827] hover:bg-[#d85f12]"
+          >
+            <a href="#universities">View options</a>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1266,12 +1298,12 @@ function SectionHeading({
         {eyebrow}
       </p>
       <h2
-        className={`mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl ${dark ? "text-white" : "text-foreground"}`}
+        className={`mt-3 font-display text-2xl font-extrabold tracking-[-0.045em] sm:text-3xl lg:text-4xl ${dark ? "text-white" : "text-foreground"}`}
       >
         {title}
       </h2>
       <p
-        className={`mt-4 max-w-2xl text-base leading-7 ${dark ? "text-white/60" : "text-muted-foreground"}`}
+        className={`mt-3 max-w-2xl text-sm leading-6 sm:text-base sm:leading-7 ${dark ? "text-white/60" : "text-muted-foreground"}`}
       >
         {description}
       </p>

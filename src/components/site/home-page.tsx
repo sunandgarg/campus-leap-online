@@ -58,7 +58,7 @@ const heroRoles = ["Student", "Parent", "Professional"] as const;
 const quickLinks = [
   { label: "Universities", helper: "Browse all", to: "/universities" as const, icon: Building2 },
   { label: "Courses", helper: "Choose a degree", to: "/programs" as const, icon: GraduationCap },
-  { label: "Find my fit", helper: "4 quick questions", to: "/finder" as const, icon: Sparkles },
+  { label: "Find my fit", helper: "3 quick questions", to: "/finder" as const, icon: Sparkles },
   { label: "Compare", helper: "Keep 3 side by side", to: "/compare" as const, icon: BarChart3 },
 ] as const;
 
@@ -219,7 +219,7 @@ export function HomePage() {
         </nav>
       </section>
 
-      <section className="container-page py-8 lg:py-12">
+      <section className="container-page py-7 sm:py-9 lg:py-11">
         <SectionIntro
           eyebrow="Popular courses"
           title="What would you like to study?"
@@ -227,78 +227,103 @@ export function HomePage() {
           action={<TextLink to="/programs" label="View all courses" />}
         />
 
-        <div
-          className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          role="tablist"
-          aria-label="Course level"
-        >
-          {courseTabs.map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              role="tab"
-              aria-selected={courseLevel === tab}
-              onClick={() => setCourseLevel(tab)}
-              className={cn(
-                "min-h-11 shrink-0 rounded-full border px-5 text-sm font-extrabold transition-colors",
-                courseLevel === tab
-                  ? "border-[#325dd2] bg-[#325dd2] text-white"
-                  : "border-border bg-card text-muted-foreground hover:border-[#325dd2] hover:text-foreground",
-              )}
+        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-start lg:gap-4">
+          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-2 lg:shadow-card">
+            <p className="hidden px-3 pb-1 pt-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground lg:block">
+              Browse by level
+            </p>
+            <div
+              className="contents lg:flex lg:flex-col lg:gap-1"
+              role="group"
+              aria-label="Course level"
             >
-              {tab === "Masters" ? "Postgraduate" : tab === "Bachelors" ? "Undergraduate" : tab}
-            </button>
-          ))}
-        </div>
+              {courseTabs.map((tab) => {
+                const selected = courseLevel === tab;
+                const label =
+                  tab === "Masters" ? "Postgraduate" : tab === "Bachelors" ? "Undergraduate" : tab;
+                const count = programCatalog.filter((program) => program.level === tab).length;
 
-        <CompactRail
-          label={`${courseLevel} online courses`}
-          rows={2}
-          columns={4}
-          className="mt-3"
-          railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
-        >
-          {visibleCourses.map((program, index) => (
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setCourseLevel(tab)}
+                    className={cn(
+                      "flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-full border px-5 text-sm font-extrabold transition-colors lg:w-full lg:rounded-xl lg:border-transparent lg:px-3 lg:text-left",
+                      selected
+                        ? "border-[#325dd2] bg-[#325dd2] text-white"
+                        : "border-border bg-card text-muted-foreground hover:border-[#325dd2] hover:text-foreground lg:bg-transparent",
+                    )}
+                  >
+                    <span>{label}</span>
+                    <span
+                      className={cn(
+                        "hidden rounded-full px-2 py-0.5 text-[10px] lg:inline-flex",
+                        selected ? "bg-white/15 text-white" : "bg-secondary text-muted-foreground",
+                      )}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
             <Link
-              key={program.slug}
-              to="/programs/$programSlug"
-              params={{ programSlug: program.slug }}
-              className="group flex min-h-[8.25rem] overflow-hidden rounded-2xl border border-border bg-card shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
+              to="/programs"
+              className="hidden min-h-11 items-center justify-between rounded-xl px-3 text-xs font-extrabold text-[#2449ad] hover:bg-secondary dark:text-[#8cb0ff] lg:flex"
             >
-              <span
-                className={cn(
-                  "flex w-[4.25rem] shrink-0 items-center justify-center",
-                  index % 3 === 0
-                    ? "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
-                    : index % 3 === 1
-                      ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
-                      : "bg-[#eaf7f1] text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]",
-                )}
+              All online courses <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <CompactRail
+            label={`${courseLevel} online courses`}
+            rows={2}
+            columns={4}
+            className="mt-2 lg:mt-0"
+            railClassName="auto-cols-[calc((100%-1rem)/3)] gap-2 sm:auto-cols-[calc((100%-1.5rem)/4)] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
+          >
+            {visibleCourses.map((program, index) => (
+              <Link
+                key={program.slug}
+                to="/programs/$programSlug"
+                params={{ programSlug: program.slug }}
+                aria-label={`Explore Online ${program.code}, ${program.name}`}
+                className="group flex min-h-[8rem] flex-col rounded-2xl border border-border bg-card p-2.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.5rem] sm:p-3"
               >
-                {index % 2 === 0 ? (
-                  <GraduationCap className="h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <BookOpenCheck className="h-6 w-6" aria-hidden="true" />
-                )}
-              </span>
-              <span className="flex min-w-0 flex-1 flex-col p-3.5">
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#a94300] dark:text-[#ffad70]">
-                  {program.durationYears} {program.durationYears === 1 ? "year" : "years"}
+                <span className="flex items-start justify-between gap-1">
+                  <span
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                      index % 2
+                        ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
+                        : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+                    )}
+                  >
+                    {index % 2 === 0 ? (
+                      <GraduationCap className="h-4.5 w-4.5" aria-hidden="true" />
+                    ) : (
+                      <BookOpenCheck className="h-4.5 w-4.5" aria-hidden="true" />
+                    )}
+                  </span>
+                  <span className="rounded-full bg-secondary px-1.5 py-1 text-[10px] font-extrabold leading-none text-muted-foreground">
+                    {program.durationYears} yr
+                  </span>
                 </span>
-                <span className="mt-1 block font-display text-base font-extrabold leading-5">
+                <span className="mt-2 block font-display text-sm font-extrabold leading-4 sm:text-base sm:leading-5">
                   Online {program.code}
                 </span>
-                <span className="mt-1 line-clamp-2 text-[11px] leading-4 text-muted-foreground">
+                <span className="mt-1 line-clamp-2 text-[10px] leading-3.5 text-muted-foreground sm:text-[11px] sm:leading-4">
                   {program.name}
                 </span>
-                <span className="mt-auto flex items-center gap-1 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
-                  Explore course
-                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                <span className="mt-auto flex items-center gap-0.5 pt-2 text-[10px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                  Explore <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5" />
                 </span>
-              </span>
-            </Link>
-          ))}
-        </CompactRail>
+              </Link>
+            ))}
+          </CompactRail>
+        </div>
       </section>
 
       <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
@@ -308,7 +333,7 @@ export function HomePage() {
             title="Everything you need in one place"
             description="Explore on your own, then ask Diya or a counsellor when you want help."
           />
-          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
             {decisionTools.map((tool) => (
               <ToolCard key={tool.title} {...tool} />
             ))}
@@ -316,7 +341,7 @@ export function HomePage() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-            className="mt-4 flex min-h-[4.75rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-colors hover:bg-[#2449ad]"
+            className="mt-4 flex min-h-[4.5rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-colors hover:bg-[#2449ad]"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
               <img
@@ -358,7 +383,7 @@ export function HomePage() {
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="group flex min-h-[8.5rem] flex-col rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
+                className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8rem] sm:p-3.5"
               >
                 <span className="flex items-start justify-between gap-2">
                   <UniversityLogo
@@ -631,7 +656,7 @@ function HeroSection({
         className="pointer-events-none absolute -right-40 top-8 h-[30rem] w-[30rem] rounded-full bg-[#dbe7ff] dark:bg-[#1d2c4a]"
         aria-hidden="true"
       />
-      <div className="container-page relative grid min-w-0 gap-7 pb-10 pt-8 sm:pb-12 sm:pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.72fr)] lg:items-center lg:gap-12 lg:py-14 xl:min-h-[610px]">
+      <div className="container-page relative grid min-w-0 gap-5 pb-9 pt-7 sm:gap-7 sm:pb-12 sm:pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.72fr)] lg:items-center lg:gap-12 lg:py-14 xl:min-h-[590px]">
         <div className="min-w-0 max-w-[760px]">
           <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
             <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
@@ -642,7 +667,7 @@ function HeroSection({
             Explore freely. Ask for help only when you want it.
           </p>
 
-          <h1 className="mt-5 max-w-[740px] font-display text-[2.45rem] font-extrabold leading-[1.02] tracking-[-0.05em] text-[#131720] dark:text-foreground min-[390px]:text-[2.75rem] sm:text-[3.65rem] xl:text-[4.6rem]">
+          <h1 className="mt-4 max-w-[740px] font-display text-[2.3rem] font-extrabold leading-[1.02] tracking-[-0.05em] text-[#131720] dark:text-foreground min-[390px]:text-[2.6rem] sm:mt-5 sm:text-[3.65rem] xl:text-[4.45rem]">
             Discover Your Ideal{" "}
             <span className="block text-[#325dd2] dark:text-[#8cb0ff]">Path.</span>
           </h1>
@@ -650,14 +675,14 @@ function HeroSection({
             Find online courses, explore universities and compare your options—without feeling lost.
           </p>
 
-          <form action="/search" className="mt-5 max-w-2xl" role="search">
-            <div className="flex min-h-14 items-center gap-2 rounded-2xl border border-input bg-card p-1.5 pl-3 shadow-card sm:min-h-16 sm:gap-3 sm:pl-5">
+          <form action="/search" className="mt-4 max-w-2xl sm:mt-5" role="search">
+            <div className="flex min-h-13 items-center gap-2 rounded-2xl border border-input bg-card p-1 pl-3 shadow-card sm:min-h-16 sm:gap-3 sm:p-1.5 sm:pl-5">
               <Search className="h-5 w-5 shrink-0 text-[#667386]" aria-hidden="true" />
               <input
                 name="q"
                 aria-label="Search universities or online courses"
                 placeholder="Search MBA, BBA, university..."
-                className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-[#667386] focus-visible:ring-2 focus-visible:ring-[#325dd2] sm:text-base"
+                className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-[#667386] placeholder:opacity-100 focus-visible:ring-2 focus-visible:ring-[#325dd2] sm:text-base"
               />
               <button
                 type="submit"
@@ -688,7 +713,7 @@ function HeroSection({
             ))}
           </div>
 
-          <div className="mt-5 grid max-w-2xl grid-cols-3 gap-2 border-t border-[#cfd9ee] pt-4 dark:border-border">
+          <div className="mt-4 grid max-w-2xl grid-cols-3 gap-2 border-t border-[#cfd9ee] pt-3 dark:border-border sm:mt-5 sm:pt-4">
             <HeroMetric value={String(universities.length)} label="Universities" />
             <HeroMetric value={String(programCatalog.length)} label="Courses" />
             <HeroMetric value={String(getSpecialisationCount())} label="Specialisations" />
@@ -696,7 +721,7 @@ function HeroSection({
         </div>
 
         <aside
-          className="w-full min-w-0 overflow-hidden rounded-3xl border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-4 shadow-lift sm:p-6"
+          className="w-full min-w-0 overflow-hidden rounded-3xl border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-3.5 shadow-lift sm:p-6"
           aria-label="Find a suitable course"
         >
           <div className="flex items-center justify-between gap-3">
@@ -705,14 +730,14 @@ function HeroSection({
             </span>
             <span className="text-[10px] font-bold text-muted-foreground">About 1 min</span>
           </div>
-          <h2 className="mt-4 font-display text-xl font-extrabold leading-tight sm:text-2xl">
+          <h2 className="mt-3 font-display text-lg font-extrabold leading-tight sm:mt-4 sm:text-2xl">
             What matters most right now?
           </h2>
           <p className="mt-1.5 text-xs leading-5 text-muted-foreground sm:text-sm">
             Choose one goal. You can change it later.
           </p>
 
-          <fieldset className="mt-4 grid grid-cols-2 gap-2">
+          <fieldset className="mt-3 grid grid-cols-2 gap-2 sm:mt-4">
             <legend className="sr-only">Choose your goal</legend>
             {heroGoals.map((goal, index) => {
               const selected = heroGoal === goal.label;
@@ -723,7 +748,7 @@ function HeroSection({
                   aria-pressed={selected}
                   onClick={() => onGoalChange(goal.label)}
                   className={cn(
-                    "flex min-h-12 items-center gap-2 rounded-xl border px-2.5 text-left text-[11px] font-bold transition-colors sm:px-3 sm:text-xs",
+                    "flex min-h-11 items-center gap-2 rounded-xl border px-2 text-left text-[10px] font-bold transition-colors sm:min-h-12 sm:px-3 sm:text-xs",
                     index === heroGoals.length - 1 && "col-span-2",
                     selected
                       ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
@@ -732,7 +757,7 @@ function HeroSection({
                 >
                   <span
                     className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
+                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8",
                       selected ? "bg-[#325dd2] text-white" : "bg-secondary text-foreground",
                     )}
                   >
@@ -744,7 +769,7 @@ function HeroSection({
             })}
           </fieldset>
 
-          <fieldset className="mt-4">
+          <fieldset className="mt-3 sm:mt-4">
             <legend className="mb-2 text-[11px] font-extrabold">I am a</legend>
             <div className="grid grid-cols-3 rounded-xl bg-secondary p-1">
               {heroRoles.map((role) => (
@@ -769,7 +794,7 @@ function HeroSection({
           <Button
             asChild
             size="lg"
-            className="mt-4 min-h-12 w-full bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad]"
+            className="mt-3 min-h-11 w-full bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad] sm:mt-4 sm:min-h-12"
           >
             <Link
               to="/finder"
@@ -818,7 +843,7 @@ function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisio
   return (
     <Link
       to={to}
-      className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.5rem] sm:p-4"
+      className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.25rem] sm:p-4"
     >
       <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", colorClass)}>
         <Icon className="h-5 w-5" aria-hidden="true" />
@@ -826,7 +851,7 @@ function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisio
       <span className="mt-3 block text-sm font-extrabold leading-4 sm:text-base sm:leading-5">
         {title}
       </span>
-      <span className="mt-1.5 line-clamp-3 text-[11px] leading-4 text-muted-foreground sm:line-clamp-2 sm:text-xs sm:leading-5">
+      <span className="mt-1.5 line-clamp-2 text-[10px] leading-4 text-muted-foreground sm:text-xs sm:leading-5">
         {description}
       </span>
       <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />

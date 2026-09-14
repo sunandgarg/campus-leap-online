@@ -13,25 +13,31 @@ function emptyComparison(programSlug = ""): ComparisonState {
   return { programSlug, universitySlugs: [] };
 }
 
+function normalizeComparison(value: unknown, fallback = emptyComparison()): ComparisonState {
+  if (!value || typeof value !== "object") return fallback;
+  const candidate = value as Partial<ComparisonState>;
+  if (typeof candidate.programSlug !== "string" || !Array.isArray(candidate.universitySlugs)) {
+    return fallback;
+  }
+
+  return {
+    programSlug: candidate.programSlug.trim(),
+    universitySlugs: [
+      ...new Set(
+        candidate.universitySlugs.filter(
+          (slug): slug is string => typeof slug === "string" && slug.trim().length > 0,
+        ),
+      ),
+    ].slice(0, MAX_UNIVERSITIES),
+  };
+}
+
 function readComparison(fallback = emptyComparison()): ComparisonState {
   if (typeof window === "undefined") return fallback;
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) return fallback;
-    const parsed = JSON.parse(stored) as ComparisonState | null;
-    if (
-      !parsed ||
-      typeof parsed.programSlug !== "string" ||
-      !Array.isArray(parsed.universitySlugs)
-    ) {
-      return fallback;
-    }
-    return {
-      programSlug: parsed.programSlug,
-      universitySlugs: parsed.universitySlugs
-        .filter((slug): slug is string => typeof slug === "string")
-        .slice(0, MAX_UNIVERSITIES),
-    };
+    return normalizeComparison(JSON.parse(stored), fallback);
   } catch {
     return fallback;
   }
@@ -66,8 +72,7 @@ export function useComparison(defaultProgramSlug = "") {
     setReady(true);
 
     function handleChange(event: Event) {
-      const next = (event as CustomEvent<ComparisonState>).detail;
-      if (!next) return;
+      const next = normalizeComparison((event as CustomEvent<unknown>).detail);
       setComparison(
         defaultProgramSlug && next.programSlug !== defaultProgramSlug
           ? emptyComparison(defaultProgramSlug)
@@ -94,6 +99,7 @@ export function useComparison(defaultProgramSlug = "") {
 
   const toggleUniversity = useCallback(
     (programSlug: string, universitySlug: string) => {
+      if (!programSlug.trim() || !universitySlug.trim()) return false;
       // Fall back to React state when localStorage is blocked or unavailable so
       // a private-browser comparison remains usable for the current tab.
       const current = readComparison(comparison);
@@ -120,8 +126,10 @@ export function useComparison(defaultProgramSlug = "") {
 
   const replaceUniversities = useCallback((programSlug: string, universitySlugs: string[]) => {
     const next = {
-      programSlug,
-      universitySlugs: [...new Set(universitySlugs)].slice(0, MAX_UNIVERSITIES),
+      programSlug: programSlug.trim(),
+      universitySlugs: [
+        ...new Set(universitySlugs.filter((slug) => typeof slug === "string" && slug.trim())),
+      ].slice(0, MAX_UNIVERSITIES),
     };
     persistComparison(next);
     setComparison(next);

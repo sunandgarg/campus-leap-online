@@ -9,10 +9,12 @@ import {
   GitCompareArrows,
   GraduationCap,
   IndianRupee,
+  Search,
   Scale,
   ShieldCheck,
   Trash2,
   WalletCards,
+  X,
 } from "lucide-react";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { LeadForm } from "@/components/site/lead-form";
@@ -73,6 +75,8 @@ function ComparePage() {
   const [programSlug, setProgramSlug] = useState(
     requestedProgramSlug ?? programCatalog[0]?.slug ?? "",
   );
+  const [universityQuery, setUniversityQuery] = useState("");
+  const [selectionFeedback, setSelectionFeedback] = useState("");
 
   useEffect(() => {
     if (!comparisonReady) return;
@@ -98,6 +102,15 @@ function ComparePage() {
     offers.some(({ university }) => university.slug === slug),
   );
   const selectedOffers = offers.filter(({ university }) => selectedSlugs.includes(university.slug));
+  const filteredOffers = useMemo(() => {
+    const query = universityQuery.trim().toLowerCase();
+    if (!query) return offers;
+    return offers.filter(({ university }) =>
+      [university.name, university.shortName, university.city, university.state].some((value) =>
+        value.toLowerCase().includes(query),
+      ),
+    );
+  }, [offers, universityQuery]);
   const lowestFee = feeReadyOffers.length
     ? Math.min(...feeReadyOffers.map(({ program: offer }) => offer.totalFee))
     : null;
@@ -124,8 +137,27 @@ function ComparePage() {
 
   function changeProgram(nextSlug: string) {
     setProgramSlug(nextSlug);
+    setUniversityQuery("");
+    setSelectionFeedback("");
     saveProgram(nextSlug);
     void navigate({ search: { program: nextSlug }, replace: true, resetScroll: false });
+  }
+
+  function toggleUniversityChoice(university: University) {
+    const selected = selectedSlugs.includes(university.slug);
+    if (!selected && selectedSlugs.length >= comparison.maxUniversities) {
+      setSelectionFeedback(
+        `You can compare up to ${comparison.maxUniversities} universities. Remove one before adding ${university.shortName}.`,
+      );
+      return;
+    }
+
+    const added = comparison.toggleUniversity(programSlug, university.slug);
+    setSelectionFeedback(
+      added
+        ? `${university.shortName} added to your comparison.`
+        : `${university.shortName} removed from your comparison.`,
+    );
   }
 
   if (!program) {
@@ -258,17 +290,35 @@ function ComparePage() {
           </span>
         </div>
 
+        <div className="mt-6 grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+          <label className="relative block" htmlFor="university-search">
+            <span className="sr-only">Search universities available for {program.code}</span>
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              id="university-search"
+              type="search"
+              value={universityQuery}
+              onChange={(event) => setUniversityQuery(event.target.value)}
+              placeholder="Search university or location"
+              className="h-11 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm font-semibold outline-none placeholder:text-muted-foreground focus:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+            />
+          </label>
+          <p className="text-xs font-semibold text-muted-foreground" aria-live="polite">
+            {filteredOffers.length} {filteredOffers.length === 1 ? "option" : "options"} shown
+          </p>
+        </div>
+
         <CompactRail label={`Universities available for ${program.code}`} rows={2} columns={3}>
-          {offers.map(({ university, program: offer }) => {
+          {filteredOffers.map(({ university, program: offer }) => {
             const selected = selectedSlugs.includes(university.slug);
-            const disabled = !selected && selectedSlugs.length >= 3;
+            const disabled = !selected && selectedSlugs.length >= comparison.maxUniversities;
             return (
               <button
                 key={university.slug}
                 type="button"
                 disabled={!comparison.ready || disabled}
                 aria-pressed={selected}
-                onClick={() => comparison.toggleUniversity(programSlug, university.slug)}
+                onClick={() => toggleUniversityChoice(university)}
                 className={`relative flex items-center gap-4 rounded-xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
                   selected
                     ? "border-[#325dd2] bg-[#edf2ff] dark:bg-[#263653]"
@@ -300,6 +350,73 @@ function ComparePage() {
           })}
         </CompactRail>
 
+        {offers.length > 0 && filteredOffers.length === 0 ? (
+          <div className="mt-5 rounded-xl border border-dashed border-border bg-card p-6 text-center">
+            <p className="font-display text-base font-extrabold">No university found</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try a shorter name or search by city or state.
+            </p>
+            <button
+              type="button"
+              onClick={() => setUniversityQuery("")}
+              className="mt-3 text-sm font-extrabold text-[#1768cc] dark:text-[#78b9ff]"
+            >
+              Clear search
+            </button>
+          </div>
+        ) : null}
+
+        <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          {selectionFeedback}
+        </p>
+
+        {selectedOffers.length > 0 ? (
+          <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-30 mt-5 rounded-xl border border-[#aebff0] bg-card p-3 shadow-[0_14px_40px_rgba(20,42,87,0.2)] md:bottom-4 md:p-4">
+            <div className="flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#1768cc] dark:text-[#78b9ff]">
+                  {selectedOffers.length} of {comparison.maxUniversities} selected
+                </p>
+                <div className="mt-2 flex min-w-0 gap-2 overflow-x-auto [scrollbar-width:none]">
+                  {selectedOffers.map(({ university }) => (
+                    <span
+                      key={university.slug}
+                      className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-secondary px-2 py-1.5 text-xs font-bold"
+                    >
+                      <span className="flex h-7 w-7 items-center justify-center rounded-md bg-white">
+                        <UniversityLogo university={university} size="sm" />
+                      </span>
+                      <span className="max-w-24 truncate sm:max-w-36">{university.shortName}</span>
+                      <button
+                        type="button"
+                        onClick={() => toggleUniversityChoice(university)}
+                        aria-label={`Remove ${university.shortName} from comparison`}
+                        className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-background hover:text-foreground"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <Button
+                asChild
+                size="sm"
+                className="shrink-0 bg-[#325dd2] text-white hover:bg-[#2449ad]"
+              >
+                <a href="#comparison-results">
+                  Review <ArrowRight className="ml-1.5 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+            {selectedSlugs.length >= comparison.maxUniversities ? (
+              <p className="mt-2 text-[11px] font-semibold text-muted-foreground">
+                Maximum reached. Remove one to choose another university.
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
         {offers.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
             <p className="font-display text-lg font-extrabold">
@@ -312,7 +429,7 @@ function ComparePage() {
           </div>
         ) : null}
 
-        <div className="mt-10">
+        <div id="comparison-results" className="mt-10 scroll-mt-28">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffab73]">
               <GitCompareArrows className="h-5 w-5" />
@@ -583,10 +700,13 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
         aria-label="Scrollable university comparison table"
         className="mt-6 hidden overflow-x-auto rounded-xl border border-border bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2 md:block"
       >
+        <p className="border-b border-border bg-[#edf2ff] px-4 py-2 text-xs font-semibold text-[#2449ad] dark:bg-[#1b263c] dark:text-[#b9ceff] lg:hidden">
+          Scroll sideways to review every selected university.
+        </p>
         <table className="w-full min-w-[760px] table-fixed text-sm">
           <thead>
             <tr className="bg-secondary/60">
-              <th className="w-44 p-5 text-left text-xs font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
+              <th className="sticky left-0 z-20 w-44 bg-secondary p-5 text-left text-xs font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
                 Factor
               </th>
               {offers.map(({ university }) => (
@@ -619,7 +739,10 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
           <tbody>
             {rows.map((row, index) => (
               <tr key={row.label} className={index % 2 ? "bg-secondary/30" : "bg-card"}>
-                <th scope="row" className="p-5 text-left align-top">
+                <th
+                  scope="row"
+                  className={`sticky left-0 z-10 p-5 text-left align-top ${index % 2 ? "bg-secondary" : "bg-card"}`}
+                >
                   <span className="flex items-center gap-2 text-xs font-extrabold text-muted-foreground">
                     <row.icon className="h-4 w-4" /> {row.label}
                   </span>
@@ -635,7 +758,7 @@ function ComparisonMatrix({ offers, programSlug }: { offers: Offer[]; programSlu
               </tr>
             ))}
             <tr>
-              <th className="p-5">
+              <th className="sticky left-0 z-10 bg-card p-5">
                 <span className="sr-only">Actions</span>
               </th>
               {offers.map(({ university }) => (

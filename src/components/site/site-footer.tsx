@@ -74,8 +74,8 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-[#2b3340] bg-[#131720] text-white dark:bg-[#0b1018]">
-      <div className="container-page py-10 lg:py-16">
-        <div className="grid gap-8 border-b border-white/10 pb-9 lg:grid-cols-[1.25fr_0.85fr_0.85fr_0.85fr_0.9fr] lg:gap-7 lg:pb-12">
+      <div className="container-page py-9 lg:py-16">
+        <div className="grid gap-7 border-b border-white/10 pb-8 lg:grid-cols-[1.25fr_0.85fr_0.85fr_0.85fr_0.9fr] lg:gap-7 lg:pb-12">
           <div className="lg:pr-6">
             <Link to="/" aria-label="DekhoCampus home" className="inline-flex rounded-lg">
               <BrandLogo size="lg" tone="inverse" />
@@ -305,7 +305,7 @@ function SupportLinks() {
 function MobileFooterGroup({ title, children }: { title: string; children: ReactNode }) {
   return (
     <details className="group rounded-xl border border-white/10 bg-[#1b202a] px-4">
-      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between text-sm font-extrabold marker:content-none">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between rounded-lg text-sm font-extrabold marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8cb0ff]">
         {title}
         <ChevronDown className="h-4 w-4 text-white/60 transition-transform group-open:rotate-180" />
       </summary>

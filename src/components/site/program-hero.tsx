@@ -72,7 +72,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
 
   return (
     <section className="border-b border-border bg-surface text-foreground">
-      <div className="container-page py-6 sm:py-8 lg:py-10">
+      <div className="container-page py-4 sm:py-7 lg:py-8">
         <nav
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground"
@@ -98,15 +98,15 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
           </span>
         </nav>
 
-        <div className="mt-6 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start lg:gap-10">
-          <div className="min-w-0 py-1 lg:py-4">
+        <div className="mt-4 grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_370px] lg:items-center lg:gap-8">
+          <div className="min-w-0 py-1 lg:py-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-2 rounded-full border border-[#bfd0ff] bg-card px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#2449ad] dark:border-[#435a8d] dark:text-[#b9ceff]">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 {requiresVerification
                   ? isEditorialFallback
-                    ? "Course guide"
-                    : "Course listing"
+                    ? "Course profile"
+                    : "Previously listed course"
                   : "Current course details available"}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-bold text-muted-foreground">
@@ -115,11 +115,11 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               </span>
             </div>
 
-            <div className="mt-5 flex items-center gap-3 sm:gap-4">
+            <div className="mt-4 flex items-center gap-3 sm:gap-4">
               <UniversityLogo
                 university={u}
                 size="lg"
-                className="h-16 w-16 rounded-xl sm:h-20 sm:w-20"
+                className="h-14 w-14 rounded-xl sm:h-16 sm:w-16"
               />
               <div className="min-w-0">
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
@@ -129,7 +129,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               </div>
             </div>
 
-            <h1 className="mt-6 max-w-4xl break-words font-display text-[2.25rem] font-extrabold leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-[3.25rem]">
+            <h1 className="mt-4 max-w-4xl break-words font-display text-[2rem] font-extrabold leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-[3.25rem]">
               {hasCurrentOfferingEvidence ? `Online ${p.code}` : `${p.code} course profile`}{" "}
               <span className="block text-[#325dd2] dark:text-[#7da2ff]">
                 {hasCurrentOfferingEvidence ? `from ${u.shortName}` : u.shortName}
@@ -143,12 +143,12 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 : "confirm availability for this intake"}
             </p>
 
-            <p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
               Compare the curriculum, fees, eligibility and study format without chasing multiple
               pages. We keep missing intake details visibly marked for you.
             </p>
 
-            <div className="mt-6 grid grid-cols-[minmax(0,1fr)_3rem] gap-3 sm:flex sm:flex-row sm:flex-wrap">
+            <div className="mt-4 grid grid-cols-[minmax(0,1fr)_3rem] gap-2.5 sm:flex sm:flex-row sm:flex-wrap sm:gap-3">
               <Button
                 asChild
                 size="lg"
@@ -190,7 +190,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               </button>
             </div>
 
-            <p className="mt-4 flex max-w-2xl items-start gap-2 text-xs leading-5 text-muted-foreground">
+            <p className="mt-3 flex max-w-2xl items-start gap-2 text-xs leading-5 text-muted-foreground">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#14845f] dark:text-[#65d5a7]" />
               Free independent support. Pay only on the university’s official channel after you
               verify the written fee and intake.
@@ -199,28 +199,20 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
 
           <aside className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
             <div className="h-1.5 bg-[#325dd2]" />
-            <div className="p-5 sm:p-6">
+            <div className="p-4 sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
                     Course quick view
                   </p>
-                  <h2 className="mt-1 font-display text-xl font-extrabold">
-                    What you need before shortlisting
+                  <h2 className="mt-1 font-display text-lg font-extrabold sm:text-xl">
+                    Check these details first
                   </h2>
                 </div>
                 <BookOpenCheck className="h-6 w-6 shrink-0 text-[#325dd2] dark:text-[#7da2ff]" />
               </div>
 
-              <a
-                href="#apply"
-                className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#f47b25] px-4 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12]"
-              >
-                Get current fee &amp; intake guidance
-                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-              </a>
-
-              <dl className="mt-5 grid grid-cols-2 gap-2 sm:block sm:divide-y sm:divide-border sm:border-y sm:border-border">
+              <dl className="mt-4 grid grid-cols-2 gap-2 sm:block sm:divide-y sm:divide-border sm:border-y sm:border-border">
                 {quickFacts.map((fact) => (
                   <div
                     key={fact.label}
@@ -237,7 +229,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 ))}
               </dl>
 
-              <div className="mt-5 rounded-xl bg-[#edf2ff] p-4 dark:bg-[#263653]">
+              <div className="mt-3 rounded-xl bg-[#edf2ff] p-3.5 dark:bg-[#263653] sm:mt-4">
                 <p className="flex items-center gap-2 text-xs font-extrabold text-[#2449ad] dark:text-[#dbe6ff]">
                   <ShieldCheck className="h-4 w-4" />
                   {hasCurrentOfferingEvidence
@@ -257,7 +249,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Check recognition details (opens in new tab)"
-                  className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold text-[#2449ad] hover:underline dark:text-[#b9ceff]"
+                  className="mt-3 inline-flex min-h-10 items-center gap-2 text-xs font-extrabold text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                 >
                   Check recognition details
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -277,6 +269,7 @@ const sections = [
   { id: "specialisations", label: "Specialisations" },
   { id: "fees", label: "Fees" },
   { id: "eligibility", label: "Eligibility" },
+  { id: "admissions", label: "Admissions" },
   { id: "careers", label: "Careers" },
   { id: "faqs", label: "FAQs" },
   { id: "compare", label: "Compare" },
@@ -289,7 +282,7 @@ export function ProgramSectionNav({ includeCompare = true }: { includeCompare?: 
   return (
     <nav
       aria-label="Programme sections"
-      className="sticky top-[5.45rem] z-30 border-b border-border bg-card"
+      className="sticky top-14 z-30 border-b border-border bg-card shadow-sm sm:top-16"
     >
       <div className="container-page flex min-w-0 items-center gap-2 py-2">
         <div className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -306,7 +299,7 @@ export function ProgramSectionNav({ includeCompare = true }: { includeCompare?: 
         <Button
           asChild
           size="sm"
-          className="shrink-0 bg-[#f47b25] text-[#111827] hover:bg-[#d85f12]"
+          className="hidden shrink-0 bg-[#f47b25] text-[#111827] hover:bg-[#d85f12] sm:inline-flex"
         >
           <a href="#apply">Get guidance</a>
         </Button>

@@ -8,6 +8,7 @@ import {
   Clock,
   ExternalLink,
   FileCheck2,
+  GitCompareArrows,
   GraduationCap,
   HelpCircle,
   Laptop2,
@@ -41,6 +42,14 @@ import {
 } from "@/data/universities";
 import { classifyEvidenceSource, evidenceSourceLinkLabel } from "@/lib/evidence-source";
 
+function hasCurrentCourse(university: University, program: UniversityProgram) {
+  return (
+    university.profileDepth !== "directory" &&
+    university.verificationCurrent === true &&
+    program.entitlementStatus === "verified"
+  );
+}
+
 export const Route = createFileRoute("/universities/$universitySlug/")({
   loader: ({ params }): { university: University; programs: UniversityProgram[] } => {
     const university = getUniversity(params.universitySlug);
@@ -58,11 +67,15 @@ export const Route = createFileRoute("/universities/$universitySlug/")({
     }
     const u = loaderData.university;
     const shouldNoIndex = u.profileDepth === "directory" || !u.verificationCurrent;
-    const title = `${u.name} — Online Courses & Admission Guide`;
-    const description =
-      u.profileDepth === "directory"
-        ? `Explore online courses associated with ${u.name} and use the intake checklist to confirm current availability and fees before applying.`
-        : `Explore ${loaderData.programs.length} online course options at ${u.name}, compare available fee details and review the intake checklist before applying.`;
+    const currentCourseCount = loaderData.programs.filter((program) =>
+      hasCurrentCourse(u, program),
+    ).length;
+    const title = currentCourseCount
+      ? `${u.name} — Online Courses & Admission Guide`
+      : `${u.name} — University Profile & Course Availability Guide`;
+    const description = currentCourseCount
+      ? `Explore ${currentCourseCount} currently listed online ${currentCourseCount === 1 ? "course" : "courses"} at ${u.name}, compare available fee details and review the intake checklist before applying.`
+      : `Review ${u.name}, explore previously listed course profiles and confirm current course availability, fees and admission details before applying.`;
     return {
       meta: [
         { title },
@@ -102,8 +115,8 @@ function UniversityNotFound() {
 
 const universitySections = [
   { id: "about", label: "About" },
-  { id: "highlights", label: "Highlights" },
   { id: "programs", label: "Courses & fees" },
+  { id: "highlights", label: "What to check" },
   { id: "admissions", label: "Admissions" },
   { id: "placements", label: "Placements" },
   { id: "faqs", label: "FAQs" },
@@ -113,7 +126,7 @@ function UniversitySectionNav() {
   return (
     <nav
       aria-label="University sections"
-      className="sticky top-[5.45rem] z-30 border-b border-border bg-card"
+      className="sticky top-14 z-30 border-b border-border bg-card shadow-sm sm:top-16"
     >
       <div className="container-page flex gap-1 overflow-x-auto py-2.5 [scrollbar-width:none]">
         {universitySections.map((section) => (
@@ -140,11 +153,12 @@ function UniversityPage() {
   const approvalClaims = getUniversityApprovalClaims(u);
   const rankingClaims = getUniversityRankingClaims(u);
   const verificationSourceKind = classifyEvidenceSource(u.verificationSourceUrl, u.domain);
+  const currentPrograms = programs.filter((program) => hasCurrentCourse(u, program));
 
   return (
     <>
       <section className="border-b border-border bg-[#eef4ff] text-foreground dark:bg-[#111b2b]">
-        <div className="container-page py-7 sm:py-9 lg:py-10">
+        <div className="container-page py-5 sm:py-7 lg:py-8">
           <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
             <Link to="/" className="hover:text-[#2449ad] dark:hover:text-[#b9ceff]">
               Home
@@ -163,19 +177,19 @@ function UniversityPage() {
             </span>
           </nav>
 
-          <div className="mt-5 grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_310px] md:items-start lg:gap-8">
-            <div className="min-w-0 rounded-2xl border border-border bg-card p-5 sm:p-6">
+          <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_300px] md:items-stretch lg:gap-6">
+            <div className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
               <div className="flex min-w-0 items-start gap-4 sm:gap-5">
                 <UniversityLogo
                   university={u}
                   size="lg"
-                  className="h-16 w-16 shrink-0 rounded-xl bg-card sm:h-20 sm:w-20"
+                  className="h-14 w-14 shrink-0 rounded-xl bg-card sm:h-16 sm:w-16"
                 />
                 <div className="min-w-0">
                   <p className="text-[11px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
                     Online university profile
                   </p>
-                  <h1 className="mt-1 break-words font-display text-[1.75rem] font-extrabold leading-[1.1] tracking-[-0.035em] sm:text-4xl">
+                  <h1 className="mt-1 break-words font-display text-[1.65rem] font-extrabold leading-[1.1] tracking-[-0.035em] sm:text-4xl">
                     {u.name}
                   </h1>
                   <p className="mt-2 text-sm text-muted-foreground">
@@ -213,7 +227,7 @@ function UniversityPage() {
                 </div>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+              <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                 <Button
                   asChild
                   className="min-h-11 bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
@@ -225,14 +239,28 @@ function UniversityPage() {
                 </Button>
                 <Button asChild variant="outline" className="min-h-11 bg-card font-bold">
                   <a href="#programs">
-                    View courses
+                    {currentPrograms.length ? "View courses" : "Course profiles"}
                     <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                   </a>
                 </Button>
+                <Button asChild variant="outline" className="min-h-11 bg-card font-bold">
+                  <Link to="/compare">
+                    <GitCompareArrows className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Compare
+                  </Link>
+                </Button>
+                {u.domain ? (
+                  <Button asChild variant="ghost" className="min-h-11 font-bold">
+                    <a href={`https://${u.domain}`} target="_blank" rel="noopener noreferrer">
+                      University website
+                      <ExternalLink className="ml-2 h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </Button>
+                ) : null}
               </div>
             </div>
             {isDirectoryProfile ? (
-              <div className="rounded-2xl border border-border bg-card p-5">
+              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
                 <p className="flex items-center gap-2 font-display text-base font-bold text-[#126f4b] dark:text-[#8de3bd]">
                   <ShieldCheck className="h-5 w-5" />
                   {hasDirectorySource ? "University details available" : "University profile added"}
@@ -245,7 +273,7 @@ function UniversityPage() {
                 </p>
               </div>
             ) : u.metricsVerified ? (
-              <div className="rounded-2xl border border-border bg-card p-5">
+              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
                 <p className="flex items-center gap-1.5 font-display text-2xl font-bold text-[#2449ad] dark:text-[#b9ceff]">
                   <Star className="h-5 w-5 fill-[#f47b25] text-[#f47b25]" />
                   {u.rating}
@@ -259,11 +287,11 @@ function UniversityPage() {
                 </p>
               </div>
             ) : (
-              <div className="rounded-2xl border border-border bg-card p-5">
+              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
                 <p className="font-display text-base font-bold">Quick check before you apply</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
                   Ratings and learner totals are hidden until they can be checked. Use the course
-                  list and official links to build your shortlist.
+                  profiles and official links to build your shortlist.
                 </p>
               </div>
             )}
@@ -284,8 +312,8 @@ function UniversityPage() {
                 </p>
                 <p className="mt-1 text-xs leading-5 text-[#3e6758] dark:text-[#a8c8ba]">
                   {u.verificationCurrent
-                    ? `Record checked ${u.lastVerified ?? "for this catalogue"}; next review ${u.verificationNextReviewAt?.slice(0, 10) ?? "scheduled"}.`
-                    : `Historical record${u.lastVerified ? ` checked ${u.lastVerified}` : ""}; a fresh review is still required.`}{" "}
+                    ? `University details checked ${u.lastVerified ?? "for this profile"}; the next review is ${u.verificationNextReviewAt?.slice(0, 10) ?? "scheduled"}.`
+                    : `Previously listed details${u.lastVerified ? ` checked ${u.lastVerified}` : ""}; current availability still needs confirmation.`}{" "}
                   Programme entitlement, fees and admissions can change by academic session.
                 </p>
               </div>
@@ -324,13 +352,16 @@ function UniversityPage() {
         </section>
       ) : null}
 
-      <section className="border-b border-border bg-surface dark:bg-secondary/25">
+      <section
+        id="recognition"
+        className="scroll-mt-32 border-b border-border bg-surface dark:bg-secondary/25"
+      >
         <div className="container-page py-6">
           <AuthorityVerification compact />
         </div>
       </section>
 
-      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-7 py-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:py-10">
         <div className="min-w-0">
           <h2 id="about" className="scroll-mt-32 font-display text-2xl font-bold">
             About {u.shortName}
@@ -354,15 +385,95 @@ function UniversityPage() {
             </dl>
           ) : null}
 
+          <h2 id="programs" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
+            Course profiles for {u.shortName} ({programs.length})
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {currentPrograms.length
+              ? `${currentPrograms.length} ${currentPrograms.length === 1 ? "course is" : "courses are"} currently listed. Every other profile is clearly marked so you can confirm availability before applying.`
+              : isDirectoryProfile
+                ? hasDirectorySource
+                  ? "These courses appeared in the last available catalogue. Open one and confirm that it is available for your intake."
+                  : "These course profiles help you research possibilities while current university details are checked."
+                : "These course profiles are not confirmed for the current intake. Check availability, mode, curriculum, pathways and eligibility with the university."}
+          </p>
+
+          <CompactRail label={`${u.shortName} course records`} rows={2} columns={2}>
+            {programs.map((p) => {
+              const currentCourse = hasCurrentCourse(u, p);
+              return (
+                <Link
+                  key={p.slug}
+                  to="/universities/$universitySlug/$programSlug"
+                  params={{ universitySlug: u.slug, programSlug: p.slug }}
+                  className="group block rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-md bg-secondary px-2 py-0.5 font-display text-xs font-bold">
+                          {p.code}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{p.level}</span>
+                        <span
+                          className={`rounded-full px-2 py-1 text-[10px] font-extrabold ${
+                            currentCourse
+                              ? "bg-[#eaf7f1] text-[#126f4b] dark:bg-[#153d30] dark:text-[#8de3bd]"
+                              : "bg-[#fff4e8] text-[#9a4d12] dark:bg-[#3b281a] dark:text-[#ffbc84]"
+                          }`}
+                        >
+                          {currentCourse ? "Current details listed" : "Confirm availability"}
+                        </span>
+                      </div>
+                      <h3 className="mt-2 font-display text-base font-bold sm:text-lg">{p.name}</h3>
+                      <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5" />{" "}
+                          {currentCourse && p.durationVerified ? "Course" : "Typical"} duration:{" "}
+                          {p.durationYears} {p.durationYears === 1 ? "year" : "years"} ·{" "}
+                          {p.semesters} {p.semesters === 1 ? "semester" : "semesters"}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <GraduationCap className="h-3.5 w-3.5" />
+                          {currentCourse && p.specialisationsVerified
+                            ? `${p.specialisations.length} specialisation pathways`
+                            : "Confirm available pathways"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <p className="font-display text-base font-bold sm:text-lg">
+                        {currentCourse && p.totalFeeAvailable
+                          ? formatINR(p.totalFee)
+                          : "Confirm current fee"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {!currentCourse || !p.totalFeeAvailable
+                          ? "Ask for the latest written fee"
+                          : p.perSemesterFeeVerified
+                            ? `${formatINR(p.perSemesterFee)}/semester · listed fee`
+                            : `${formatINR(p.perSemesterFee)}/semester · calculated split`}
+                      </p>
+                      <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary">
+                        {currentCourse ? "View course" : "Check course profile"}{" "}
+                        <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </CompactRail>
+
           <h2 id="highlights" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
-            Why learners shortlist {u.shortName}
+            What to check about {u.shortName}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {isDirectoryProfile
               ? "What is currently known, and what still needs confirmation for your intake."
               : "Useful points to investigate before choosing a course."}
           </p>
-          <CompactRail label={`${u.shortName} catalogue notes`} rows={2} columns={2}>
+          <CompactRail label={`${u.shortName} decision notes`} rows={2} columns={2}>
             {u.highlights.map((h) => (
               <article
                 key={h}
@@ -371,70 +482,6 @@ function UniversityPage() {
                 <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 {h}
               </article>
-            ))}
-          </CompactRail>
-
-          <h2 id="programs" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
-            Online courses at {u.shortName} ({programs.length})
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {isDirectoryProfile
-              ? hasDirectorySource
-                ? "These courses appeared in the last available catalogue. Open one and confirm that it is available for your intake."
-                : "These courses are listed for discovery while the current university documents are reviewed."
-              : "Availability, mode, curriculum, pathways and eligibility must still be confirmed for the exact intake."}
-          </p>
-
-          <CompactRail label={`${u.shortName} course records`} rows={2} columns={2}>
-            {programs.map((p) => (
-              <Link
-                key={p.slug}
-                to="/universities/$universitySlug/$programSlug"
-                params={{ universitySlug: u.slug, programSlug: p.slug }}
-                className="group block rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-md bg-secondary px-2 py-0.5 font-display text-xs font-bold">
-                        {p.code}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{p.level}</span>
-                    </div>
-                    <h3 className="mt-2 font-display text-lg font-bold">{p.name}</h3>
-                    <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5" />{" "}
-                        {p.durationVerified ? "Course" : "Typical"} duration: {p.durationYears}{" "}
-                        {p.durationYears === 1 ? "year" : "years"} · {p.semesters}{" "}
-                        {p.semesters === 1 ? "semester" : "semesters"}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <GraduationCap className="h-3.5 w-3.5" />
-                        {p.specialisationsVerified
-                          ? `${p.specialisations.length} specialisation pathways`
-                          : "Pathways vary by university"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-left sm:text-right">
-                    <p className="font-display text-lg font-bold">
-                      {p.totalFeeAvailable ? formatINR(p.totalFee) : "Confirm current fee"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {!p.totalFeeAvailable
-                        ? "Ask for the latest written fee"
-                        : p.perSemesterFeeVerified
-                          ? `${formatINR(p.perSemesterFee)}/semester · listed fee`
-                          : `${formatINR(p.perSemesterFee)}/semester · ${p.feesVerified ? "calculated split" : "estimated amount"}`}
-                    </p>
-                    <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary">
-                      View program{" "}
-                      <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </div>
-                </div>
-              </Link>
             ))}
           </CompactRail>
 
@@ -510,8 +557,8 @@ function UniversityPage() {
             Placement & career support
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Employer-network claims appear only when independently evidenced. Any placement
-            assistance still cannot guarantee a job or salary outcome.
+            Employer names appear only after a reliable public check. Placement assistance still
+            cannot guarantee a job or salary outcome.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {u.metricsVerified && u.placementPartners.length ? (
@@ -525,7 +572,7 @@ function UniversityPage() {
               ))
             ) : (
               <p className="rounded-xl border border-dashed border-border bg-secondary/35 px-4 py-3 text-sm text-muted-foreground">
-                Employer-network details are not yet independently verified for this profile.
+                Career-support employer names have not been confirmed for this profile yet.
               </p>
             )}
           </div>
@@ -641,7 +688,10 @@ function UniversityPage() {
           </div>
         </div>
 
-        <aside id="counselling" className="min-w-0 scroll-mt-32 lg:sticky lg:top-24 lg:h-fit">
+        <aside
+          id="counselling"
+          className="min-w-0 scroll-mt-32 lg:sticky lg:top-[9.25rem] lg:h-fit"
+        >
           <LeadForm
             compact
             defaultUniversitySlug={u.slug}
@@ -660,6 +710,27 @@ function UniversityPage() {
           </Link>
         </aside>
       </section>
+
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <div className="fixed inset-x-0 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 px-3 lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3 rounded-2xl border border-border bg-card p-2.5 shadow-lift">
+          <UniversityLogo university={u} size="sm" className="h-10 w-12 shrink-0 rounded-lg" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-extrabold">{u.shortName}</p>
+            <p className="truncate text-[10px] text-muted-foreground">
+              {currentPrograms.length
+                ? `${currentPrograms.length} current ${currentPrograms.length === 1 ? "course" : "courses"}`
+                : "Confirm current course availability"}
+            </p>
+          </div>
+          <Button
+            asChild
+            className="h-11 shrink-0 bg-[#f47b25] px-4 font-extrabold text-[#111827] hover:bg-[#d85f12]"
+          >
+            <a href="#counselling">Free guidance</a>
+          </Button>
+        </div>
+      </div>
     </>
   );
 }

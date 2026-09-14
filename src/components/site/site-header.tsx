@@ -61,6 +61,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<DesktopMenu>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
   const mobilePanelRef = useRef<HTMLDivElement>(null);
   const desktopPanelRef = useRef<HTMLDivElement>(null);
@@ -89,6 +90,15 @@ export function SiteHeader() {
   }, [open]);
 
   useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  useEffect(() => {
     if (!desktopMenu) return;
     const frame = window.requestAnimationFrame(() => {
       desktopPanelRef.current
@@ -96,6 +106,20 @@ export function SiteHeader() {
         ?.focus();
     });
     return () => window.cancelAnimationFrame(frame);
+  }, [desktopMenu]);
+
+  useEffect(() => {
+    if (!desktopMenu) return;
+
+    function handleOutsidePointer(event: PointerEvent) {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
+        setDesktopMenu(null);
+        navigationReturnFocusRef.current = null;
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutsidePointer);
+    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
   }, [desktopMenu]);
 
   useEffect(() => {
@@ -161,7 +185,10 @@ export function SiteHeader() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-50 border-b border-border bg-background shadow-[0_1px_0_rgba(19,23,32,0.02)]"
+    >
       <div className="container-page relative flex h-14 items-center justify-between gap-2 sm:h-16">
         <div className="flex min-w-0 items-center gap-1.5 lg:gap-0">
           <button
@@ -207,7 +234,7 @@ export function SiteHeader() {
               key={link.to}
               to={link.to}
               onClick={() => setDesktopMenu(null)}
-              className="inline-flex h-11 items-center rounded-xl px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="hidden h-11 items-center rounded-xl px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground xl:inline-flex"
               activeProps={{ className: "bg-secondary text-foreground" }}
             >
               {link.label}
@@ -235,14 +262,15 @@ export function SiteHeader() {
               to="/search"
               search={{ q: "" }}
               aria-label="Search courses and universities"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-foreground transition-colors hover:bg-secondary"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-bold text-foreground transition-colors hover:border-[#86a2e8] hover:bg-secondary"
             >
               <Search className="h-4 w-4" />
+              <span className="hidden xl:inline">Search</span>
             </Link>
             <Link
               to="/compare"
               aria-label={`Compare universities${comparison.count ? `, ${comparison.count} selected` : ""}`}
-              className="relative inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-extrabold text-foreground transition-colors hover:bg-secondary"
+              className="relative inline-flex h-11 items-center gap-2 rounded-xl border border-[#c8d5f8] bg-[#edf2ff] px-3 text-xs font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:border-[#41547d] dark:bg-[#263653] dark:text-[#b9ceff]"
             >
               <GitCompareArrows className="h-4 w-4" />
               Compare
@@ -402,6 +430,7 @@ function DesktopMenuButton({
       type="button"
       aria-expanded={open}
       aria-controls="desktop-navigation-panel"
+      aria-haspopup="true"
       onClick={(event) => onClick(event.currentTarget)}
       className="inline-flex h-11 items-center gap-1 rounded-xl px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
     >

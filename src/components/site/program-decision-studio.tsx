@@ -36,7 +36,7 @@ const profiles = [
 const priorities = [
   { value: "budget" as const, label: "Keep costs low", icon: WalletCards },
   { value: "flexibility" as const, label: "Maximum flexibility", icon: Clock3 },
-  { value: "career" as const, label: "Career lens (no rank)", icon: BriefcaseBusiness },
+  { value: "career" as const, label: "Career relevance", icon: BriefcaseBusiness },
 ];
 
 const profileCopy: Record<LearnerProfile, string> = {
@@ -116,14 +116,14 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
   return (
     <section
       id="decision-tools"
-      className="scroll-mt-32 border-b border-border bg-background py-12 lg:py-14"
+      className="scroll-mt-32 border-b border-border bg-background py-9 lg:py-12"
     >
       <div className="container-page">
         <div className="max-w-3xl">
           <span className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-xs font-extrabold uppercase tracking-[0.16em] text-[#2449ad] dark:text-[#b9ceff]">
             <BadgeCheck className="h-4 w-4" /> Practical decision tools
           </span>
-          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-[-0.045em] sm:text-4xl">
+          <h2 className="mt-3 font-display text-2xl font-extrabold tracking-[-0.045em] sm:text-4xl">
             Make a decision that fits your life—not a sales script
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
@@ -132,15 +132,15 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </p>
         </div>
 
-        <div className="mt-7 grid gap-5 xl:grid-cols-[1.06fr_0.94fr]">
+        <div className="mt-6 grid gap-4 xl:grid-cols-[1.06fr_0.94fr]">
           <article className="overflow-hidden rounded-xl border border-border bg-card">
-            <div className="border-b border-border bg-[#edf2ff] p-5 dark:bg-[#263653] sm:p-6">
+            <div className="border-b border-border bg-[#edf2ff] p-4 dark:bg-[#263653] sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
                     Course-fit check
                   </p>
-                  <h3 className="mt-2 font-display text-2xl font-extrabold">
+                  <h3 className="mt-2 font-display text-xl font-extrabold sm:text-2xl">
                     Build your learner profile
                   </h3>
                 </div>
@@ -150,7 +150,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               </div>
             </div>
 
-            <div className="space-y-6 p-5 sm:p-6">
+            <div className="space-y-5 p-4 sm:p-5">
               <fieldset>
                 <legend className="text-sm font-extrabold">Where are you today?</legend>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -160,7 +160,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                       type="button"
                       aria-pressed={profile === item.value}
                       onClick={() => setProfile(item.value)}
-                      className={`flex min-h-20 flex-col items-start justify-between rounded-lg border p-3.5 text-left text-xs font-bold transition-colors ${
+                      className={`flex min-h-16 flex-col items-start justify-between rounded-lg border p-3 text-left text-xs font-bold transition-colors ${
                         profile === item.value
                           ? "border-[#1768cc] bg-[#edf5ff] text-[#155cb6] dark:bg-[#102a42] dark:text-[#78b9ff]"
                           : "border-border bg-background text-muted-foreground hover:border-[#8db8e8]"
@@ -216,11 +216,11 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 />
               </div>
 
-              <div className="rounded-xl border border-[#aebff0] bg-[#f6f8ff] p-5 dark:border-[#56698c] dark:bg-[#1b2942]">
+              <div className="rounded-xl border border-[#aebff0] bg-[#f6f8ff] p-4 dark:border-[#56698c] dark:bg-[#1b2942]">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-display text-lg font-extrabold">Your readiness: {readiness}</p>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#168258] dark:bg-[#153d30] dark:text-[#69d7a9]">
-                    <Check className="h-3.5 w-3.5" /> On-device rule guidance
+                    <Check className="h-3.5 w-3.5" /> Personal planning note
                   </span>
                 </div>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -232,11 +232,11 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
           </article>
 
           <article className="overflow-hidden rounded-xl border border-[#3b4350] bg-[#131720] text-white dark:bg-[#0b1018]">
-            <div className="border-b border-white/10 p-5 sm:p-6">
+            <div className="border-b border-white/10 p-4 sm:p-5">
               <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#ff9a50]">
                 Budget planner
               </p>
-              <h3 className="mt-2 font-display text-2xl font-extrabold">
+              <h3 className="mt-2 font-display text-xl font-extrabold sm:text-2xl">
                 Set a comfortable monthly range
               </h3>
               <p className="mt-3 text-sm leading-6 text-white/65">
@@ -245,7 +245,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
               </p>
             </div>
 
-            <div className="p-5 sm:p-6">
+            <div className="p-4 sm:p-5">
               <div className="flex items-end justify-between gap-4">
                 <label htmlFor="monthly-budget" className="text-sm font-bold text-white/70">
                   Monthly study budget
@@ -270,7 +270,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 <span>{formatINR(maxEmi)}</span>
               </div>
 
-              <div className="mt-7 flex items-center justify-between gap-4">
+              <div className="mt-6 flex items-center justify-between gap-4">
                 <div>
                   <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-white/65">
                     Matches

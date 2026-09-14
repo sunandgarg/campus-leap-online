@@ -346,7 +346,7 @@ function ProgramPage() {
 
       <section
         id="overview"
-        className="scroll-mt-32 border-b border-border bg-background py-10 lg:py-12"
+        className="scroll-mt-32 border-b border-border bg-background py-8 lg:py-10"
       >
         <div className="container-page">
           <SectionHeading
@@ -355,7 +355,7 @@ function ProgramPage() {
             description={p.overview}
           />
 
-          <dl className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
             {facts.map((f) => (
               <div key={f.k} className="min-w-0 rounded-xl border border-border bg-card p-4">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
@@ -369,7 +369,7 @@ function ProgramPage() {
             ))}
           </dl>
 
-          <div className="mt-4 grid overflow-hidden rounded-xl border border-border bg-card md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-border bg-card">
             {[
               {
                 icon: BookOpenCheck,
@@ -389,23 +389,27 @@ function ProgramPage() {
             ].map((item, index) => (
               <article
                 key={item.title}
-                className={`p-5 ${index ? "border-t border-border md:border-l md:border-t-0" : ""}`}
+                className={`min-w-0 p-3 sm:p-5 ${index ? "border-l border-border" : ""}`}
               >
-                <item.icon className="h-5 w-5 text-[#f47b25]" />
-                <h3 className="mt-3 text-sm font-extrabold">{item.title}</h3>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.copy}</p>
+                <item.icon className="h-4 w-4 text-[#f47b25] sm:h-5 sm:w-5" />
+                <h3 className="mt-2 text-[10px] font-extrabold leading-3.5 sm:mt-3 sm:text-sm sm:leading-5">
+                  {item.title}
+                </h3>
+                <p className="mt-1 hidden text-xs leading-5 text-muted-foreground sm:block">
+                  {item.copy}
+                </p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-surface py-10 lg:py-12">
+      <section className="bg-surface py-8 lg:py-10">
         <div className="container-page grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
           <div className="min-w-0 space-y-6">
             <article
               id="curriculum"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
                 eyebrow="Curriculum"
@@ -465,7 +469,7 @@ function ProgramPage() {
 
             <article
               id="specialisations"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
                 eyebrow="Pathways"
@@ -498,7 +502,7 @@ function ProgramPage() {
 
             <article
               id="fees"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
                 eyebrow="Fees"
@@ -562,11 +566,11 @@ function ProgramPage() {
 
             <article
               id="eligibility"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
-                eyebrow="Eligibility & admission"
-                title="Eligibility and admission"
+                eyebrow="Eligibility"
+                title="Who can apply?"
                 description={p.eligibility}
                 compact
               />
@@ -575,19 +579,22 @@ function ProgramPage() {
                   ? "Checked for the listed intake; reconfirm the current document rules."
                   : "General course guidance; confirm the exact threshold with the university."}
               </p>
-              <ol className="mt-5 grid gap-3 sm:grid-cols-2">
-                {admissionSteps.map(([number, title, copy]) => (
-                  <li key={number} className="rounded-xl border border-border bg-background p-4">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#131720] text-xs font-extrabold text-white dark:bg-[#f7f8fa] dark:text-[#131720]">
-                        {number}
-                      </span>
-                      <h3 className="text-sm font-extrabold">{title}</h3>
-                    </div>
-                    <p className="mt-3 text-xs leading-5 text-muted-foreground">{copy}</p>
-                  </li>
-                ))}
-              </ol>
+              <div id="admissions" className="scroll-mt-32 border-t border-border pt-5 mt-5">
+                <h3 className="font-display text-lg font-extrabold">How admission usually works</h3>
+                <ol className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {admissionSteps.map(([number, title, copy]) => (
+                    <li key={number} className="rounded-xl border border-border bg-background p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#131720] text-xs font-extrabold text-white dark:bg-[#f7f8fa] dark:text-[#131720]">
+                          {number}
+                        </span>
+                        <h4 className="text-sm font-extrabold">{title}</h4>
+                      </div>
+                      <p className="mt-3 text-xs leading-5 text-muted-foreground">{copy}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
               {hasCurrentOfferingEvidence &&
               (p.universityProgramUrl || p.officialApplicationUrl) ? (
                 <div className="mt-5 flex flex-wrap gap-4 border-t border-border pt-4 text-xs font-extrabold">
@@ -620,7 +627,7 @@ function ProgramPage() {
 
             <article
               id="careers"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
                 eyebrow="Career directions"
@@ -664,7 +671,7 @@ function ProgramPage() {
 
             <article
               id="faqs"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
             >
               <SectionHeading
                 eyebrow="Questions families ask"
@@ -689,7 +696,7 @@ function ProgramPage() {
             {alternatives.length > 0 ? (
               <article
                 id="compare"
-                className="scroll-mt-32 rounded-2xl border border-border bg-card p-5 sm:p-6 lg:p-7"
+                className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
               >
                 <SectionHeading
                   eyebrow="Compare"
@@ -777,7 +784,7 @@ function ProgramPage() {
 
       <section
         id="apply"
-        className="scroll-mt-32 border-y border-border bg-background py-10 lg:py-12"
+        className="scroll-mt-32 border-y border-border bg-background py-8 lg:py-10"
       >
         <div className="container-page grid min-w-0 gap-7 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start lg:gap-12">
           <div className="min-w-0 py-2 lg:py-8">
@@ -827,6 +834,25 @@ function ProgramPage() {
           />
         </div>
       </section>
+
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <div className="fixed inset-x-0 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 px-3 lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3 rounded-2xl border border-border bg-card p-2.5 shadow-lift">
+          <UniversityLogo university={u} size="sm" className="h-10 w-12 shrink-0 rounded-lg" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-extrabold">
+              {hasCurrentOfferingEvidence ? `Online ${p.code}` : `${p.code} course profile`}
+            </p>
+            <p className="truncate text-[10px] text-muted-foreground">{u.shortName}</p>
+          </div>
+          <Button
+            asChild
+            className="h-11 shrink-0 bg-[#f47b25] px-4 font-extrabold text-[#111827] hover:bg-[#d85f12]"
+          >
+            <a href="#apply">Free guidance</a>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
