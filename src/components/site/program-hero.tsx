@@ -51,7 +51,8 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
   const quickFacts = [
     {
       icon: Clock3,
-      label: p.durationVerified ? "Offering duration" : "Typical duration",
+      label:
+        hasCurrentOfferingEvidence && p.durationVerified ? "Course duration" : "Typical duration",
       value: `${p.durationYears} years · ${p.semesters} semesters`,
     },
     { icon: GraduationCap, label: "Degree level", value: p.level },
@@ -104,9 +105,9 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 {requiresVerification
                   ? isEditorialFallback
-                    ? "Independent editorial guide"
-                    : "Independent discovery guide"
-                  : "Source-backed course profile"}
+                    ? "Course guide"
+                    : "Course listing"
+                  : "Current course details available"}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-bold text-muted-foreground">
                 <BadgeCheck className="h-3.5 w-3.5 text-[#14845f] dark:text-[#65d5a7]" />
@@ -122,24 +123,29 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               />
               <div className="min-w-0">
                 <p className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
-                  Study online with
+                  {hasCurrentOfferingEvidence ? "Study online with" : "University course profile"}
                 </p>
                 <p className="mt-1 text-sm font-extrabold leading-5 sm:text-base">{u.name}</p>
               </div>
             </div>
 
             <h1 className="mt-6 max-w-4xl break-words font-display text-[2.25rem] font-extrabold leading-[1.04] tracking-[-0.045em] sm:text-5xl lg:text-[3.25rem]">
-              Online {p.code}{" "}
-              <span className="block text-[#325dd2] dark:text-[#7da2ff]">from {u.shortName}</span>
+              {hasCurrentOfferingEvidence ? `Online ${p.code}` : `${p.code} course profile`}{" "}
+              <span className="block text-[#325dd2] dark:text-[#7da2ff]">
+                {hasCurrentOfferingEvidence ? `from ${u.shortName}` : u.shortName}
+              </span>
             </h1>
 
             <p className="mt-3 text-sm font-bold text-[#536176] dark:text-muted-foreground">
-              {p.name} · online course guide
+              {p.name} ·{" "}
+              {hasCurrentOfferingEvidence
+                ? "current course details"
+                : "confirm availability for this intake"}
             </p>
 
             <p className="mt-5 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
-              Understand the curriculum, fees, eligibility and study format in one calm place. Every
-              intake-specific claim is labelled so your family can decide with clarity.
+              Compare the curriculum, fees, eligibility and study format without chasing multiple
+              pages. We keep missing intake details visibly marked for you.
             </p>
 
             <div className="mt-6 grid grid-cols-[minmax(0,1fr)_3rem] gap-3 sm:flex sm:flex-row sm:flex-wrap">
@@ -176,7 +182,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
               <button
                 type="button"
                 onClick={share}
-                aria-label="Share this program"
+                aria-label="Share this course profile"
                 className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-bold transition-colors hover:border-[#325dd2] hover:text-[#2449ad] dark:hover:text-[#b9ceff] sm:w-12 sm:px-0"
               >
                 <Share2 className="h-4 w-4" />
@@ -235,13 +241,13 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 <p className="flex items-center gap-2 text-xs font-extrabold text-[#2449ad] dark:text-[#dbe6ff]">
                   <ShieldCheck className="h-4 w-4" />
                   {hasCurrentOfferingEvidence
-                    ? `${p.academicSession ?? "Current"} source record reviewed`
-                    : "Current intake confirmation is still required"}
+                    ? `${p.academicSession ?? "Current"} course details checked`
+                    : "Current availability is not confirmed"}
                 </p>
                 <p className="mt-2 text-xs leading-5 text-[#475467] dark:text-[#c2cbdb]">
                   {hasCurrentOfferingEvidence
-                    ? "Use the cited source links below, then reconfirm every payable amount before admission."
-                    : "We show category guidance but do not present an unverified record as an active offer."}
+                    ? "Check the linked course document, then reconfirm every payable amount before admission."
+                    : "Use this profile to prepare your questions, then confirm the exact course, mode and admission session with the university."}
                 </p>
               </div>
 
@@ -250,10 +256,10 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                   href={approvalClaims[0].sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="View cited programme evidence (opens in new tab)"
+                  aria-label="Check recognition details (opens in new tab)"
                   className="mt-4 inline-flex items-center gap-2 text-xs font-extrabold text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                 >
-                  View cited programme evidence
+                  Check recognition details
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               ) : null}
@@ -283,7 +289,7 @@ export function ProgramSectionNav({ includeCompare = true }: { includeCompare?: 
   return (
     <nav
       aria-label="Programme sections"
-      className="sticky top-[5.45rem] z-30 border-b border-border bg-card/95 backdrop-blur"
+      className="sticky top-[5.45rem] z-30 border-b border-border bg-card"
     >
       <div className="container-page flex min-w-0 items-center gap-2 py-2">
         <div className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

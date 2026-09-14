@@ -36,7 +36,7 @@ export const Route = createFileRoute("/search")({
       {
         name: "description",
         content:
-          "Search online degree categories, specialisations and source-labelled university records in one place.",
+          "Search online degree categories, specialisations and university profiles in one place.",
       },
       { name: "robots", content: "noindex, follow" },
     ],
@@ -46,6 +46,7 @@ export const Route = createFileRoute("/search")({
 
 function SearchPage() {
   const { q: initialQuery } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const [query, setQuery] = useState(initialQuery);
   const [resultType, setResultType] = useState<ResultType>("all");
   const normalizedQuery = query.trim().toLowerCase();
@@ -54,6 +55,20 @@ function SearchPage() {
     setQuery(initialQuery);
     setResultType("all");
   }, [initialQuery]);
+
+  useEffect(() => {
+    if (query === initialQuery) return;
+
+    const timeout = window.setTimeout(() => {
+      void navigate({
+        search: { q: query },
+        replace: true,
+        resetScroll: false,
+      });
+    }, 300);
+
+    return () => window.clearTimeout(timeout);
+  }, [initialQuery, navigate, query]);
 
   const results = useMemo(() => {
     const matches = (value: string) => {
@@ -158,7 +173,7 @@ function SearchPage() {
                 : "Explore the catalogue"}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Source status, cited fees and editorial guidance stay clearly separated.
+              Current fees, university details and general course guidance stay clearly separated.
             </p>
           </div>
           <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
@@ -238,7 +253,7 @@ function SearchPage() {
                           <span>{program.specialisations.length} pathway themes</span>
                           <span>
                             {lowestFee !== null
-                              ? `Sourced fee from ${formatINR(lowestFee)}`
+                              ? `Listed fee from ${formatINR(lowestFee)}`
                               : "Confirm current fee"}
                           </span>
                         </div>

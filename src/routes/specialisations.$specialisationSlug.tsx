@@ -238,7 +238,7 @@ function SpecialisationPage() {
                   Compare providers
                 </p>
                 <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.04em]">
-                  Verified university availability
+                  University options for this specialisation
                 </h2>
               </div>
               <Button asChild variant="outline" className="rounded-xl">
@@ -269,7 +269,7 @@ function SpecialisationPage() {
                         {university.shortName}
                       </h3>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {university.state} · Source-backed {program.academicSession ?? "offering"}
+                        {university.state} · {program.academicSession ?? "Course details available"}
                       </p>
                     </div>
                   </div>
@@ -278,8 +278,8 @@ function SpecialisationPage() {
                       <p className="text-[10px] uppercase tracking-wide text-muted-foreground">
                         {program.totalFeeAvailable
                           ? program.feesVerified
-                            ? "Sourced catalogue fee"
-                            : "Editorial fee estimate"
+                            ? "Listed total fee"
+                            : "Estimated fee"
                           : "Fee status"}
                       </p>
                       <p className="font-display font-extrabold">

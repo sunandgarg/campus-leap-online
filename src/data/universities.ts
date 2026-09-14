@@ -1197,11 +1197,11 @@ const editorialUniversityData: University[] = coreUniversityData.map((university
   studentsEnrolled: "Not independently verified",
   placementPartners: [],
   highlights: [
-    "Course fields are editorial guides; fee amounts stay hidden unless source-backed",
+    "Course details are for comparison; missing current fees stay hidden instead of being guessed",
     "Recognition must be checked for the exact programme, mode and admission session",
     "Learning delivery, examinations, support and refund rules require university confirmation",
   ],
-  about: `${university.name} is maintained as an editorial comparison profile. Course fields are discovery aids rather than a current prospectus, and fee amounts remain hidden unless backed by a reviewed source. Verify the exact programme, online mode, academic session, recognition status, payable fee and official application route before applying or paying.`,
+  about: `${university.name} is included to help learners compare online study options. This page is not the current university prospectus, and a fee appears only when a reviewed fee document is available. Confirm the exact programme, learning mode, academic session, recognition status, payable amount and official application route before applying or paying.`,
 }));
 
 const universityData: University[] = [...editorialUniversityData, ...directoryUniversities];

@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         {
           name: "description",
           content:
-            "Explore online degrees, compare source-checked catalogue facts, build a private shortlist and verify the exact intake before applying.",
+            "Explore online degrees, compare university details, build a private shortlist and check the exact intake before applying.",
         },
         { name: "author", content: "DekhoCampus" },
         { property: "og:type", content: "website" },

@@ -69,8 +69,8 @@ export const Route = createFileRoute("/programs/$programSlug")({
     const discoveryCount = loaderData.offers.filter(
       (offer) => !isComparableProgramOffer(offer),
     ).length;
-    const title = `${p.name} (${p.code}) Online — Course Guide & University Records`;
-    const description = `Explore an online ${p.code} category guide with ${comparableOffers.length} labelled comparison profiles and ${discoveryCount} catalogue records excluded from ranking. Verify every intake-level detail before applying.`;
+    const title = `${p.name} (${p.code}) Online — Course Guide & Universities`;
+    const description = `Explore the online ${p.code}, compare ${comparableOffers.length + discoveryCount} university profiles, review eligibility and specialisations, and check current intake details before applying.`;
     return {
       meta: [
         { title },
@@ -98,7 +98,7 @@ export const Route = createFileRoute("/programs/$programSlug")({
 
 const pageNav = [
   { label: "Overview", href: "#overview" },
-  { label: "Decision tools", href: "#decision-tools" },
+  { label: "Compare", href: "#decision-tools" },
   { label: "Universities", href: "#universities" },
   { label: "Curriculum", href: "#curriculum" },
   { label: "Specialisations", href: "#specialisations" },
@@ -203,14 +203,14 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
       question: "Can I pay the program fee in instalments?",
       answer: comparableOffers.length
         ? `Some labelled profiles include arithmetic payment estimates from ${formatINR(startingEmi)} per month. Confirm the current university and lender terms in writing.`
-        : "Payment plans have not been reviewed for the catalogue records shown here. Ask the university for the current written fee and financing terms.",
+        : "Payment plans have not been reviewed for the university profiles shown here. Ask the university for the current written fee and financing terms.",
     },
   ];
 
   return (
     <div className="bg-background text-foreground transition-colors">
       <section className="border-b border-border bg-surface">
-        <div className="container-page py-7 lg:py-12">
+        <div className="container-page py-6 sm:py-8 lg:py-10">
           <nav
             className="flex items-center gap-1 text-xs text-muted-foreground"
             aria-label="Breadcrumb"
@@ -228,44 +228,43 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </span>
           </nav>
 
-          <div className="mt-9 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center xl:gap-20">
+          <div className="mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-7 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-center lg:gap-10 xl:gap-14">
             <div className="min-w-0 max-w-3xl py-2 lg:py-8">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-2 rounded-lg border border-[#aebff0] bg-card px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#2449ad] dark:border-[#56698c] dark:text-[#b9ceff]">
                   <BadgeCheck className="h-4 w-4" />
-                  Category guide · intake verification required
+                  Online {p.code} course guide
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3.5 py-2 text-[11px] font-bold text-muted-foreground">
                   Updated September 2026
                 </span>
               </div>
 
-              <h1 className="mt-7 max-w-3xl font-display text-[2.8rem] font-extrabold leading-[1.02] tracking-[-0.06em] text-foreground sm:text-5xl lg:text-[4.25rem]">
-                Online {p.name}{" "}
-                <span className="inline-block text-[#325dd2] dark:text-[#7da2ff]">({p.code})</span>
+              <h1 className="mt-5 max-w-3xl font-display text-[2.25rem] font-extrabold leading-[1.04] tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[4rem]">
+                Online {p.code} <span className="text-[#325dd2] dark:text-[#7da2ff]">Course</span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-                <span className="font-semibold text-foreground">Typical category overview: </span>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-lg sm:leading-8">
+                <span className="font-semibold text-foreground">{p.name}. </span>
                 {p.overview}
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-2.5">
-                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-bold">
+              <div className="mt-5 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+                <span className="inline-flex min-w-0 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 text-xs font-bold sm:px-4 sm:text-sm">
                   <Clock3 className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.durationYears} years · {p.semesters} semesters
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-bold">
+                <span className="inline-flex min-w-0 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5 text-xs font-bold sm:px-4 sm:text-sm">
                   <GraduationCap className="h-4 w-4 text-[#a94300] dark:text-[#ff9a5b]" />
                   {p.level} degree
                 </span>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
                 <Button
                   asChild
                   size="lg"
-                  className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
+                  className="min-w-0 px-3 text-xs font-extrabold sm:px-5 sm:text-sm bg-[#f47b25] text-[#111827] hover:bg-[#d85f12]"
                 >
                   <Link to="/contact">
                     Get free counselling
@@ -276,24 +275,18 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-border bg-background font-bold text-foreground hover:bg-secondary"
+                  className="min-w-0 border-border bg-background px-3 text-xs font-bold text-foreground hover:bg-secondary sm:px-5 sm:text-sm"
                 >
                   <a href="#universities">Compare universities</a>
                 </Button>
               </div>
 
-              <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-x-4 gap-y-6 border-t border-border pt-7 sm:grid-cols-4">
+              <dl className="mt-7 grid max-w-2xl grid-cols-2 gap-4 border-t border-border pt-5 sm:grid-cols-4">
                 {[
-                  [comparableOffers.length.toString(), "Source-backed offerings"],
-                  [discoveryOffers.length.toString(), "Unranked catalogue records"],
-                  [
-                    comparableOffers.length ? formatINR(startingFee) : "Not mapped",
-                    "Fee guide from",
-                  ],
-                  [
-                    comparableOffers.length ? formatINR(startingEmi) : "Not mapped",
-                    "Monthly split from",
-                  ],
+                  [offers.length.toString(), "University profiles"],
+                  [p.specialisations.length.toString(), "Specialisations"],
+                  [`${p.durationYears} years`, "Typical duration"],
+                  ["Up to 3", "Compare side by side"],
                 ].map(([value, label]) => (
                   <div key={label}>
                     <dt className="font-display text-xl font-extrabold text-foreground">{value}</dt>
@@ -306,7 +299,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </div>
 
             <aside className="relative mx-auto w-full min-w-0 max-w-[440px]">
-              <div className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-7">
+              <div className="rounded-2xl border border-border bg-card p-5 shadow-card sm:p-7">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
@@ -322,14 +315,14 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </div>
 
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  Compare budget, evidence, learning format and fit at your own pace, without sales
-                  pressure.
+                  Compare budget, current details, learning format and fit at your own pace, without
+                  sales pressure.
                 </p>
 
                 <div className="mt-6 space-y-2.5">
                   {[
-                    `${comparableOffers.length} labelled comparison profiles`,
-                    `${discoveryOffers.length} unranked catalogue records kept separate`,
+                    `${offers.length} university profiles to explore`,
+                    "Compare up to three without signing in",
                     "Free human guidance when you need it",
                   ].map((item) => (
                     <div
@@ -347,18 +340,18 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Catalogue fee guide
+                      Typical duration
                     </p>
                     <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {comparableOffers.length ? formatINR(startingFee) : "Not mapped"}
+                      {p.durationYears} years
                     </p>
                   </div>
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Arithmetic monthly split
+                      Study pathways
                     </p>
                     <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {comparableOffers.length ? formatINR(startingEmi) : "Not mapped"}
+                      {p.specialisations.length}
                     </p>
                   </div>
                 </div>
@@ -423,8 +416,8 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             },
             {
               icon: IndianRupee,
-              title: "Fee provenance upfront",
-              text: "See sourced total fees and clearly labelled arithmetic monthly splits.",
+              title: "Fees made clear",
+              text: "See available fee documents and clearly labelled monthly calculations.",
             },
             {
               icon: BadgeCheck,
@@ -456,7 +449,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           <SectionHeading
             eyebrow="Program overview"
             title={`Build a future-ready career with an online ${p.code}`}
-            description={`A category-level ${p.durationYears}-year format guide for comparing curriculum, workload and career directions. Exact institutional delivery requires a current source check.`}
+            description={`A category-level ${p.durationYears}-year format guide for comparing curriculum, workload and career directions. Confirm the exact university delivery before applying.`}
           />
           <CompactRail label={`Online ${p.code} learning features`} columns={4}>
             {learningFeatures.map((feature) => (
@@ -539,20 +532,31 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
       ) : (
         <section
           id="decision-tools"
-          className="scroll-mt-32 border-b border-border bg-background py-16"
+          className="scroll-mt-32 border-b border-border bg-background py-10 lg:py-12"
         >
           <div className="container-page">
-            <div className="rounded-[1.75rem] border border-dashed border-border bg-card p-8">
-              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
-                Decision tools paused for this course
-              </p>
-              <h2 className="mt-3 font-display text-2xl font-extrabold">
-                Source-backed fee inputs are not available yet
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-                Editorial and directory records remain useful for discovery, but they do not enter
-                this planner until current offering and total-fee evidence is mapped.
-              </p>
+            <div className="grid gap-5 rounded-2xl border border-border bg-card p-5 sm:p-6 md:grid-cols-[1fr_auto] md:items-center">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
+                  Free comparison tool
+                </p>
+                <h2 className="mt-2 font-display text-2xl font-extrabold">
+                  Compare up to three universities side by side
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                  Check course availability, location, duration, recognition details and any listed
+                  fees. Missing information stays clearly marked so you know what to ask.
+                </p>
+              </div>
+              <Button
+                asChild
+                size="lg"
+                className="bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad]"
+              >
+                <Link to="/compare" search={{ program: p.slug }}>
+                  Start comparing <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
@@ -563,314 +567,325 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <SectionHeading
               eyebrow="Compare your options"
-              title={`Source-backed ${p.code} comparison profiles`}
-              description="Compare cited total fees and recognition evidence. Editorial, directory and non-current records stay outside rankings."
+              title={`Online ${p.code} university options`}
+              description="Compare available fees and recognition details. Records with missing current information stay clearly marked."
             />
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-              <GitCompareArrows className="h-4 w-4" /> {displayedOffers.length} comparable options
-            </span>
+            <Button asChild variant="outline" className="w-fit bg-card font-extrabold">
+              <Link to="/compare" search={{ program: p.slug }}>
+                <GitCompareArrows className="mr-2 h-4 w-4" /> Compare up to 3
+              </Link>
+            </Button>
           </div>
-
-          <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e7f1ff] text-[#1768cc] dark:bg-[#153a5e] dark:text-[#70b3ff]">
-                <GitCompareArrows className="h-4.5 w-4.5" />
-              </span>
-              <div>
-                <p className="text-sm font-extrabold">Build a side-by-side comparison</p>
-                <p className="text-xs text-muted-foreground">Select up to 3 universities below.</p>
-              </div>
-            </div>
-            <p className="text-xs font-bold text-muted-foreground">
-              <span className="text-[#1768cc] dark:text-[#70b3ff]">{selectedOffers.length}</span> of
-              3 selected
-            </p>
-          </div>
-
-          {selectedOffers.length > 0 ? (
-            <div className="mt-4 overflow-hidden rounded-xl border border-[#aebff0] bg-card dark:border-[#56698c]">
-              <div className="flex items-center justify-between border-b border-border bg-[#edf5ff] px-5 py-3 dark:bg-[#102a42]">
-                <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#155cb6] dark:text-[#70b3ff]">
-                  <GitCompareArrows className="h-4 w-4" /> Live comparison
-                </p>
-                <button
-                  type="button"
-                  onClick={comparison.clearComparison}
-                  className="text-xs font-bold text-muted-foreground hover:text-foreground"
-                >
-                  Clear all
-                </button>
-              </div>
-              <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
-                {selectedOffers.map(({ university, program }) => (
-                  <div key={university.slug} className="relative p-5">
-                    <button
-                      type="button"
-                      onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
-                      aria-label={`Remove ${university.shortName} from comparison`}
-                      className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                    <div className="flex items-center gap-3 pr-7">
-                      <UniversityLogo university={university} size="sm" />
-                      <div>
-                        <h3 className="text-sm font-extrabold">{university.shortName}</h3>
-                        <p className="mt-0.5 text-[10px] text-muted-foreground">
-                          Sourced total-fee offering
-                        </p>
-                      </div>
-                    </div>
-                    <dl className="mt-5 grid grid-cols-2 gap-3">
-                      <div>
-                        <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                          Total fee
-                        </dt>
-                        <dd className="mt-1 font-display text-base font-extrabold">
-                          {formatINR(program.totalFee)}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                          {program.emiPerMonthVerified
-                            ? "Published monthly amount"
-                            : "Arithmetic monthly split"}
-                        </dt>
-                        <dd className="mt-1 font-display text-base font-extrabold">
-                          {formatINR(program.emiPerMonth)}
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                ))}
-                {Array.from({ length: 3 - selectedOffers.length }).map((_, index) => (
-                  <div
-                    key={`empty-${index}`}
-                    className="flex min-h-32 items-center justify-center p-5 text-center text-xs font-semibold text-muted-foreground"
-                  >
-                    Select another university to compare
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs text-muted-foreground">
-                  Compare facts first, then speak to a counsellor only if you need help.
-                </p>
-                <Button
-                  asChild
-                  size="sm"
-                  className="rounded-lg bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
-                >
-                  <Link to="/compare">Open complete comparison</Link>
-                </Button>
-              </div>
-            </div>
-          ) : null}
 
           {comparableOffers.length ? (
-            <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
-              <div>
-                <div className="flex items-center justify-between gap-4">
-                  <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
-                    Maximum total fee
-                  </label>
-                  <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-extrabold text-[#155cb6] dark:text-[#78b9ff]">
-                    {formatINR(feeCeiling)}
+            <>
+              <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e7f1ff] text-[#1768cc] dark:bg-[#153a5e] dark:text-[#70b3ff]">
+                    <GitCompareArrows className="h-4.5 w-4.5" />
                   </span>
-                </div>
-                <input
-                  id="fee-ceiling"
-                  type="range"
-                  min={startingFee}
-                  max={highestFee}
-                  step="5000"
-                  value={feeCeiling}
-                  onChange={(event) => setFeeCeiling(Number(event.target.value))}
-                  className="mt-4 w-full accent-[#1768cc]"
-                />
-                <div className="mt-1 flex justify-between text-[10px] font-bold text-muted-foreground">
-                  <span>{formatINR(startingFee)}</span>
-                  <span>{formatINR(highestFee)}</span>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="sort-offers" className="text-sm font-extrabold">
-                  Sort universities
-                </label>
-                <select
-                  id="sort-offers"
-                  value={sortBy}
-                  onChange={(event) => setSortBy(event.target.value as "fee" | "emi")}
-                  className="mt-3 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-bold text-foreground outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
-                >
-                  <option value="fee">Lowest total fee</option>
-                  <option value="emi">Lowest arithmetic monthly split</option>
-                </select>
-              </div>
-            </div>
-          ) : null}
-
-          <CompactRail label={`Comparable ${p.code} university records`} rows={2} columns={3}>
-            {displayedOffers.map(({ university, program }, index) => {
-              const approvalClaims = getProgramApprovalClaims(university, program);
-              return (
-                <article
-                  key={university.slug}
-                  className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0] sm:p-6"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
-                        <UniversityLogo university={university} size="md" />
-                      </span>
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-display text-base font-extrabold tracking-[-0.025em]">
-                            {university.shortName}
-                          </h3>
-                          {index === 0 && sortBy === "fee" ? (
-                            <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
-                              Lowest sourced total fee
-                            </span>
-                          ) : null}
-                        </div>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {formatUniversityLocation(university)} · recognition must be checked for
-                          the intake
-                        </p>
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-[#fff7df] px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#8c6811]">
-                      Sourced total fee
-                    </span>
+                  <div>
+                    <p className="text-sm font-extrabold">Build a side-by-side comparison</p>
+                    <p className="text-xs text-muted-foreground">
+                      Select up to 3 universities below.
+                    </p>
                   </div>
+                </div>
+                <p className="text-xs font-bold text-muted-foreground">
+                  <span className="text-[#1768cc] dark:text-[#70b3ff]">
+                    {selectedOffers.length}
+                  </span>{" "}
+                  of 3 selected
+                </p>
+              </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-secondary/60 p-4">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                        Sourced total fee
-                      </p>
-                      <p className="mt-1 font-display text-xl font-extrabold">
-                        {formatINR(program.totalFee)}
-                      </p>
-                    </div>
-                    <div className="border-l border-border pl-4">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                        {program.emiPerMonthVerified
-                          ? "Published monthly amount"
-                          : "Arithmetic monthly split"}
-                      </p>
-                      <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
-                        {formatINR(monthlyComparisonAmount(program))}
-                        <span className="text-xs font-semibold text-muted-foreground">/mo</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    aria-pressed={selectedUniversities.includes(university.slug)}
-                    disabled={
-                      selectedUniversities.length >= 3 &&
-                      !selectedUniversities.includes(university.slug)
-                    }
-                    onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
-                    className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
-                      selectedUniversities.includes(university.slug)
-                        ? "border-[#1768cc] bg-[#1768cc] text-white"
-                        : "border-border bg-background text-foreground hover:border-[#78a9df] hover:bg-[#edf5ff] dark:hover:bg-[#102a42]"
-                    }`}
-                  >
-                    {selectedUniversities.includes(university.slug) ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <GitCompareArrows className="h-4 w-4" />
-                    )}
-                    {selectedUniversities.includes(university.slug)
-                      ? "Added to comparison"
-                      : "Add to comparison"}
-                  </button>
-
-                  <div className="mt-5 flex items-center justify-between gap-4">
-                    <div className="flex flex-wrap gap-1.5">
-                      {approvalClaims.length ? (
-                        approvalClaims.slice(0, 2).map((claim) => (
-                          <a
-                            key={claim.id}
-                            href={claim.sourceUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
-                          >
-                            {claim.renderedClaim}
-                          </a>
-                        ))
-                      ) : (
-                        <span className="text-[10px] font-semibold text-muted-foreground">
-                          No programme-scoped context source mapped
-                        </span>
-                      )}
-                    </div>
-                    <Link
-                      to="/universities/$universitySlug/$programSlug"
-                      params={{ universitySlug: university.slug, programSlug: p.slug }}
-                      className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]"
+              {selectedOffers.length > 0 ? (
+                <div className="mt-4 overflow-hidden rounded-xl border border-[#aebff0] bg-card dark:border-[#56698c]">
+                  <div className="flex items-center justify-between border-b border-border bg-[#edf5ff] px-5 py-3 dark:bg-[#102a42]">
+                    <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.1em] text-[#155cb6] dark:text-[#70b3ff]">
+                      <GitCompareArrows className="h-4 w-4" /> Live comparison
+                    </p>
+                    <button
+                      type="button"
+                      onClick={comparison.clearComparison}
+                      className="text-xs font-bold text-muted-foreground hover:text-foreground"
                     >
-                      View details{" "}
-                      <ArrowRight className="ml-1 h-3.5 w-3.5 transition group-hover:translate-x-1" />
-                    </Link>
+                      Clear all
+                    </button>
                   </div>
-                </article>
-              );
-            })}
-          </CompactRail>
-          {displayedOffers.length === 0 ? (
-            <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
-              <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
-              <h3 className="mt-4 font-display text-lg font-extrabold">
-                {comparableOffers.length
-                  ? "No option fits this fee range"
-                  : "No comparison-ready profile yet"}
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {comparableOffers.length
-                  ? "Raise your maximum fee to see more universities."
-                  : "Unverified and directory records appear separately below and do not enter rankings."}
-              </p>
-              {comparableOffers.length ? (
-                <button
-                  type="button"
-                  onClick={() => setFeeCeiling(highestFee)}
-                  className="mt-4 text-sm font-extrabold text-[#155cb6] dark:text-[#78b9ff]"
-                >
-                  Reset fee filter
-                </button>
+                  <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+                    {selectedOffers.map(({ university, program }) => (
+                      <div key={university.slug} className="relative p-5">
+                        <button
+                          type="button"
+                          onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
+                          aria-label={`Remove ${university.shortName} from comparison`}
+                          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                        <div className="flex items-center gap-3 pr-7">
+                          <UniversityLogo university={university} size="sm" />
+                          <div>
+                            <h3 className="text-sm font-extrabold">{university.shortName}</h3>
+                            <p className="mt-0.5 text-[10px] text-muted-foreground">
+                              Current total fee listed
+                            </p>
+                          </div>
+                        </div>
+                        <dl className="mt-5 grid grid-cols-2 gap-3">
+                          <div>
+                            <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                              Total fee
+                            </dt>
+                            <dd className="mt-1 font-display text-base font-extrabold">
+                              {formatINR(program.totalFee)}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                              {program.emiPerMonthVerified
+                                ? "Published monthly amount"
+                                : "Arithmetic monthly split"}
+                            </dt>
+                            <dd className="mt-1 font-display text-base font-extrabold">
+                              {formatINR(program.emiPerMonth)}
+                            </dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                    {Array.from({ length: 3 - selectedOffers.length }).map((_, index) => (
+                      <div
+                        key={`empty-${index}`}
+                        className="flex min-h-32 items-center justify-center p-5 text-center text-xs font-semibold text-muted-foreground"
+                      >
+                        Select another university to compare
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs text-muted-foreground">
+                      Compare facts first, then speak to a counsellor only if you need help.
+                    </p>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="rounded-lg bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                    >
+                      <Link to="/compare" search={{ program: p.slug }}>
+                        Open complete comparison
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               ) : null}
-            </div>
+
+              {comparableOffers.length ? (
+                <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
+                  <div>
+                    <div className="flex items-center justify-between gap-4">
+                      <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
+                        Maximum total fee
+                      </label>
+                      <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-extrabold text-[#155cb6] dark:text-[#78b9ff]">
+                        {formatINR(feeCeiling)}
+                      </span>
+                    </div>
+                    <input
+                      id="fee-ceiling"
+                      type="range"
+                      min={startingFee}
+                      max={highestFee}
+                      step="5000"
+                      value={feeCeiling}
+                      onChange={(event) => setFeeCeiling(Number(event.target.value))}
+                      className="mt-4 w-full accent-[#1768cc]"
+                    />
+                    <div className="mt-1 flex justify-between text-[10px] font-bold text-muted-foreground">
+                      <span>{formatINR(startingFee)}</span>
+                      <span>{formatINR(highestFee)}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="sort-offers" className="text-sm font-extrabold">
+                      Sort universities
+                    </label>
+                    <select
+                      id="sort-offers"
+                      value={sortBy}
+                      onChange={(event) => setSortBy(event.target.value as "fee" | "emi")}
+                      className="mt-3 h-11 w-full rounded-xl border border-border bg-background px-3 text-sm font-bold text-foreground outline-none focus:border-[#1768cc] focus-visible:ring-2 focus-visible:ring-[#0d5cad] focus-visible:ring-offset-2"
+                    >
+                      <option value="fee">Lowest total fee</option>
+                      <option value="emi">Lowest arithmetic monthly split</option>
+                    </select>
+                  </div>
+                </div>
+              ) : null}
+
+              <CompactRail label={`Comparable ${p.code} university records`} rows={2} columns={3}>
+                {displayedOffers.map(({ university, program }, index) => {
+                  const approvalClaims = getProgramApprovalClaims(university, program);
+                  return (
+                    <article
+                      key={university.slug}
+                      className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0] sm:p-6"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-background">
+                            <UniversityLogo university={university} size="md" />
+                          </span>
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 className="font-display text-base font-extrabold tracking-[-0.025em]">
+                                {university.shortName}
+                              </h3>
+                              {index === 0 && sortBy === "fee" ? (
+                                <span className="rounded-full bg-[#e9f8f0] px-2 py-1 text-[9px] font-extrabold uppercase tracking-wide text-[#168258]">
+                                  Lowest listed total fee
+                                </span>
+                              ) : null}
+                            </div>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {formatUniversityLocation(university)} · recognition must be checked
+                              for the intake
+                            </p>
+                          </div>
+                        </div>
+                        <span className="rounded-full bg-[#fff7df] px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#8c6811]">
+                          Listed total fee
+                        </span>
+                      </div>
+
+                      <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-secondary/60 p-4">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                            Listed total fee
+                          </p>
+                          <p className="mt-1 font-display text-xl font-extrabold">
+                            {formatINR(program.totalFee)}
+                          </p>
+                        </div>
+                        <div className="border-l border-border pl-4">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                            {program.emiPerMonthVerified
+                              ? "Published monthly amount"
+                              : "Arithmetic monthly split"}
+                          </p>
+                          <p className="mt-1 font-display text-xl font-extrabold text-[#155cb6] dark:text-[#70b3ff]">
+                            {formatINR(monthlyComparisonAmount(program))}
+                            <span className="text-xs font-semibold text-muted-foreground">/mo</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        aria-pressed={selectedUniversities.includes(university.slug)}
+                        disabled={
+                          selectedUniversities.length >= 3 &&
+                          !selectedUniversities.includes(university.slug)
+                        }
+                        onClick={() => comparison.toggleUniversity(p.slug, university.slug)}
+                        className={`mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-xs font-extrabold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                          selectedUniversities.includes(university.slug)
+                            ? "border-[#1768cc] bg-[#1768cc] text-white"
+                            : "border-border bg-background text-foreground hover:border-[#78a9df] hover:bg-[#edf5ff] dark:hover:bg-[#102a42]"
+                        }`}
+                      >
+                        {selectedUniversities.includes(university.slug) ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <GitCompareArrows className="h-4 w-4" />
+                        )}
+                        {selectedUniversities.includes(university.slug)
+                          ? "Added to comparison"
+                          : "Add to comparison"}
+                      </button>
+
+                      <div className="mt-5 flex items-center justify-between gap-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {approvalClaims.length ? (
+                            approvalClaims.slice(0, 2).map((claim) => (
+                              <a
+                                key={claim.id}
+                                href={claim.sourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="rounded-full border border-border px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
+                              >
+                                {claim.renderedClaim}
+                              </a>
+                            ))
+                          ) : (
+                            <span className="text-[10px] font-semibold text-muted-foreground">
+                              Recognition details not available for this course yet
+                            </span>
+                          )}
+                        </div>
+                        <Link
+                          to="/universities/$universitySlug/$programSlug"
+                          params={{ universitySlug: university.slug, programSlug: p.slug }}
+                          className="inline-flex shrink-0 items-center text-xs font-extrabold text-[#155cb6] dark:text-[#70b3ff]"
+                        >
+                          View details{" "}
+                          <ArrowRight className="ml-1 h-3.5 w-3.5 transition group-hover:translate-x-1" />
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </CompactRail>
+              {displayedOffers.length === 0 ? (
+                <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
+                  <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
+                  <h3 className="mt-4 font-display text-lg font-extrabold">
+                    {comparableOffers.length
+                      ? "No option fits this fee range"
+                      : "No comparison-ready profile yet"}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {comparableOffers.length
+                      ? "Raise your maximum fee to see more universities."
+                      : "University profiles without a current fee are listed separately below."}
+                  </p>
+                  {comparableOffers.length ? (
+                    <button
+                      type="button"
+                      onClick={() => setFeeCeiling(highestFee)}
+                      className="mt-4 text-sm font-extrabold text-[#155cb6] dark:text-[#78b9ff]"
+                    >
+                      Reset fee filter
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+            </>
           ) : null}
 
           {discoveryOffers.length ? (
-            <div className="mt-12 border-t border-border pt-10">
+            <div className="mt-8 border-t border-border pt-8">
               <div className="max-w-3xl">
                 <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#a66316] dark:text-[#ffc36f]">
-                  Discovery catalogue · excluded from rankings
+                  Explore by university
                 </p>
                 <h3 className="mt-2 font-display text-2xl font-extrabold">
-                  {discoveryOffers.length} unranked university records
+                  {discoveryOffers.length} university profiles for online {p.code}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  These directory, editorial or non-current records help with discovery. No exact
-                  fee, rating, salary, pathway availability or current-intake entitlement is
-                  asserted here.
+                  Open a profile to review the course guide, then confirm the current intake, fee
+                  and learning mode directly with the university before applying.
                 </p>
               </div>
-              <CompactRail label={`Unranked ${p.code} discovery records`} rows={2} columns={3}>
+              <CompactRail label={`${p.code} university profiles`} rows={2} columns={3}>
                 {(showAllDiscovery ? discoveryOffers : discoveryOffers.slice(0, 12)).map(
                   ({ university, program }) => (
                     <Link
                       key={university.slug}
-                      to="/universities/$universitySlug"
-                      params={{ universitySlug: university.slug }}
+                      to="/universities/$universitySlug/$programSlug"
+                      params={{ universitySlug: university.slug, programSlug: p.slug }}
                       className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition hover:border-[#d09b5d]"
                     >
                       <UniversityLogo university={university} size="sm" />
@@ -881,13 +896,13 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                         <span className="mt-1 block text-[10px] text-muted-foreground">
                           {program.entitlementStatus === undefined &&
                           university.profileDepth !== "directory"
-                            ? "Editorial profile · current offering not verified"
+                            ? "Course guide · confirm the current intake"
                             : program.entitlementStatus === "expired"
-                              ? "Offering evidence expired · verify intake"
+                              ? "Previous intake details · check again"
                               : program.entitlementStatus === "no-admission" ||
                                   program.entitlementStatus === "debarred"
-                                ? `${program.entitlementStatus} status · check source`
-                                : `${university.verificationAcademicYear ?? program.academicSession ?? "Historical"} source · verify intake`}
+                                ? `${program.entitlementStatus} status · check current details`
+                                : `${university.verificationAcademicYear ?? program.academicSession ?? "Previous"} record · verify intake`}
                         </span>
                       </span>
                       <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1" />
@@ -986,7 +1001,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 />
                 <Fact
                   icon={Building2}
-                  label="Source-backed offerings"
+                  label="Current fee records"
                   value={`${comparableOffers.length} options`}
                 />
               </div>
@@ -1142,11 +1157,11 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               description="Your outcomes depend on prior experience, skills, university support and the opportunities you pursue—not the degree alone."
             />
             <div className="mt-7 rounded-xl bg-[#325dd2] p-5 text-white">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/85">
                 Outcome guardrail
               </p>
               <p className="mt-2 font-display text-2xl font-extrabold">No salary promise</p>
-              <p className="mt-2 text-xs leading-5 text-white/65">
+              <p className="mt-2 text-xs leading-5 text-white/85">
                 Compare skills, projects and role requirements. Salary depends on experience,
                 location, evidence of work and market conditions.
               </p>
@@ -1210,7 +1225,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
       <section className="bg-[#325dd2] py-12 text-white">
         <div className="container-page flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-white/80">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-white/85">
               Your next step
             </p>
             <h2 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em] text-white">

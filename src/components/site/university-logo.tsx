@@ -45,6 +45,10 @@ export function UniversityLogo({
   const failed = !logoUrl || failedUrl === logoUrl;
   const loaded = loadedUrl === logoUrl;
   const imageRef = useRef<HTMLImageElement>(null);
+  // The supplied Amity crest is a square canvas with substantial baked-in
+  // whitespace. Zoom only that audited asset so the mark remains legible in
+  // compact mobile cards; other wordmarks keep their natural fit.
+  const needsWhitespaceCrop = university.slug.startsWith("amity-university-");
 
   const syncCompletedImage = useCallback(
     (image: HTMLImageElement | null) => {
@@ -134,6 +138,7 @@ export function UniversityLogo({
         decoding="async"
         referrerPolicy="no-referrer"
         draggable={false}
+        style={needsWhitespaceCrop ? { transform: "scale(2.15)" } : undefined}
         className={cn(
           "relative block h-full w-full object-contain p-[8%] transition-opacity duration-200",
           loaded ? "opacity-100" : "opacity-0",

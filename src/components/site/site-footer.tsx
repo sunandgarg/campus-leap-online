@@ -1,9 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Mail, ShieldCheck } from "lucide-react";
+import { ArrowRight, ChevronDown, Mail, ShieldCheck, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { BrandLogo } from "@/components/site/brand-logo";
-import { programCatalog, universities, universitiesOfferingProgram } from "@/data/universities";
+import {
+  programCatalog,
+  universities,
+  universitiesOfferingProgram,
+  type ProgramOffer,
+} from "@/data/universities";
 
 function popularCourseRecords(programSlug: "online-mba" | "online-bba") {
   return universitiesOfferingProgram(programSlug)
@@ -19,6 +24,14 @@ function providerName(name: string) {
   return name.replace(/\s+Online$/i, "");
 }
 
+function hasCurrentOfferingEvidence({ university, program }: ProgramOffer) {
+  return (
+    university.profileDepth !== "directory" &&
+    university.verificationCurrent === true &&
+    program.entitlementStatus === "verified"
+  );
+}
+
 export function SiteFooter() {
   const mbaRecords = popularCourseRecords("online-mba");
   const bbaRecords = popularCourseRecords("online-bba");
@@ -26,154 +39,186 @@ export function SiteFooter() {
     .filter((university) => university.programs.length > 0)
     .slice(0, 6);
 
+  const columns = [
+    {
+      title: "Online MBA",
+      items: mbaRecords.map(({ university, program }) => ({
+        label: hasCurrentOfferingEvidence({ university, program })
+          ? `${providerName(university.shortName)} Online MBA`
+          : `${providerName(university.shortName)} MBA course profile`,
+        to: "/universities/$universitySlug/$programSlug" as const,
+        params: { universitySlug: university.slug, programSlug: program.slug },
+      })),
+      end: {
+        label: "Explore Online MBA course profiles",
+        to: "/programs/$programSlug" as const,
+        params: { programSlug: "online-mba" },
+      },
+    },
+    {
+      title: "Online BBA",
+      items: bbaRecords.map(({ university, program }) => ({
+        label: hasCurrentOfferingEvidence({ university, program })
+          ? `${providerName(university.shortName)} Online BBA`
+          : `${providerName(university.shortName)} BBA course profile`,
+        to: "/universities/$universitySlug/$programSlug" as const,
+        params: { universitySlug: university.slug, programSlug: program.slug },
+      })),
+      end: {
+        label: "Explore Online BBA course profiles",
+        to: "/programs/$programSlug" as const,
+        params: { programSlug: "online-bba" },
+      },
+    },
+  ];
+
   return (
     <footer className="border-t border-[#2b3340] bg-[#131720] text-white dark:bg-[#0b1018]">
-      <div className="container-page py-16 lg:py-20">
-        <div className="grid gap-10 border-b border-white/10 pb-12 lg:grid-cols-[1.35fr_0.8fr_0.8fr_0.9fr_0.9fr] lg:gap-8">
-          <div className="lg:pr-8">
+      <div className="container-page py-10 lg:py-16">
+        <div className="grid gap-8 border-b border-white/10 pb-9 lg:grid-cols-[1.25fr_0.85fr_0.85fr_0.85fr_0.9fr] lg:gap-7 lg:pb-12">
+          <div className="lg:pr-6">
             <Link to="/" aria-label="DekhoCampus home" className="inline-flex rounded-lg">
               <BrandLogo size="lg" tone="inverse" />
             </Link>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-white/70">
-              Clear information and personal guidance for choosing an online degree. Browse
-              privately, inspect the evidence, and ask for human help when you need it.
+            <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">
+              A simpler way to explore online degrees, compare universities and plan your next step.
             </p>
-            <div className="mt-6 rounded-xl border border-white/15 bg-[#1b202a] p-4">
-              <div className="flex items-center gap-2 text-sm font-extrabold">
-                <ShieldCheck className="h-4 w-4 text-[#ff9a50]" aria-hidden="true" />
-                Verify before you pay
-              </div>
-              <p className="mt-2 text-xs leading-5 text-white/60">
-                Confirm the exact university, programme, Online mode and academic session on
-                official sources.
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+              className="mt-5 flex min-h-12 w-full max-w-sm items-center gap-3 rounded-xl border border-white/15 bg-[#1b202a] px-3 text-left transition-colors hover:border-[#8cb0ff]"
+            >
+              <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-white">
+                <img
+                  src="/diya-ai.webp"
+                  alt=""
+                  width={90}
+                  height={96}
+                  className="h-9 w-9 object-cover"
+                />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-extrabold">Ask Diya</span>
+                <span className="block text-[11px] text-white/60">
+                  Find your way around DekhoCampus
+                </span>
+              </span>
+              <Sparkles className="h-4 w-4 text-[#ffad70]" />
+            </button>
             <a
               href="https://dekhocampus.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ff9a50] hover:underline"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ffad70] hover:underline"
             >
-              Explore all of DekhoCampus <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Visit DekhoCampus.com <ArrowRight className="h-4 w-4" />
             </a>
           </div>
 
-          <FooterColumn title="Online MBA">
-            {mbaRecords.map(({ university, program }) => (
-              <li key={university.slug}>
-                <Link
-                  to="/universities/$universitySlug/$programSlug"
-                  params={{ universitySlug: university.slug, programSlug: program.slug }}
-                  className="footer-link"
-                >
-                  {providerName(university.shortName)} Online MBA
+          <div className="space-y-2 lg:hidden">
+            {columns.map((column) => (
+              <MobileFooterGroup key={column.title} title={column.title}>
+                {column.items.map((item) => (
+                  <li key={item.label}>
+                    <Link to={item.to} params={item.params} className="footer-link">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    to={column.end.to}
+                    params={column.end.params}
+                    className="footer-link font-bold text-[#ffad70]"
+                  >
+                    {column.end.label}
+                  </Link>
+                </li>
+              </MobileFooterGroup>
+            ))}
+
+            <MobileFooterGroup title="Universities">
+              {universityLinks.map((university) => (
+                <li key={university.slug}>
+                  <Link
+                    to="/universities/$universitySlug"
+                    params={{ universitySlug: university.slug }}
+                    className="footer-link"
+                  >
+                    {university.shortName}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/universities" className="footer-link font-bold text-[#ffad70]">
+                  View all universities
                 </Link>
               </li>
-            ))}
-            <li>
-              <Link
-                to="/programs/$programSlug"
-                params={{ programSlug: "online-mba" }}
-                className="footer-link font-bold text-[#ffad70]"
-              >
-                Compare all MBA records
-              </Link>
-            </li>
-          </FooterColumn>
+            </MobileFooterGroup>
 
-          <FooterColumn title="Online BBA">
-            {bbaRecords.map(({ university, program }) => (
-              <li key={university.slug}>
-                <Link
-                  to="/universities/$universitySlug/$programSlug"
-                  params={{ universitySlug: university.slug, programSlug: program.slug }}
-                  className="footer-link"
-                >
-                  {providerName(university.shortName)} Online BBA
+            <MobileFooterGroup title="Explore & support">
+              <SupportLinks />
+            </MobileFooterGroup>
+          </div>
+
+          <div className="hidden lg:contents">
+            {columns.map((column) => (
+              <FooterColumn key={column.title} title={column.title}>
+                {column.items.map((item) => (
+                  <li key={item.label}>
+                    <Link to={item.to} params={item.params} className="footer-link">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    to={column.end.to}
+                    params={column.end.params}
+                    className="footer-link font-bold text-[#ffad70]"
+                  >
+                    {column.end.label}
+                  </Link>
+                </li>
+              </FooterColumn>
+            ))}
+
+            <FooterColumn title="Universities">
+              {universityLinks.map((university) => (
+                <li key={university.slug}>
+                  <Link
+                    to="/universities/$universitySlug"
+                    params={{ universitySlug: university.slug }}
+                    className="footer-link"
+                  >
+                    {university.shortName}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/universities" className="footer-link font-bold text-[#ffad70]">
+                  View all universities
                 </Link>
               </li>
-            ))}
-            <li>
-              <Link
-                to="/programs/$programSlug"
-                params={{ programSlug: "online-bba" }}
-                className="footer-link font-bold text-[#ffad70]"
-              >
-                Compare all BBA records
-              </Link>
-            </li>
-          </FooterColumn>
+            </FooterColumn>
 
-          <FooterColumn title="Universities">
-            {universityLinks.map((university) => (
-              <li key={university.slug}>
-                <Link
-                  to="/universities/$universitySlug"
-                  params={{ universitySlug: university.slug }}
-                  className="footer-link"
-                >
-                  {university.name}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link to="/universities" className="footer-link font-bold text-[#ffad70]">
-                All {universities.length} universities
-              </Link>
-            </li>
-          </FooterColumn>
-
-          <FooterColumn title="Help and trust">
-            <li>
-              <Link to="/finder" className="footer-link">
-                Find the right course
-              </Link>
-            </li>
-            <li>
-              <Link to="/programs" className="footer-link">
-                Browse {programCatalog.length} course guides
-              </Link>
-            </li>
-            <li>
-              <Link to="/specialisations" className="footer-link">
-                Explore specialisations
-              </Link>
-            </li>
-            <li>
-              <Link to="/compare" className="footer-link">
-                Compare universities
-              </Link>
-            </li>
-            <li>
-              <Link to="/methodology" className="footer-link">
-                How we verify information
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className="footer-link">
-                About DekhoCampus
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="footer-link font-bold text-[#ffad70]">
-                Talk to a counsellor
-              </Link>
-            </li>
-          </FooterColumn>
+            <FooterColumn title="Explore & support">
+              <SupportLinks />
+            </FooterColumn>
+          </div>
         </div>
 
-        <div className="grid gap-7 py-9 md:grid-cols-[1fr_auto] md:items-start">
+        <div className="grid gap-5 py-7 md:grid-cols-[1fr_auto] md:items-center">
           <div>
             <p className="text-sm font-extrabold">Need help with your shortlist?</p>
             <a
               href="mailto:online@dekhocampus.com"
-              className="mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white/75 hover:text-[#ff9a50]"
+              className="mt-1 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white/75 hover:text-[#ff9a50]"
             >
-              <Mail className="h-4 w-4" aria-hidden="true" />
-              online@dekhocampus.com
+              <Mail className="h-4 w-4" /> online@dekhocampus.com
             </a>
           </div>
-          <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/65">
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/65">
             <Link to="/privacy" className="inline-flex min-h-11 items-center hover:text-[#ff9a50]">
               Privacy
             </Link>
@@ -188,24 +233,26 @@ export function SiteFooter() {
             </Link>
           </nav>
         </div>
-      </div>
 
-      <div className="border-t border-white/10">
-        <div className="container-page flex flex-col gap-3 py-7 text-xs leading-5 text-white/60 md:flex-row md:items-start md:justify-between">
+        <div className="rounded-xl border border-white/10 bg-[#1b202a] p-4">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#ff9a50]" />
+            <div>
+              <p className="text-sm font-extrabold">One important check before you pay</p>
+              <p className="mt-1 text-xs leading-5 text-white/60">
+                Course availability, fees and admission details can change by intake. Confirm the
+                exact university, programme, Online mode and academic session on the university
+                website and the relevant official portal.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 pt-7 text-xs leading-5 text-white/50 md:flex-row md:items-start md:justify-between">
           <p>© {new Date().getFullYear()} DekhoCampus Online. All rights reserved.</p>
-          <p className="max-w-3xl md:text-right">
-            Programme entitlement, fees, admissions and outcomes can change by intake. Verify the
-            exact university–programme–mode–session combination on the{" "}
-            <a
-              href="https://deb.ugc.ac.in/"
-              target="_blank"
-              rel="noreferrer"
-              className="font-bold text-white/85 hover:text-[#ff9a50]"
-            >
-              UGC-DEB portal
-            </a>{" "}
-            and pay only through the university&apos;s official channel. DekhoCampus does not
-            guarantee admission, placement, scholarship or salary.
+          <p className="max-w-2xl md:text-right">
+            DekhoCampus helps learners research their options. Universities manage admissions, fees,
+            scholarships, placements and academic delivery.
           </p>
         </div>
       </div>
@@ -213,11 +260,65 @@ export function SiteFooter() {
   );
 }
 
+function SupportLinks() {
+  return (
+    <>
+      <li>
+        <Link to="/finder" className="footer-link">
+          Find the right course
+        </Link>
+      </li>
+      <li>
+        <Link to="/programs" className="footer-link">
+          Browse {programCatalog.length} courses
+        </Link>
+      </li>
+      <li>
+        <Link to="/specialisations" className="footer-link">
+          Explore specialisations
+        </Link>
+      </li>
+      <li>
+        <Link to="/compare" className="footer-link">
+          Compare universities
+        </Link>
+      </li>
+      <li>
+        <Link to="/methodology" className="footer-link">
+          What to check before paying
+        </Link>
+      </li>
+      <li>
+        <Link to="/about" className="footer-link">
+          About DekhoCampus
+        </Link>
+      </li>
+      <li>
+        <Link to="/contact" className="footer-link font-bold text-[#ffad70]">
+          Talk to a counsellor
+        </Link>
+      </li>
+    </>
+  );
+}
+
+function MobileFooterGroup({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="group rounded-xl border border-white/10 bg-[#1b202a] px-4">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between text-sm font-extrabold marker:content-none">
+        {title}
+        <ChevronDown className="h-4 w-4 text-white/60 transition-transform group-open:rotate-180" />
+      </summary>
+      <ul className="border-t border-white/10 pb-3 pt-2 text-sm">{children}</ul>
+    </details>
+  );
+}
+
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-xs font-extrabold uppercase tracking-[0.14em] text-white/65">{title}</h2>
-      <ul className="mt-4 text-sm">{children}</ul>
+      <h2 className="text-xs font-extrabold uppercase tracking-[0.12em] text-white/60">{title}</h2>
+      <ul className="mt-3 text-sm">{children}</ul>
     </div>
   );
 }

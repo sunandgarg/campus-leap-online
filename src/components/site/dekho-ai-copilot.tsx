@@ -140,8 +140,8 @@ function reviewedFeeOffers(programSlug: string): CatalogueOffer[] {
 
 function catalogueFeeDetail(offer: CatalogueOffer) {
   return hasReviewedFee(offer.program)
-    ? `${formatINR(offer.program.totalFee)} sourced catalogue fee · confirm the current intake`
-    : "Fee needs source review · compare the programme profile first";
+    ? `${formatINR(offer.program.totalFee)} listed total fee · confirm the current intake`
+    : "Current fee unavailable · compare the programme profile first";
 }
 
 function programmeMatch(query: string) {
@@ -256,7 +256,7 @@ function buildAnswer(rawQuery: string, catalogueUniversities: University[]): Cop
     return {
       eyebrow: "Catalogue match",
       title: `Explore ${matchedUniversity.name}`,
-      body: `I found this university in the DekhoCampus catalogue. Review its evidence status and programme details, then re-check the current session on the university and UGC-DEB websites.`,
+      body: `I found this university in the DekhoCampus catalogue. Review its course details, then re-check the current session on the university and UGC-DEB websites.`,
       suggestions: [
         {
           label: `${matchedUniversity.name} profile`,
@@ -317,9 +317,9 @@ function buildAnswer(rawQuery: string, catalogueUniversities: University[]): Cop
       title: `${directProgram.code}: ${matchedCatalogueOffers.length} catalogue ${matchedCatalogueOffers.length === 1 ? "record" : "records"}`,
       body: asksForBudget
         ? pricedOffers.length
-          ? `${eligibleOffers.length ? "These sourced-fee options fit" : "No sourced-fee option fits"} the amount in your question. Fees, taxes, scholarships and payment terms can change.`
-          : "No catalogue record has a current sourced fee for this comparison, so I will not estimate or rank a provider by price."
-        : `Compare the available catalogue records for this programme. Directory records are discovery aids; current entitlement, fees and admission terms still require an intake check.`,
+          ? `${eligibleOffers.length ? "These listed-fee options fit" : "No listed-fee option fits"} the amount in your question. Fees, taxes, scholarships and payment terms can change.`
+          : "No catalogue record has a current fee for this comparison, so I will not guess or rank a provider by price."
+        : `Compare the available university options for this programme. Confirm the current intake, final fee and admission terms before applying.`,
       suggestions: [
         ...rankedOffers.slice(0, 3).map((offer) => ({
           label: `${offer.program.code} · ${offer.university.shortName}`,
@@ -328,12 +328,12 @@ function buildAnswer(rawQuery: string, catalogueUniversities: University[]): Cop
         })),
         {
           label: `Compare every ${directProgram.code} option`,
-          detail: "Review curriculum, eligibility and source status side by side.",
+          detail: "Review curriculum, eligibility and current details side by side.",
           href: programmeHref(directProgram),
         },
       ],
       why: asksForBudget
-        ? `Matched “${directProgram.code}” and ranked only catalogue records with the required sourced fee field.`
+        ? `Matched “${directProgram.code}” and ranked only catalogue records with a current fee field.`
         : `Matched “${directProgram.code}” and ordered catalogue records alphabetically without inventing a “best” ranking.`,
     };
   }
@@ -476,7 +476,7 @@ function buildAnswer(rawQuery: string, catalogueUniversities: University[]): Cop
               href: "/finder",
             },
           ],
-      why: "Sorted only source-reviewed fee fields; no scholarship or loan approval was assumed.",
+      why: "Sorted only currently listed fee fields; no scholarship or loan approval was assumed.",
     };
   }
 
@@ -518,7 +518,7 @@ function welcomeAnswer(catalogueUniversityCount: number): CopilotAnswer {
       },
       {
         label: "See how catalogue checks work",
-        detail: "Understand sources, limitations and what you should verify.",
+        detail: "Understand what is listed, what is missing and what you should verify.",
         href: "/methodology",
       },
     ],
@@ -588,7 +588,7 @@ export function DekhoAICopilot({
           onClick={() => {
             returnFocusRef.current = launcherRef.current;
           }}
-          className="fixed bottom-8 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] xl:flex"
+          className="fixed bottom-8 right-6 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#325dd2] p-1 text-white shadow-card transition-colors hover:bg-[#2449ad] lg:flex"
         >
           <span className="sr-only">Ask Diya, DekhoCampus course guide</span>
           <span className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white">
@@ -799,7 +799,7 @@ export function DekhoAICopilot({
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Try “MBA under ₹2 lakh”"
               autoComplete="off"
-              className="h-12 min-w-0 flex-1 rounded-lg border border-input bg-surface px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+              className="h-12 min-w-0 flex-1 rounded-lg border border-input bg-surface px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground placeholder:opacity-100 focus-visible:border-[#325dd2] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
             />
             <button
               type="submit"

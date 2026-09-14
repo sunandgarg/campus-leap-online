@@ -50,8 +50,8 @@ const profileCopy: Record<LearnerProfile, string> = {
 
 const trustNotes: [string, string, typeof BadgeCheck][] = [
   [
-    "Source-backed comparisons",
-    "Only current offerings with cited total-fee evidence enter this planner.",
+    "Fee comparisons",
+    "Only options with a currently listed total fee enter this planner.",
     BadgeCheck,
   ],
   [
@@ -240,7 +240,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 Set a comfortable monthly range
               </h3>
               <p className="mt-3 text-sm leading-6 text-white/65">
-                Compare arithmetic monthly splits from source-backed total fees. A split is not a
+                Compare monthly calculations from the available total fees. A calculation is not a
                 lender quote; published monthly plans are labelled separately.
               </p>
             </div>

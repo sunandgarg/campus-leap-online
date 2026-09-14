@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Explore online MBA, BBA, MCA, BCA and other degrees by university, source status, fees where verified and specialisation. Get a private, free shortlist.",
+          "Explore online MBA, BBA, MCA, BCA and other degrees by university, current fee availability and specialisation. Build a private shortlist for free.",
       },
       {
         property: "og:title",
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Clear source status, ungated comparison and optional expert counselling from DekhoCampus Online.",
+          "Clear university information, ungated comparison and optional expert counselling from DekhoCampus Online.",
       },
     ],
   }),

@@ -36,7 +36,7 @@ function createDirectoryUniversity(input: DirectoryUniversityInput): University 
       `Reference period: ${input.referencePeriod}`,
       "Programme and intake-specific verification required",
     ],
-    about: `${input.name} is included in the DekhoCampus researched directory of Indian universities with evidence of online degree provision. This directory record covers ${input.referencePeriod}; it does not confirm that every programme or the latest intake is currently approved or open. Verify the exact programme, online mode, academic session and official application route before applying or paying.`,
+    about: `${input.name} is included in the DekhoCampus catalogue of Indian universities offering online education. The available information was recorded for ${input.referencePeriod}; it does not confirm that every programme or the latest intake is currently open. Verify the exact programme, online mode, academic session and official application route before applying or paying.`,
     programs: [],
     profileDepth: "directory",
     verificationAcademicYear: input.referencePeriod,

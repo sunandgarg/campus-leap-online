@@ -11,6 +11,7 @@ import {
   GraduationCap,
   HelpCircle,
   Laptop2,
+  MessageCircle,
   ShieldCheck,
   Star,
   Users,
@@ -57,11 +58,11 @@ export const Route = createFileRoute("/universities/$universitySlug/")({
     }
     const u = loaderData.university;
     const shouldNoIndex = u.profileDepth === "directory" || !u.verificationCurrent;
-    const title = `${u.name} — Online Course Records & Verification Guide`;
+    const title = `${u.name} — Online Courses & Admission Guide`;
     const description =
       u.profileDepth === "directory"
-        ? `Explore the ${u.name} online-program directory profile, courses and an intake-verification checklist. Confirm 2026–27 entitlement and fees before applying.`
-        : `Explore ${u.name} through an editorial comparison profile with ${loaderData.programs.length} course records, clearly labelled fee guides and an intake-level verification checklist.`;
+        ? `Explore online courses associated with ${u.name} and use the intake checklist to confirm current availability and fees before applying.`
+        : `Explore ${loaderData.programs.length} online course options at ${u.name}, compare available fee details and review the intake checklist before applying.`;
     return {
       meta: [
         { title },
@@ -142,102 +143,127 @@ function UniversityPage() {
 
   return (
     <>
-      <section className="hero-ink text-ink-foreground">
-        <div className="container-page py-12">
-          <nav aria-label="Breadcrumb" className="text-xs text-ink-foreground/60">
-            <Link to="/" className="hover:text-gold">
+      <section className="border-b border-border bg-[#eef4ff] text-foreground dark:bg-[#111b2b]">
+        <div className="container-page py-7 sm:py-9 lg:py-10">
+          <nav aria-label="Breadcrumb" className="text-xs text-muted-foreground">
+            <Link to="/" className="hover:text-[#2449ad] dark:hover:text-[#b9ceff]">
               Home
             </Link>
             <span aria-hidden="true" className="mx-2">
               /
             </span>
-            <Link to="/universities" className="hover:text-gold">
+            <Link to="/universities" className="hover:text-[#2449ad] dark:hover:text-[#b9ceff]">
               Universities
             </Link>
             <span aria-hidden="true" className="mx-2">
               /
             </span>
-            <span aria-current="page" className="text-ink-foreground/85">
+            <span aria-current="page" className="font-semibold text-foreground">
               {u.shortName}
             </span>
           </nav>
 
-          <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="flex gap-5">
-              <UniversityLogo university={u} size="lg" className="bg-card" />
-              <div>
-                <h1 className="font-display text-3xl font-extrabold leading-tight md:text-4xl">
-                  {u.name}
-                </h1>
-                <p className="mt-2 text-sm text-ink-foreground/70">
-                  {formatUniversityLocation(u)}
-                  {u.established ? ` · Established ${u.established}` : ""}
-                  {approvalClaims.length
-                    ? ` · ${approvalClaims.length} current institutional evidence record${approvalClaims.length === 1 ? "" : "s"}`
-                    : ""}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {approvalClaims.length
-                    ? approvalClaims.slice(0, 3).map((claim) => (
-                        <a
-                          key={claim.id}
-                          href={claim.sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${claim.renderedClaim} (opens in new tab)`}
-                        >
-                          <Badge className="border-gold/30 bg-gold/15 text-gold hover:bg-gold/15">
-                            <BadgeCheck className="mr-1 h-3 w-3" /> {claim.renderedClaim}
-                            <ExternalLink className="ml-1 h-3 w-3" />
+          <div className="mt-5 grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_310px] md:items-start lg:gap-8">
+            <div className="min-w-0 rounded-2xl border border-border bg-card p-5 sm:p-6">
+              <div className="flex min-w-0 items-start gap-4 sm:gap-5">
+                <UniversityLogo
+                  university={u}
+                  size="lg"
+                  className="h-16 w-16 shrink-0 rounded-xl bg-card sm:h-20 sm:w-20"
+                />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
+                    Online university profile
+                  </p>
+                  <h1 className="mt-1 break-words font-display text-[1.75rem] font-extrabold leading-[1.1] tracking-[-0.035em] sm:text-4xl">
+                    {u.name}
+                  </h1>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {formatUniversityLocation(u)}
+                    {u.established ? ` · Established ${u.established}` : ""}
+                    {approvalClaims.length
+                      ? ` · ${approvalClaims.length} recognition detail${approvalClaims.length === 1 ? "" : "s"} available`
+                      : ""}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {approvalClaims.length
+                      ? approvalClaims.slice(0, 3).map((claim) => (
+                          <a
+                            key={claim.id}
+                            href={claim.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${claim.renderedClaim} (opens in new tab)`}
+                          >
+                            <Badge className="border-[#b7c8f6] bg-[#edf2ff] text-[#2449ad] hover:bg-[#edf2ff] dark:border-[#435a8d] dark:bg-[#263653] dark:text-[#b9ceff]">
+                              <BadgeCheck className="mr-1 h-3 w-3" /> {claim.renderedClaim}
+                              <ExternalLink className="ml-1 h-3 w-3" />
+                            </Badge>
+                          </a>
+                        ))
+                      : ["Recognition markers need refresh", "Verify exact intake"].map((label) => (
+                          <Badge
+                            key={label}
+                            className="border-border bg-secondary text-muted-foreground hover:bg-secondary"
+                          >
+                            <ShieldCheck className="mr-1 h-3 w-3" /> {label}
                           </Badge>
-                        </a>
-                      ))
-                    : ["Recognition markers need refresh", "Verify exact intake"].map((label) => (
-                        <Badge
-                          key={label}
-                          className="border-gold/30 bg-gold/15 text-gold hover:bg-gold/15"
-                        >
-                          <ShieldCheck className="mr-1 h-3 w-3" /> {label}
-                        </Badge>
-                      ))}
+                        ))}
+                  </div>
                 </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
+                <Button
+                  asChild
+                  className="min-h-11 bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
+                >
+                  <a href="#counselling">
+                    <MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Free guidance
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="min-h-11 bg-card font-bold">
+                  <a href="#programs">
+                    View courses
+                    <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                  </a>
+                </Button>
               </div>
             </div>
             {isDirectoryProfile ? (
-              <div className="max-w-xs rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-5">
-                <p className="flex items-center gap-2 font-display text-base font-bold text-emerald-200">
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <p className="flex items-center gap-2 font-display text-base font-bold text-[#126f4b] dark:text-[#8de3bd]">
                   <ShieldCheck className="h-5 w-5" />
-                  {hasDirectorySource
-                    ? "Historical source documented"
-                    : "Editorial directory profile"}
+                  {hasDirectorySource ? "University details available" : "University profile added"}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-ink-foreground/65">
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
                   {hasDirectorySource
-                    ? `Historical ${u.verificationAcademicYear} directory record.`
-                    : "No directory source has been attached to this record yet."}{" "}
-                  Verify the exact programme for your current intake.
+                    ? `Last recorded for ${u.verificationAcademicYear}.`
+                    : "The current university details are still being reviewed."}{" "}
+                  Confirm the exact course and intake before applying.
                 </p>
               </div>
             ) : u.metricsVerified ? (
-              <div className="rounded-xl border border-ink-foreground/15 bg-ink-foreground/5 p-5">
-                <p className="flex items-center gap-1.5 font-display text-2xl font-bold text-gold">
-                  <Star className="h-5 w-5 fill-gold text-gold" />
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <p className="flex items-center gap-1.5 font-display text-2xl font-bold text-[#2449ad] dark:text-[#b9ceff]">
+                  <Star className="h-5 w-5 fill-[#f47b25] text-[#f47b25]" />
                   {u.rating}
                 </p>
-                <p className="mt-1 text-xs text-ink-foreground/60">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {u.reviews.toLocaleString("en-IN")} student reviews
                 </p>
-                <p className="mt-3 text-xs text-ink-foreground/60">
+                <p className="mt-3 text-xs text-muted-foreground">
                   <Users className="mr-1 inline h-3.5 w-3.5" />
                   {u.studentsEnrolled} learners
                 </p>
               </div>
             ) : (
-              <div className="max-w-xs rounded-xl border border-ink-foreground/15 bg-ink-foreground/5 p-5">
-                <p className="font-display text-base font-bold">Editorial catalogue profile</p>
-                <p className="mt-2 text-xs leading-5 text-ink-foreground/65">
-                  Ratings, review totals and enrolment figures are not independently evidenced, so
-                  they are not used here.
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <p className="font-display text-base font-bold">Quick check before you apply</p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  Ratings and learner totals are hidden until they can be checked. Use the course
+                  list and official links to build your shortlist.
                 </p>
               </div>
             )}
@@ -254,12 +280,12 @@ function UniversityPage() {
               <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#187a55] dark:text-[#77ddb2]" />
               <div>
                 <p className="text-sm font-extrabold text-[#115f41] dark:text-[#8ae5bd]">
-                  Directory-stage data — verify before you apply
+                  Check the current intake before you apply
                 </p>
                 <p className="mt-1 text-xs leading-5 text-[#3e6758] dark:text-[#a8c8ba]">
                   {u.verificationCurrent
-                    ? `Source checked ${u.lastVerified ?? "for this catalogue"}; next review ${u.verificationNextReviewAt?.slice(0, 10) ?? "scheduled"}.`
-                    : `Historical source${u.lastVerified ? ` checked ${u.lastVerified}` : ""}; current-source review is still required.`}{" "}
+                    ? `Record checked ${u.lastVerified ?? "for this catalogue"}; next review ${u.verificationNextReviewAt?.slice(0, 10) ?? "scheduled"}.`
+                    : `Historical record${u.lastVerified ? ` checked ${u.lastVerified}` : ""}; a fresh review is still required.`}{" "}
                   Programme entitlement, fees and admissions can change by academic session.
                 </p>
               </div>
@@ -284,15 +310,14 @@ function UniversityPage() {
         <section className="border-b border-[#c7d9ec] bg-[#f3f8ff] dark:border-[#2b557c] dark:bg-[#102538]">
           <div className="container-page py-5">
             <p className="font-display text-sm font-extrabold text-[#155b9f] dark:text-[#8bc7ff]">
-              Editorial comparison profile — not an official university prospectus
+              Independent university guide — not the official prospectus
             </p>
             <p className="mt-1 max-w-4xl text-xs leading-5 text-muted-foreground">
-              Fee amounts are hidden unless marked sourced. Ratings, review totals, enrolment
-              numbers, employer logos and intake-specific program claims are not shown as verified
-              facts without current evidence.{" "}
+              Fees, ratings, learner totals and employer claims are hidden when they have not been
+              checked for this profile.{" "}
               {u.verificationCurrent
-                ? `The university identity source was checked ${u.lastVerified ?? "for this catalogue"} and is scheduled for review by ${u.verificationNextReviewAt?.slice(0, 10) ?? "the recorded review date"}. `
-                : "The university-level source is not currently evidenced or is due for refresh. "}
+                ? `The university details were checked ${u.lastVerified ?? "for this catalogue"} and are scheduled for review by ${u.verificationNextReviewAt?.slice(0, 10) ?? "the recorded review date"}. `
+                : "The university details are due for a fresh review. "}
               Reconfirm everything on UGC-DEB and the university’s official website.
             </p>
           </div>
@@ -330,12 +355,12 @@ function UniversityPage() {
           ) : null}
 
           <h2 id="highlights" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
-            Catalogue notes for {u.shortName}
+            Why learners shortlist {u.shortName}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {isDirectoryProfile
               ? "What is currently known, and what still needs confirmation for your intake."
-              : "Editorially collected themes to investigate—not independently verified benefits."}
+              : "Useful points to investigate before choosing a course."}
           </p>
           <CompactRail label={`${u.shortName} catalogue notes`} rows={2} columns={2}>
             {u.highlights.map((h) => (
@@ -350,13 +375,13 @@ function UniversityPage() {
           </CompactRail>
 
           <h2 id="programs" className="mt-10 scroll-mt-32 font-display text-2xl font-bold">
-            Course records for {u.shortName} ({programs.length})
+            Online courses at {u.shortName} ({programs.length})
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {isDirectoryProfile
               ? hasDirectorySource
-                ? "These course names come from the cited historical directory source. Open one to review what must be confirmed for your intake."
-                : "These are editorial catalogue entries awaiting a documented directory source. Open one to review what must be confirmed for your intake."
+                ? "These courses appeared in the last available catalogue. Open one and confirm that it is available for your intake."
+                : "These courses are listed for discovery while the current university documents are reviewed."
               : "Availability, mode, curriculum, pathways and eligibility must still be confirmed for the exact intake."}
           </p>
 
@@ -380,14 +405,14 @@ function UniversityPage() {
                     <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1.5">
                         <Clock className="h-3.5 w-3.5" />{" "}
-                        {p.durationVerified ? "Sourced" : "Typical"} duration: {p.durationYears}{" "}
+                        {p.durationVerified ? "Course" : "Typical"} duration: {p.durationYears}{" "}
                         {p.durationYears === 1 ? "year" : "years"} · {p.semesters}{" "}
                         {p.semesters === 1 ? "semester" : "semesters"}
                       </span>
                       <span className="inline-flex items-center gap-1.5">
                         <GraduationCap className="h-3.5 w-3.5" />
                         {p.specialisationsVerified
-                          ? `${p.specialisations.length} verified pathways`
+                          ? `${p.specialisations.length} specialisation pathways`
                           : "Pathways vary by university"}
                       </span>
                     </div>
@@ -398,10 +423,10 @@ function UniversityPage() {
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {!p.totalFeeAvailable
-                        ? "Not yet verified by DekhoCampus"
+                        ? "Ask for the latest written fee"
                         : p.perSemesterFeeVerified
-                          ? `${formatINR(p.perSemesterFee)}/semester · sourced value`
-                          : `${formatINR(p.perSemesterFee)}/semester · ${p.feesVerified ? "derived split" : "editorial estimate"}`}
+                          ? `${formatINR(p.perSemesterFee)}/semester · listed fee`
+                          : `${formatINR(p.perSemesterFee)}/semester · ${p.feesVerified ? "calculated split" : "estimated amount"}`}
                     </p>
                     <span className="mt-2 inline-flex items-center text-xs font-semibold text-primary">
                       View program{" "}
@@ -515,11 +540,11 @@ function UniversityPage() {
               },
               {
                 icon: BadgeCheck,
-                k: isDirectoryProfile ? "Directory reference" : "Institutional context",
+                k: isDirectoryProfile ? "Last catalogue update" : "University recognition",
                 v: isDirectoryProfile
-                  ? `Historical ${u.verificationAcademicYear ?? "source date not recorded"}`
+                  ? (u.verificationAcademicYear ?? "Update date unavailable")
                   : (approvalClaims.find((claim) => claim.claimType === "accreditation")
-                      ?.renderedClaim ?? "No current institutional evidence mapped"),
+                      ?.renderedClaim ?? "Check current recognition"),
               },
               ...(rankingClaims[0]
                 ? [
@@ -564,7 +589,7 @@ function UniversityPage() {
                 <AccordionContent className="leading-6 text-muted-foreground">
                   {approvalClaims.length ? (
                     <>
-                      Current university-wide evidence records:{" "}
+                      Current recognition details:{" "}
                       {approvalClaims.map((claim, index) => (
                         <span key={claim.id}>
                           {index ? "; " : ""}
@@ -582,7 +607,7 @@ function UniversityPage() {
                       .{" "}
                     </>
                   ) : (
-                    "Recognition markers are not presented as current facts because this profile lacks fresh, university-scoped claim evidence. "
+                    "We do not have a current recognition document for this university profile. "
                   )}
                   Recognition must still be verified for the exact program and admission session on
                   the UGC-DEB and university websites before enrolment.
@@ -592,8 +617,8 @@ function UniversityPage() {
                 <AccordionTrigger>How much do the online programs cost?</AccordionTrigger>
                 <AccordionContent className="leading-6 text-muted-foreground">
                   {isDirectoryProfile
-                    ? "DekhoCampus does not publish an amount for this directory-stage profile. Request the latest written total fee, semester schedule, scholarship conditions and financing charges from the university before paying."
-                    : "Course cards may show a sourced total fee or a clearly labelled editorial estimate. Universities can revise fees, scholarships and financing plans by intake, so request the latest written fee schedule before paying."}
+                    ? "DekhoCampus does not publish an amount when the current fee has not been confirmed. Request the latest written total fee, semester schedule, scholarship conditions and financing charges from the university before paying."
+                    : "Course cards show a fee only when a current fee document is available. Universities can revise fees, scholarships and financing plans by intake, so request the latest written fee schedule before paying."}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="learning">
@@ -616,7 +641,7 @@ function UniversityPage() {
           </div>
         </div>
 
-        <aside className="min-w-0 lg:sticky lg:top-24 lg:h-fit">
+        <aside id="counselling" className="min-w-0 scroll-mt-32 lg:sticky lg:top-24 lg:h-fit">
           <LeadForm
             compact
             defaultUniversitySlug={u.slug}

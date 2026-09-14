@@ -80,11 +80,11 @@ export const Route = createFileRoute("/universities/$universitySlug/$programSlug
       university.verificationCurrent === true &&
       program.entitlementStatus === "verified";
     const title = !hasCurrentOfferingEvidence
-      ? `${program.name} Online — ${university.shortName} | Verification Guide`
+      ? `${program.code} Course Profile — ${university.shortName} | Availability Check`
       : `${program.name} (${program.code}) Online — ${university.shortName} | Fees & Syllabus`;
     const description = !hasCurrentOfferingEvidence
-      ? `${university.name} and ${program.name} are presented as a discovery or editorial record, not a verified current admission offer. Verify the exact program, mode, intake, fee and application route.`
-      : `${program.name} at ${university.name}: a source-backed ${program.academicSession ?? "intake"} offering${program.feesVerified ? ` with a cited total fee of ${formatINR(program.totalFee)}` : ""}. Category-level fields remain clearly labelled.`;
+      ? `This ${program.name} course profile was previously listed with ${university.name}; current availability is not confirmed. Check the exact course, learning mode, fee and application route before applying.`
+      : `${program.name} at ${university.name}: course details checked for the ${program.academicSession ?? "recorded intake"}${program.feesVerified ? ` with a listed total fee of ${formatINR(program.totalFee)}` : ""}. Reconfirm current admission terms before applying.`;
     return {
       meta: [
         { title },
@@ -109,13 +109,13 @@ function ProgramNotFound() {
   const { universitySlug } = Route.useParams();
   return (
     <div className="container-page py-24 text-center">
-      <h1 className="font-display text-2xl font-bold">No current catalogue record</h1>
+      <h1 className="font-display text-2xl font-bold">Course profile not available</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        This programme is not listed for this university in our current catalogue.
+        We do not have a course profile for this university and course combination.
       </p>
       <Button asChild className="mt-6 bg-ink text-ink-foreground hover:bg-ink-soft">
         <Link to="/universities/$universitySlug" params={{ universitySlug }}>
-          See available programs
+          See university profile
         </Link>
       </Button>
     </div>
@@ -128,34 +128,38 @@ function ProgramPage() {
   const hasCurrentOfferingEvidence =
     !isDirectoryProfile && u.verificationCurrent === true && p.entitlementStatus === "verified";
   const isEditorialFallback = !isDirectoryProfile && p.entitlementStatus === undefined;
-  const hideOfferingClaims =
-    isDirectoryProfile || Boolean(p.entitlementStatus && p.entitlementStatus !== "verified");
+  const hideOfferingClaims = !hasCurrentOfferingEvidence;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    name: `${p.name} (Online)`,
-    description: `${p.name} category record for ${u.name}. Current intake details require verification with UGC-DEB and the university.`,
-    provider: {
-      "@type": "CollegeOrUniversity",
-      name: u.name,
-      ...(u.domain ? { sameAs: `https://${u.domain}` } : {}),
-    },
-    educationalCredentialAwarded: p.level,
-    ...(hasCurrentOfferingEvidence && p.feesVerified
-      ? {
-          offers: {
-            "@type": "Offer",
-            price: p.totalFee,
-            priceCurrency: "INR",
-            category: "Tuition",
-          },
-        }
-      : {}),
-    ...(hasCurrentOfferingEvidence && p.durationVerified
-      ? { timeRequired: `P${p.durationYears}Y` }
-      : {}),
-  };
+  const jsonLd = hasCurrentOfferingEvidence
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        name: `${p.name} (Online)`,
+        description: `${p.name} course details for ${u.name}. Reconfirm the current intake with the university before applying.`,
+        provider: {
+          "@type": "CollegeOrUniversity",
+          name: u.name,
+          ...(u.domain ? { sameAs: `https://${u.domain}` } : {}),
+        },
+        educationalCredentialAwarded: p.level,
+        ...(p.feesVerified
+          ? {
+              offers: {
+                "@type": "Offer",
+                price: p.totalFee,
+                priceCurrency: "INR",
+                category: "Tuition",
+              },
+            }
+          : {}),
+        ...(p.durationVerified ? { timeRequired: `P${p.durationYears}Y` } : {}),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: `${p.code} course profile — ${u.name}`,
+        description: `This course profile was previously listed with ${u.name}. Current availability is not confirmed.`,
+      };
 
   const facts = hideOfferingClaims
     ? [
@@ -164,21 +168,24 @@ function ProgramPage() {
         { icon: Laptop, k: "Delivery & exams", v: "Confirm with the university" },
         {
           icon: ShieldCheck,
-          k: "Source status",
-          v: `${p.entitlementStatus ?? "unverified"} · ${p.academicSession ?? u.verificationAcademicYear ?? "session not mapped"}`,
+          k: "Intake check",
+          v:
+            p.entitlementStatus === "expired"
+              ? "Previously listed · confirm current availability"
+              : "Current availability is not confirmed",
         },
       ]
     : [
         {
           icon: Clock,
-          k: p.durationVerified ? "Sourced offering duration" : "Typical category duration",
+          k: p.durationVerified ? "Course duration" : "Typical duration",
           v: `${p.durationYears} years (${p.semesters} semesters)`,
         },
         ...(p.totalFeeAvailable
           ? [
               {
                 icon: IndianRupee,
-                k: p.feesVerified ? "Sourced total fee" : "Editorial fee guide",
+                k: p.feesVerified ? "Listed total fee" : "Estimated fee guide",
                 v: formatINR(p.totalFee),
               },
             ]
@@ -187,7 +194,7 @@ function ProgramPage() {
           ? [
               {
                 icon: FileText,
-                k: p.perSemesterFeeVerified ? "Sourced per-semester fee" : "Derived semester split",
+                k: p.perSemesterFeeVerified ? "Listed semester fee" : "Calculated semester split",
                 v: formatINR(p.perSemesterFee),
               },
             ]
@@ -221,17 +228,17 @@ function ProgramPage() {
   const feeRows: { label: string; value: string }[] = [];
   if (!hideOfferingClaims && p.totalFeeAvailable) {
     feeRows.push({
-      label: p.feesVerified ? "Sourced total program fee" : "Editorial total-fee estimate",
+      label: p.feesVerified ? "Listed total programme fee" : "Estimated total-fee guide",
       value: formatINR(p.totalFee),
     });
   }
   if (!hideOfferingClaims && p.perSemesterFeeAvailable) {
     feeRows.push({
       label: p.perSemesterFeeVerified
-        ? "Sourced per-semester fee"
+        ? "Listed semester fee"
         : p.feesVerified
           ? "Derived semester split"
-          : "Editorial semester estimate",
+          : "Planning estimate",
       value: formatINR(p.perSemesterFee),
     });
   }
@@ -269,21 +276,21 @@ function ProgramPage() {
   ];
   const faqs = [
     {
-      question: `Is this online ${p.code} record verified for the current intake?`,
+      question: `Is this ${p.code} course available for the current intake?`,
       answer: hasCurrentOfferingEvidence
-        ? `This page links the ${p.academicSession ?? "reviewed"} university-programme-mode-session record to source evidence. Admission availability, the final payable fee and all intake terms should still be reconfirmed on the university's official channel.`
-        : `No. This is a discovery or editorial record, not a verified current admission offer. Use it to understand the ${p.code} category, then confirm the exact university, programme, mode and admission session before applying.`,
+        ? `We checked the university, course and learning mode for the ${p.academicSession ?? "recorded intake"}. Admission availability, the final payable fee and all intake terms should still be reconfirmed on the university's official channel.`
+        : `Not yet. We have not confirmed this option for the current intake. Use the page to understand the ${p.code}, then confirm the exact university, programme, learning mode and admission session before applying.`,
     },
     {
       question: `What is the eligibility for this online ${p.code}?`,
-      answer: `${p.eligibility} ${p.eligibilityVerified ? "This field was mapped from the reviewed offering, but the current document and threshold rules should be reconfirmed." : "This is category-level guidance; ask the university for its current written requirement."}`,
+      answer: `${p.eligibility} ${hasCurrentOfferingEvidence && p.eligibilityVerified ? "This requirement was checked for the listed intake, but the current document and threshold rules should be reconfirmed." : "This is general course guidance; ask the university for its current written requirement."}`,
     },
     {
       question: "Are the fee and monthly amount final?",
       answer:
         !hideOfferingClaims && p.totalFeeAvailable
-          ? `The page labels whether each amount is source-backed, derived or editorial. ${formatINR(p.totalFee)} is the displayed total-fee field, but scholarships, taxes, registration charges, financing costs and intake changes can affect the final payable amount.`
-          : "No evidenced current fee is published on this page. Ask for the complete written payable amount, payment schedule, scholarship conditions, refund rules and any lender charges before paying.",
+          ? `The page explains whether each amount is listed, calculated or estimated. ${formatINR(p.totalFee)} is the displayed total-fee field, but scholarships, taxes, registration charges, financing costs and intake changes can affect the final payable amount.`
+          : "A current fee is not available on this page. Ask for the complete written payable amount, payment schedule, scholarship conditions, refund rules and any lender charges before paying.",
     },
     {
       question: "Does DekhoCampus take admission payment?",
@@ -302,7 +309,7 @@ function ProgramPage() {
       <ProgramHero university={u} program={p} />
       <ProgramSectionNav includeCompare={alternatives.length > 0} />
 
-      <section className="border-b border-border bg-card" aria-label="Evidence status">
+      <section className="border-b border-border bg-card" aria-label="Course availability status">
         <div className="container-page flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex max-w-4xl items-start gap-3">
             <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
@@ -311,15 +318,15 @@ function ProgramPage() {
             <div>
               <p className="text-sm font-extrabold">
                 {hasCurrentOfferingEvidence
-                  ? `${p.academicSession ?? "Reviewed intake"} evidence is mapped — reconfirm before payment`
+                  ? `${p.academicSession ?? "Listed intake"} course details checked — reconfirm before payment`
                   : isEditorialFallback
-                    ? "Editorial course guide — use it to prepare, then verify the current intake"
-                    : "Discovery record — current offering details still need confirmation"}
+                    ? "Course profile — confirm availability for the current intake"
+                    : "Previously listed course — confirm current availability"}
               </p>
               <p className="mt-1 text-xs leading-5 text-muted-foreground sm:text-sm">
                 {hasCurrentOfferingEvidence
-                  ? `Offering fields are shown only where the reviewed record supports them. Source reviewed ${p.verifiedAt?.slice(0, 10) ?? "for this catalogue"}.`
-                  : "Category guidance is kept separate from university-specific claims. Missing evidence is shown as missing—not filled with marketing assumptions."}
+                  ? `We checked these course details ${p.verifiedAt?.slice(0, 10) ?? "for the listed intake"}. Reconfirm the fee, admission dates and application route with the university.`
+                  : "Use this page to understand the course and prepare your questions. Ask the university to confirm the exact course, learning mode and admission session."}
               </p>
             </div>
           </div>
@@ -328,10 +335,10 @@ function ProgramPage() {
               href={sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Open cited source (opens in new tab)"
+              aria-label="Open supporting document (opens in new tab)"
               className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 text-xs font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:text-[#b9ceff]"
             >
-              Open cited source <ExternalLink className="h-3.5 w-3.5" />
+              Open supporting document <ExternalLink className="h-3.5 w-3.5" />
             </a>
           ) : null}
         </div>
@@ -372,7 +379,7 @@ function ProgramPage() {
               {
                 icon: WalletCards,
                 title: "See what the fee means",
-                copy: "Sourced, derived and unverified amounts are labelled differently.",
+                copy: "Listed, calculated and unavailable amounts are clearly separated.",
               },
               {
                 icon: UsersRound,
@@ -402,11 +409,15 @@ function ProgramPage() {
             >
               <SectionHeading
                 eyebrow="Curriculum"
-                title={p.curriculumVerified ? "Offering curriculum" : "Typical curriculum themes"}
+                title={
+                  hasCurrentOfferingEvidence && p.curriculumVerified
+                    ? "Course curriculum"
+                    : "Typical curriculum themes"
+                }
                 description={
-                  p.curriculumVerified
-                    ? `Mapped from the reviewed ${p.academicSession ?? "offering"} record. Reconfirm subject names, credits and assessment rules in the current prospectus.`
-                    : `This shared category guide is not the verified syllabus for ${u.shortName}. Use it to frame questions, then check the current official prospectus.`
+                  hasCurrentOfferingEvidence && p.curriculumVerified
+                    ? `Checked for the ${p.academicSession ?? "listed intake"}. Reconfirm subject names, credits and assessment rules in the current prospectus.`
+                    : `This is a general ${p.code} outline, not a confirmed syllabus from ${u.shortName}. Use it to frame questions, then check the current official prospectus.`
                 }
                 compact
               />
@@ -446,8 +457,8 @@ function ProgramPage() {
                 </Accordion>
               ) : (
                 <div className="mt-5 rounded-xl border border-dashed border-border bg-secondary/35 p-5 text-sm leading-6 text-muted-foreground">
-                  No curriculum outline is mapped for this record yet. Use the current official
-                  prospectus before comparing subjects or credits.
+                  No university-specific curriculum has been added here yet. Use the current
+                  official prospectus before comparing subjects or credits.
                 </div>
               )}
             </article>
@@ -459,14 +470,14 @@ function ProgramPage() {
               <SectionHeading
                 eyebrow="Pathways"
                 title={
-                  p.specialisationsVerified
-                    ? "Mapped specialisations"
-                    : "Specialisations to investigate"
+                  hasCurrentOfferingEvidence && p.specialisationsVerified
+                    ? "Listed specialisations"
+                    : "Specialisations to ask about"
                 }
                 description={
-                  p.specialisationsVerified
-                    ? "These pathways are mapped to the reviewed university offering. Reconfirm availability for your admission session."
-                    : "These are degree-category examples—not a claim that this university offers every pathway. Check its exact name and how it appears on the award."
+                  hasCurrentOfferingEvidence && p.specialisationsVerified
+                    ? "These pathways were listed for the checked intake. Reconfirm availability for your admission session."
+                    : "These are general course examples, not a claim that this university currently offers every pathway. Confirm the exact name and how it appears on the award."
                 }
                 compact
               />
@@ -492,7 +503,7 @@ function ProgramPage() {
               <SectionHeading
                 eyebrow="Fees"
                 title="Fees and payment structure"
-                description="Amounts can change by admission session. Labels below distinguish published values from arithmetic or editorial guidance."
+                description="Amounts can change by admission session. Labels below distinguish university-listed values from calculations or planning estimates."
                 compact
               />
               {feeRows.length ? (
@@ -514,7 +525,7 @@ function ProgramPage() {
               ) : (
                 <div className="mt-5 rounded-xl border border-[#c9d8e8] bg-[#f4f8fd] p-5 dark:border-[#284760] dark:bg-[#0e2435]">
                   <p className="font-display text-lg font-extrabold">
-                    No evidenced fee is published here yet
+                    Current fee is not available here yet
                   </p>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
                     Ask for the complete written payable amount, semester schedule, scholarship
@@ -528,10 +539,10 @@ function ProgramPage() {
                     href={p.feeSourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Open fee source checked ${p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
+                    aria-label={`Open fee document checked ${p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"} (opens in new tab)`}
                     className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                   >
-                    Fee source · checked {p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
+                    Fee document · checked {p.feeVerifiedAt?.slice(0, 10) ?? "for this catalogue"}
                     <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : null}
@@ -540,10 +551,10 @@ function ProgramPage() {
                     href={p.refundPolicyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Open reviewed refund-policy link (opens in new tab)"
+                    aria-label="Open refund-policy link (opens in new tab)"
                     className="inline-flex items-center gap-2 text-[#2449ad] hover:underline dark:text-[#b9ceff]"
                   >
-                    Reviewed refund-policy link <ExternalLink className="h-3.5 w-3.5" />
+                    Refund-policy link <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : null}
               </div>
@@ -560,9 +571,9 @@ function ProgramPage() {
                 compact
               />
               <p className="mt-3 text-xs font-semibold text-muted-foreground">
-                {p.eligibilityVerified
-                  ? "Mapped from the reviewed offering; reconfirm the current document rules."
-                  : "Category-level guidance; confirm the exact threshold with the university."}
+                {hasCurrentOfferingEvidence && p.eligibilityVerified
+                  ? "Checked for the listed intake; reconfirm the current document rules."
+                  : "General course guidance; confirm the exact threshold with the university."}
               </p>
               <ol className="mt-5 grid gap-3 sm:grid-cols-2">
                 {admissionSteps.map(([number, title, copy]) => (
@@ -616,7 +627,7 @@ function ProgramPage() {
                 title={`Career paths after an online ${p.code}`}
                 description={
                   !hasCurrentOfferingEvidence
-                    ? "These are degree-category directions. This page does not assert a salary or placement result for this discovery record."
+                    ? "These are general directions for this degree. They are not a salary or placement promise for this unconfirmed course profile."
                     : "These roles are illustrative learning directions—not a placement, role or salary guarantee."
                 }
                 compact
@@ -635,7 +646,7 @@ function ProgramPage() {
               {hasCurrentOfferingEvidence && u.metricsVerified && u.placementPartners.length ? (
                 <div className="mt-5 border-t border-border pt-4">
                   <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
-                    Source-backed partner labels
+                    Career-support names
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {u.placementPartners.map((partner) => (
@@ -682,11 +693,11 @@ function ProgramPage() {
               >
                 <SectionHeading
                   eyebrow="Compare"
-                  title={`Compare other reviewed ${p.code} options`}
-                  description="Compare like with like: current session evidence, full payable fee, delivery, exams and learner support."
+                  title={`Compare current ${p.code} course profiles`}
+                  description="Compare the listed intake, full payable fee, delivery, exams and learner support side by side."
                   compact
                 />
-                <CompactRail label={`Other universities offering ${p.code}`} rows={2} columns={2}>
+                <CompactRail label={`Other confirmed ${p.code} courses`} rows={2} columns={2}>
                   {alternatives.map(({ university, program }) => (
                     <Link
                       key={university.slug}
@@ -718,7 +729,11 @@ function ProgramPage() {
                   <UniversityLogo university={u} size="md" />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-extrabold">{u.shortName}</p>
-                    <p className="text-xs text-muted-foreground">Online {p.code} decision card</p>
+                    <p className="text-xs text-muted-foreground">
+                      {hasCurrentOfferingEvidence
+                        ? `Online ${p.code} quick view`
+                        : `${p.code} course profile`}
+                    </p>
                   </div>
                 </div>
                 <div className="mt-5 rounded-xl bg-secondary p-4">
@@ -746,7 +761,7 @@ function ProgramPage() {
                   {[
                     "Free independent guidance",
                     "No payment collected by DekhoCampus",
-                    "Your current intake is checked before advice",
+                    "We help you check current intake details",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#14845f] dark:text-[#65d5a7]" />
@@ -798,8 +813,16 @@ function ProgramPage() {
             compact
             defaultProgramSlug={p.slug}
             defaultUniversitySlug={u.slug}
-            title={`Ask about ${u.shortName}'s online ${p.code}`}
-            description="Share only what is needed. A real person will reply on the channel you choose."
+            title={
+              hasCurrentOfferingEvidence
+                ? `Ask about ${u.shortName}'s online ${p.code}`
+                : `Ask about ${p.code} and ${u.shortName}`
+            }
+            description={
+              hasCurrentOfferingEvidence
+                ? "Share only what is needed. A real person will reply on the channel you choose."
+                : "We can help you confirm whether this course is available for your intake. Share only what is needed."
+            }
             className="min-w-0 rounded-2xl shadow-card"
           />
         </div>

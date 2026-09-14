@@ -1,160 +1,43 @@
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  BadgeCheck,
   BarChart3,
   BookOpenCheck,
-  BrainCircuit,
   BriefcaseBusiness,
   Building2,
   Check,
   CheckCircle2,
+  ChevronRight,
   Clock3,
   Code2,
   GraduationCap,
-  HeartPulse,
   IndianRupee,
   Laptop2,
   Lightbulb,
-  Megaphone,
-  PlayCircle,
   Search,
   Send,
   ShieldCheck,
   Sparkles,
   Target,
-  TimerReset,
   Users,
   WalletCards,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { CompactRail } from "@/components/site/compact-rail";
-import { AuthorityVerification } from "@/components/site/authority-verification";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { Button } from "@/components/ui/button";
+import { getAllSpecialisations } from "@/data/specialisations";
 import {
   getSpecialisationCount,
-  getTotalProgramCount,
   programCatalog,
   universities,
-  universitiesOfferingProgram,
+  type ProgramLevel,
+  type University,
 } from "@/data/universities";
 import { cn } from "@/lib/utils";
 
-const studyAreas = [
-  {
-    title: "Business & leadership",
-    description: "MBA and BBA paths for management, strategy and entrepreneurship.",
-    icon: BriefcaseBusiness,
-    codes: ["MBA", "BBA"],
-  },
-  {
-    title: "Technology & software",
-    description: "Computer applications, cloud, cyber security and software careers.",
-    icon: Code2,
-    codes: ["MCA", "BCA"],
-  },
-  {
-    title: "AI, data & analytics",
-    description: "Data science, business analytics and technology-led decision making.",
-    icon: BrainCircuit,
-    codes: ["MBA", "M.Sc"],
-  },
-  {
-    title: "Finance & commerce",
-    description: "Accounting, finance, banking and fintech-focused online degrees.",
-    icon: WalletCards,
-    codes: ["M.Com", "B.Com"],
-  },
-  {
-    title: "Marketing & communication",
-    description: "Brand, performance marketing, media and communication pathways.",
-    icon: Megaphone,
-    codes: ["MBA", "MA"],
-  },
-  {
-    title: "Healthcare operations",
-    description: "Non-clinical management and administration pathways to verify carefully.",
-    icon: HeartPulse,
-    codes: ["MBA"],
-  },
-] as const;
-
-const scheduleCards = [
-  {
-    title: "Live class timing",
-    description: "Ask for the weekly timetable and mandatory attendance policy.",
-    icon: PlayCircle,
-  },
-  {
-    title: "Recording access",
-    description: "Confirm which sessions are recorded and when access expires.",
-    icon: BookOpenCheck,
-  },
-  {
-    title: "Assessment calendar",
-    description: "Check exam windows, proctoring rules, centres and resit charges.",
-    icon: TimerReset,
-  },
-  {
-    title: "Workload you can sustain",
-    description: "Match weekly study hours to work, family and connectivity needs.",
-    icon: Clock3,
-  },
-] as const;
-
-const guides = [
-  {
-    title: "Is this online degree valid?",
-    description: "A practical checklist for programme, mode and intake verification.",
-    meta: "Verification checklist",
-    icon: ShieldCheck,
-    to: "/methodology" as const,
-  },
-  {
-    title: "How to compare universities",
-    description: "Questions to ask about fees, classes, exams and learner support.",
-    meta: "Decision framework",
-    icon: BarChart3,
-    to: "/compare" as const,
-  },
-  {
-    title: "Choose a specialisation",
-    description: "Connect a specialisation to the work you actually want to do.",
-    meta: "Career worksheet",
-    icon: Lightbulb,
-    to: "/specialisations" as const,
-  },
-  {
-    title: "Talk it through together",
-    description: "Bring your shortlist and questions to a human counsellor.",
-    meta: "Family discussion",
-    icon: Users,
-    to: "/contact" as const,
-  },
-] as const;
-
-const decisionTools = [
-  {
-    title: "Find my course",
-    description: "Answer four questions and see an ungated shortlist.",
-    icon: Target,
-    to: "/finder" as const,
-  },
-  {
-    title: "Compare universities",
-    description: "Save three records; sourced facts stay clearly labelled.",
-    icon: BarChart3,
-    to: "/compare" as const,
-  },
-  {
-    title: "Learn how to verify",
-    description: "Check the institution, programme, mode and session.",
-    icon: ShieldCheck,
-    to: "/methodology" as const,
-  },
-] as const;
+const courseTabs = ["Masters", "Bachelors", "Diploma"] as const satisfies ProgramLevel[];
 
 const heroGoals = [
   { label: "Online degree", value: "flexible-study", icon: Laptop2 },
@@ -170,16 +53,99 @@ const heroGoals = [
   { label: "Career clarity", value: "career-switch", field: "unsure", icon: Target },
 ] as const;
 
-const heroUtilities = [
-  { label: "Universities", to: "/universities" as const, icon: Building2 },
-  { label: "Courses", to: "/programs" as const, icon: GraduationCap },
-  { label: "Specialisations", to: "/specialisations" as const, icon: Target },
-  { label: "Course finder", to: "/finder" as const, icon: Sparkles },
-  { label: "Compare", to: "/compare" as const, icon: BarChart3 },
-  { label: "Verify", to: "/methodology" as const, icon: ShieldCheck },
+const heroRoles = ["Student", "Parent", "Professional"] as const;
+
+const quickLinks = [
+  { label: "Universities", helper: "Browse all", to: "/universities" as const, icon: Building2 },
+  { label: "Courses", helper: "Choose a degree", to: "/programs" as const, icon: GraduationCap },
+  { label: "Find my fit", helper: "4 quick questions", to: "/finder" as const, icon: Sparkles },
+  { label: "Compare", helper: "Keep 3 side by side", to: "/compare" as const, icon: BarChart3 },
 ] as const;
 
-const heroRoles = ["Student", "Parent", "Professional"] as const;
+const decisionTools = [
+  {
+    title: "Course finder",
+    description: "Tell us your goal and get a starting shortlist.",
+    icon: Target,
+    to: "/finder" as const,
+    color: "blue",
+  },
+  {
+    title: "University compare",
+    description: "Keep up to three options together while you decide.",
+    icon: BarChart3,
+    to: "/compare" as const,
+    color: "orange",
+  },
+  {
+    title: "Specialisation explorer",
+    description: "Connect subjects with the work you want to do.",
+    icon: Lightbulb,
+    to: "/specialisations" as const,
+    color: "green",
+  },
+  {
+    title: "Before-you-pay check",
+    description: "Know what to confirm for your exact intake.",
+    icon: ShieldCheck,
+    to: "/methodology" as const,
+    color: "violet",
+  },
+] as const;
+
+const guides = [
+  {
+    title: "Is an online degree right for me?",
+    description: "Think through time, learning style and your reason for studying.",
+    meta: "2 minute read",
+    icon: Laptop2,
+    to: "/finder" as const,
+  },
+  {
+    title: "How should I compare universities?",
+    description: "Focus on the course, total cost, classes, exams and learner support.",
+    meta: "Simple checklist",
+    icon: BarChart3,
+    to: "/compare" as const,
+  },
+  {
+    title: "Which specialisation should I choose?",
+    description: "Start with the role you want, then look closely at the subjects.",
+    meta: "Career guide",
+    icon: Lightbulb,
+    to: "/specialisations" as const,
+  },
+  {
+    title: "What should my family ask?",
+    description: "A short list for discussing fees, time and support at home.",
+    meta: "Family guide",
+    icon: Users,
+    to: "/contact" as const,
+  },
+] as const;
+
+const faqs = [
+  {
+    question: "How do I find an online course that suits me?",
+    answer:
+      "Start with the qualification you already have, the career direction you want and the time you can study each week. Our course finder turns those answers into a useful starting shortlist.",
+  },
+  {
+    question: "Can I compare universities without sharing my phone number?",
+    answer:
+      "Yes. You can browse courses, open university pages and compare up to three options before deciding whether you want counselling help.",
+  },
+  {
+    question: "What should I confirm before paying a university?",
+    answer:
+      "Confirm the legal university name, the exact programme, Online mode, academic session, full fee schedule and refund policy through the university and the relevant official portal.",
+  },
+  {
+    question: "Can Diya choose a university for me?",
+    answer:
+      "Diya can help you navigate the choices and explain what to compare. Your final decision should still use the university's current official information and your own priorities.",
+  },
+] as const;
 
 const featuredUniversityOrder = [
   "amity-university-online",
@@ -187,7 +153,11 @@ const featuredUniversityOrder = [
   "jain-university-online",
   "chandigarh-university-online",
   "lpu-online",
-  "gla-university-uttar-pradesh",
+  "dy-patil-university-online",
+  "shoolini-university-online",
+  "sikkim-manipal-university-online",
+  "uttaranchal-university-online",
+  "vignan-university-online",
 ];
 
 function orderedUniversities() {
@@ -195,590 +165,369 @@ function orderedUniversities() {
   return [...universities].sort((a, b) => {
     const aPriority = priority.get(a.slug) ?? 999;
     const bPriority = priority.get(b.slug) ?? 999;
-    if (aPriority !== bPriority) return aPriority - bPriority;
-    if (a.profileDepth !== b.profileDepth) return a.profileDepth === "directory" ? 1 : -1;
-    return a.name.localeCompare(b.name);
+    return aPriority - bPriority || a.name.localeCompare(b.name);
   });
 }
 
-function featuredCourseRecords() {
-  const mba = universitiesOfferingProgram("online-mba");
-  const bba = universitiesOfferingProgram("online-bba");
-  const priority = new Map(featuredUniversityOrder.map((slug, index) => [slug, index]));
-  const sortOffers = (offers: typeof mba) =>
-    [...offers].sort((a, b) => {
-      const aPriority = priority.get(a.university.slug) ?? 999;
-      const bPriority = priority.get(b.university.slug) ?? 999;
-      return aPriority - bPriority || a.university.name.localeCompare(b.university.name);
-    });
-  return [...sortOffers(mba), ...sortOffers(bba)].slice(0, 12);
+function currentProgramCount(university: University) {
+  if (university.profileDepth === "directory" || university.verificationCurrent !== true) return 0;
+  return university.programs.filter((program) => program.entitlementStatus === "verified").length;
 }
 
 export function HomePage() {
-  const totalProgramRecords = getTotalProgramCount();
-  const totalSpecialisations = getSpecialisationCount();
   const [heroGoal, setHeroGoal] = useState<(typeof heroGoals)[number]["label"]>("Online degree");
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
-  const [directoryOpen, setDirectoryOpen] = useState(false);
+  const [courseLevel, setCourseLevel] = useState<(typeof courseTabs)[number]>("Masters");
+
   const selectedHeroGoal = heroGoals.find((goal) => goal.label === heroGoal) ?? heroGoals[0];
-  const featuredUniversities = orderedUniversities().slice(0, 16);
-  const courseRecords = featuredCourseRecords();
-  const catalogueStats = [
-    { value: String(universities.length), label: "university profiles", icon: Building2 },
-    { value: String(programCatalog.length), label: "online course guides", icon: GraduationCap },
-    { value: String(totalProgramRecords), label: "course relationships", icon: BookOpenCheck },
-    { value: String(totalSpecialisations), label: "specialisations mapped", icon: Target },
-  ];
+  const visibleCourses = programCatalog.filter((program) => program.level === courseLevel);
+  const featuredUniversities = useMemo(() => orderedUniversities().slice(0, 12), []);
+  const featuredSpecialisations = useMemo(() => getAllSpecialisations().slice(0, 14), []);
 
   return (
     <div className="overflow-hidden bg-background text-foreground">
-      <section className="relative isolate overflow-hidden border-b border-[#d8e0f1] bg-[#eff4ff] dark:border-border dark:bg-background">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#f47b25]"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute -right-24 top-0 h-[34rem] w-[34rem] rounded-full bg-[#dbe7ff] blur-3xl dark:bg-[#1d2c4a]"
-          aria-hidden="true"
-        />
-        <div className="container-page relative grid min-w-0 grid-cols-[minmax(0,1fr)] gap-9 py-10 sm:py-12 xl:min-h-[640px] xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,0.78fr)] xl:items-center xl:gap-16 xl:py-14">
-          <div className="min-w-0 max-w-[760px]">
-            <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
-              <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
-              DekhoCampus Online degree desk
-            </div>
-            <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-[#536176] dark:text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-[#168258]" />
-              Browse first. Ask a human when you need one.
-            </p>
+      <HeroSection
+        heroGoal={heroGoal}
+        heroRole={heroRole}
+        selectedHeroGoal={selectedHeroGoal}
+        onGoalChange={setHeroGoal}
+        onRoleChange={setHeroRole}
+      />
 
-            <h1 className="mt-6 max-w-[740px] font-display text-[2.55rem] font-extrabold leading-[1.03] tracking-[-0.045em] text-[#131720] dark:text-foreground sm:text-[3.65rem] xl:text-[4.7rem]">
-              Discover Your Ideal{" "}
-              <span className="block text-[#325dd2] dark:text-[#8cb0ff]">Path.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-[#536176] dark:text-muted-foreground sm:text-lg sm:leading-8">
-              Search university and course records, compare the details available today, and see
-              what to confirm directly before you apply or pay.
-            </p>
-
-            <form action="/search" className="mt-6 max-w-2xl" role="search">
-              <div className="flex min-h-16 items-center gap-3 rounded-2xl border border-input bg-card p-1.5 pl-4 shadow-card sm:pl-5">
-                <Search className="h-5 w-5 shrink-0 text-[#667386]" aria-hidden="true" />
-                <input
-                  name="q"
-                  aria-label="Search universities or online courses"
-                  placeholder="Search MBA, BBA or a university..."
-                  className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-[#667386] focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2 sm:text-base"
-                />
-                <button
-                  type="submit"
-                  aria-label="Search the online degree catalogue"
-                  className="inline-flex h-12 min-w-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:min-w-28 sm:px-5"
-                >
-                  <Send className="h-4 w-4" aria-hidden="true" />
-                  <span className="hidden sm:inline">Search</span>
-                </button>
-              </div>
-            </form>
-
-            <div className="mt-3 flex max-w-2xl flex-wrap items-center gap-2">
-              <span className="text-xs font-bold text-muted-foreground">Start with:</span>
-              {[
-                { label: "Online MBA", query: "MBA" },
-                { label: "Online BBA", query: "BBA" },
-                { label: "Online MCA", query: "MCA" },
-              ].map((prompt) => (
-                <Link
-                  key={prompt.label}
-                  to="/search"
-                  search={{ q: prompt.query }}
-                  className="inline-flex min-h-9 items-center rounded-lg border border-border bg-card px-3 text-xs font-bold text-muted-foreground transition-colors hover:border-[#325dd2] hover:text-foreground"
-                >
-                  {prompt.label}
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-6 grid max-w-2xl grid-cols-3 gap-3 border-t border-border pt-5">
-              <HeroMetric value={String(universities.length)} label="university profiles" />
-              <HeroMetric value={String(programCatalog.length)} label="course guides" />
-              <HeroMetric value="Ungated" label="catalogue browsing" />
-            </div>
-
-            <nav
-              aria-label="Online degree tools"
-              className="mt-5 grid w-full min-w-0 max-w-2xl grid-flow-col auto-cols-[7.25rem] gap-2 overflow-x-auto pb-1 [scrollbar-width:none] sm:grid-flow-row sm:grid-cols-6 sm:overflow-visible [&::-webkit-scrollbar]:hidden"
+      <section className="container-page -mt-4 relative z-10 pb-8 sm:-mt-6 lg:pb-10">
+        <nav
+          aria-label="Popular ways to start"
+          className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-card p-2 shadow-lift md:grid-cols-4"
+        >
+          {quickLinks.map((item) => (
+            <Link
+              key={item.label}
+              to={item.to}
+              className="group flex min-h-[4.5rem] items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
             >
-              {heroUtilities.map((utility) => (
-                <Link
-                  key={utility.label}
-                  to={utility.to}
-                  className="flex min-h-[4.75rem] flex-col items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-2 text-center text-[10px] font-extrabold text-foreground transition-colors hover:border-[#325dd2] hover:text-[#2449ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
-                >
-                  <utility.icon className="h-5 w-5 text-[#a94300]" aria-hidden="true" />
-                  {utility.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          <aside
-            className="mx-auto w-full min-w-0 max-w-[440px] overflow-hidden rounded-[1.75rem] border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-5 shadow-lift sm:p-7"
-            aria-label="Free counselling starter"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <span className="inline-flex min-h-8 items-center gap-2 rounded-lg bg-[#eaf7f1] px-3 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
-                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                Guidance, if you want it
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
+                <item.icon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div className="flex gap-1.5" aria-hidden="true">
-                <span className="h-1.5 w-8 rounded-full bg-[#325dd2]" />
-                <span className="h-1.5 w-4 rounded-full bg-[#dce4f2]" />
-              </div>
-            </div>
-
-            <p className="brand-kicker mt-5">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Your degree starting point
-            </p>
-            <h2 className="mt-2 font-display text-[1.65rem] font-extrabold leading-tight tracking-[-0.035em]">
-              What are you exploring?
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Pick a goal and who you are. We will take you to a more useful starting point.
-            </p>
-
-            <fieldset className="mt-5 grid grid-cols-2 gap-2">
-              <legend className="sr-only">Select your goal</legend>
-              {heroGoals.map((goal, index) => {
-                const selected = heroGoal === goal.label;
-                return (
-                  <button
-                    key={goal.label}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setHeroGoal(goal.label)}
-                    className={cn(
-                      "flex min-h-13 items-center gap-2.5 rounded-xl border px-3 text-left text-xs font-bold transition-colors",
-                      index === heroGoals.length - 1 && "col-span-2",
-                      selected
-                        ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
-                        : "border-border bg-background text-muted-foreground hover:border-[#9bb5f1] hover:text-foreground",
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                        selected ? "bg-[#325dd2] text-white" : "bg-secondary text-foreground",
-                      )}
-                    >
-                      <goal.icon className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                    {goal.label}
-                  </button>
-                );
-              })}
-            </fieldset>
-
-            <fieldset className="mt-5">
-              <legend className="mb-2 text-[11px] font-extrabold text-foreground">I am a</legend>
-              <div className="grid grid-cols-3 rounded-xl bg-secondary p-1">
-                {heroRoles.map((role) => (
-                  <button
-                    key={role}
-                    type="button"
-                    aria-pressed={heroRole === role}
-                    onClick={() => setHeroRole(role)}
-                    className={cn(
-                      "min-h-10 rounded-lg px-2 text-[11px] font-extrabold transition-colors",
-                      heroRole === role
-                        ? "bg-card text-[#2449ad] shadow-sm dark:text-[#8cb0ff]"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {role}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            <Button
-              asChild
-              size="lg"
-              className="mt-4 w-full bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad]"
-            >
-              <Link
-                to="/finder"
-                search={{
-                  goal: selectedHeroGoal.value,
-                  audience: heroRole.toLowerCase() as Lowercase<typeof heroRole>,
-                  ...("education" in selectedHeroGoal
-                    ? { education: selectedHeroGoal.education }
-                    : {}),
-                  ...("field" in selectedHeroGoal ? { field: selectedHeroGoal.field } : {}),
-                }}
-              >
-                Show my best-fit options <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <p className="mt-3 text-center text-[10px] font-semibold text-muted-foreground">
-              No form needed to see your starting options
-            </p>
-          </aside>
-        </div>
+              <span className="min-w-0">
+                <span className="block text-sm font-extrabold leading-4">{item.label}</span>
+                <span className="mt-1 block text-[10px] font-semibold leading-3 text-muted-foreground sm:text-[11px]">
+                  {item.helper}
+                </span>
+              </span>
+            </Link>
+          ))}
+        </nav>
       </section>
 
-      <section className="container-page py-10 lg:py-12">
+      <section className="container-page py-8 lg:py-12">
         <SectionIntro
-          eyebrow="Choose your direction"
-          title="What do you want to study?"
-          description="Start with a broad career area. You can narrow the course and university later."
+          eyebrow="Popular courses"
+          title="What would you like to study?"
+          description="Choose a level, understand the course and explore university profiles with clear availability checks."
+          action={<TextLink to="/programs" label="View all courses" />}
         />
-        <CompactRail
-          label="Study areas"
-          columns={4}
-          railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+
+        <div
+          className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="tablist"
+          aria-label="Course level"
         >
-          {studyAreas.map((area) => (
-            <Link
-              key={area.title}
-              to="/search"
-              search={{ q: area.codes[0] }}
-              className="brand-card brand-card-interactive group flex min-h-[8.5rem] items-stretch"
+          {courseTabs.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={courseLevel === tab}
+              onClick={() => setCourseLevel(tab)}
+              className={cn(
+                "min-h-11 shrink-0 rounded-full border px-5 text-sm font-extrabold transition-colors",
+                courseLevel === tab
+                  ? "border-[#325dd2] bg-[#325dd2] text-white"
+                  : "border-border bg-card text-muted-foreground hover:border-[#325dd2] hover:text-foreground",
+              )}
             >
-              <span className="absolute inset-y-0 left-0 w-1 bg-[#325dd2]" aria-hidden="true" />
-              <div className="flex w-full gap-3.5 p-4 pl-5">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
-                  <area.icon className="h-5 w-5" aria-hidden="true" />
+              {tab === "Masters" ? "Postgraduate" : tab === "Bachelors" ? "Undergraduate" : tab}
+            </button>
+          ))}
+        </div>
+
+        <CompactRail
+          label={`${courseLevel} online courses`}
+          rows={2}
+          columns={4}
+          className="mt-3"
+          railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+        >
+          {visibleCourses.map((program, index) => (
+            <Link
+              key={program.slug}
+              to="/programs/$programSlug"
+              params={{ programSlug: program.slug }}
+              className="group flex min-h-[8.25rem] overflow-hidden rounded-2xl border border-border bg-card shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
+            >
+              <span
+                className={cn(
+                  "flex w-[4.25rem] shrink-0 items-center justify-center",
+                  index % 3 === 0
+                    ? "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
+                    : index % 3 === 1
+                      ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
+                      : "bg-[#eaf7f1] text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]",
+                )}
+              >
+                {index % 2 === 0 ? (
+                  <GraduationCap className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <BookOpenCheck className="h-6 w-6" aria-hidden="true" />
+                )}
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col p-3.5">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#a94300] dark:text-[#ffad70]">
+                  {program.durationYears} {program.durationYears === 1 ? "year" : "years"}
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col">
-                  <h3 className="font-display text-[0.95rem] font-extrabold leading-5 tracking-[-0.02em]">
-                    {area.title}
-                  </h3>
-                  <p className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
-                    {area.description}
-                  </p>
-                  <span className="mt-auto flex items-center gap-1.5 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
-                    Explore {area.codes.join(" · ")}
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
+                <span className="mt-1 block font-display text-base font-extrabold leading-5">
+                  Online {program.code}
                 </span>
-              </div>
+                <span className="mt-1 line-clamp-2 text-[11px] leading-4 text-muted-foreground">
+                  {program.name}
+                </span>
+                <span className="mt-auto flex items-center gap-1 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                  Explore course
+                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </span>
             </Link>
           ))}
         </CompactRail>
       </section>
 
-      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
+      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
-            eyebrow="Course discovery"
-            title="Explore online MBA & BBA programmes"
-            description="Start with a course, then open the relevant university record to inspect the details and evidence status."
-            action={<TextLink to="/programs" label="See every course" />}
+            eyebrow="Your decision toolkit"
+            title="Everything you need in one place"
+            description="Explore on your own, then ask Diya or a counsellor when you want help."
           />
-          <CompactRail
-            label="Online MBA and BBA university records"
-            rows={2}
-            columns={4}
-            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
-          >
-            {courseRecords.map(({ university, program }, index) => (
-              <Link
-                key={university.slug + "-" + program.slug}
-                to="/universities/$universitySlug/$programSlug"
-                params={{ universitySlug: university.slug, programSlug: program.slug }}
-                className="brand-card brand-card-interactive group flex min-h-[7.75rem] items-stretch"
-              >
-                <span className="flex w-[5.5rem] shrink-0 items-center justify-center border-r border-border bg-[#f7f8fb] p-2.5 dark:bg-[#202632]">
-                  <UniversityLogo
-                    university={university}
-                    size="md"
-                    priority={index < 4}
-                    className="h-14 w-full rounded-lg bg-white"
-                  />
-                </span>
-                <span className="flex min-w-0 flex-1 flex-col p-3.5">
-                  <span className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
-                      Course record
-                    </span>
-                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-[0.04em] text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#f47b25]" aria-hidden="true" />
-                      Verify details
-                    </span>
-                  </span>
-                  <span className="mt-1 block font-display text-base font-extrabold leading-5 tracking-[-0.02em]">
-                    Online {program.code}
-                  </span>
-                  <span className="mt-0.5 line-clamp-1 block text-[11px] font-semibold text-muted-foreground">
-                    {university.shortName} · {program.name}
-                  </span>
-                  <span className="mt-auto flex items-center justify-between pt-2 text-[10px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
-                    View details
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </span>
-              </Link>
+          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {decisionTools.map((tool) => (
+              <ToolCard key={tool.title} {...tool} />
             ))}
-          </CompactRail>
-        </div>
-      </section>
-
-      <DecisionToolsSection />
-
-      <section className="container-page py-10 lg:py-12">
-        <SectionIntro
-          eyebrow="Admission verification"
-          title="Two checks before you apply."
-          description="A university name is not enough. Confirm the institution first, then the exact programme, mode and intake."
-          action={<TextLink to="/methodology" label="See our method" />}
-        />
-        <div className="mt-7 grid gap-3 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
-          <VerificationCard
-            step="Step 1"
-            title="Check the institution"
-            icon={Building2}
-            items={["Legal university name", "Official domain", "Current regulator notices"]}
-          />
-          <div className="flex items-center justify-center" aria-hidden="true">
-            <span className="flex h-10 w-10 rotate-90 items-center justify-center rounded-full bg-[#f47b25] text-[#111827] md:rotate-0">
-              <ArrowRight className="h-4 w-4" />
-            </span>
           </div>
-          <VerificationCard
-            step="Step 2"
-            title="Check the exact offering"
-            icon={Laptop2}
-            items={["Programme name", "Online—not ODL—mode", "Academic session"]}
-            primary
-          />
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+            className="mt-4 flex min-h-[4.75rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-colors hover:bg-[#2449ad]"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
+              <img
+                src="/diya-ai.webp"
+                alt=""
+                width={90}
+                height={96}
+                className="h-12 w-12 object-cover"
+              />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-base font-extrabold">Hi, I’m Diya</span>
+              <span className="mt-0.5 block text-xs leading-4 text-white/80">
+                Ask me to find a course, university or specialisation.
+              </span>
+            </span>
+            <ArrowRight className="h-5 w-5 shrink-0" aria-hidden="true" />
+          </button>
         </div>
-        <div className="mt-4 rounded-xl border border-border bg-surface p-4 text-xs leading-5 text-muted-foreground dark:bg-secondary/30">
-          Keep screenshots or PDFs of the official entitlement, fee schedule and refund policy.
-        </div>
-        <AuthorityVerification compact className="mt-6" />
       </section>
 
-      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
-        <div className="container-page">
-          <SectionIntro
-            eyebrow="University directory"
-            title="Browse online university profiles"
-            description="Use the logo rail to open a profile, review its course records and make a considered shortlist."
-            action={<TextLink to="/universities" label={"View all " + universities.length} />}
-          />
-          <CompactRail
-            label="Featured online university profiles"
-            columns={4}
-            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
-          >
-            {featuredUniversities.map((university, index) => (
+      <section className="container-page py-8 lg:py-12">
+        <SectionIntro
+          eyebrow="Online universities"
+          title="Explore popular university profiles"
+          description="Start with familiar names or browse every university profile."
+          action={<TextLink to="/universities" label={`View all ${universities.length}`} />}
+        />
+        <CompactRail
+          label="Online universities"
+          rows={2}
+          columns={4}
+          railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+        >
+          {featuredUniversities.map((university, index) => {
+            const confirmedCourses = currentProgramCount(university);
+            return (
               <Link
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="brand-card brand-card-interactive group flex min-h-[7.75rem] items-stretch"
+                className="group flex min-h-[8.5rem] flex-col rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
               >
-                <div className="flex w-[5.5rem] shrink-0 items-center justify-center border-r border-border bg-[#f7f8fb] p-2.5 dark:bg-[#202632]">
+                <span className="flex items-start justify-between gap-2">
                   <UniversityLogo
                     university={university}
                     size="md"
                     priority={index < 4}
-                    className="h-14 w-full rounded-lg bg-white"
+                    className="h-12 w-[5.75rem] rounded-xl bg-white"
                   />
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col p-3.5">
-                  <span className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
-                    {university.profileDepth === "directory"
-                      ? "Directory profile"
-                      : "Editorial profile"}
-                  </span>
-                  <h3 className="mt-1 line-clamp-2 font-display text-sm font-extrabold leading-[1.125rem] tracking-[-0.015em]">
-                    {university.shortName}
-                  </h3>
-                  <p className="mt-1 line-clamp-1 text-[10px] font-semibold text-muted-foreground">
-                    {university.state || "India"} ·{" "}
-                    {university.programs.length > 0
-                      ? String(university.programs.length) + " course records"
-                      : "Profile available"}
-                  </p>
-                  <span className="mt-auto flex items-center justify-between pt-2 text-[10px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
-                    Explore profile
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                </div>
+                  <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />
+                </span>
+                <span className="mt-2 line-clamp-2 font-display text-sm font-extrabold leading-[1.125rem]">
+                  {university.shortName}
+                </span>
+                <span className="mt-auto line-clamp-2 pt-1 text-[10px] font-semibold leading-4 text-muted-foreground">
+                  {university.state || "India"} ·{" "}
+                  {confirmedCourses
+                    ? `${confirmedCourses} current ${confirmedCourses === 1 ? "course" : "courses"}`
+                    : university.programs.length
+                      ? "Course profiles · confirm availability"
+                      : "View university profile"}
+                </span>
               </Link>
-            ))}
-          </CompactRail>
+            );
+          })}
+        </CompactRail>
 
-          <details
-            className="brand-card mt-5"
-            onToggle={(event) => setDirectoryOpen(event.currentTarget.open)}
-          >
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-3 px-4 text-sm font-extrabold marker:content-none">
-              Browse all {universities.length} university names
-              <span className="text-xs font-bold text-[#2449ad] dark:text-[#8cb0ff]">
-                Open directory
-              </span>
-            </summary>
-            {directoryOpen ? (
-              <div className="grid max-h-96 gap-x-6 overflow-y-auto border-t border-border p-4 sm:grid-cols-2 lg:grid-cols-4">
-                {orderedUniversities().map((university, index) => (
-                  <Link
-                    key={university.slug}
-                    to="/universities/$universitySlug"
-                    params={{ universitySlug: university.slug }}
-                    className="flex min-h-11 items-center gap-2.5 text-xs font-semibold text-muted-foreground hover:text-[#2449ad] dark:hover:text-[#8cb0ff]"
-                  >
-                    <UniversityLogo
-                      university={university}
-                      size="sm"
-                      priority={index < 16}
-                      className="h-7 w-7 rounded-md"
-                    />
-                    <span className="min-w-0 leading-4">{university.name}</span>
-                  </Link>
-                ))}
-              </div>
-            ) : null}
-          </details>
-        </div>
-      </section>
-
-      <section className="bg-[#131720] py-10 text-white lg:py-12">
-        <div className="container-page">
-          <SectionIntro
-            dark
-            eyebrow="Flexible learning"
-            title="Build a schedule you can sustain."
-            description="Online does not mean effortless. Check the actual rhythm before you commit."
-          />
-          <CompactRail
-            label="Online learning schedule checks"
-            columns={4}
-            dark
-            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
-          >
-            {scheduleCards.map((card) => (
-              <article
-                key={card.title}
-                className="flex min-h-[7.25rem] gap-3.5 rounded-xl border border-white/15 bg-[#1b202a] p-3.5"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f47b25] text-[#111827]">
-                  <card.icon className="h-4.5 w-4.5" aria-hidden="true" />
-                </span>
-                <div className="min-w-0">
-                  <h3 className="font-display text-sm font-extrabold leading-5">{card.title}</h3>
-                  <p className="mt-1.5 text-xs leading-5 text-white/70">{card.description}</p>
-                </div>
-              </article>
-            ))}
-          </CompactRail>
-          <div className="mt-5 grid gap-3 rounded-2xl border border-white/15 bg-[#1b202a] p-4 sm:grid-cols-4">
-            {[
-              ["Before work", "Live class"],
-              ["Lunch break", "Short lesson"],
-              ["After work", "Doubt session"],
-              ["Weekend", "Assessment"],
-            ].map(([time, task], index) => (
-              <div key={time} className="flex items-center gap-3 sm:block">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-xs font-black text-[#2449ad]">
-                  {index + 1}
-                </span>
-                <div className="sm:mt-2">
-                  <p className="text-xs font-extrabold">{time}</p>
-                  <p className="mt-0.5 text-[11px] text-white/60">{task}</p>
-                </div>
-              </div>
-            ))}
+        <div className="mt-6 overflow-hidden rounded-2xl bg-[#131720] text-white">
+          <div className="grid gap-5 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-7">
+            <div>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ffad70]">
+                Side-by-side view
+              </p>
+              <h3 className="mt-2 font-display text-xl font-extrabold sm:text-2xl">
+                Comparing a few universities?
+              </h3>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">
+                Keep up to three options together and focus on the differences that matter to you.
+              </p>
+            </div>
+            <Button
+              asChild
+              className="min-h-12 bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#e56e1e]"
+            >
+              <Link to="/compare">
+                Start comparing <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      <section className="container-page py-10 lg:py-12">
-        <SectionIntro
-          eyebrow="Transparent coverage"
-          title="The DekhoCampus catalogue, clearly explained"
-          description="These figures describe the profiles and course relationships available to browse here. They are not rankings, approval claims or outcome guarantees."
-        />
-        <CompactRail
-          label="Catalogue coverage statistics"
-          columns={4}
-          railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
-        >
-          {catalogueStats.map((stat) => (
-            <article
-              key={stat.label}
-              className="brand-card flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#f47b25] p-4"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fff0e5] text-[#a94300] dark:bg-[#4a2a1b] dark:text-[#ffad70]">
-                <stat.icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block font-display text-2xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
-                  {stat.value}
+      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
+        <div className="container-page">
+          <SectionIntro
+            eyebrow="Popular specialisations"
+            title="Choose a direction, not just a label"
+            description="Explore subjects and the kinds of roles they can support."
+            action={<TextLink to="/specialisations" label="See all specialisations" />}
+          />
+          <CompactRail
+            label="Popular online degree specialisations"
+            rows={2}
+            columns={4}
+            railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          >
+            {featuredSpecialisations.map((specialisation, index) => (
+              <Link
+                key={specialisation.slug}
+                to="/specialisations/$specialisationSlug"
+                params={{ specialisationSlug: specialisation.slug }}
+                className="group flex min-h-[6.75rem] items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8]"
+              >
+                <span
+                  className={cn(
+                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+                    index % 2
+                      ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
+                      : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+                  )}
+                >
+                  {index % 2 ? <WalletCards className="h-5 w-5" /> : <Code2 className="h-5 w-5" />}
                 </span>
-                <span className="mt-0.5 block text-[11px] font-bold leading-4 text-muted-foreground">
-                  {stat.label}
+                <span className="min-w-0 flex-1">
+                  <span className="line-clamp-2 block text-sm font-extrabold leading-[1.125rem]">
+                    {specialisation.name}
+                  </span>
+                  <span className="mt-1 block text-[10px] font-semibold text-muted-foreground">
+                    Online {specialisation.program.code}
+                  </span>
                 </span>
-              </span>
-            </article>
-          ))}
-        </CompactRail>
-        <div className="mt-4 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold leading-5 text-muted-foreground dark:bg-secondary/30">
-          Information can change by academic session. Reconfirm entitlement, fees and dates through
-          the university&apos;s official process before paying.
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </CompactRail>
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-10 dark:bg-secondary/25 lg:py-12">
+      <section className="container-page py-8 lg:py-12">
+        <SectionIntro
+          eyebrow="A calmer way to decide"
+          title="From confused to confident in three steps"
+          description="No pressure. Move at your pace and keep your shortlist organised."
+        />
+        <ol className="mt-6 grid gap-3 md:grid-cols-3">
+          {[
+            ["01", "Explore", "Browse courses, universities and specialisations."],
+            ["02", "Compare", "Keep the options that fit your goals and budget."],
+            ["03", "Confirm", "Check current details before you apply or pay."],
+          ].map(([step, title, description]) => (
+            <li
+              key={step}
+              className="flex min-h-24 items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-card"
+            >
+              <span className="font-display text-3xl font-black text-[#c8d5f8] dark:text-[#41547d]">
+                {step}
+              </span>
+              <span>
+                <span className="block font-display text-base font-extrabold">{title}</span>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                  {description}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-6 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+          <SimpleStat value={String(universities.length)} label="Universities" />
+          <SimpleStat value={String(programCatalog.length)} label="Courses" bordered />
+          <SimpleStat value={String(getSpecialisationCount())} label="Specialisations" />
+        </div>
+        <p className="mt-3 text-center text-[11px] leading-5 text-muted-foreground">
+          These are the profiles and study options currently available to browse on DekhoCampus.
+        </p>
+      </section>
+
+      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
         <div className="container-page">
           <SectionIntro
-            eyebrow="Decision guides"
-            title="Practical guides for you and your family"
-            description="Short, practical tools for making the decision together."
+            eyebrow="Helpful reads"
+            title="Guides you can discuss with your family"
+            description="Plain answers to the questions that usually come up before enrolment."
           />
           <CompactRail
-            label="Online degree decision guides"
+            label="Online degree guides"
             columns={4}
-            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+            railClassName="auto-cols-[minmax(16rem,84%)] min-[390px]:auto-cols-[minmax(10.75rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
           >
             {guides.map((guide) => (
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="brand-card brand-card-interactive group flex min-h-[8.75rem] gap-3.5 p-4"
+                className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-4 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#325dd2] text-white">
-                  <guide.icon className="h-5 w-5" aria-hidden="true" />
+                <span className="flex items-start justify-between gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
+                    <guide.icon className="h-5 w-5" />
+                  </span>
+                  <span className="text-[10px] font-bold text-muted-foreground">{guide.meta}</span>
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
-                    {guide.meta}
-                  </span>
-                  <span className="mt-1 block font-display text-sm font-extrabold leading-5 tracking-[-0.02em]">
-                    {guide.title}
-                  </span>
-                  <span className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
-                    {guide.description}
-                  </span>
-                  <span className="mt-auto flex items-center gap-1.5 pt-2 text-[10px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
-                    Open guide
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
+                <span className="mt-3 block font-display text-sm font-extrabold leading-5">
+                  {guide.title}
+                </span>
+                <span className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
+                  {guide.description}
+                </span>
+                <span className="mt-auto flex items-center gap-1 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                  Read more{" "}
+                  <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                 </span>
               </Link>
             ))}
@@ -786,44 +535,72 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-12 lg:py-16">
-        <div className="rounded-[1.75rem] bg-[#325dd2] px-6 py-10 text-center text-white shadow-lift md:px-12 md:py-12">
-          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#f47b25] text-[#111827]">
-            <BadgeCheck className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <h2 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-extrabold tracking-[-0.035em] md:text-4xl">
-            Shortlist calmly. Verify carefully. Apply confidently.
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/85 md:text-base">
-            Browse first, compare what is documented, then speak with a counsellor if you want help
-            organising the next step.
-          </p>
-          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button
-              asChild
-              size="lg"
-              className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
-            >
-              <Link to="/contact">
-                Talk to a counsellor <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white/40 bg-transparent font-extrabold text-white hover:bg-white hover:text-[#2449ad]"
-            >
-              <Link to="/universities">Explore all universities</Link>
-            </Button>
-          </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs font-semibold text-white/85">
-            {["No result gate", "Visible source status", "Human help available"].map((item) => (
-              <span key={item} className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#ffd7ba]" aria-hidden="true" />
-                {item}
+      <section className="container-page py-8 lg:py-12">
+        <SectionIntro
+          eyebrow="Common questions"
+          title="Let’s clear up a few doubts"
+          description="Quick answers before you begin exploring."
+        />
+        <div className="mt-6 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+          {faqs.map((faq, index) => (
+            <details key={faq.question} className="group" open={index === 0}>
+              <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-extrabold marker:content-none sm:px-5">
+                {faq.question}
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-lg text-[#2449ad] transition-transform group-open:rotate-45 dark:text-[#8cb0ff]">
+                  +
+                </span>
+              </summary>
+              <p className="px-4 pb-5 text-sm leading-6 text-muted-foreground sm:px-5">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="container-page pb-10 pt-2 lg:pb-16">
+        <div className="overflow-hidden rounded-[1.75rem] bg-[#325dd2] px-5 py-8 text-white shadow-lift sm:px-8 sm:py-10 lg:px-12">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ffd7ba]">
+                <CheckCircle2 className="h-4 w-4" /> Here when you need us
               </span>
-            ))}
+              <h2 className="mt-3 max-w-3xl font-display text-2xl font-extrabold leading-tight sm:text-3xl">
+                Still unsure? Let’s organise your options together.
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80">
+                Bring your questions, budget and shortlist. A counsellor can help you plan the next
+                step.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+              <Button
+                asChild
+                size="lg"
+                className="min-h-12 bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#e56e1e]"
+              >
+                <Link to="/contact">
+                  Talk to a counsellor <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="min-h-12 border-white/35 bg-transparent font-extrabold text-white hover:bg-white hover:text-[#2449ad]"
+              >
+                <Link to="/finder">Find my course</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-5 text-xs font-semibold text-white/80">
+            {["Browse before enquiring", "Compare at your pace", "Human help is optional"].map(
+              (item) => (
+                <span key={item} className="inline-flex items-center gap-2">
+                  <Check className="h-4 w-4 text-[#ffd7ba]" /> {item}
+                </span>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -831,70 +608,252 @@ export function HomePage() {
   );
 }
 
+function HeroSection({
+  heroGoal,
+  heroRole,
+  selectedHeroGoal,
+  onGoalChange,
+  onRoleChange,
+}: {
+  heroGoal: (typeof heroGoals)[number]["label"];
+  heroRole: (typeof heroRoles)[number];
+  selectedHeroGoal: (typeof heroGoals)[number];
+  onGoalChange: (goal: (typeof heroGoals)[number]["label"]) => void;
+  onRoleChange: (role: (typeof heroRoles)[number]) => void;
+}) {
+  return (
+    <section className="relative isolate overflow-hidden border-b border-[#d8e0f1] bg-[#eff4ff] dark:border-border dark:bg-background">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#f47b25]"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-40 top-8 h-[30rem] w-[30rem] rounded-full bg-[#dbe7ff] dark:bg-[#1d2c4a]"
+        aria-hidden="true"
+      />
+      <div className="container-page relative grid min-w-0 gap-7 pb-10 pt-8 sm:pb-12 sm:pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.72fr)] lg:items-center lg:gap-12 lg:py-14 xl:min-h-[610px]">
+        <div className="min-w-0 max-w-[760px]">
+          <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
+            <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
+            Built for online learners
+          </div>
+          <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#536176] dark:text-muted-foreground sm:text-sm">
+            <span className="h-2 w-2 rounded-full bg-[#168258]" />
+            Explore freely. Ask for help only when you want it.
+          </p>
+
+          <h1 className="mt-5 max-w-[740px] font-display text-[2.45rem] font-extrabold leading-[1.02] tracking-[-0.05em] text-[#131720] dark:text-foreground min-[390px]:text-[2.75rem] sm:text-[3.65rem] xl:text-[4.6rem]">
+            Discover Your Ideal{" "}
+            <span className="block text-[#325dd2] dark:text-[#8cb0ff]">Path.</span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-[#536176] dark:text-muted-foreground sm:mt-5 sm:text-lg sm:leading-8">
+            Find online courses, explore universities and compare your options—without feeling lost.
+          </p>
+
+          <form action="/search" className="mt-5 max-w-2xl" role="search">
+            <div className="flex min-h-14 items-center gap-2 rounded-2xl border border-input bg-card p-1.5 pl-3 shadow-card sm:min-h-16 sm:gap-3 sm:pl-5">
+              <Search className="h-5 w-5 shrink-0 text-[#667386]" aria-hidden="true" />
+              <input
+                name="q"
+                aria-label="Search universities or online courses"
+                placeholder="Search MBA, BBA, university..."
+                className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-[#667386] focus-visible:ring-2 focus-visible:ring-[#325dd2] sm:text-base"
+              />
+              <button
+                type="submit"
+                aria-label="Search courses and universities"
+                className="inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:h-12 sm:min-w-28 sm:px-5"
+              >
+                <Send className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-3 flex max-w-2xl items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <span className="shrink-0 text-[11px] font-bold text-muted-foreground">Popular:</span>
+            {[
+              { label: "Online MBA", query: "MBA" },
+              { label: "Online BBA", query: "BBA" },
+              { label: "Online MCA", query: "MCA" },
+            ].map((prompt) => (
+              <Link
+                key={prompt.label}
+                to="/search"
+                search={{ q: prompt.query }}
+                className="inline-flex min-h-9 shrink-0 items-center rounded-full border border-border bg-card px-3 text-[11px] font-bold text-muted-foreground transition-colors hover:border-[#325dd2] hover:text-foreground"
+              >
+                {prompt.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-5 grid max-w-2xl grid-cols-3 gap-2 border-t border-[#cfd9ee] pt-4 dark:border-border">
+            <HeroMetric value={String(universities.length)} label="Universities" />
+            <HeroMetric value={String(programCatalog.length)} label="Courses" />
+            <HeroMetric value={String(getSpecialisationCount())} label="Specialisations" />
+          </div>
+        </div>
+
+        <aside
+          className="w-full min-w-0 overflow-hidden rounded-3xl border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-4 shadow-lift sm:p-6"
+          aria-label="Find a suitable course"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <span className="inline-flex min-h-8 items-center gap-2 rounded-full bg-[#eaf7f1] px-3 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
+              <Sparkles className="h-3.5 w-3.5" /> Personal starting point
+            </span>
+            <span className="text-[10px] font-bold text-muted-foreground">About 1 min</span>
+          </div>
+          <h2 className="mt-4 font-display text-xl font-extrabold leading-tight sm:text-2xl">
+            What matters most right now?
+          </h2>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground sm:text-sm">
+            Choose one goal. You can change it later.
+          </p>
+
+          <fieldset className="mt-4 grid grid-cols-2 gap-2">
+            <legend className="sr-only">Choose your goal</legend>
+            {heroGoals.map((goal, index) => {
+              const selected = heroGoal === goal.label;
+              return (
+                <button
+                  key={goal.label}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => onGoalChange(goal.label)}
+                  className={cn(
+                    "flex min-h-12 items-center gap-2 rounded-xl border px-2.5 text-left text-[11px] font-bold transition-colors sm:px-3 sm:text-xs",
+                    index === heroGoals.length - 1 && "col-span-2",
+                    selected
+                      ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
+                      : "border-border bg-background text-muted-foreground hover:border-[#9bb5f1] hover:text-foreground",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
+                      selected ? "bg-[#325dd2] text-white" : "bg-secondary text-foreground",
+                    )}
+                  >
+                    <goal.icon className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  {goal.label}
+                </button>
+              );
+            })}
+          </fieldset>
+
+          <fieldset className="mt-4">
+            <legend className="mb-2 text-[11px] font-extrabold">I am a</legend>
+            <div className="grid grid-cols-3 rounded-xl bg-secondary p-1">
+              {heroRoles.map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  aria-pressed={heroRole === role}
+                  onClick={() => onRoleChange(role)}
+                  className={cn(
+                    "min-h-10 rounded-lg px-1 text-[10px] font-extrabold transition-colors sm:text-[11px]",
+                    heroRole === role
+                      ? "bg-card text-[#2449ad] shadow-sm dark:text-[#8cb0ff]"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <Button
+            asChild
+            size="lg"
+            className="mt-4 min-h-12 w-full bg-[#325dd2] font-extrabold text-white hover:bg-[#2449ad]"
+          >
+            <Link
+              to="/finder"
+              search={{
+                goal: selectedHeroGoal.value,
+                audience: heroRole.toLowerCase() as Lowercase<typeof heroRole>,
+                ...("education" in selectedHeroGoal
+                  ? { education: selectedHeroGoal.education }
+                  : {}),
+                ...("field" in selectedHeroGoal ? { field: selectedHeroGoal.field } : {}),
+              }}
+            >
+              Show my options <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <p className="mt-2 text-center text-[10px] font-semibold text-muted-foreground">
+            See your starting options before any enquiry form
+          </p>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
 function HeroMetric({ value, label }: { value: string; label: string }) {
   return (
-    <div>
+    <div className="min-w-0">
       <p className="font-display text-xl font-extrabold text-[#131720] dark:text-foreground sm:text-2xl">
         {value}
       </p>
-      <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-muted-foreground sm:text-[11px]">
+      <p className="mt-0.5 text-[10px] font-bold uppercase leading-3 tracking-[0.04em] text-muted-foreground sm:text-[11px]">
         {label}
       </p>
     </div>
   );
 }
 
-function DecisionToolsSection() {
+function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisionTools)[number]) {
+  const colorClass = {
+    blue: "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+    orange: "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]",
+    green: "bg-[#eaf7f1] text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]",
+    violet: "bg-[#f2edff] text-[#6243a8] dark:bg-[#302648] dark:text-[#cab8ff]",
+  }[color];
+
   return (
-    <section className="container-page py-10 lg:py-12">
-      <SectionIntro
-        eyebrow="Decision tools"
-        title="Do the useful checks in one place"
-        description="Shortlist and compare before a form asks for your details. Diya can help you navigate the same catalogue."
-      />
-      <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {decisionTools.map((tool) => (
-          <Link
-            key={tool.title}
-            to={tool.to}
-            className="brand-card brand-card-interactive group flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#325dd2] p-4"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
-              <tool.icon className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-sm font-extrabold">{tool.title}</span>
-              <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
-                {tool.description}
-              </span>
-            </span>
-            <ArrowRight
-              className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]"
-              aria-hidden="true"
-            />
-          </Link>
-        ))}
-        <button
-          type="button"
-          onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-          className="brand-card brand-card-interactive group flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#f47b25] p-4 text-left"
-        >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
-            <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-9 w-9" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-extrabold">Ask Diya</span>
-            <span className="mt-1 block text-[11px] leading-4 text-muted-foreground">
-              Search catalogue records in plain language.
-            </span>
-          </span>
-          <ArrowRight
-            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#a94300]"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
-    </section>
+    <Link
+      to={to}
+      className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-3.5 shadow-card transition hover:border-[#86a2e8] hover:shadow-lift sm:min-h-[8.5rem] sm:p-4"
+    >
+      <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", colorClass)}>
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <span className="mt-3 block text-sm font-extrabold leading-4 sm:text-base sm:leading-5">
+        {title}
+      </span>
+      <span className="mt-1.5 line-clamp-3 text-[11px] leading-4 text-muted-foreground sm:line-clamp-2 sm:text-xs sm:leading-5">
+        {description}
+      </span>
+      <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />
+    </Link>
+  );
+}
+
+function SimpleStat({
+  value,
+  label,
+  bordered = false,
+}: {
+  value: string;
+  label: string;
+  bordered?: boolean;
+}) {
+  return (
+    <div
+      className={cn("min-w-0 px-2 py-4 text-center sm:py-5", bordered && "border-x border-border")}
+    >
+      <p className="font-display text-xl font-extrabold text-[#325dd2] dark:text-[#8cb0ff] sm:text-2xl">
+        {value}
+      </p>
+      <p className="mt-1 text-[10px] font-bold uppercase leading-3 tracking-[0.04em] text-muted-foreground sm:text-[11px]">
+        {label}
+      </p>
+    </div>
   );
 }
 
@@ -903,32 +862,20 @@ function SectionIntro({
   title,
   description,
   action,
-  dark = false,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   action?: ReactNode;
-  dark?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
       <div className="max-w-3xl">
-        <p className={cn("brand-kicker", dark && "text-[#ffad70]")}>{eyebrow}</p>
-        <h2
-          className={cn(
-            "mt-2.5 font-display text-[1.85rem] font-extrabold leading-[1.12] tracking-[-0.035em] md:text-[2.35rem]",
-            dark ? "text-white" : "text-[#131720] dark:text-foreground",
-          )}
-        >
+        <p className="brand-kicker">{eyebrow}</p>
+        <h2 className="mt-2 font-display text-[1.65rem] font-extrabold leading-[1.12] tracking-[-0.04em] text-[#131720] dark:text-foreground sm:text-[2rem] lg:text-[2.35rem]">
           {title}
         </h2>
-        <p
-          className={cn(
-            "mt-3 max-w-2xl text-sm leading-6 md:text-base md:leading-7",
-            dark ? "text-white/70" : "text-muted-foreground",
-          )}
-        >
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
           {description}
         </p>
       </div>
@@ -941,7 +888,7 @@ function TextLink({
   to,
   label,
 }: {
-  to: "/programs" | "/universities" | "/methodology";
+  to: "/programs" | "/universities" | "/specialisations";
   label: string;
 }) {
   return (
@@ -951,63 +898,5 @@ function TextLink({
     >
       {label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </Link>
-  );
-}
-
-function VerificationCard({
-  step,
-  title,
-  icon: Icon,
-  items,
-  primary = false,
-}: {
-  step: string;
-  title: string;
-  icon: typeof Building2;
-  items: string[];
-  primary?: boolean;
-}) {
-  return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-xl border p-4",
-        primary
-          ? "border-[#325dd2] bg-[#325dd2] text-white"
-          : "border-border bg-card text-foreground",
-      )}
-    >
-      <div className="flex items-center gap-3">
-        <span
-          className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-lg",
-            primary ? "bg-white text-[#2449ad]" : "bg-[#325dd2] text-white",
-          )}
-        >
-          <Icon className="h-4.5 w-4.5" aria-hidden="true" />
-        </span>
-        <div>
-          <p
-            className={cn(
-              "text-[10px] font-extrabold uppercase tracking-[0.14em]",
-              primary ? "text-white/80" : "text-[#a94300] dark:text-[#ffad70]",
-            )}
-          >
-            {step}
-          </p>
-          <h3 className="mt-0.5 font-display text-base font-bold">{title}</h3>
-        </div>
-      </div>
-      <ul className="mt-3 grid gap-2 sm:grid-cols-3">
-        {items.map((item) => (
-          <li key={item} className="flex items-center gap-2 text-xs font-semibold">
-            <Check
-              className={cn("h-3.5 w-3.5 shrink-0", primary ? "text-[#ffd7ba]" : "text-[#168258]")}
-              aria-hidden="true"
-            />
-            {item}
-          </li>
-        ))}
-      </ul>
-    </article>
   );
 }

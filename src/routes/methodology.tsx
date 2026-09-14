@@ -82,7 +82,7 @@ const pillars = [
     number: "06",
     title: "Cost & payment clarity",
     description:
-      "Where primary-source evidence is available, we show total programme fee beside semester and indicative EMI figures. Unsourced fees are withheld—not estimated.",
+      "When a current fee document is available, we show the total programme fee beside any listed or clearly calculated instalment figures. Missing fees stay hidden—not guessed.",
     checks: ["Source-checked fee", "Full cost before EMI", "No synthetic estimates"],
     icon: IndianRupee,
     color: "bg-[#ffedf3] text-[#c84b76] dark:bg-[#462333] dark:text-[#ff8eb7]",
@@ -181,8 +181,8 @@ function MethodologyPage() {
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-7 text-white/65">
                 Entitlement, fees and admissions can change by session. DekhoCampus separates a
-                researched profile from a directory-stage listing and links you back to the official
-                regulator before any payment decision.
+                recently reviewed profile from an older catalogue listing and links you back to the
+                official regulator before any payment decision.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <a

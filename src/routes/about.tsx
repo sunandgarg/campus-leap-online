@@ -10,13 +10,13 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "DekhoCampus Online is the dedicated online-degree discovery experience from DekhoCampus, with visible source status, ungated comparison and optional counselling.",
+          "DekhoCampus Online helps learners explore online degrees, compare universities without signing in and ask for counselling only when they want it.",
       },
       { property: "og:title", content: "About DekhoCampus Online" },
       {
         property: "og:description",
         content:
-          "Why we built a dedicated online-degree discovery portal and how its source-status model works.",
+          "Why we built a dedicated online-degree discovery portal and how we keep comparisons clear and useful.",
       },
     ],
   }),
@@ -47,8 +47,8 @@ function AboutPage() {
           <p>
             DekhoCampus Online organises that decision. You can explore {universities.length}{" "}
             university profiles and {getTotalProgramCount()} mapped university-program
-            relationships. Research-complete and directory-stage records are labelled separately,
-            and a fee is not intended to appear where its source status has not been checked.
+            relationships. We clearly separate details that have been checked from those that still
+            need confirmation. A fee is not shown when the current amount has not been checked.
           </p>
           <p>
             The catalogue and finder can be used before sharing personal information. A requested

@@ -7,7 +7,6 @@ import {
   BookOpenCheck,
   BriefcaseBusiness,
   Check,
-  Clock3,
   Code2,
   GraduationCap,
   HelpCircle,
@@ -16,23 +15,19 @@ import {
   RotateCcw,
   ShieldCheck,
   Sparkles,
-  Target,
   UserRoundSearch,
-  WalletCards,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { CompactRail } from "@/components/site/compact-rail";
 import {
-  formatINR,
   programCatalog,
-  verifiedUniversitiesOfferingProgram,
+  universitiesOfferingProgram,
   type ProgramLevel,
 } from "@/data/universities";
 
 type Education = "12th" | "graduate" | "postgraduate" | "diploma";
 type Field = "business" | "technology" | "commerce" | "media" | "unsure";
-type Priority = "affordability" | "career" | "flexibility" | "reputation";
 type FinderGoal = "career-growth" | "career-switch" | "lower-fees" | "flexible-study";
 type FinderAudience = "student" | "parent" | "professional";
 type FinderSearch = {
@@ -52,11 +47,29 @@ const finderAudiences: FinderAudience[] = ["student", "parent", "professional"];
 const finderEducation: Education[] = ["12th", "graduate", "postgraduate", "diploma"];
 const finderFields: Field[] = ["business", "technology", "commerce", "media", "unsure"];
 
-const finderGoalDetails: Record<FinderGoal, { label: string; priority: Priority }> = {
-  "career-growth": { label: "Career growth", priority: "career" },
-  "career-switch": { label: "Career switch", priority: "career" },
-  "lower-fees": { label: "Lower fees", priority: "affordability" },
-  "flexible-study": { label: "Flexible study", priority: "flexibility" },
+const finderGoalDetails: Record<FinderGoal, { label: string; guidance: string }> = {
+  "career-growth": {
+    label: "Career growth",
+    guidance: "Compare the curriculum, projects and learner support for the roles you want next.",
+  },
+  "career-switch": {
+    label: "Career switch",
+    guidance: "Check prerequisites and practical subjects before choosing a new direction.",
+  },
+  "lower-fees": {
+    label: "Lower fees",
+    guidance: "Compare current total fees and refund terms directly before making a payment.",
+  },
+  "flexible-study": {
+    label: "Flexible study",
+    guidance: "Ask for the live-class, recording and exam schedule before applying.",
+  },
+};
+
+const audienceGuidance: Record<FinderAudience, string> = {
+  student: "Discuss the course, total cost and study routine with someone you trust.",
+  parent: "Review recognition, total cost, support and refund terms together.",
+  professional: "Check weekly study hours and live-class timings against your work schedule.",
 };
 
 export const Route = createFileRoute("/finder")({
@@ -88,9 +101,9 @@ export const Route = createFileRoute("/finder")({
       {
         name: "description",
         content:
-          "Find online degree and university options matched to your qualification, career direction, priorities and monthly budget—without sharing personal details.",
+          "Build a private shortlist of online degree directions from your qualification and study interests—without sharing personal details.",
       },
-      { property: "og:title", content: "Find a suitable online degree" },
+      { property: "og:title", content: "Explore online degree directions" },
       {
         property: "og:description",
         content: "A free, private guided shortlist of online courses and universities.",
@@ -162,44 +175,10 @@ const fieldChoices: Choice<Field>[] = [
   {
     value: "unsure",
     label: "Help me discover",
-    description: "Keep the options broad and show strong all-round fits.",
+    description: "Keep the options broad while you explore.",
     icon: HelpCircle,
   },
 ];
-
-const priorityChoices: Choice<Priority>[] = [
-  {
-    value: "affordability",
-    label: "Lowest overall cost",
-    description: "Prioritise lower total fees and manageable payments.",
-    icon: WalletCards,
-  },
-  {
-    value: "career",
-    label: "Career progression",
-    description: "Filter course categories by direction without ranking salary outcomes.",
-    icon: Target,
-  },
-  {
-    value: "flexibility",
-    label: "Maximum flexibility",
-    description: "Compare a standard monthly split—not a lender payment plan.",
-    icon: Clock3,
-  },
-  {
-    value: "reputation",
-    label: "University reputation",
-    description: "Keep provider ranking off until comparable reputation evidence is mapped.",
-    icon: BadgeCheck,
-  },
-];
-
-const budgets = [
-  { value: 4_000, label: "Up to ₹4,000", description: "Keep monthly payments very lean" },
-  { value: 7_000, label: "Up to ₹7,000", description: "A balanced monthly range" },
-  { value: 10_000, label: "Up to ₹10,000", description: "More university choice" },
-  { value: 1_00_000, label: "Budget is flexible", description: "Show the strongest overall fit" },
-] as const;
 
 const levelsByEducation: Record<Education, ProgramLevel[]> = {
   "12th": ["Bachelors"],
@@ -215,7 +194,7 @@ const codesByField: Record<Exclude<Field, "unsure">, string[]> = {
   media: ["MA JMC", "MA English"],
 };
 
-const stepLabels = ["Qualification", "Direction", "Priority", "Budget"];
+const stepLabels = ["Qualification", "Direction"];
 
 function DegreeFinderPage() {
   const {
@@ -224,12 +203,9 @@ function DegreeFinderPage() {
     education: initialEducation,
     field: initialField,
   } = Route.useSearch();
-  const initialPriority = initialGoal ? finderGoalDetails[initialGoal].priority : null;
   const [step, setStep] = useState(0);
   const [education, setEducation] = useState<Education | null>(initialEducation ?? null);
   const [field, setField] = useState<Field | null>(initialField ?? null);
-  const [priority, setPriority] = useState<Priority | null>(initialPriority);
-  const [budget, setBudget] = useState<number | null>(null);
   const questionHeadingRef = useRef<HTMLHeadingElement>(null);
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
   const previousStepRef = useRef(step);
@@ -238,12 +214,10 @@ function DegreeFinderPage() {
     setStep(0);
     setEducation(initialEducation ?? null);
     setField(initialField ?? null);
-    setPriority(initialGoal ? finderGoalDetails[initialGoal].priority : null);
-    setBudget(null);
   }, [audience, initialEducation, initialField, initialGoal]);
 
   const recommendations = useMemo(() => {
-    if (!education || !field || !priority || budget === null) return [];
+    if (!education || !field) return [];
 
     const eligibleLevels = levelsByEducation[education];
     const preferredCodes = field === "unsure" ? null : codesByField[field];
@@ -256,54 +230,19 @@ function DegreeFinderPage() {
       ? eligiblePrograms
       : programCatalog.filter((program) => eligibleLevels.includes(program.level));
 
-    return candidates
-      .map((program) => {
-        // A provider enters finder rankings only when the exact offering and
-        // total fee both have current source evidence. The course category can
-        // still be recommended when that reviewed provider set is empty.
-        const offers = verifiedUniversitiesOfferingProgram(program.slug);
-        const canRankProvider = priority === "affordability" || priority === "flexibility";
-        const rankedOffers = canRankProvider
-          ? [...offers].sort((a, b) => a.program.totalFee - b.program.totalFee)
-          : offers;
-        const typicalMonths = Math.max(1, program.durationYears * 12);
-        const monthlySplit = (totalFee: number) => Math.round(totalFee / typicalMonths);
-        const withinBudget = rankedOffers.filter(
-          ({ program: offer }) => monthlySplit(offer.totalFee) <= budget,
-        );
-        const bestOffer = canRankProvider
-          ? (withinBudget.length ? withinBudget : rankedOffers)[0]
-          : undefined;
-        const minimumMonthlySplit = offers.length
-          ? Math.min(...offers.map(({ program: offer }) => monthlySplit(offer.totalFee)))
-          : null;
-        const isWithinBudget = minimumMonthlySplit !== null && minimumMonthlySplit <= budget;
-        const fitLabel = preferredCodes?.includes(program.code) ? "Strong" : "Good";
+    return candidates.slice(0, 6).map((program) => ({
+      program,
+      offers: universitiesOfferingProgram(program.slug),
+      reason:
+        preferredCodes === null
+          ? `Included in the ${program.level.toLowerCase()} options available after your qualification.`
+          : preferredCodes.includes(program.code)
+            ? `Included because you chose ${fieldChoices.find((choice) => choice.value === field)?.label.toLowerCase()}.`
+            : `Included as another ${program.level.toLowerCase()} direction to explore.`,
+    }));
+  }, [education, field]);
 
-        return {
-          program,
-          offers: rankedOffers,
-          bestOffer,
-          minimumMonthlySplit,
-          isWithinBudget,
-          fitLabel,
-          providerRankingUnavailable: offers.length > 0 && !canRankProvider,
-        };
-      })
-      .sort((a, b) => {
-        if (priority === "affordability" || priority === "flexibility") {
-          return (
-            (a.minimumMonthlySplit ?? Number.POSITIVE_INFINITY) -
-              (b.minimumMonthlySplit ?? Number.POSITIVE_INFINITY) ||
-            a.program.name.localeCompare(b.program.name)
-          );
-        }
-        return a.program.name.localeCompare(b.program.name);
-      })
-      .slice(0, 4);
-  }, [budget, education, field, priority]);
-
-  const selections = [education, field, priority, budget];
+  const selections = [education, field];
   const currentComplete = selections[step] !== null;
   const showingResults = step === stepLabels.length;
 
@@ -319,8 +258,6 @@ function DegreeFinderPage() {
     setStep(0);
     setEducation(initialEducation ?? null);
     setField(initialField ?? null);
-    setPriority(initialGoal ? finderGoalDetails[initialGoal].priority : null);
-    setBudget(null);
   }
 
   return (
@@ -335,8 +272,8 @@ function DegreeFinderPage() {
               Find a course direction that makes sense for you.
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70 sm:text-base sm:leading-7">
-              Answer four simple questions. We’ll match your qualification, direction and budget
-              with courses and universities already in the DekhoCampus catalogue.
+              Answer two simple questions. We’ll build a starting shortlist from your qualification
+              and the subject area you want to explore.
             </p>
             {initialGoal || audience ? (
               <p className="mt-4 inline-flex flex-wrap items-center gap-1.5 rounded-lg border border-white/15 bg-[#252b36] px-3.5 py-2 text-xs font-semibold text-white/85">
@@ -347,12 +284,12 @@ function DegreeFinderPage() {
               </p>
             ) : null}
           </div>
-          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/75 lg:max-w-xs">
+          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/85 lg:max-w-xs">
             <p className="flex items-center gap-2 font-bold text-white">
               <ShieldCheck className="h-4 w-4 text-[#78ddb3]" /> Private by design
             </p>
             <p className="mt-1.5 max-w-xs text-xs leading-5">
-              No phone number, email or payment is required to see your matches.
+              No phone number, email or payment is required to see your shortlist.
             </p>
           </div>
         </div>
@@ -384,7 +321,7 @@ function DegreeFinderPage() {
           </div>
           <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
             {showingResults
-              ? `Shortlist ready with ${recommendations.length} course ${recommendations.length === 1 ? "match" : "matches"}.`
+              ? `Shortlist ready with ${recommendations.length} course ${recommendations.length === 1 ? "direction" : "directions"}.`
               : `Question ${step + 1} of ${stepLabels.length}: ${stepLabels[step]}.`}
           </p>
 
@@ -401,15 +338,10 @@ function DegreeFinderPage() {
                 >
                   {step === 0 && "What have you completed?"}
                   {step === 1 && "Where do you want to grow?"}
-                  {step === 2 && "What matters most in your decision?"}
-                  {step === 3 && "What monthly payment feels comfortable?"}
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {step === 0 && "This keeps every recommendation academically relevant."}
                   {step === 1 && "Choose a direction—not a permanent career commitment."}
-                  {step === 2 && "We use this in a transparent rule-based catalogue sort."}
-                  {step === 3 &&
-                    "We divide cited total fees across the category’s typical duration; this is not a lender quote."}
                 </p>
               </div>
 
@@ -432,47 +364,6 @@ function DegreeFinderPage() {
                       onSelect={() => setField(choice.value)}
                     />
                   ))}
-                {step === 2 &&
-                  priorityChoices.map((choice) => (
-                    <FinderChoice
-                      key={choice.value}
-                      choice={choice}
-                      selected={priority === choice.value}
-                      onSelect={() => setPriority(choice.value)}
-                    />
-                  ))}
-                {step === 3 &&
-                  budgets.map((choice) => (
-                    <button
-                      key={choice.value}
-                      type="button"
-                      aria-pressed={budget === choice.value}
-                      onClick={() => setBudget(choice.value)}
-                      className={`flex min-h-24 items-center justify-between gap-4 rounded-xl border p-4 text-left transition ${
-                        budget === choice.value
-                          ? "border-[#f47a20] bg-[#fff3ea] ring-2 ring-[#f47a20]/15 dark:bg-[#382317]"
-                          : "border-border bg-background hover:border-[#edaa79] hover:bg-secondary/50"
-                      }`}
-                    >
-                      <span>
-                        <span className="block font-display text-lg font-extrabold">
-                          {choice.label}
-                        </span>
-                        <span className="mt-1 block text-xs leading-5 text-muted-foreground">
-                          {choice.description}
-                        </span>
-                      </span>
-                      <span
-                        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border ${
-                          budget === choice.value
-                            ? "border-[#a94300] bg-[#a94300] text-white"
-                            : "border-border"
-                        }`}
-                      >
-                        {budget === choice.value ? <Check className="h-4 w-4" /> : null}
-                      </span>
-                    </button>
-                  ))}
               </div>
 
               <div className="sticky bottom-[5.25rem] z-20 flex items-center justify-between gap-4 rounded-b-xl border-t border-border bg-card px-5 py-4 shadow-[0_-12px_24px_-24px_rgba(19,23,32,0.7)] sm:static sm:px-8 sm:shadow-none">
@@ -491,7 +382,7 @@ function DegreeFinderPage() {
                   onClick={() => setStep((value) => value + 1)}
                   className="rounded-xl bg-[#a94300] font-extrabold text-white hover:bg-[#8f3700]"
                 >
-                  {step === stepLabels.length - 1 ? "Show my matches" : "Continue"}
+                  {step === stepLabels.length - 1 ? "Show my shortlist" : "Continue"}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -508,12 +399,12 @@ function DegreeFinderPage() {
                     tabIndex={-1}
                     className="mt-2 font-display text-3xl font-extrabold tracking-[-0.045em] outline-none"
                   >
-                    {recommendations.length} suitable course
-                    {recommendations.length === 1 ? "" : "s"}
+                    {recommendations.length} course direction
+                    {recommendations.length === 1 ? "" : "s"} to explore
                   </h2>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-                    Course categories are filtered from your answers. Providers are ranked only on
-                    comparable source-backed cost—not on unsupported reputation or outcome claims.
+                    This shortlist uses only your qualification and chosen subject area. University
+                    profiles are shown without a best-university ranking.
                   </p>
                 </div>
                 <Button variant="outline" onClick={reset} className="shrink-0 rounded-xl bg-card">
@@ -521,141 +412,107 @@ function DegreeFinderPage() {
                 </Button>
               </div>
 
-              <CompactRail label="Your course recommendations" rows={2} columns={2}>
-                {recommendations.map(
-                  ({
-                    program,
-                    offers,
-                    bestOffer,
-                    minimumMonthlySplit,
-                    isWithinBudget,
-                    fitLabel,
-                    providerRankingUnavailable,
-                  }) => (
-                    <article
-                      key={program.slug}
-                      className="overflow-hidden rounded-xl border border-border bg-card"
-                    >
-                      <div className="p-6">
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <span className="rounded-full bg-[#edf5ff] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
-                              {program.level} · {program.durationYears} years
-                            </span>
-                            <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ff9a5b]">
-                              Online {program.code}
-                            </p>
-                            <h3 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em]">
-                              {program.name}
-                            </h3>
-                          </div>
-                          <span className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-[#eaf8f1] text-[#168258] dark:bg-[#12372c] dark:text-[#75dcb4]">
-                            <span className="font-display text-sm font-extrabold">{fitLabel}</span>
-                            <span className="text-[8px] font-bold uppercase">rule fit</span>
+              {initialGoal || audience ? (
+                <div className="mt-5 rounded-xl border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
+                  <p className="font-extrabold text-foreground">Keep in mind</p>
+                  {initialGoal ? (
+                    <p className="mt-1">{finderGoalDetails[initialGoal].guidance}</p>
+                  ) : null}
+                  {audience ? <p className="mt-1">{audienceGuidance[audience]}</p> : null}
+                </div>
+              ) : null}
+
+              <CompactRail label="Course directions from your answers" rows={2} columns={2}>
+                {recommendations.map(({ program, offers, reason }) => (
+                  <article
+                    key={program.slug}
+                    className="overflow-hidden rounded-xl border border-border bg-card"
+                  >
+                    <div className="p-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <span className="rounded-full bg-[#edf5ff] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
+                            {program.level} · {program.durationYears} years
                           </span>
+                          <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ff9a5b]">
+                            Online {program.code}
+                          </p>
+                          <h3 className="mt-2 font-display text-2xl font-extrabold tracking-[-0.04em]">
+                            {program.name}
+                          </h3>
                         </div>
-
-                        <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted-foreground">
-                          {program.overview}
-                        </p>
-
-                        <div className="mt-5 grid grid-cols-3 divide-x divide-border rounded-2xl bg-secondary/60 py-4 text-center">
-                          <div className="px-2">
-                            <p className="font-display font-extrabold">{offers.length}</p>
-                            <p className="mt-1 text-[9px] font-bold uppercase text-muted-foreground">
-                              Sourced offers
-                            </p>
-                          </div>
-                          <div className="px-2">
-                            <p className="font-display font-extrabold">
-                              {minimumMonthlySplit !== null
-                                ? formatINR(minimumMonthlySplit)
-                                : "Not mapped"}
-                            </p>
-                            <p className="mt-1 text-[9px] font-bold uppercase text-muted-foreground">
-                              Arithmetic split
-                            </p>
-                          </div>
-                          <div className="px-2">
-                            <p className="font-display font-extrabold">{program.careers.length}</p>
-                            <p className="mt-1 text-[9px] font-bold uppercase text-muted-foreground">
-                              Career directions
-                            </p>
-                          </div>
-                        </div>
-
-                        {bestOffer ? (
-                          <div className="mt-5 rounded-2xl border border-border bg-background p-4">
-                            <div className="flex items-center justify-between gap-3">
-                              <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
-                                Closest source-backed fit
-                              </p>
-                              <span
-                                className={`text-[10px] font-extrabold ${
-                                  isWithinBudget
-                                    ? "text-[#168258] dark:text-[#62d3a7]"
-                                    : "text-[#a94300] dark:text-[#ffad70]"
-                                }`}
-                              >
-                                {isWithinBudget ? "Within your range" : "Closest budget match"}
-                              </span>
-                            </div>
-                            <Link
-                              to="/universities/$universitySlug/$programSlug"
-                              params={{
-                                universitySlug: bestOffer.university.slug,
-                                programSlug: program.slug,
-                              }}
-                              className="mt-3 flex items-center gap-3 rounded-xl transition hover:bg-secondary"
-                            >
-                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-1 shadow-sm">
-                                <UniversityLogo university={bestOffer.university} size="sm" />
-                              </span>
-                              <span className="min-w-0 flex-1">
-                                <span className="block truncate text-sm font-extrabold">
-                                  {bestOffer.university.shortName}
-                                </span>
-                                <span className="mt-0.5 block text-xs text-muted-foreground">
-                                  Sourced total fee · {formatINR(bestOffer.program.totalFee)}
-                                </span>
-                              </span>
-                              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                            </Link>
-                          </div>
-                        ) : (
-                          <div className="mt-5 rounded-2xl border border-dashed border-border bg-background p-4">
-                            <p className="text-xs font-extrabold uppercase tracking-[0.1em] text-muted-foreground">
-                              Course-category match only
-                            </p>
-                            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                              {providerRankingUnavailable
-                                ? "Current sourced offerings exist, but this finder does not rank reputation or career outcomes without comparable evidence. Review them in the course guide."
-                                : "No university has current offering and total-fee evidence for this finder, so no provider is ranked. Use the course guide to review source records manually."}
-                            </p>
-                          </div>
-                        )}
                       </div>
 
-                      <div
-                        className={`grid border-t border-border p-4 ${bestOffer ? "grid-cols-2" : "grid-cols-1"}`}
-                      >
-                        <Button asChild variant="ghost" className="rounded-xl font-bold">
-                          <Link to="/programs/$programSlug" params={{ programSlug: program.slug }}>
-                            View course
+                      <p className="mt-4 text-sm font-semibold leading-6 text-foreground">
+                        {reason}
+                      </p>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
+                        {program.overview}
+                      </p>
+
+                      <div className="mt-5 grid grid-cols-3 divide-x divide-border rounded-2xl bg-secondary/60 py-4 text-center">
+                        <div className="px-2">
+                          <p className="font-display font-extrabold">{offers.length}</p>
+                          <p className="mt-1 text-[10px] font-bold uppercase text-muted-foreground">
+                            University profiles
+                          </p>
+                        </div>
+                        <div className="px-2">
+                          <p className="font-display font-extrabold">
+                            {program.specialisations.length}
+                          </p>
+                          <p className="mt-1 text-[10px] font-bold uppercase text-muted-foreground">
+                            Specialisations
+                          </p>
+                        </div>
+                        <div className="px-2">
+                          <p className="font-display font-extrabold">{program.careers.length}</p>
+                          <p className="mt-1 text-[10px] font-bold uppercase text-muted-foreground">
+                            Career directions
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-5 flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+                        <div className="flex -space-x-2">
+                          {offers.slice(0, 3).map(({ university }) => (
+                            <span
+                              key={university.slug}
+                              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-white"
+                            >
+                              <UniversityLogo university={university} size="sm" />
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-xs font-semibold leading-5 text-muted-foreground">
+                          {offers.length
+                            ? `${offers.length} university ${offers.length === 1 ? "profile" : "profiles"} available to review`
+                            : "University profiles are not available for this course yet"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`grid border-t border-border p-4 ${offers.length ? "grid-cols-2" : "grid-cols-1"}`}
+                    >
+                      <Button asChild variant="ghost" className="rounded-xl font-bold">
+                        <Link to="/programs/$programSlug" params={{ programSlug: program.slug }}>
+                          View course
+                        </Link>
+                      </Button>
+                      {offers.length ? (
+                        <Button
+                          asChild
+                          className="rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
+                        >
+                          <Link to="/compare" search={{ program: program.slug }}>
+                            Compare universities
                           </Link>
                         </Button>
-                        {bestOffer ? (
-                          <Button
-                            asChild
-                            className="rounded-xl bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
-                          >
-                            <Link to="/compare">Compare sourced options</Link>
-                          </Button>
-                        ) : null}
-                      </div>
-                    </article>
-                  ),
-                )}
+                      ) : null}
+                    </div>
+                  </article>
+                ))}
               </CompactRail>
 
               <div className="mt-6 flex flex-col items-start justify-between gap-5 rounded-xl bg-[#131720] p-5 text-white sm:flex-row sm:items-center sm:p-6">
@@ -664,9 +521,9 @@ function DegreeFinderPage() {
                     <UserRoundSearch className="h-4 w-4" /> Optional human check
                   </p>
                   <h2 className="mt-2 font-display text-2xl font-extrabold">
-                    Want a counsellor to review these matches?
+                    Want a counsellor to review this shortlist?
                   </h2>
-                  <p className="mt-2 text-sm text-white/60">
+                  <p className="mt-2 text-sm text-white/85">
                     Share your details only when you’re ready. Guidance remains free.
                   </p>
                 </div>

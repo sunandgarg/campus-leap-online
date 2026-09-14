@@ -1,7 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  BookOpenCheck,
+  Building2,
   ChevronDown,
   GitCompareArrows,
   GraduationCap,
@@ -9,26 +10,61 @@ import {
   Moon,
   Search,
   ShieldCheck,
+  Sparkles,
   Sun,
+  Target,
   X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState, type RefObject } from "react";
+
 import { BrandLogo } from "@/components/site/brand-logo";
 import { UniversityLogo } from "@/components/site/university-logo";
+import { Button } from "@/components/ui/button";
 import { programCatalog, universities } from "@/data/universities";
 import { useComparison } from "@/hooks/use-comparison";
+
+type DesktopMenu = "programs" | "universities" | "tools" | null;
 
 const navLinks = [
   { to: "/specialisations", label: "Specialisations" },
   { to: "/about", label: "About" },
 ] as const;
 
-type DesktopMenu = "programs" | "universities" | "tools" | null;
+const toolLinks = [
+  {
+    to: "/finder" as const,
+    title: "Course finder",
+    description: "Get a useful starting shortlist",
+    icon: Target,
+  },
+  {
+    to: "/compare" as const,
+    title: "Compare universities",
+    description: "Keep up to three options together",
+    icon: GitCompareArrows,
+  },
+  {
+    to: "/search" as const,
+    title: "Search everything",
+    description: "Courses, universities and topics",
+    icon: Search,
+  },
+  {
+    to: "/methodology" as const,
+    title: "Before-you-pay check",
+    description: "Know what to confirm before applying",
+    icon: ShieldCheck,
+  },
+] as const;
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const [desktopMenu, setDesktopMenu] = useState<DesktopMenu>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobilePanelRef = useRef<HTMLDivElement>(null);
+  const desktopPanelRef = useRef<HTMLDivElement>(null);
+  const navigationReturnFocusRef = useRef<HTMLElement | null>(null);
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const comparison = useComparison();
 
@@ -39,16 +75,39 @@ export function SiteHeader() {
   useEffect(() => {
     setOpen(false);
     setDesktopMenu(null);
+    navigationReturnFocusRef.current = null;
   }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const frame = window.requestAnimationFrame(() => {
+      mobilePanelRef.current
+        ?.querySelector<HTMLElement>("a[href], button:not([disabled])")
+        ?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open]);
+
+  useEffect(() => {
+    if (!desktopMenu) return;
+    const frame = window.requestAnimationFrame(() => {
+      desktopPanelRef.current
+        ?.querySelector<HTMLElement>("a[href], button:not([disabled])")
+        ?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [desktopMenu]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        const returnTarget = navigationReturnFocusRef.current;
         setOpen(false);
         setDesktopMenu(null);
+        navigationReturnFocusRef.current = null;
+        window.requestAnimationFrame(() => returnTarget?.focus());
       }
     }
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
@@ -59,7 +118,7 @@ export function SiteHeader() {
     try {
       window.localStorage.setItem("dekhocampus-theme", nextDark ? "dark" : "light");
     } catch {
-      // Theme switching still works when storage is unavailable.
+      // The theme still changes when browser storage is unavailable.
     }
     setDark(nextDark);
   }
@@ -67,6 +126,33 @@ export function SiteHeader() {
   function closeNavigation() {
     setOpen(false);
     setDesktopMenu(null);
+    navigationReturnFocusRef.current = null;
+  }
+
+  function toggleMobileNavigation() {
+    if (open) {
+      setOpen(false);
+      navigationReturnFocusRef.current = null;
+      window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+      return;
+    }
+
+    navigationReturnFocusRef.current = mobileMenuButtonRef.current;
+    setDesktopMenu(null);
+    setOpen(true);
+  }
+
+  function toggleDesktopNavigation(menu: Exclude<DesktopMenu, null>, trigger: HTMLButtonElement) {
+    if (desktopMenu === menu) {
+      setDesktopMenu(null);
+      navigationReturnFocusRef.current = null;
+      window.requestAnimationFrame(() => trigger.focus());
+      return;
+    }
+
+    navigationReturnFocusRef.current = trigger;
+    setOpen(false);
+    setDesktopMenu(menu);
   }
 
   const groupedPrograms = ["Masters", "Bachelors", "Diploma", "Certificate"].map((level) => ({
@@ -75,62 +161,53 @@ export function SiteHeader() {
   }));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background">
-      <div className="container-page relative flex h-16 items-center justify-between gap-4">
-        <Link
-          to="/"
-          aria-label="DekhoCampus home"
-          className="flex h-11 shrink-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          onClick={closeNavigation}
-        >
-          <BrandLogo size="md" />
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+      <div className="container-page relative flex h-14 items-center justify-between gap-2 sm:h-16">
+        <div className="flex min-w-0 items-center gap-1.5 lg:gap-0">
+          <button
+            ref={mobileMenuButtonRef}
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation-panel"
+            onClick={toggleMobileNavigation}
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-secondary lg:hidden"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+          <Link
+            to="/"
+            aria-label="DekhoCampus home"
+            onClick={closeNavigation}
+            className="flex h-11 min-w-0 items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <BrandLogo size="sm" className="sm:hidden" />
+            <BrandLogo size="md" className="hidden sm:inline-flex" />
+          </Link>
+        </div>
 
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
-          <button
-            type="button"
-            aria-expanded={desktopMenu === "programs"}
-            aria-controls="desktop-navigation-panel"
-            onClick={() => setDesktopMenu((menu) => (menu === "programs" ? null : "programs"))}
-            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Courses
-            <ChevronDown
-              className={`h-3.5 w-3.5 transition ${desktopMenu === "programs" ? "rotate-180" : ""}`}
-            />
-          </button>
-          <button
-            type="button"
-            aria-expanded={desktopMenu === "universities"}
-            aria-controls="desktop-navigation-panel"
-            onClick={() =>
-              setDesktopMenu((menu) => (menu === "universities" ? null : "universities"))
-            }
-            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Universities
-            <ChevronDown
-              className={`h-3.5 w-3.5 transition ${desktopMenu === "universities" ? "rotate-180" : ""}`}
-            />
-          </button>
-          <button
-            type="button"
-            aria-expanded={desktopMenu === "tools"}
-            aria-controls="desktop-navigation-panel"
-            onClick={() => setDesktopMenu((menu) => (menu === "tools" ? null : "tools"))}
-            className="inline-flex h-11 items-center gap-1 rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Tools
-            <ChevronDown
-              className={`h-3.5 w-3.5 transition ${desktopMenu === "tools" ? "rotate-180" : ""}`}
-            />
-          </button>
+        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
+          <DesktopMenuButton
+            label="Courses"
+            open={desktopMenu === "programs"}
+            onClick={(trigger) => toggleDesktopNavigation("programs", trigger)}
+          />
+          <DesktopMenuButton
+            label="Universities"
+            open={desktopMenu === "universities"}
+            onClick={(trigger) => toggleDesktopNavigation("universities", trigger)}
+          />
+          <DesktopMenuButton
+            label="Tools"
+            open={desktopMenu === "tools"}
+            onClick={(trigger) => toggleDesktopNavigation("tools", trigger)}
+          />
           {navLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
               onClick={() => setDesktopMenu(null)}
-              className="inline-flex h-11 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              className="inline-flex h-11 items-center rounded-xl px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               activeProps={{ className: "bg-secondary text-foreground" }}
             >
               {link.label}
@@ -138,367 +215,167 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 xl:flex">
-          <Link
-            to="/search"
-            search={{ q: "" }}
-            aria-label="Search courses and universities"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
-          >
-            <Search className="h-4 w-4" />
-          </Link>
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <Link
             to="/compare"
-            aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
+            aria-label={`Compare universities${comparison.count ? `, ${comparison.count} selected` : ""}`}
+            className="relative inline-flex h-10 items-center gap-1.5 rounded-full border border-[#c8d5f8] bg-[#edf2ff] px-3 text-[11px] font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:border-[#41547d] dark:bg-[#263653] dark:text-[#b9ceff] sm:h-11 sm:text-xs lg:hidden"
           >
-            <GitCompareArrows className="h-4 w-4" />
+            <GitCompareArrows className="h-4 w-4" aria-hidden="true" />
+            <span>Compare</span>
             {comparison.count > 0 ? (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold text-primary-foreground">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#325dd2] px-1 text-[9px] text-white">
                 {comparison.count}
               </span>
             ) : null}
           </Link>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-            title={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-secondary"
-          >
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          <Button
-            asChild
-            className="h-11 min-w-0 rounded-lg border border-[#C86620] bg-[#F47B25] px-4 font-extrabold text-[#111827] hover:bg-[#E56E1E] dark:border-[#FF9A50] dark:bg-[#FF9A50] dark:text-[#16100B] dark:hover:bg-[#FFAA6D]"
-          >
-            <Link to="/contact">Talk to a counsellor</Link>
-          </Button>
-        </div>
 
-        <div className="flex items-center gap-2 xl:hidden">
-          <Link
-            to="/compare"
-            aria-label={`Open comparison${comparison.count ? ` with ${comparison.count} selected` : ""}`}
-            className="relative hidden h-11 w-11 items-center justify-center rounded-lg border border-border bg-background sm:inline-flex"
-          >
-            <GitCompareArrows className="h-4 w-4" />
-            {comparison.count > 0 ? (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold text-primary-foreground">
-                {comparison.count}
-              </span>
-            ) : null}
-          </Link>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background"
-          >
-            {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          <button
-            type="button"
-            aria-label="Toggle menu"
-            aria-expanded={open}
-            onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-background"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="hidden items-center gap-2 lg:flex">
+            <Link
+              to="/search"
+              search={{ q: "" }}
+              aria-label="Search courses and universities"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-foreground transition-colors hover:bg-secondary"
+            >
+              <Search className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/compare"
+              aria-label={`Compare universities${comparison.count ? `, ${comparison.count} selected` : ""}`}
+              className="relative inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-extrabold text-foreground transition-colors hover:bg-secondary"
+            >
+              <GitCompareArrows className="h-4 w-4" />
+              Compare
+              {comparison.count > 0 ? (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#325dd2] px-1 text-[9px] text-white">
+                  {comparison.count}
+                </span>
+              ) : null}
+            </Link>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+              title={dark ? "Switch to light theme" : "Switch to dark theme"}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-foreground transition-colors hover:bg-secondary"
+            >
+              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            <Button
+              asChild
+              className="h-11 rounded-xl bg-[#f47b25] px-4 font-extrabold text-[#111827] hover:bg-[#e56e1e]"
+            >
+              <Link to="/contact">Talk to a counsellor</Link>
+            </Button>
+          </div>
         </div>
 
         {desktopMenu ? (
-          <div
-            id="desktop-navigation-panel"
-            className="absolute left-5 right-5 top-full hidden overflow-hidden rounded-b-xl border border-border bg-popover xl:block md:left-8 md:right-8"
-          >
-            {desktopMenu === "programs" ? (
-              <div className="grid grid-cols-[0.76fr_2.24fr]">
-                <div className="border-r border-border bg-surface p-7 text-foreground">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <GraduationCap className="h-5 w-5" />
-                  </span>
-                  <p className="mt-5 font-display text-xl font-extrabold tracking-[-0.04em]">
-                    Explore online courses
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Explore by qualification, then compare fees, eligibility and universities.
-                  </p>
-                  <Link
-                    to="/programs"
-                    onClick={closeNavigation}
-                    className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
-                  >
-                    See all courses <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-4 gap-6 p-7">
-                  {groupedPrograms.map((group) => (
-                    <div key={group.level}>
-                      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
-                        {group.level}
-                      </p>
-                      <div className="mt-3 space-y-1">
-                        {group.programs.length ? (
-                          group.programs.map((program) => (
-                            <Link
-                              key={program.slug}
-                              to="/programs/$programSlug"
-                              params={{ programSlug: program.slug }}
-                              onClick={closeNavigation}
-                              className="flex min-h-11 items-center rounded-lg px-2 text-sm font-bold transition-colors hover:bg-secondary hover:text-primary"
-                            >
-                              <span className="mr-2 text-[#A94300] dark:text-[#FFAA6D]">
-                                {program.code}
-                              </span>
-                              <span className="text-xs font-medium text-muted-foreground">
-                                {program.durationYears} yr
-                              </span>
-                            </Link>
-                          ))
-                        ) : (
-                          <p className="flex min-h-11 items-center px-2 text-xs text-muted-foreground">
-                            Coming soon
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : desktopMenu === "universities" ? (
-              <div className="p-7">
-                <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
-                  <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#A94300] dark:text-[#FFAA6D]">
-                      University directory
-                    </p>
-                    <p className="mt-1 font-display text-xl font-extrabold tracking-[-0.035em]">
-                      Browse online universities
-                    </p>
-                  </div>
-                  <Link
-                    to="/universities"
-                    onClick={closeNavigation}
-                    className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
-                  >
-                    View all <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-3 gap-2 pt-5">
-                  {universities.slice(0, 9).map((university) => (
-                    <Link
-                      key={university.slug}
-                      to="/universities/$universitySlug"
-                      params={{ universitySlug: university.slug }}
-                      onClick={closeNavigation}
-                      className="flex min-h-14 items-center gap-3 rounded-lg border border-transparent p-3 transition-colors hover:border-border hover:bg-secondary"
-                    >
-                      <UniversityLogo university={university} size="sm" />
-                      <span className="min-w-0">
-                        <span className="block text-sm font-extrabold">{university.shortName}</span>
-                        <span className="mt-0.5 flex items-center gap-1 text-[10px] text-muted-foreground">
-                          <ShieldCheck className="h-3 w-3" />
-                          {university.profileDepth === "directory"
-                            ? "Directory record"
-                            : "Reviewed profile"}
-                        </span>
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-[0.76fr_2.24fr]">
-                <div className="border-r border-border bg-surface p-7 text-foreground">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#325dd2] text-white">
-                    <ShieldCheck className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <p className="mt-5 font-display text-xl font-extrabold tracking-[-0.04em]">
-                    Decide with clarity
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Shortlist privately, compare cited facts and verify the exact intake before you
-                    enquire.
-                  </p>
-                  <Link
-                    to="/methodology"
-                    onClick={closeNavigation}
-                    className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary hover:underline"
-                  >
-                    How our evidence works <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-2 gap-3 p-7">
-                  <Link
-                    to="/finder"
-                    onClick={closeNavigation}
-                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#8db8e8] hover:bg-secondary"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653]">
-                      <GraduationCap className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-extrabold">Course finder</span>
-                      <span className="mt-1 block text-xs text-muted-foreground">
-                        Get an ungated shortlist
-                      </span>
-                    </span>
-                  </Link>
-                  <Link
-                    to="/compare"
-                    onClick={closeNavigation}
-                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#8db8e8] hover:bg-secondary"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653]">
-                      <GitCompareArrows className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-extrabold">Compare options</span>
-                      <span className="mt-1 block text-xs text-muted-foreground">
-                        Review up to three records
-                      </span>
-                    </span>
-                  </Link>
-                  <Link
-                    to="/search"
-                    search={{ q: "" }}
-                    onClick={closeNavigation}
-                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 transition-colors hover:border-[#edaa79] hover:bg-secondary"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]">
-                      <Search className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-extrabold">Search catalogue</span>
-                      <span className="mt-1 block text-xs text-muted-foreground">
-                        Courses, universities and topics
-                      </span>
-                    </span>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      closeNavigation();
-                      window.dispatchEvent(new Event("dekhocampus:open-diya"));
-                    }}
-                    className="flex min-h-20 items-center gap-4 rounded-lg border border-border p-4 text-left transition-colors hover:border-[#edaa79] hover:bg-secondary"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
-                      <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-9 w-9" />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-extrabold">Ask Diya</span>
-                      <span className="mt-1 block text-xs text-muted-foreground">
-                        Navigate the catalogue in plain language
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          <DesktopPanel
+            panelRef={desktopPanelRef}
+            menu={desktopMenu}
+            groupedPrograms={groupedPrograms}
+            onNavigate={closeNavigation}
+          />
         ) : null}
       </div>
 
       {open ? (
-        <div className="container-page overflow-hidden border-t border-border bg-background xl:hidden">
-          <div className="flex max-h-[calc(100vh-7rem)] flex-col gap-1 overflow-y-auto p-4">
+        <div
+          ref={mobilePanelRef}
+          id="mobile-navigation-panel"
+          tabIndex={-1}
+          aria-label="Mobile navigation menu"
+          className="border-t border-border bg-background lg:hidden"
+        >
+          <div className="container-page max-h-[calc(100dvh-3.5rem)] overflow-y-auto pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-3 sm:max-h-[calc(100dvh-4rem)]">
             <Link
               to="/search"
               search={{ q: "" }}
               onClick={closeNavigation}
-              className="mb-2 flex min-h-11 items-center gap-3 rounded-lg border border-border bg-card px-3 text-sm font-bold text-foreground"
+              className="flex min-h-12 items-center gap-3 rounded-xl border border-border bg-card px-3 text-sm font-bold shadow-card"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-primary">
-                <Search className="h-4 w-4" />
-              </span>
+              <Search className="h-5 w-5 text-[#325dd2]" />
               Search courses and universities
             </Link>
-            <button
-              type="button"
-              onClick={() => {
-                closeNavigation();
-                window.dispatchEvent(new Event("dekhocampus:open-diya"));
-              }}
-              className="mb-2 flex min-h-11 items-center gap-3 rounded-lg border border-border bg-card px-3 text-left text-sm font-bold text-foreground"
-            >
-              <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#325dd2] p-0.5">
-                <img src="/diya-ai.webp" alt="" width={90} height={96} className="h-7 w-7" />
-              </span>
-              Ask Diya AI
-            </button>
-            <p className="px-3 pt-1 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {[
+                { to: "/programs" as const, label: "Courses", icon: BookOpenCheck },
+                { to: "/universities" as const, label: "Universities", icon: Building2 },
+                { to: "/finder" as const, label: "Find my fit", icon: Sparkles },
+                { to: "/compare" as const, label: "Compare", icon: GitCompareArrows },
+              ].map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={closeNavigation}
+                  className="flex min-h-14 items-center gap-2.5 rounded-xl bg-secondary px-3 text-sm font-extrabold"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-card text-[#325dd2]">
+                    <item.icon className="h-4 w-4" />
+                  </span>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <p className="mt-5 px-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">
               Popular courses
             </p>
-            <Link
-              to="/programs"
-              onClick={closeNavigation}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-foreground hover:bg-secondary"
-            >
-              All online courses
-            </Link>
-            <div className="grid grid-cols-2 gap-2 px-3 pb-3">
-              {programCatalog.slice(0, 6).map((program) => (
+            <div className="mt-2 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {programCatalog.slice(0, 8).map((program) => (
                 <Link
                   key={program.slug}
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   onClick={closeNavigation}
-                  className="flex min-h-11 items-center rounded-lg bg-secondary px-3 text-xs font-bold"
+                  className="inline-flex min-h-11 shrink-0 items-center rounded-full border border-border bg-card px-4 text-xs font-extrabold"
                 >
-                  {program.code}
+                  Online {program.code}
                 </Link>
               ))}
             </div>
-            <Link
-              to="/universities"
-              onClick={closeNavigation}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-foreground hover:bg-secondary"
-            >
-              Universities
-            </Link>
-            <p className="mt-2 px-3 pt-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
-              Decision tools
-            </p>
-            <Link
-              to="/finder"
-              onClick={closeNavigation}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
-            >
-              Find my course
-            </Link>
-            <Link
-              to="/compare"
-              onClick={closeNavigation}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
-            >
-              Compare universities
-            </Link>
-            <Link
-              to="/methodology"
-              onClick={closeNavigation}
-              className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
-            >
-              How we verify
-            </Link>
-            <p className="mt-2 px-3 pt-2 text-[9px] font-extrabold uppercase tracking-[0.16em] text-muted-foreground">
-              More
-            </p>
-            {navLinks.map((link) => (
+
+            <div className="mt-4 divide-y divide-border rounded-xl border border-border bg-card px-3">
               <Link
-                key={link.to}
-                to={link.to}
+                to="/specialisations"
                 onClick={closeNavigation}
-                className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-foreground hover:bg-secondary"
+                className="flex min-h-12 items-center justify-between text-sm font-bold"
               >
-                {link.label}
+                Explore specialisations <ArrowRight className="h-4 w-4 text-muted-foreground" />
               </Link>
-            ))}
+              <Link
+                to="/methodology"
+                onClick={closeNavigation}
+                className="flex min-h-12 items-center justify-between text-sm font-bold"
+              >
+                What to check before paying <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+              <Link
+                to="/about"
+                onClick={closeNavigation}
+                className="flex min-h-12 items-center justify-between text-sm font-bold"
+              >
+                About DekhoCampus <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </Link>
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex min-h-12 w-full items-center justify-between text-left text-sm font-bold"
+              >
+                {dark ? "Use light theme" : "Use dark theme"}
+                {dark ? (
+                  <Sun className="h-4 w-4 text-muted-foreground" />
+                ) : (
+                  <Moon className="h-4 w-4 text-muted-foreground" />
+                )}
+              </button>
+            </div>
+
             <Button
               asChild
-              className="mt-2 h-11 w-full rounded-lg border border-[#C86620] bg-[#F47B25] font-extrabold text-[#111827] hover:bg-[#E56E1E] dark:border-[#FF9A50] dark:bg-[#FF9A50] dark:text-[#16100B] dark:hover:bg-[#FFAA6D]"
+              className="mt-3 min-h-12 w-full bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#e56e1e]"
             >
               <Link to="/contact" onClick={closeNavigation}>
                 Talk to a counsellor
@@ -508,5 +385,196 @@ export function SiteHeader() {
         </div>
       ) : null}
     </header>
+  );
+}
+
+function DesktopMenuButton({
+  label,
+  open,
+  onClick,
+}: {
+  label: string;
+  open: boolean;
+  onClick: (trigger: HTMLButtonElement) => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-controls="desktop-navigation-panel"
+      onClick={(event) => onClick(event.currentTarget)}
+      className="inline-flex h-11 items-center gap-1 rounded-xl px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+    >
+      {label}
+      <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+    </button>
+  );
+}
+
+function DesktopPanel({
+  panelRef,
+  menu,
+  groupedPrograms,
+  onNavigate,
+}: {
+  panelRef: RefObject<HTMLDivElement | null>;
+  menu: Exclude<DesktopMenu, null>;
+  groupedPrograms: { level: string; programs: typeof programCatalog }[];
+  onNavigate: () => void;
+}) {
+  return (
+    <div
+      ref={panelRef}
+      id="desktop-navigation-panel"
+      tabIndex={-1}
+      aria-label={`${menu} navigation`}
+      className="absolute left-5 right-5 top-full hidden overflow-hidden rounded-b-2xl border border-border bg-popover shadow-lift lg:block md:left-8 md:right-8"
+    >
+      {menu === "programs" ? (
+        <div className="grid grid-cols-[0.7fr_2.3fr]">
+          <MenuIntro
+            icon={GraduationCap}
+            title="Find your online course"
+            description="Browse by qualification and open any course for university options."
+            to="/programs"
+            linkLabel="See all courses"
+            onNavigate={onNavigate}
+          />
+          <div className="grid grid-cols-4 gap-5 p-6">
+            {groupedPrograms.map((group) => (
+              <div key={group.level}>
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-muted-foreground">
+                  {group.level}
+                </p>
+                <div className="mt-2 space-y-0.5">
+                  {group.programs.length ? (
+                    group.programs.map((program) => (
+                      <Link
+                        key={program.slug}
+                        to="/programs/$programSlug"
+                        params={{ programSlug: program.slug }}
+                        onClick={onNavigate}
+                        className="flex min-h-10 items-center justify-between rounded-lg px-2 text-sm font-bold transition-colors hover:bg-secondary hover:text-[#2449ad] dark:hover:text-[#8cb0ff]"
+                      >
+                        <span>Online {program.code}</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground">
+                          {program.durationYears} yr
+                        </span>
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="flex min-h-10 items-center px-2 text-xs text-muted-foreground">
+                      Coming soon
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : menu === "universities" ? (
+        <div className="grid grid-cols-[0.7fr_2.3fr]">
+          <MenuIntro
+            icon={Building2}
+            title="Explore universities"
+            description="Start with popular profiles or open the complete university directory."
+            to="/universities"
+            linkLabel="View all universities"
+            onNavigate={onNavigate}
+          />
+          <div className="grid grid-cols-3 gap-2 p-6">
+            {universities.slice(0, 9).map((university) => (
+              <Link
+                key={university.slug}
+                to="/universities/$universitySlug"
+                params={{ universitySlug: university.slug }}
+                onClick={onNavigate}
+                className="flex min-h-16 items-center gap-3 rounded-xl border border-transparent p-3 transition-colors hover:border-border hover:bg-secondary"
+              >
+                <UniversityLogo
+                  university={university}
+                  size="sm"
+                  className="h-10 w-14 rounded-lg bg-white"
+                />
+                <span className="min-w-0">
+                  <span className="line-clamp-1 block text-sm font-extrabold">
+                    {university.shortName}
+                  </span>
+                  <span className="mt-0.5 block text-[10px] font-semibold text-muted-foreground">
+                    {university.state || "India"}
+                    {university.programs.length ? ` · ${university.programs.length} courses` : ""}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-[0.7fr_2.3fr]">
+          <MenuIntro
+            icon={Sparkles}
+            title="Make a clearer choice"
+            description="Use practical tools to find, compare and confirm your options."
+            to="/finder"
+            linkLabel="Start course finder"
+            onNavigate={onNavigate}
+          />
+          <div className="grid grid-cols-2 gap-3 p-6">
+            {toolLinks.map((tool) => (
+              <Link
+                key={tool.title}
+                to={tool.to}
+                {...(tool.to === "/search" ? { search: { q: "" } } : {})}
+                onClick={onNavigate}
+                className="flex min-h-20 items-center gap-4 rounded-xl border border-border p-4 transition-colors hover:border-[#86a2e8] hover:bg-secondary"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653]">
+                  <tool.icon className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block text-sm font-extrabold">{tool.title}</span>
+                  <span className="mt-1 block text-xs text-muted-foreground">
+                    {tool.description}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuIntro({
+  icon: Icon,
+  title,
+  description,
+  to,
+  linkLabel,
+  onNavigate,
+}: {
+  icon: typeof GraduationCap;
+  title: string;
+  description: string;
+  to: "/programs" | "/universities" | "/finder";
+  linkLabel: string;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="border-r border-border bg-surface p-6">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#325dd2] text-white">
+        <Icon className="h-5 w-5" />
+      </span>
+      <p className="mt-4 font-display text-xl font-extrabold tracking-[-0.04em]">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+      <Link
+        to={to}
+        onClick={onNavigate}
+        className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#2449ad] hover:underline dark:text-[#8cb0ff]"
+      >
+        {linkLabel} <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
   );
 }
