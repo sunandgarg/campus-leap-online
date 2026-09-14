@@ -373,35 +373,39 @@ export function HomePage() {
           title="What do you want to study?"
           description="Start with a broad career area. You can narrow the course and university later."
         />
-        <CompactRail label="Study areas" columns={4}>
-          {studyAreas.map((area, index) => (
+        <CompactRail
+          label="Study areas"
+          columns={4}
+          railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+        >
+          {studyAreas.map((area) => (
             <Link
               key={area.title}
               to="/search"
               search={{ q: area.codes[0] }}
-              className="brand-card brand-card-interactive group flex h-full min-h-44 flex-col p-4"
+              className="brand-card brand-card-interactive group flex min-h-[8.5rem] items-stretch"
             >
-              <span className="absolute inset-x-0 top-0 h-1 bg-[#325dd2]" aria-hidden="true" />
-              <div className="flex items-start justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#325dd2] text-white">
-                  <area.icon className="h-4 w-4" aria-hidden="true" />
+              <span className="absolute inset-y-0 left-0 w-1 bg-[#325dd2]" aria-hidden="true" />
+              <div className="flex w-full gap-3.5 p-4 pl-5">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
+                  <area.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <span className="font-display text-2xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
-                  {String(index + 1).padStart(2, "0")}
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <h3 className="font-display text-[0.95rem] font-extrabold leading-5 tracking-[-0.02em]">
+                    {area.title}
+                  </h3>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
+                    {area.description}
+                  </p>
+                  <span className="mt-auto flex items-center gap-1.5 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                    Explore {area.codes.join(" · ")}
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </span>
               </div>
-              <h3 className="mt-3 font-display text-base font-bold tracking-[-0.025em]">
-                {area.title}
-              </h3>
-              <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">
-                {area.description}
-              </p>
-              <span className="mt-3 flex items-center justify-between border-t border-border pt-2.5 text-[11px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
-                {area.codes.join(" · ")}
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#edf2ff] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653]">
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </span>
-              </span>
             </Link>
           ))}
         </CompactRail>
@@ -415,33 +419,50 @@ export function HomePage() {
             description="Two rows keep the page compact. Each card opens that university-course record so you can inspect its evidence status."
             action={<TextLink to="/programs" label="See every course" />}
           />
-          <CompactRail label="Online MBA and BBA university records" rows={2} columns={4}>
+          <CompactRail
+            label="Online MBA and BBA university records"
+            rows={2}
+            columns={4}
+            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          >
             {courseRecords.map(({ university, program }, index) => (
               <Link
                 key={university.slug + "-" + program.slug}
                 to="/universities/$universitySlug/$programSlug"
                 params={{ universitySlug: university.slug, programSlug: program.slug }}
-                className="brand-card brand-card-interactive group flex min-h-28 items-center gap-3 p-3"
+                className="brand-card brand-card-interactive group flex min-h-[7.75rem] items-stretch"
               >
-                <UniversityLogo
-                  university={university}
-                  size="md"
-                  priority={index < 4}
-                  className="h-14 w-18 rounded-lg bg-white"
-                />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#a94300] dark:text-[#ffad70]">
+                <span className="flex w-[5.5rem] shrink-0 items-center justify-center border-r border-border bg-[#f7f8fb] p-2.5 dark:bg-[#202632]">
+                  <UniversityLogo
+                    university={university}
+                    size="md"
+                    priority={index < 4}
+                    className="h-14 w-full rounded-lg bg-white"
+                  />
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col p-3.5">
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
+                      Course record
+                    </span>
+                    <span className="inline-flex shrink-0 items-center gap-1 text-[8px] font-bold uppercase tracking-[0.06em] text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#f47b25]" aria-hidden="true" />
+                      Check intake
+                    </span>
+                  </span>
+                  <span className="mt-1 block font-display text-base font-extrabold leading-5 tracking-[-0.02em]">
                     Online {program.code}
                   </span>
-                  <span className="mt-1 line-clamp-2 block font-display text-sm font-bold leading-4">
-                    {university.shortName}
+                  <span className="mt-0.5 line-clamp-1 block text-[11px] font-semibold text-muted-foreground">
+                    {university.shortName} · {program.name}
                   </span>
-                  <span className="mt-1.5 block text-[10px] leading-4 text-muted-foreground">
-                    View course record · confirm current intake
+                  <span className="mt-auto flex items-center justify-between pt-2 text-[10px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
+                    View details
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
                   </span>
-                </span>
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground transition-colors group-hover:bg-[#325dd2] group-hover:text-white">
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </span>
               </Link>
             ))}
@@ -490,37 +511,49 @@ export function HomePage() {
             description="Four compact cards stay visible on desktop. Swipe or use the arrows to continue."
             action={<TextLink to="/universities" label={"View all " + universities.length} />}
           />
-          <CompactRail label="Featured online university profiles" columns={4}>
+          <CompactRail
+            label="Featured online university profiles"
+            columns={4}
+            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          >
             {featuredUniversities.map((university, index) => (
               <Link
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="brand-card brand-card-interactive group flex min-h-40 flex-col p-3.5"
+                className="brand-card brand-card-interactive group flex min-h-[7.75rem] items-stretch"
               >
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex w-[5.5rem] shrink-0 items-center justify-center border-r border-border bg-[#f7f8fb] p-2.5 dark:bg-[#202632]">
                   <UniversityLogo
                     university={university}
                     size="md"
                     priority={index < 4}
-                    className="h-14 w-20 rounded-lg bg-white"
+                    className="h-14 w-full rounded-lg bg-white"
                   />
-                  <span className="rounded-md bg-secondary px-2 py-1 text-[9px] font-extrabold uppercase tracking-[0.08em] text-muted-foreground">
-                    {university.profileDepth === "directory" ? "Directory" : "Editorial"}
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col p-3.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
+                    {university.profileDepth === "directory"
+                      ? "Directory profile"
+                      : "Editorial profile"}
+                  </span>
+                  <h3 className="mt-1 line-clamp-2 font-display text-sm font-extrabold leading-[1.125rem] tracking-[-0.015em]">
+                    {university.shortName}
+                  </h3>
+                  <p className="mt-1 line-clamp-1 text-[10px] font-semibold text-muted-foreground">
+                    {university.state || "India"} ·{" "}
+                    {university.programs.length > 0
+                      ? String(university.programs.length) + " course records"
+                      : "Profile available"}
+                  </p>
+                  <span className="mt-auto flex items-center justify-between pt-2 text-[10px] font-bold text-[#2449ad] dark:text-[#8cb0ff]">
+                    Explore profile
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
                   </span>
                 </div>
-                <h3 className="mt-3 line-clamp-2 font-display text-base font-bold leading-5">
-                  {university.shortName}
-                </h3>
-                <p className="mt-1 line-clamp-1 text-[11px] text-muted-foreground">
-                  {university.state || "India"}
-                </p>
-                <span className="mt-auto flex items-center justify-between pt-3 text-[11px] font-bold text-muted-foreground">
-                  {university.programs.length > 0
-                    ? String(university.programs.length) + " course records"
-                    : "Profile available"}
-                  <ArrowRight className="h-4 w-4 group-hover:text-[#325dd2]" aria-hidden="true" />
-                </span>
               </Link>
             ))}
           </CompactRail>
@@ -567,18 +600,23 @@ export function HomePage() {
             title="Build a schedule you can sustain."
             description="Online does not mean effortless. Check the actual rhythm before you commit."
           />
-          <CompactRail label="Online learning schedule checks" columns={4} dark>
+          <CompactRail
+            label="Online learning schedule checks"
+            columns={4}
+            dark
+            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          >
             {scheduleCards.map((card) => (
               <article
                 key={card.title}
-                className="flex min-h-28 gap-3 rounded-xl border border-white/15 bg-[#1b202a] p-4"
+                className="flex min-h-[7.25rem] gap-3.5 rounded-xl border border-white/15 bg-[#1b202a] p-3.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f47b25] text-[#111827]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f47b25] text-[#111827]">
                   <card.icon className="h-4.5 w-4.5" aria-hidden="true" />
                 </span>
-                <div>
-                  <h3 className="font-display text-base font-bold">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/70">{card.description}</p>
+                <div className="min-w-0">
+                  <h3 className="font-display text-sm font-extrabold leading-5">{card.title}</h3>
+                  <p className="mt-1.5 text-xs leading-5 text-white/70">{card.description}</p>
                 </div>
               </article>
             ))}
@@ -610,20 +648,27 @@ export function HomePage() {
           title="The DekhoCampus catalogue, clearly explained"
           description="Counts describe this catalogue. They are not rankings, approval claims or outcome guarantees."
         />
-        <CompactRail label="Catalogue coverage statistics" columns={4}>
+        <CompactRail
+          label="Catalogue coverage statistics"
+          columns={4}
+          railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+        >
           {catalogueStats.map((stat) => (
             <article
               key={stat.label}
-              className="brand-card min-h-32 border-t-4 border-t-[#f47b25] p-4"
+              className="brand-card flex min-h-24 items-center gap-3.5 border-l-4 border-l-[#f47b25] p-4"
             >
-              <stat.icon
-                className="h-5 w-5 text-[#a94300] dark:text-[#ffad70]"
-                aria-hidden="true"
-              />
-              <p className="mt-3 font-display text-3xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
-                {stat.value}
-              </p>
-              <p className="mt-1.5 text-xs font-bold text-muted-foreground">{stat.label}</p>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fff0e5] text-[#a94300] dark:bg-[#4a2a1b] dark:text-[#ffad70]">
+                <stat.icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="min-w-0">
+                <span className="block font-display text-2xl font-extrabold tracking-[-0.04em] text-[#325dd2] dark:text-[#8cb0ff]">
+                  {stat.value}
+                </span>
+                <span className="mt-0.5 block text-[11px] font-bold leading-4 text-muted-foreground">
+                  {stat.label}
+                </span>
+              </span>
             </article>
           ))}
         </CompactRail>
@@ -647,30 +692,37 @@ export function HomePage() {
             title="Practical guides for you and your family"
             description="Short, practical tools for making the decision together."
           />
-          <CompactRail label="Online degree decision guides" columns={4}>
-            {guides.map((guide, index) => (
+          <CompactRail
+            label="Online degree decision guides"
+            columns={4}
+            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[minmax(17rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          >
+            {guides.map((guide) => (
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="brand-card brand-card-interactive group flex min-h-48 flex-col p-4"
+                className="brand-card brand-card-interactive group flex min-h-[8.75rem] gap-3.5 p-4"
               >
-                <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#325dd2] text-white">
-                    <guide.icon className="h-4 w-4" aria-hidden="true" />
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#325dd2] text-white">
+                  <guide.icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <span className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#a94300] dark:text-[#ffad70]">
+                    {guide.meta}
                   </span>
-                  <span className="font-display text-2xl font-extrabold text-[#dfe5f4] dark:text-[#3d475a]">
-                    {String(index + 1).padStart(2, "0")}
+                  <span className="mt-1 block font-display text-sm font-extrabold leading-5 tracking-[-0.02em]">
+                    {guide.title}
                   </span>
-                </div>
-                <p className="brand-kicker mt-3">{guide.meta}</p>
-                <h3 className="mt-1.5 font-display text-base font-bold tracking-[-0.025em]">
-                  {guide.title}
-                </h3>
-                <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">
-                  {guide.description}
-                </p>
-                <span className="mt-3 flex items-center gap-2 border-t border-border pt-2.5 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
-                  Open guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <span className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
+                    {guide.description}
+                  </span>
+                  <span className="mt-auto flex items-center gap-1.5 pt-2 text-[10px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
+                    Open guide
+                    <ArrowRight
+                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </span>
               </Link>
             ))}

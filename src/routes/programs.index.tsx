@@ -131,7 +131,12 @@ function ProgramsPage() {
         </div>
 
         {programs.length > 0 ? (
-          <CompactRail label="Filtered online course guides" rows={2} columns={4}>
+          <CompactRail
+            label="Filtered online course guides"
+            rows={2}
+            columns={3}
+            railClassName="auto-cols-[92%] sm:auto-cols-[minmax(20rem,48%)] lg:auto-cols-[calc((100%-2rem)/3)]"
+          >
             {programs.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
               const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
@@ -145,105 +150,100 @@ function ProgramsPage() {
               return (
                 <article
                   key={program.slug}
-                  className="group flex min-h-[19rem] flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-[#325dd2]"
+                  className="group relative flex h-44 flex-col overflow-hidden rounded-[1.25rem] border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-lift focus-within:border-[#325dd2]"
                 >
-                  <div className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap gap-1.5">
-                          <span className="rounded-full bg-[#edf5ff] px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
-                            {program.level}
-                          </span>
-                          <span className="rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                            {program.durationYears} years
-                          </span>
-                        </div>
-                        <p className="mt-3 text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#a94300] dark:text-[#ff9a5b]">
+                  <div className="h-1 shrink-0 bg-[#325dd2]" aria-hidden="true" />
+                  <div className="flex min-w-0 items-start gap-2.5 px-3 pt-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#131720] text-white dark:bg-[#325dd2]">
+                      <GraduationCap className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+                        <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#a94300] dark:text-[#ff9a5b]">
                           Online {program.code}
                         </p>
-                        <h2 className="mt-1 line-clamp-2 font-display text-lg font-extrabold leading-tight tracking-[-0.03em]">
-                          {program.name}
-                        </h2>
-                      </div>
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary text-[#1768cc] dark:text-[#78b9ff]">
-                        <GraduationCap className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                    </div>
-                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                      {program.overview}
-                    </p>
-
-                    <div className="mt-3 grid grid-cols-3 divide-x divide-border rounded-lg bg-secondary py-2.5 text-center">
-                      <div className="px-2">
-                        <p className="font-display text-sm font-extrabold">{offers.length}</p>
-                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
-                          Records
+                        <span
+                          className="hidden h-1 w-1 rounded-full bg-border sm:block"
+                          aria-hidden="true"
+                        />
+                        <p className="hidden truncate text-[10px] font-bold uppercase tracking-wide text-muted-foreground sm:block">
+                          {program.level}
                         </p>
+                        <span className="ml-auto inline-flex shrink-0 items-center gap-1 text-[10px] font-extrabold text-foreground">
+                          <Clock3 className="h-3 w-3 text-[#1768cc]" aria-hidden="true" />
+                          {program.durationYears} yr
+                        </span>
                       </div>
-                      <div className="px-2">
-                        <p className="font-display text-sm font-extrabold">
-                          {program.specialisations.length}
-                        </p>
-                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
-                          Pathways
-                        </p>
-                      </div>
-                      <div className="px-2">
-                        <p className="font-display text-sm font-extrabold">{program.semesters}</p>
-                        <p className="mt-0.5 text-[10px] font-bold text-muted-foreground">
-                          Semesters
-                        </p>
-                      </div>
+                      <h2 className="mt-1 line-clamp-2 font-display text-[0.95rem] font-extrabold leading-[1.16] tracking-[-0.025em] sm:text-base">
+                        {program.name}
+                      </h2>
                     </div>
                   </div>
 
-                  <div className="mt-auto grid grid-cols-2 border-y border-border bg-background">
-                    <div className="p-3">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                        Sourced fee from
-                      </p>
-                      <p className="mt-1 font-display text-sm font-extrabold">
-                        {lowest !== null ? formatINR(lowest) : "Confirm current fee"}
-                      </p>
+                  <dl className="mx-3 mt-2 grid grid-cols-3 divide-x divide-border rounded-xl bg-secondary px-1 py-1.5 text-center">
+                    <div className="flex flex-col px-1.5">
+                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
+                        Records
+                      </dt>
+                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
+                        {offers.length}
+                      </dd>
                     </div>
-                    <div className="border-l border-border p-3">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                        Published monthly from
-                      </p>
-                      <p className="mt-1 font-display text-sm font-extrabold text-[#1768cc] dark:text-[#78b9ff]">
-                        {lowestEmi !== null ? formatINR(lowestEmi) : "Not mapped"}
-                        {lowestEmi !== null ? (
-                          <span className="text-[10px] text-muted-foreground">/mo</span>
-                        ) : null}
-                      </p>
+                    <div className="flex flex-col px-1.5">
+                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
+                        Pathways
+                      </dt>
+                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
+                        {program.specialisations.length}
+                      </dd>
                     </div>
-                  </div>
+                    <div className="flex flex-col px-1.5">
+                      <dt className="order-2 mt-1 text-[10px] font-bold text-muted-foreground">
+                        Semesters
+                      </dt>
+                      <dd className="order-1 font-display text-xs font-extrabold leading-none">
+                        {program.semesters}
+                      </dd>
+                    </div>
+                  </dl>
 
-                  <div className="flex items-center justify-between gap-2 p-3">
-                    <div className="flex -space-x-2">
-                      {offers.slice(0, 3).map(({ university }) => (
+                  <div className="mt-auto flex min-w-0 items-center gap-2 border-t border-border px-3 py-2">
+                    <div className="flex shrink-0 -space-x-2" aria-label="Example universities">
+                      {offers.slice(0, 1).map(({ university }) => (
                         <span
                           key={university.slug}
                           title={university.shortName}
-                          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-card bg-white"
+                          className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-card bg-white"
                         >
-                          <UniversityLogo university={university} size="sm" />
+                          <UniversityLogo
+                            university={university}
+                            size="sm"
+                            className="h-8 w-8 rounded-full border-0"
+                          />
                         </span>
                       ))}
                     </div>
-                    <Button
-                      asChild
-                      size="sm"
-                      className="rounded-lg bg-[#1768cc] font-extrabold text-white hover:bg-[#0e57b2]"
-                    >
-                      <Link
-                        to="/programs/$programSlug"
-                        params={{ programSlug: program.slug }}
-                        aria-label={`View ${program.name} course details`}
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className="truncate font-display text-[11px] font-extrabold"
+                        title={lowest !== null ? `Sourced fee ${formatINR(lowest)}` : undefined}
                       >
-                        Details <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
-                      </Link>
-                    </Button>
+                        {lowest !== null ? `Sourced: ${formatINR(lowest)}` : "Confirm current fee"}
+                      </p>
+                      <p className="truncate text-[10px] font-semibold text-muted-foreground">
+                        {lowestEmi !== null
+                          ? `${formatINR(lowestEmi)}/month · published plan`
+                          : "Verify before applying"}
+                      </p>
+                    </div>
+                    <Link
+                      to="/programs/$programSlug"
+                      params={{ programSlug: program.slug }}
+                      aria-label={`View ${program.name} course details`}
+                      className="inline-flex h-8 shrink-0 items-center justify-center rounded-full bg-[#325dd2] px-2 text-[10px] font-extrabold text-white transition-colors hover:bg-[#2449ad] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2 sm:px-2.5 sm:text-[11px]"
+                    >
+                      Explore <ArrowRight className="ml-1 h-3.5 w-3.5" aria-hidden="true" />
+                    </Link>
                   </div>
                 </article>
               );

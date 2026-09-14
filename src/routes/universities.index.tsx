@@ -133,60 +133,95 @@ function UniversitiesPage() {
 
   return (
     <>
-      <section className="border-b border-border bg-[#131720] text-white">
-        <div className="container-page py-10 lg:py-12">
-          <p className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/85">
-            <ShieldCheck className="h-4 w-4" /> {universities.length} university profiles
-          </p>
-          <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.055em] sm:text-4xl lg:text-5xl">
-            Compare online universities with confidence.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70 sm:text-base">
-            Filter by course, location, research depth and source-backed fee when available.
-            Editorial and directory profiles clearly show what still needs intake-level
-            confirmation.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Button
-              asChild
-              className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
-            >
-              <Link to="/compare">
-                Open comparison <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-white/30 bg-transparent font-bold text-white hover:bg-white hover:text-[#131720]"
-            >
-              <Link to="/methodology">How we verify information</Link>
-            </Button>
+      <section className="border-b border-border bg-[#f6f8fc] dark:bg-[#121722]">
+        <div className="container-page py-8 lg:py-10">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+            <div>
+              <p className="inline-flex items-center gap-2 border-l-4 border-[#f47b25] pl-3 text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#2449ad] dark:text-[#b9ceff]">
+                <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Independent catalogue
+              </p>
+              <h1 className="mt-4 max-w-4xl font-display text-3xl font-extrabold tracking-[-0.05em] text-[#131720] dark:text-foreground sm:text-4xl lg:text-[2.75rem]">
+                Find an online university you can examine clearly.
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+                Start with the course and location that suit you. Every profile tells you whether
+                its information is editorial or from a historical directory source, so you know what
+                still needs current-intake confirmation.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 lg:justify-end">
+              <Button
+                asChild
+                className="bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12]"
+              >
+                <Link to="/compare">
+                  Compare universities <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="bg-card font-bold">
+                <Link to="/methodology">How we check data</Link>
+              </Button>
+            </div>
           </div>
+
+          <dl className="mt-6 flex flex-wrap gap-x-9 gap-y-3 border-t border-border pt-4">
+            <div>
+              <dt className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Profiles to explore
+              </dt>
+              <dd className="mt-1 font-display text-lg font-extrabold text-[#131720] dark:text-foreground">
+                {universities.length} universities
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Course categories
+              </dt>
+              <dd className="mt-1 font-display text-lg font-extrabold text-[#131720] dark:text-foreground">
+                {programCatalog.length} choices
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Before admission
+              </dt>
+              <dd className="mt-1 font-display text-sm font-extrabold text-[#131720] dark:text-foreground">
+                Verify university + course + mode + session
+              </dd>
+            </div>
+          </dl>
         </div>
       </section>
 
-      <section className="container-page py-8 lg:py-10">
-        <div className="rounded-xl border border-border bg-card p-3 shadow-card md:p-4">
-          <div className="mb-3 flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
-              <Search className="h-4 w-4" />
-            </span>
-            <div>
-              <h2 className="text-sm font-extrabold">Find a university that suits you</h2>
-              <p className="text-xs text-muted-foreground">
-                Search, filter and sort the catalogue.
-              </p>
+      <section className="container-page py-7 lg:py-9">
+        <div className="overflow-hidden rounded-[1.5rem] border border-border border-t-[3px] border-t-[#f47b25] bg-card p-3 shadow-card md:p-4">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <Search className="h-4 w-4 text-[#325dd2] dark:text-[#8cb0ff]" aria-hidden="true" />
+              <div>
+                <h2 className="text-sm font-extrabold">Search the university directory</h2>
+                <p className="text-xs text-muted-foreground">Use only the filters that matter.</p>
+              </div>
             </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={!filtersAreActive}
+              onClick={resetFilters}
+              className="rounded-full"
+            >
+              <SlidersHorizontal className="mr-1 h-4 w-4" /> Clear filters
+            </Button>
           </div>
-          <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:grid-cols-[1.3fr_1fr_0.9fr_1fr_1fr]">
-            <div className="relative min-w-0">
+          <div className="grid min-w-0 grid-cols-2 gap-2.5 xl:grid-cols-[1.35fr_1fr_0.95fr_1fr_1fr]">
+            <div className="relative col-span-2 min-w-0 xl:col-span-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search university, city or state"
-                className="h-10 w-full min-w-0 rounded-lg pl-10"
+                placeholder="University, city or state"
+                className="h-10 w-full min-w-0 rounded-xl bg-background pl-10"
                 aria-label="Search universities"
               />
             </div>
@@ -194,33 +229,22 @@ function UniversitiesPage() {
               value={program}
               onChange={(e) => setProgram(e.target.value)}
               aria-label="Filter by program"
-              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
+              className="h-10 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
             >
-              <option value="all">All programs</option>
+              <option value="all">All courses</option>
               {programCatalog.map((p) => (
                 <option key={p.slug} value={p.slug}>
                   {p.name}
                 </option>
               ))}
             </select>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              aria-label="Sort universities"
-              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
-            >
-              <option value="rating">Sort: Highest sourced rating</option>
-              <option value="feeLow">Sort: Fees low to high</option>
-              <option value="feeHigh">Sort: Fees high to low</option>
-              <option value="name">Sort: Name (A–Z)</option>
-            </select>
-            <div className="relative min-w-0 md:order-2 xl:order-none">
+            <div className="relative min-w-0">
               <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <select
                 value={stateFilter}
                 onChange={(event) => setStateFilter(event.target.value)}
                 aria-label="Filter by state"
-                className="h-10 w-full min-w-0 appearance-none rounded-lg border border-input bg-background pl-10 pr-3 text-sm font-semibold"
+                className="h-10 w-full min-w-0 appearance-none rounded-xl border border-input bg-background pl-10 pr-3 text-sm font-semibold"
               >
                 <option value="all">All locations</option>
                 {stateOptions.map((state) => (
@@ -234,74 +258,79 @@ function UniversitiesPage() {
               value={profileFilter}
               onChange={(event) => setProfileFilter(event.target.value as ProfileFilter)}
               aria-label="Filter by profile depth"
-              className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm font-semibold"
+              className="h-10 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
             >
-              <option value="all">All data depths</option>
-              <option value="complete">Complete profiles</option>
-              <option value="directory">Directory profiles</option>
+              <option value="all">All profiles</option>
+              <option value="complete">Editorial profiles</option>
+              <option value="directory">Directory research</option>
+            </select>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              aria-label="Sort universities"
+              className="h-10 w-full min-w-0 rounded-xl border border-input bg-background px-3 text-sm font-semibold"
+            >
+              <option value="name">Name: A–Z</option>
+              <option value="rating">Highest sourced rating</option>
+              <option value="feeLow">Lowest sourced fee</option>
+              <option value="feeHigh">Highest sourced fee</option>
             </select>
           </div>
 
-          <div
-            className={`mt-4 grid gap-4 border-t border-border pt-4 md:items-center ${
-              maximumCatalogFee > 0 ? "md:grid-cols-[auto_1fr_auto]" : "md:grid-cols-[1fr_auto]"
-            }`}
-          >
-            {maximumCatalogFee > 0 ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff1e7] text-[#df651b] dark:bg-[#392418] dark:text-[#ffad70]">
-                    <IndianRupee className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <label htmlFor="university-fee-ceiling" className="text-xs font-extrabold">
-                      Maximum sourced total fee
-                    </label>
-                    <p className="text-[10px] text-muted-foreground">
-                      {feeCeiling >= maximumCatalogFee
-                        ? "Any sourced fee"
-                        : `Up to ${formatINR(feeCeiling)}`}
-                    </p>
-                  </div>
+          {maximumCatalogFee > 0 ? (
+            <div className="mt-3 grid gap-3 border-t border-border pt-3 sm:grid-cols-[auto_minmax(8rem,1fr)] sm:items-center">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff1e7] text-[#b44e0e] dark:bg-[#392418] dark:text-[#ffad70]">
+                  <IndianRupee className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <div>
+                  <label htmlFor="university-fee-ceiling" className="text-xs font-extrabold">
+                    Sourced fee ceiling
+                  </label>
+                  <p className="text-[10px] text-muted-foreground">
+                    {feeCeiling >= maximumCatalogFee
+                      ? "Show every available fee"
+                      : `Up to ${formatINR(feeCeiling)}`}
+                  </p>
                 </div>
-                <input
-                  id="university-fee-ceiling"
-                  type="range"
-                  min="0"
-                  max={maximumCatalogFee}
-                  step="5000"
-                  value={feeCeiling}
-                  onChange={(event) => setFeeCeiling(Number(event.target.value))}
-                  className="w-full accent-[#f47a20]"
-                />
-              </>
-            ) : (
-              <p className="text-xs leading-5 text-muted-foreground">
+              </div>
+              <input
+                id="university-fee-ceiling"
+                type="range"
+                min="0"
+                max={maximumCatalogFee}
+                step="5000"
+                value={feeCeiling}
+                onChange={(event) => setFeeCeiling(Number(event.target.value))}
+                className="w-full accent-[#f47a20]"
+              />
+            </div>
+          ) : (
+            <div>
+              <p className="mt-3 border-t border-border pt-3 text-xs leading-5 text-muted-foreground">
                 Fee filtering appears after current, source-backed total fees are published.
               </p>
-            )}
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              disabled={!filtersAreActive}
-              onClick={resetFilters}
-              className="justify-self-start rounded-xl md:justify-self-end"
-            >
-              <SlidersHorizontal className="mr-2 h-4 w-4" /> Reset filters
-            </Button>
-          </div>
+            </div>
+          )}
         </div>
 
-        <div className="mt-6 flex items-center justify-between gap-4">
-          <p
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-            className="text-sm font-bold text-muted-foreground"
-          >
-            Showing {list.length} of {universities.length} universities
-          </p>
+        <div className="mt-7 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#2449ad] dark:text-[#b9ceff]">
+              Explore your options
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-extrabold tracking-[-0.035em]">
+              University directory
+            </h2>
+            <p
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="mt-1 text-xs font-semibold text-muted-foreground"
+            >
+              Showing {list.length} of {universities.length} profiles
+            </p>
+          </div>
           <Link
             to="/programs"
             className="hidden items-center text-sm font-extrabold text-[#1768cc] dark:text-[#78b9ff] sm:inline-flex"
@@ -325,7 +354,8 @@ function UniversitiesPage() {
             label="Filtered university profiles"
             rows={2}
             columns={4}
-            railClassName="auto-cols-[calc((100%_-_1rem)/2)] sm:auto-cols-[calc((100%_-_3rem)/4)] xl:auto-cols-[calc((100%_-_5rem)/6)]"
+            className="mt-3"
+            railClassName="auto-cols-[minmax(17rem,84%)] sm:auto-cols-[calc((100%_-_2rem)/3)] lg:auto-cols-[calc((100%_-_3rem)/4)] xl:auto-cols-[calc((100%_-_4rem)/5)]"
           >
             {list.map((u, index) => (
               <UniversityCard key={u.slug} university={u} priority={index < 12} />
@@ -333,9 +363,9 @@ function UniversitiesPage() {
           </CompactRail>
         )}
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
-          <div className="rounded-xl border border-border bg-surface p-5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-card text-[#1768cc] shadow-sm dark:text-[#78b9ff]">
+        <div className="mt-9 grid gap-5 lg:grid-cols-[1fr_0.8fr]">
+          <div className="rounded-[1.5rem] border border-border bg-[#f6f8fc] p-5 dark:bg-[#151b26]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-card text-[#1768cc] shadow-sm dark:text-[#78b9ff]">
               <Building2 className="h-5 w-5" />
             </span>
             <h2 className="mt-4 font-display text-xl font-bold">Not sure which one fits?</h2>
@@ -355,7 +385,11 @@ function UniversitiesPage() {
               ))}
             </ul>
           </div>
-          <LeadForm compact title="Get a personalised shortlist" />
+          <LeadForm
+            compact
+            title="Get a personalised shortlist"
+            className="rounded-[1.5rem] shadow-none"
+          />
         </div>
       </section>
     </>

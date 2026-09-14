@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowRight, BriefcaseBusiness, GraduationCap, Search, Target } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Clock3, GraduationCap, Search, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadForm } from "@/components/site/lead-form";
@@ -129,43 +129,65 @@ function SpecialisationsPage() {
           </p>
         </div>
 
-        <CompactRail label="Filtered specialisation pathways" rows={2} columns={4}>
+        <CompactRail
+          label="Filtered specialisation pathways"
+          rows={2}
+          columns={3}
+          railClassName="auto-cols-[92%] sm:auto-cols-[minmax(20rem,48%)] lg:auto-cols-[calc((100%-2rem)/3)]"
+        >
           {filtered.map((specialisation) => (
             <Link
               key={specialisation.slug}
               to="/specialisations/$specialisationSlug"
               params={{ specialisationSlug: specialisation.slug }}
-              className="group flex min-h-[12.5rem] flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+              className="group relative flex h-[9.5rem] flex-col overflow-hidden rounded-[1.25rem] border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
             >
-              <div className="flex items-start justify-between gap-3">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
+              <div className="h-1 shrink-0 bg-[#f47b25]" aria-hidden="true" />
+              <div className="flex min-w-0 items-center gap-2.5 px-3 pt-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#131720] text-white dark:bg-[#325dd2]">
                   <Target className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <span className="rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-                  {specialisation.program.code}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#a94300] dark:text-[#ff9a5b]">
+                      Online {specialisation.program.code}
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground">
+                      <Clock3 className="h-3 w-3" aria-hidden="true" />
+                      {specialisation.program.durationYears} yr
+                    </span>
+                  </div>
+                </div>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-background text-[#1768cc] transition-colors group-hover:border-[#325dd2] group-hover:bg-[#325dd2] group-hover:text-white dark:text-[#78b9ff]">
+                  <ArrowRight
+                    className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </span>
               </div>
-              <h2 className="mt-3 line-clamp-2 font-display text-base font-extrabold leading-snug tracking-[-0.02em]">
+              <h2 className="mx-3 mt-2 line-clamp-2 font-display text-[0.95rem] font-extrabold leading-[1.18] tracking-[-0.025em] sm:text-base">
                 {specialisation.name}
               </h2>
-              <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                {specialisation.summary}
+              <p className="mx-3 mt-1 truncate text-[10px] font-semibold text-muted-foreground">
+                Career direction: {specialisation.careerDirections[0]}
               </p>
-              <div className="mt-auto flex items-end justify-between gap-3 border-t border-border pt-3">
-                <div className="min-w-0">
-                  <p className="text-[11px] font-bold text-foreground">
+              <div className="mt-auto flex min-w-0 items-center justify-between gap-2 border-t border-border px-3 py-2.5">
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1.5 text-[10px] font-extrabold text-foreground">
+                    <span
+                      className={`h-2 w-2 shrink-0 rounded-full ${
+                        specialisation.universityCount ? "bg-[#14845f]" : "bg-[#f47b25]"
+                      }`}
+                      aria-hidden="true"
+                    />
                     {specialisation.universityCount
-                      ? `${specialisation.universityCount} mapped university options`
-                      : "University availability not yet mapped"}
-                  </p>
-                  <p className="mt-1 truncate text-[10px] text-muted-foreground">
-                    {specialisation.careerDirections[0]}
+                      ? `${specialisation.universityCount} university options mapped`
+                      : "University mapping in review"}
                   </p>
                 </div>
-                <ArrowRight
-                  aria-hidden="true"
-                  className="h-4 w-4 shrink-0 text-[#1768cc] transition group-hover:translate-x-1 dark:text-[#78b9ff]"
-                />
+                <span className="shrink-0 text-[10px] font-extrabold text-[#1768cc] dark:text-[#78b9ff]">
+                  View pathway
+                </span>
               </div>
             </Link>
           ))}
