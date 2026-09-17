@@ -94,8 +94,8 @@ const heroRoles = ["Student", "Parent", "Professional"] as const;
 const quickLinks = [
   { label: "Universities", helper: "Browse all", to: "/universities" as const, icon: Building2 },
   { label: "Courses", helper: "Choose a degree", to: "/programs" as const, icon: GraduationCap },
-  { label: "Find my fit", helper: "3 quick questions", to: "/finder" as const, icon: Sparkles },
-  { label: "Compare", helper: "Keep 3 side by side", to: "/compare" as const, icon: BarChart3 },
+  { label: "Course finder", helper: "2 questions", to: "/finder" as const, icon: Target },
+  { label: "Compare", helper: "Up to 3 options", to: "/compare" as const, icon: BarChart3 },
 ] as const;
 
 const heroTrustPoints = [
@@ -139,17 +139,17 @@ const decisionSpotlights = [
 
 const preAdmissionTools = [
   { title: "Course finder", icon: Target, to: "/finder" as const, color: "blue" },
-  { title: "Compare universities", icon: BarChart3, to: "/compare" as const, color: "orange" },
-  { title: "Explore courses", icon: GraduationCap, to: "/programs" as const, color: "green" },
-  { title: "Browse universities", icon: Building2, to: "/universities" as const, color: "violet" },
+  { title: "Compare options", icon: BarChart3, to: "/compare" as const, color: "orange" },
+  { title: "Online courses", icon: GraduationCap, to: "/programs" as const, color: "green" },
+  { title: "Universities", icon: Building2, to: "/universities" as const, color: "violet" },
   {
-    title: "Choose a specialisation",
+    title: "Specialisations",
     icon: Lightbulb,
     to: "/specialisations" as const,
     color: "blue",
   },
   {
-    title: "Before-you-pay check",
+    title: "Payment checklist",
     icon: ShieldCheck,
     to: "/methodology" as const,
     color: "orange",
@@ -157,11 +157,11 @@ const preAdmissionTools = [
 ] as const;
 
 const afterAdmissionTools = [
-  { title: "Plan study time", icon: Clock3, to: "/finder" as const, color: "blue" },
-  { title: "Review course details", icon: BookOpenCheck, to: "/programs" as const, color: "green" },
-  { title: "University profiles", icon: Building2, to: "/universities" as const, color: "violet" },
-  { title: "Talk to a counsellor", icon: Users, to: "/contact" as const, color: "orange" },
-  { title: "Compare again", icon: BarChart3, to: "/compare" as const, color: "blue" },
+  { title: "Study planner", icon: Clock3, to: "/finder" as const, color: "blue" },
+  { title: "Course details", icon: BookOpenCheck, to: "/programs" as const, color: "green" },
+  { title: "Universities", icon: Building2, to: "/universities" as const, color: "violet" },
+  { title: "Talk to us", icon: Users, to: "/contact" as const, color: "orange" },
+  { title: "Compare options", icon: BarChart3, to: "/compare" as const, color: "blue" },
   { title: "Ask Diya", icon: Sparkles, action: "diya" as const, color: "orange" },
 ] as const;
 
@@ -281,13 +281,13 @@ export function HomePage() {
         onRoleChange={setHeroRole}
       />
 
-      <section className="container-page relative z-10 border-b border-border py-5 sm:py-6 lg:py-7">
-        <div className="mb-4 flex items-center justify-between gap-3">
+      <section className="container-page relative z-10 border-b border-border py-4 sm:py-5">
+        <div className="mb-3 flex items-center justify-between gap-3">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ffad70]">
               Start here
             </p>
-            <h2 className="mt-1 font-display text-lg font-extrabold sm:text-xl">
+            <h2 className="mt-1 font-display text-base font-extrabold sm:text-lg">
               What would you like to do?
             </h2>
           </div>
@@ -300,14 +300,16 @@ export function HomePage() {
             <Link
               key={item.label}
               to={item.to}
-              className="group flex min-h-[4.5rem] items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
+              className="group flex min-h-[3.75rem] items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 transition-[border-color,box-shadow] duration-200 hover:border-[#86a2e8] hover:shadow-sm active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
-                <item.icon className="h-5 w-5" aria-hidden="true" />
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
+                <item.icon className="h-4 w-4" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-extrabold leading-4">{item.label}</span>
-                <span className="mt-1 block text-[10px] font-semibold leading-3 text-muted-foreground sm:text-[11px]">
+                <span className="block text-xs font-extrabold leading-4 sm:text-[13px]">
+                  {item.label}
+                </span>
+                <span className="block text-[10px] font-semibold leading-3 text-muted-foreground">
                   {item.helper}
                 </span>
               </span>
@@ -316,21 +318,21 @@ export function HomePage() {
         </nav>
       </section>
 
-      <section className="container-page py-9 sm:py-11 lg:py-14">
+      <section className="container-page py-7 sm:py-9 lg:py-11">
         <h2 className="sr-only">Explore online courses and universities</h2>
 
         <div className="mx-auto grid max-w-5xl grid-cols-3 gap-3 py-2 sm:gap-8 lg:gap-16">
           <CourseTrustStat
             icon={Building2}
             value={String(universities.length)}
-            label="University profiles"
+            label="Universities to explore"
           />
           <CourseTrustStat
             icon={GraduationCap}
             value={String(programCatalog.length)}
-            label="Course families"
+            label="Online courses"
           />
-          <CourseTrustStat icon={BarChart3} value="3" label="Compare together" />
+          <CourseTrustStat icon={BarChart3} value="3" label="Compare at once" />
         </div>
 
         <div className="mt-7 min-w-0 lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:items-start lg:gap-8">
@@ -477,31 +479,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[#dce5f7] bg-[#edf3ff] py-9 dark:border-border dark:bg-[#172237] lg:py-14">
+      <section className="border-y border-[#dce5f7] bg-[#f6f8fc] py-6 dark:border-border dark:bg-[#172237] lg:py-8">
         <div className="container-page">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-[#325dd2] text-white shadow-lift dark:border-[#202a3c] sm:h-24 sm:w-24">
-              <activeSpotlight.icon className="h-9 w-9 sm:h-11 sm:w-11" aria-hidden="true" />
-            </span>
-            <p className="mt-5 text-[10px] font-black uppercase tracking-[0.14em] text-[#2449ad] dark:text-[#9eb8f5]">
-              {activeSpotlight.eyebrow}
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-black tracking-tight text-[#131720] dark:text-white sm:text-4xl">
-              {activeSpotlight.title}
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#4b5a70] dark:text-[#c6cfdd] sm:text-base">
-              {activeSpotlight.description}
-            </p>
-            <Button
-              asChild
-              className="mt-5 min-h-12 rounded-xl bg-[#325dd2] px-6 text-white hover:bg-[#2449ad]"
-            >
-              <Link to={activeSpotlight.to}>
-                {activeSpotlight.action} <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Button>
+          <div className="mx-auto max-w-6xl">
             <div
-              className="mt-6 flex justify-center gap-2"
+              className="flex gap-2 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               role="tablist"
               aria-label="Decision checks"
             >
@@ -513,7 +495,7 @@ export function HomePage() {
                   aria-selected={decisionSpotlight === index}
                   onClick={() => setDecisionSpotlight(index)}
                   className={cn(
-                    "min-h-10 rounded-full border px-3 text-[10px] font-extrabold transition-[background-color,border-color,color,transform] active:scale-[0.98] sm:px-4 sm:text-xs",
+                    "min-h-9 shrink-0 rounded-full border px-3 text-[10px] font-extrabold transition-colors active:scale-[0.98] sm:text-[11px]",
                     decisionSpotlight === index
                       ? "border-[#325dd2] bg-[#325dd2] text-white"
                       : "border-[#cbd7ee] bg-white text-[#475569] hover:border-[#86a2e8] hover:text-[#2449ad] dark:border-[#344158] dark:bg-[#1c2739] dark:text-[#d8dfeb]",
@@ -523,24 +505,46 @@ export function HomePage() {
                 </button>
               ))}
             </div>
+            <div className="grid items-center gap-4 rounded-2xl border border-[#d7e0ef] bg-white p-4 shadow-sm dark:border-border dark:bg-card sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:p-5">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#325dd2] text-white">
+                <activeSpotlight.icon className="h-6 w-6" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#2449ad] dark:text-[#9eb8f5]">
+                  {activeSpotlight.eyebrow}
+                </p>
+                <h2 className="mt-1 font-display text-xl font-black leading-tight text-[#131720] dark:text-white sm:text-2xl">
+                  {activeSpotlight.title}
+                </h2>
+                <p className="mt-1.5 max-w-2xl text-xs leading-5 text-[#4b5a70] dark:text-[#c6cfdd] sm:text-sm">
+                  {activeSpotlight.description}
+                </p>
+              </div>
+              <Button asChild className="min-h-11 bg-[#325dd2] px-5 text-white hover:bg-[#2449ad]">
+                <Link to={activeSpotlight.to}>
+                  {activeSpotlight.action}{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="container-page py-9 lg:py-14">
+      <section className="container-page py-7 lg:py-10">
         <SectionIntro
           eyebrow="Decide with clarity"
-          title="Tools, guidance & more — all in one place"
-          description="Use the tools you need now. Everything opens directly, without hiding the result behind a sign-up."
+          title="Helpful tools for every step"
+          description="Find a course, compare universities or plan what to check next."
         />
-        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-5">
+        <div className="mt-4 min-w-0 lg:grid lg:grid-cols-[12rem_minmax(0,1fr)] lg:items-start lg:gap-4">
           <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:overflow-visible lg:pb-0">
             <button
               type="button"
               aria-pressed={toolGroup === "before"}
               onClick={() => setToolGroup("before")}
               className={cn(
-                "min-h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition-colors lg:min-h-14 lg:w-full lg:text-sm",
+                "min-h-10 shrink-0 rounded-lg border px-3 text-xs font-extrabold transition-colors lg:w-full",
                 toolGroup === "before"
                   ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
                   : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:text-foreground",
@@ -553,7 +557,7 @@ export function HomePage() {
               aria-pressed={toolGroup === "after"}
               onClick={() => setToolGroup("after")}
               className={cn(
-                "min-h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition-colors lg:min-h-14 lg:w-full lg:text-sm",
+                "min-h-10 shrink-0 rounded-lg border px-3 text-xs font-extrabold transition-colors lg:w-full",
                 toolGroup === "after"
                   ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
                   : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:text-foreground",
@@ -565,7 +569,7 @@ export function HomePage() {
               Choose a group to keep the page simple and relevant.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:gap-2.5">
             {visibleDecisionTools.map((tool) => (
               <ToolCard key={tool.title} tool={tool} />
             ))}
@@ -573,97 +577,58 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-[#f3f7ff] py-9 dark:bg-[#162035] lg:py-14">
-        <div className="container-page grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10">
-          <div className="text-center lg:text-left">
-            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ffad70]">
-              Your always-available course guide
-            </p>
-            <h2 className="mt-2 font-display text-2xl font-black tracking-tight sm:text-4xl">
-              A simpler first step starts with Ask Diya AI.
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground lg:mx-0 sm:text-base">
-              Ask about MBA, MCA, university profiles, specialisations or what to compare. Diya uses
-              the DekhoCampus catalogue and shows where you should confirm details.
-            </p>
-            <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
-              {["Find an MBA", "Compare universities", "Choose a specialisation"].map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-                  className="min-h-10 rounded-full border border-[#b8c8ea] bg-white px-3 text-[11px] font-extrabold text-[#2449ad] shadow-card transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-lift active:scale-[0.98] dark:border-[#405070] dark:bg-[#1c2739] dark:text-[#b9ceff]"
-                >
-                  {prompt}
-                </button>
-              ))}
+      <section className="border-y border-border bg-[#f8f9fc] py-6 dark:bg-[#162035] lg:py-8">
+        <div className="container-page">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-[#d7e0ef] bg-white p-4 shadow-sm dark:border-[#344158] dark:bg-card sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4 sm:p-5">
+            <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-[#325dd2] bg-white">
+              <img
+                src="/diya-ai.webp"
+                alt=""
+                width={90}
+                height={96}
+                className="h-[3.25rem] w-[3.25rem] object-cover"
+              />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#a94300] dark:text-[#ffad70]">
+                Need a quick starting point?
+              </p>
+              <h2 className="mt-1 font-display text-xl font-black leading-tight sm:text-2xl">
+                Ask Diya or speak with a counsellor
+              </h2>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground sm:text-sm">
+                Get help finding a course, understanding a university page or preparing questions
+                for a counsellor.
+              </p>
             </div>
-            <Button
-              type="button"
-              onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-              className="mt-5 min-h-12 rounded-xl bg-[#325dd2] px-6 text-white hover:bg-[#2449ad]"
-            >
-              Ask Diya AI <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
-            <p className="mt-3 text-[10px] font-semibold leading-4 text-muted-foreground">
-              Guidance only. Confirm your exact intake, eligibility, fee and dates on official
-              sources.
-            </p>
+            <div className="col-span-2 grid grid-cols-2 gap-2 sm:col-span-1 sm:flex">
+              <Button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+                className="min-h-11 bg-[#325dd2] px-4 text-white hover:bg-[#2449ad]"
+              >
+                Ask Diya
+              </Button>
+              <Button asChild variant="outline" className="min-h-11 px-4">
+                <Link to="/contact">Talk to us</Link>
+              </Button>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-            className="group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-[1.75rem] border border-[#cbd7ee] bg-white text-left shadow-lift transition-[transform,border-color,box-shadow] hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-xl active:scale-[0.99] dark:border-[#344158] dark:bg-[#1c2739] motion-reduce:transform-none"
-            aria-label="Open Ask Diya AI"
-          >
-            <span className="flex items-center gap-3 bg-[#325dd2] px-5 py-4 text-white">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-white">
-                <img
-                  src="/diya-ai.webp"
-                  alt=""
-                  width={90}
-                  height={96}
-                  className="h-14 w-14 object-cover"
-                />
-              </span>
-              <span>
-                <span className="block font-display text-lg font-black">Diya by DekhoCampus</span>
-                <span className="mt-0.5 block text-xs font-semibold text-white/85">
-                  Online education guide
-                </span>
-              </span>
-            </span>
-            <span className="space-y-3 p-5">
-              <span className="block max-w-[88%] rounded-2xl rounded-tl-md bg-[#edf2ff] px-4 py-3 text-xs font-semibold leading-5 text-[#263b65] dark:bg-[#263653] dark:text-[#dce7ff]">
-                Tell me what you have studied and what you want to do next.
-              </span>
-              <span className="ml-auto block max-w-[82%] rounded-2xl rounded-br-md bg-[#fff0e6] px-4 py-3 text-xs font-semibold leading-5 text-[#79350c] dark:bg-[#3d281c] dark:text-[#ffd0ad]">
-                I want to compare online MBA options.
-              </span>
-              <span className="flex min-h-11 items-center justify-between rounded-xl border border-border px-3 text-xs font-bold text-muted-foreground">
-                Ask anything about online courses
-                <ArrowRight
-                  className="h-4 w-4 text-[#325dd2] transition-transform group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </span>
-            </span>
-          </button>
         </div>
       </section>
 
-      <section className="container-page py-9 lg:py-14">
+      <section className="container-page py-7 lg:py-10">
         <SectionIntro
           eyebrow="Online universities"
-          title="Explore popular university profiles"
-          description="Start with familiar names or browse every university profile."
+          title="Explore familiar university names"
+          description="Open a university to see its available course information."
           action={<TextLink to="/universities" label={`View all ${universities.length}`} />}
         />
         <CompactRail
           label="Online universities"
           rows={2}
           columns={4}
-          railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+          railClassName="auto-cols-[minmax(14rem,76%)] min-[390px]:auto-cols-[minmax(10rem,46%)] lg:auto-cols-[calc((100%-4rem)/5)]"
         >
           {featuredUniversities.map((university, index) => {
             const confirmedCourses = currentProgramCount(university);
@@ -672,21 +637,21 @@ export function HomePage() {
                 key={university.slug}
                 to="/universities/$universitySlug"
                 params={{ universitySlug: university.slug }}
-                className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8rem] sm:p-3.5"
+                className="group flex min-h-[5.75rem] flex-col rounded-xl border border-border bg-card p-2.5 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-[#86a2e8] hover:shadow-md active:scale-[0.985]"
               >
                 <span className="flex items-start justify-between gap-2">
                   <UniversityLogo
                     university={university}
                     size="md"
                     priority={index < 4}
-                    className="h-12 w-[5.75rem] rounded-xl bg-white"
+                    className="h-10 w-[4.75rem] rounded-lg bg-white"
                   />
                   <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />
                 </span>
-                <span className="mt-2 line-clamp-2 font-display text-sm font-extrabold leading-[1.125rem]">
+                <span className="mt-1.5 line-clamp-2 font-display text-xs font-extrabold leading-4 sm:text-[13px]">
                   {university.shortName}
                 </span>
-                <span className="mt-auto line-clamp-2 pt-1 text-[10px] font-semibold leading-4 text-muted-foreground">
+                <span className="mt-auto line-clamp-1 pt-1 text-[10px] font-semibold leading-4 text-muted-foreground">
                   {university.state || "India"} ·{" "}
                   {confirmedCourses
                     ? `${confirmedCourses} current ${confirmedCourses === 1 ? "course" : "courses"}`
@@ -699,16 +664,16 @@ export function HomePage() {
           })}
         </CompactRail>
 
-        <div className="mt-6 overflow-hidden rounded-2xl bg-[#131720] text-white">
-          <div className="grid gap-5 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-7">
+        <div className="mt-4 overflow-hidden rounded-xl bg-[#131720] text-white">
+          <div className="grid gap-4 p-4 sm:grid-cols-[1fr_auto] sm:items-center sm:p-5">
             <div>
               <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ffad70]">
                 Side-by-side view
               </p>
-              <h3 className="mt-2 font-display text-xl font-extrabold sm:text-2xl">
+              <h3 className="mt-1 font-display text-lg font-extrabold sm:text-xl">
                 Comparing a few universities?
               </h3>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-white/70">
+              <p className="mt-1 max-w-2xl text-xs leading-5 text-white/75 sm:text-sm">
                 Keep up to three options together and focus on the differences that matter to you.
               </p>
             </div>
@@ -724,39 +689,39 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-[#f6f8fc] py-9 dark:bg-secondary/25 lg:py-14">
+      <section className="border-y border-border bg-[#f6f8fc] py-7 dark:bg-secondary/25 lg:py-10">
         <div className="container-page">
           <SectionIntro
             eyebrow="Popular specialisations"
-            title="Choose a direction, not just a label"
-            description="Explore subjects and the kinds of roles they can support."
+            title="Popular study directions"
+            description="Browse specialisations by course and interest."
             action={<TextLink to="/specialisations" label="See all specialisations" />}
           />
           <CompactRail
             label="Popular online degree specialisations"
             rows={2}
             columns={4}
-            railClassName="auto-cols-[minmax(15.5rem,82%)] min-[390px]:auto-cols-[minmax(10.5rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+            railClassName="auto-cols-[minmax(14rem,76%)] min-[390px]:auto-cols-[minmax(10rem,46%)] lg:auto-cols-[calc((100%-4rem)/5)]"
           >
             {featuredSpecialisations.map((specialisation, index) => (
               <Link
                 key={specialisation.slug}
                 to="/specialisations/$specialisationSlug"
                 params={{ specialisationSlug: specialisation.slug }}
-                className="group flex min-h-[6.75rem] items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none"
+                className="group flex min-h-[4.75rem] items-center gap-2.5 rounded-xl border border-border bg-card p-2.5 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-[#86a2e8] hover:shadow-md active:scale-[0.985]"
               >
                 <span
                   className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
                     index % 2
                       ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
                       : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
                   )}
                 >
-                  {index % 2 ? <WalletCards className="h-5 w-5" /> : <Code2 className="h-5 w-5" />}
+                  {index % 2 ? <WalletCards className="h-4 w-4" /> : <Code2 className="h-4 w-4" />}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="line-clamp-2 block text-sm font-extrabold leading-[1.125rem]">
+                  <span className="line-clamp-2 block text-xs font-extrabold leading-4 sm:text-[13px]">
                     {specialisation.name}
                   </span>
                   <span className="mt-1 block text-[10px] font-semibold text-muted-foreground">
@@ -770,13 +735,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-8 lg:py-12">
+      <section className="container-page py-7 lg:py-10">
         <SectionIntro
           eyebrow="A calmer way to decide"
-          title="From confused to confident in three steps"
-          description="No pressure. Move at your pace and keep your shortlist organised."
+          title="Three simple steps"
+          description="Explore, compare and confirm before you decide."
         />
-        <ol className="mt-6 grid gap-3 md:grid-cols-3">
+        <ol className="mt-4 grid gap-2.5 md:grid-cols-3">
           {[
             ["01", "Explore", "Browse courses, universities and specialisations."],
             ["02", "Compare", "Keep the options that fit your goals and budget."],
@@ -784,14 +749,14 @@ export function HomePage() {
           ].map(([step, title, description]) => (
             <li
               key={step}
-              className="flex min-h-24 items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-card"
+              className="flex min-h-20 items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm"
             >
-              <span className="font-display text-3xl font-black text-[#c8d5f8] dark:text-[#41547d]">
+              <span className="font-display text-2xl font-black text-[#c8d5f8] dark:text-[#41547d]">
                 {step}
               </span>
               <span>
-                <span className="block font-display text-base font-extrabold">{title}</span>
-                <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                <span className="block font-display text-sm font-extrabold">{title}</span>
+                <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground sm:text-xs">
                   {description}
                 </span>
               </span>
@@ -799,7 +764,7 @@ export function HomePage() {
           ))}
         </ol>
 
-        <div className="mt-6 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+        <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
           <SimpleStat value={String(universities.length)} label="Universities" />
           <SimpleStat value={String(programCatalog.length)} label="Courses" bordered />
           <SimpleStat value={String(getSpecialisationCount())} label="Specialisations" />
@@ -809,34 +774,34 @@ export function HomePage() {
         </p>
       </section>
 
-      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
+      <section className="border-y border-border bg-surface py-7 dark:bg-secondary/25 lg:py-10">
         <div className="container-page">
           <SectionIntro
             eyebrow="Helpful reads"
-            title="Guides you can discuss with your family"
-            description="Plain answers to the questions that usually come up before enrolment."
+            title="Useful guides for you and your family"
+            description="Short, practical answers to common admission questions."
           />
           <CompactRail
             label="Online degree guides"
             columns={4}
-            railClassName="auto-cols-[minmax(16rem,84%)] min-[390px]:auto-cols-[minmax(10.75rem,47%)] lg:auto-cols-[calc((100%-3rem)/4)]"
+            railClassName="auto-cols-[minmax(15rem,80%)] min-[390px]:auto-cols-[minmax(10.25rem,46%)] lg:auto-cols-[calc((100%-3rem)/4)]"
           >
             {guides.map((guide) => (
               <Link
                 key={guide.title}
                 to={guide.to}
-                className="group flex min-h-[9.25rem] flex-col rounded-2xl border border-border bg-card p-4 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none"
+                className="group flex min-h-[6.75rem] flex-col rounded-xl border border-border bg-card p-3 shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-[#86a2e8] hover:shadow-md active:scale-[0.985]"
               >
                 <span className="flex items-start justify-between gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
-                    <guide.icon className="h-5 w-5" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
+                    <guide.icon className="h-4 w-4" />
                   </span>
                   <span className="text-[10px] font-bold text-muted-foreground">{guide.meta}</span>
                 </span>
-                <span className="mt-3 block font-display text-sm font-extrabold leading-5">
+                <span className="mt-2 line-clamp-2 block font-display text-xs font-extrabold leading-4 sm:text-sm">
                   {guide.title}
                 </span>
-                <span className="mt-1 line-clamp-2 text-[11px] leading-[1.125rem] text-muted-foreground">
+                <span className="mt-1 line-clamp-1 text-[10px] leading-4 text-muted-foreground sm:text-[11px]">
                   {guide.description}
                 </span>
                 <span className="mt-auto flex items-center gap-1 pt-2 text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]">
@@ -849,16 +814,16 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-8 lg:py-12">
+      <section className="container-page py-7 lg:py-10">
         <SectionIntro
           eyebrow="Common questions"
           title="Let’s clear up a few doubts"
           description="Quick answers before you begin exploring."
         />
-        <div className="mt-6 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+        <div className="mt-4 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {faqs.map((faq, index) => (
             <details key={faq.question} className="group" open={index === 0}>
-              <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-sm font-extrabold marker:content-none sm:px-5">
+              <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2.5 text-sm font-extrabold marker:content-none sm:px-5">
                 {faq.question}
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-lg text-[#2449ad] transition-transform group-open:rotate-45 dark:text-[#8cb0ff]">
                   +
@@ -872,17 +837,17 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page pb-10 pt-2 lg:pb-16">
-        <div className="overflow-hidden rounded-[1.75rem] bg-[#325dd2] px-5 py-8 text-white shadow-lift sm:px-8 sm:py-10 lg:px-12">
+      <section className="container-page pb-9 pt-1 lg:pb-12">
+        <div className="overflow-hidden rounded-2xl bg-[#325dd2] px-5 py-6 text-white sm:px-7 sm:py-7 lg:px-9">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
               <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#ffd7ba]">
                 <CheckCircle2 className="h-4 w-4" /> Here when you need us
               </span>
-              <h2 className="mt-3 max-w-3xl font-display text-2xl font-extrabold leading-tight sm:text-3xl">
+              <h2 className="mt-2 max-w-3xl font-display text-xl font-extrabold leading-tight sm:text-2xl">
                 Still unsure? Let’s organise your options together.
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80">
+              <p className="mt-2 max-w-2xl text-xs leading-5 text-white/85 sm:text-sm">
                 Bring your questions, budget and shortlist. A counsellor can help you plan the next
                 step.
               </p>
@@ -907,7 +872,7 @@ export function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-5 text-xs font-semibold text-white/80">
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/15 pt-4 text-[11px] font-semibold text-white/85 sm:text-xs">
             {["Browse before enquiring", "Compare at your pace", "Human help is optional"].map(
               (item) => (
                 <span key={item} className="inline-flex items-center gap-2">
@@ -1194,21 +1159,21 @@ function ToolCard({ tool }: { tool: DecisionTool }) {
     <>
       <span
         className={cn(
-          "flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
+          "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-105",
           colorClass,
         )}
       >
-        <Icon className="h-5 w-5" aria-hidden="true" />
+        <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
-      <span className="mt-3 line-clamp-2 block text-xs font-extrabold leading-4 sm:text-[13px]">
+      <span className="min-w-0 flex-1 line-clamp-2 text-left text-[11px] font-extrabold leading-4 sm:text-xs">
         {tool.title}
       </span>
-      <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-[#2449ad]" />
+      <ArrowRight className="hidden h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad] sm:block" />
     </>
   );
 
   const className =
-    "group flex min-h-[7.5rem] flex-col rounded-xl border border-border bg-card p-3 text-left shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8rem]";
+    "group flex min-h-[4.25rem] items-center gap-2.5 rounded-xl border border-border bg-card p-2.5 text-left shadow-sm transition-[border-color,box-shadow] duration-200 hover:border-[#86a2e8] hover:shadow-md active:scale-[0.985]";
 
   if ("action" in tool) {
     return (
@@ -1243,18 +1208,18 @@ function CourseTrustStat({
   return (
     <div
       className={cn(
-        "flex min-w-0 items-center justify-center gap-2 px-2 py-3 sm:gap-3 sm:py-4",
+        "flex min-w-0 items-center justify-center gap-2 px-1 py-2 sm:gap-2.5 sm:py-3",
         bordered && "border-x border-border",
       )}
     >
-      <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff] sm:flex">
-        <Icon className="h-5 w-5" aria-hidden="true" />
+      <span className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff] sm:flex">
+        <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
       <span className="min-w-0 text-center sm:text-left">
-        <span className="block font-display text-lg font-black leading-5 text-[#131720] dark:text-foreground sm:text-xl">
+        <span className="block font-display text-base font-black leading-5 text-[#131720] dark:text-foreground sm:text-lg">
           {value}
         </span>
-        <span className="mt-0.5 block text-[9px] font-bold leading-3 text-muted-foreground sm:text-[11px]">
+        <span className="mt-0.5 block text-[9px] font-bold leading-3 text-muted-foreground sm:text-[10px]">
           {label}
         </span>
       </span>
@@ -1273,9 +1238,9 @@ function SimpleStat({
 }) {
   return (
     <div
-      className={cn("min-w-0 px-2 py-4 text-center sm:py-5", bordered && "border-x border-border")}
+      className={cn("min-w-0 px-2 py-3 text-center sm:py-4", bordered && "border-x border-border")}
     >
-      <p className="font-display text-xl font-extrabold text-[#325dd2] dark:text-[#8cb0ff] sm:text-2xl">
+      <p className="font-display text-lg font-extrabold text-[#325dd2] dark:text-[#8cb0ff] sm:text-xl">
         {value}
       </p>
       <p className="mt-1 text-[10px] font-bold uppercase leading-3 tracking-[0.04em] text-muted-foreground sm:text-[11px]">
@@ -1300,10 +1265,10 @@ function SectionIntro({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
       <div className="max-w-3xl">
         <p className="brand-kicker">{eyebrow}</p>
-        <h2 className="mt-2 font-display text-[1.65rem] font-extrabold leading-[1.12] tracking-[-0.04em] text-[#131720] dark:text-foreground sm:text-[2rem] lg:text-[2.35rem]">
+        <h2 className="mt-1.5 font-display text-[1.45rem] font-extrabold leading-[1.15] tracking-[-0.035em] text-[#131720] dark:text-foreground sm:text-[1.75rem] lg:text-[2rem]">
           {title}
         </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
+        <p className="mt-1.5 max-w-2xl text-xs leading-5 text-muted-foreground sm:text-sm sm:leading-6">
           {description}
         </p>
       </div>
