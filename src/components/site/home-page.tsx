@@ -317,14 +317,9 @@ export function HomePage() {
       </section>
 
       <section className="container-page py-9 sm:py-11 lg:py-14">
-        <SectionIntro
-          eyebrow="Course explorer"
-          title="Explore courses that match your next step"
-          description="Choose your study level, then open a course to see university profiles, specialisations and important details."
-          action={<TextLink to="/programs" label="View all courses" />}
-        />
+        <h2 className="sr-only">Explore online courses and universities</h2>
 
-        <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+        <div className="mx-auto grid max-w-5xl grid-cols-3 gap-3 py-2 sm:gap-8 lg:gap-16">
           <CourseTrustStat
             icon={Building2}
             value={String(universities.length)}
@@ -334,13 +329,12 @@ export function HomePage() {
             icon={GraduationCap}
             value={String(programCatalog.length)}
             label="Course families"
-            bordered
           />
           <CourseTrustStat icon={BarChart3} value="3" label="Compare together" />
         </div>
 
-        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-start lg:gap-5">
-          <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-2 lg:shadow-lift">
+        <div className="mt-7 min-w-0 lg:grid lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:items-start lg:gap-8">
+          <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:rounded-xl lg:border lg:border-border lg:bg-white lg:p-2 lg:shadow-[0_4px_18px_rgba(15,23,42,0.12)] dark:lg:bg-card">
             <p className="hidden px-3 pb-1 pt-2 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground lg:block">
               Browse courses
             </p>
@@ -364,10 +358,10 @@ export function HomePage() {
                     aria-pressed={selected}
                     onClick={() => setCourseLevel(tab)}
                     className={cn(
-                      "flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-full border px-4 text-left text-xs font-extrabold transition-[background-color,border-color,color,transform] active:scale-[0.98] lg:min-h-[3.6rem] lg:w-full lg:rounded-xl lg:border-transparent lg:px-3",
+                      "flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-full border px-4 text-left text-xs font-extrabold transition-colors lg:min-h-[3.55rem] lg:w-full lg:rounded-lg lg:border-transparent lg:px-3",
                       selected
-                        ? "border-[#325dd2] bg-[#325dd2] text-white shadow-card"
-                        : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:bg-[#f6f8fc] hover:text-foreground lg:bg-transparent",
+                        ? "border-[#2458d3] bg-[#2458d3] text-white"
+                        : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:bg-[#f4f7ff] hover:text-foreground lg:bg-transparent",
                     )}
                   >
                     <span className="min-w-0">
@@ -395,7 +389,7 @@ export function HomePage() {
             </div>
             <Link
               to="/specialisations"
-              className="hidden min-h-[3.6rem] flex-col justify-center rounded-xl px-3 text-xs font-extrabold text-foreground hover:bg-[#f6f8fc] lg:flex"
+              className="hidden min-h-[3.55rem] flex-col justify-center rounded-lg px-3 text-xs font-extrabold text-foreground hover:bg-[#f4f7ff] lg:flex"
             >
               Specialisations
               <span className="mt-1 text-[9px] font-bold text-[#325dd2] dark:text-[#8cb0ff]">
@@ -404,7 +398,7 @@ export function HomePage() {
             </Link>
             <Link
               to="/compare"
-              className="hidden min-h-[3.6rem] flex-col justify-center rounded-xl px-3 text-xs font-extrabold text-foreground hover:bg-[#f6f8fc] lg:flex"
+              className="hidden min-h-[3.55rem] flex-col justify-center rounded-lg px-3 text-xs font-extrabold text-foreground hover:bg-[#f4f7ff] lg:flex"
             >
               Compare universities
               <span className="mt-1 text-[9px] font-bold text-[#325dd2] dark:text-[#8cb0ff]">
@@ -424,7 +418,7 @@ export function HomePage() {
             rows={2}
             columns={4}
             className="mt-2 lg:mt-0"
-            railClassName="auto-cols-[47%] gap-2.5 sm:auto-cols-[31.5%] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
+            railClassName="auto-cols-[47%] gap-2.5 sm:auto-cols-[31.5%] lg:auto-cols-[calc((100%-3rem)/7)] lg:gap-2"
           >
             {visibleCourses.map((program, index) => {
               const offers = universitiesOfferingProgram(program.slug);
@@ -436,13 +430,13 @@ export function HomePage() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore Online ${program.code}, ${program.name}`}
-                  className="group flex h-[9rem] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:-translate-y-1 hover:border-[#7699ee] hover:shadow-lift"
+                  className="group flex h-[8.65rem] flex-col overflow-hidden rounded-[0.7rem] border border-border bg-white shadow-[0_3px_12px_rgba(15,23,42,0.12)] transition-[border-color,box-shadow] duration-200 active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:border-[#7699ee] hover:shadow-[0_5px_16px_rgba(37,88,211,0.16)] dark:bg-card"
                   style={{ animationDelay: `${Math.min(index, 7) * 45}ms` }}
                 >
-                  <span className="flex min-h-0 flex-1 flex-col items-center px-2 pb-2 pt-1.5 text-center">
+                  <span className="flex min-h-0 flex-1 flex-col items-center px-1.5 pb-1.5 pt-1 text-center">
                     <span
                       className={cn(
-                        "inline-flex min-h-5 max-w-full items-center truncate rounded-full px-2 text-[9px] font-black",
+                        "inline-flex min-h-[1.15rem] max-w-full items-center truncate rounded-full px-2 text-[8px] font-black sm:text-[9px]",
                         isPriorityCourse
                           ? "bg-[#dff8ec] text-[#0f7553] dark:bg-[#123b30] dark:text-[#77ddb4]"
                           : "bg-[#fff0e0] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]",
@@ -452,7 +446,7 @@ export function HomePage() {
                     </span>
                     <span
                       className={cn(
-                        "mt-1.5 flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-black transition-transform duration-300 group-hover:scale-110",
+                        "mt-1 flex h-7 w-7 items-center justify-center rounded-md text-[9px] font-black",
                         program.code === "MBA" || program.code === "BBA"
                           ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
                           : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
@@ -460,16 +454,16 @@ export function HomePage() {
                     >
                       {courseMark(program.code)}
                     </span>
-                    <span className="mt-1 line-clamp-2 min-h-8 text-[11px] font-extrabold leading-4 text-foreground sm:text-xs">
+                    <span className="mt-1 line-clamp-2 min-h-7 text-[10px] font-extrabold leading-3.5 text-foreground sm:text-[11px]">
                       Online {program.code}
                     </span>
-                    <span className="mt-auto truncate text-[9px] font-semibold text-muted-foreground sm:text-[10px]">
+                    <span className="mt-auto max-w-full truncate text-[8px] font-semibold text-muted-foreground sm:text-[9px]">
                       {offers.length
                         ? `${offers.length} university ${offers.length === 1 ? "profile" : "profiles"}`
                         : program.name}
                     </span>
                   </span>
-                  <span className="flex min-h-7 shrink-0 items-center justify-center gap-1 bg-[#325dd2] px-2 text-[10px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#2449ad] sm:text-[11px]">
+                  <span className="flex min-h-7 shrink-0 items-center justify-center gap-1 bg-[#2458d3] px-2 text-[9px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#1746b8] sm:text-[10px]">
                     View options
                     <ChevronRight
                       className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
