@@ -39,6 +39,13 @@ import { cn } from "@/lib/utils";
 const courseTabs = ["Popular", "Masters", "Bachelors", "Diploma"] as const;
 type CourseTab = (typeof courseTabs)[number];
 
+const courseTabMeta: Record<CourseTab, { label: string; helper: string }> = {
+  Popular: { label: "Popular courses", helper: "MBA, MCA, BBA & more" },
+  Masters: { label: "PG courses", helper: "After graduation" },
+  Bachelors: { label: "UG courses", helper: "After Class 12" },
+  Diploma: { label: "Diploma & certificate", helper: "Build job-ready skills" },
+};
+
 // Demand-led ordering for the first browse view. MBA remains the dominant
 // online degree category, while MCA/BCA and BBA are the next high-intent
 // technology and management directions in the current India market.
@@ -278,16 +285,31 @@ export function HomePage() {
 
       <section className="container-page py-9 sm:py-11 lg:py-14">
         <SectionIntro
-          eyebrow="Popular courses"
-          title="What would you like to study?"
-          description="Start with MBA and MCA, then swipe through other degree directions people explore online."
+          eyebrow="Course explorer"
+          title="Explore courses that match your next step"
+          description="Choose your study level, then open a course to see university profiles, specialisations and important details."
           action={<TextLink to="/programs" label="View all courses" />}
         />
 
-        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:items-start lg:gap-4">
-          <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-2 lg:shadow-card">
-            <p className="hidden px-3 pb-1 pt-2 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted-foreground lg:block">
-              Browse by level
+        <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-border bg-card shadow-card">
+          <CourseTrustStat
+            icon={Building2}
+            value={String(universities.length)}
+            label="University profiles"
+          />
+          <CourseTrustStat
+            icon={GraduationCap}
+            value={String(programCatalog.length)}
+            label="Course families"
+            bordered
+          />
+          <CourseTrustStat icon={BarChart3} value="3" label="Compare together" />
+        </div>
+
+        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-start lg:gap-5">
+          <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:rounded-2xl lg:border lg:border-border lg:bg-card lg:p-2 lg:shadow-lift">
+            <p className="hidden px-3 pb-1 pt-2 text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground lg:block">
+              Browse courses
             </p>
             <div
               className="contents lg:flex lg:flex-col lg:gap-1"
@@ -296,8 +318,7 @@ export function HomePage() {
             >
               {courseTabs.map((tab) => {
                 const selected = courseLevel === tab;
-                const label =
-                  tab === "Masters" ? "Postgraduate" : tab === "Bachelors" ? "Undergraduate" : tab;
+                const meta = courseTabMeta[tab];
                 const count =
                   tab === "Popular"
                     ? programCatalog.length
@@ -310,13 +331,23 @@ export function HomePage() {
                     aria-pressed={selected}
                     onClick={() => setCourseLevel(tab)}
                     className={cn(
-                      "flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-full border px-5 text-sm font-extrabold transition-colors lg:w-full lg:rounded-xl lg:border-transparent lg:px-3 lg:text-left",
+                      "flex min-h-11 shrink-0 items-center justify-between gap-3 rounded-full border px-4 text-left text-xs font-extrabold transition-[background-color,border-color,color,transform] active:scale-[0.98] lg:min-h-[3.6rem] lg:w-full lg:rounded-xl lg:border-transparent lg:px-3",
                       selected
-                        ? "border-[#325dd2] bg-[#325dd2] text-white"
-                        : "border-border bg-card text-muted-foreground hover:border-[#325dd2] hover:text-foreground lg:bg-transparent",
+                        ? "border-[#325dd2] bg-[#325dd2] text-white shadow-card"
+                        : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:bg-[#f6f8fc] hover:text-foreground lg:bg-transparent",
                     )}
                   >
-                    <span>{label}</span>
+                    <span className="min-w-0">
+                      <span className="block">{meta.label}</span>
+                      <span
+                        className={cn(
+                          "mt-1 hidden text-[9px] font-bold leading-3 lg:block",
+                          selected ? "text-white/75" : "text-[#325dd2] dark:text-[#8cb0ff]",
+                        )}
+                      >
+                        {meta.helper}
+                      </span>
+                    </span>
                     <span
                       className={cn(
                         "hidden rounded-full px-2 py-0.5 text-[10px] lg:inline-flex",
@@ -330,8 +361,26 @@ export function HomePage() {
               })}
             </div>
             <Link
+              to="/specialisations"
+              className="hidden min-h-[3.6rem] flex-col justify-center rounded-xl px-3 text-xs font-extrabold text-foreground hover:bg-[#f6f8fc] lg:flex"
+            >
+              Specialisations
+              <span className="mt-1 text-[9px] font-bold text-[#325dd2] dark:text-[#8cb0ff]">
+                Explore career directions
+              </span>
+            </Link>
+            <Link
+              to="/compare"
+              className="hidden min-h-[3.6rem] flex-col justify-center rounded-xl px-3 text-xs font-extrabold text-foreground hover:bg-[#f6f8fc] lg:flex"
+            >
+              Compare universities
+              <span className="mt-1 text-[9px] font-bold text-[#325dd2] dark:text-[#8cb0ff]">
+                Keep three side by side
+              </span>
+            </Link>
+            <Link
               to="/programs"
-              className="hidden min-h-11 items-center justify-between rounded-xl px-3 text-xs font-extrabold text-[#2449ad] hover:bg-secondary dark:text-[#8cb0ff] lg:flex"
+              className="hidden min-h-11 items-center justify-between border-t border-border px-3 pt-2 text-xs font-extrabold text-[#2449ad] hover:text-[#173b68] dark:text-[#8cb0ff] lg:flex"
             >
               All online courses <ArrowRight className="h-4 w-4" />
             </Link>
@@ -342,11 +391,10 @@ export function HomePage() {
             rows={2}
             columns={4}
             className="mt-2 lg:mt-0"
-            railClassName="auto-cols-[88%] gap-3 sm:auto-cols-[47%] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
+            railClassName="auto-cols-[47%] gap-2.5 sm:auto-cols-[31.5%] lg:auto-cols-[calc((100%-2.5rem)/6)] lg:gap-2"
           >
             {visibleCourses.map((program, index) => {
               const offers = universitiesOfferingProgram(program.slug);
-              const logoUniversities = offers.slice(0, 3).map(({ university }) => university);
               const isPriorityCourse = program.code === "MBA" || program.code === "MCA";
 
               return (
@@ -355,70 +403,43 @@ export function HomePage() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore Online ${program.code}, ${program.name}`}
-                  className="group flex min-h-[9.5rem] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:-translate-y-1 hover:border-[#7699ee] hover:shadow-lift"
+                  className="group flex h-[9rem] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:-translate-y-1 hover:border-[#7699ee] hover:shadow-lift"
                   style={{ animationDelay: `${Math.min(index, 7) * 45}ms` }}
                 >
-                  <span className="flex min-h-0 flex-1 flex-col p-3">
-                    <span className="flex items-start justify-between gap-2">
-                      <span className="flex min-w-0 items-center gap-2.5">
-                        <span
-                          className={cn(
-                            "flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[11px] font-black transition-transform duration-300 group-hover:scale-105",
-                            program.code === "MBA" || program.code === "BBA"
-                              ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
-                              : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
-                          )}
-                        >
-                          {courseMark(program.code)}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block font-display text-base font-extrabold leading-5">
-                            Online {program.code}
-                          </span>
-                          <span className="mt-0.5 block text-[11px] font-semibold text-muted-foreground">
-                            {program.level}
-                          </span>
-                        </span>
-                      </span>
-                      <span className="shrink-0 rounded-full bg-secondary px-2 py-1 text-[10px] font-extrabold leading-none text-muted-foreground">
-                        {program.durationYears} yr
-                      </span>
+                  <span className="flex min-h-0 flex-1 flex-col items-center px-2 pb-2 pt-1.5 text-center">
+                    <span
+                      className={cn(
+                        "inline-flex min-h-5 max-w-full items-center truncate rounded-full px-2 text-[9px] font-black",
+                        isPriorityCourse
+                          ? "bg-[#dff8ec] text-[#0f7553] dark:bg-[#123b30] dark:text-[#77ddb4]"
+                          : "bg-[#fff0e0] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]",
+                      )}
+                    >
+                      {isPriorityCourse ? "Popular" : `${program.durationYears} year course`}
                     </span>
-
-                    <span className="mt-2 line-clamp-1 text-xs font-semibold leading-4 text-muted-foreground">
-                      {program.name}
+                    <span
+                      className={cn(
+                        "mt-1.5 flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-black transition-transform duration-300 group-hover:scale-110",
+                        program.code === "MBA" || program.code === "BBA"
+                          ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
+                          : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+                      )}
+                    >
+                      {courseMark(program.code)}
                     </span>
-
-                    <span className="mt-auto flex min-w-0 items-end justify-between gap-2 pt-2">
-                      <span className="flex min-w-0 items-center gap-2">
-                        <span className="flex shrink-0 -space-x-1.5" aria-hidden="true">
-                          {logoUniversities.map((university, logoIndex) => (
-                            <UniversityLogo
-                              key={university.slug}
-                              university={university}
-                              size="sm"
-                              priority={index < 2 && logoIndex === 0}
-                              className="h-6 w-6 rounded-full border-2 border-white dark:border-[#191f2b]"
-                            />
-                          ))}
-                        </span>
-                        <span className="truncate text-[10px] font-bold text-muted-foreground sm:text-[11px]">
-                          {offers.length
-                            ? `${offers.length} university profiles`
-                            : "Explore course options"}
-                        </span>
-                      </span>
-                      {isPriorityCourse ? (
-                        <span className="shrink-0 rounded-full bg-[#fff0e6] px-2 py-1 text-[9px] font-black uppercase tracking-[0.06em] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]">
-                          Popular
-                        </span>
-                      ) : null}
+                    <span className="mt-1 line-clamp-2 min-h-8 text-[11px] font-extrabold leading-4 text-foreground sm:text-xs">
+                      Online {program.code}
+                    </span>
+                    <span className="mt-auto truncate text-[9px] font-semibold text-muted-foreground sm:text-[10px]">
+                      {offers.length
+                        ? `${offers.length} university ${offers.length === 1 ? "profile" : "profiles"}`
+                        : program.name}
                     </span>
                   </span>
-                  <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#2449ad]">
-                    Explore options
+                  <span className="flex min-h-7 shrink-0 items-center justify-center gap-1 bg-[#325dd2] px-2 text-[10px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#2449ad] sm:text-[11px]">
+                    View options
                     <ChevronRight
-                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
+                      className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
                       aria-hidden="true"
                     />
                   </span>
@@ -1017,6 +1038,39 @@ function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisio
       </span>
       <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />
     </Link>
+  );
+}
+
+function CourseTrustStat({
+  icon: Icon,
+  value,
+  label,
+  bordered = false,
+}: {
+  icon: typeof Building2;
+  value: string;
+  label: string;
+  bordered?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex min-w-0 items-center justify-center gap-2 px-2 py-3 sm:gap-3 sm:py-4",
+        bordered && "border-x border-border",
+      )}
+    >
+      <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff] sm:flex">
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <span className="min-w-0 text-center sm:text-left">
+        <span className="block font-display text-lg font-black leading-5 text-[#131720] dark:text-foreground sm:text-xl">
+          {value}
+        </span>
+        <span className="mt-0.5 block text-[9px] font-bold leading-3 text-muted-foreground sm:text-[11px]">
+          {label}
+        </span>
+      </span>
+    </div>
   );
 }
 
