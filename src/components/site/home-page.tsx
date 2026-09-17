@@ -105,35 +105,64 @@ const heroTrustPoints = [
   { label: "Human guidance when needed", icon: Users },
 ] as const;
 
-const decisionTools = [
+const decisionSpotlights = [
   {
-    title: "Course finder",
-    description: "Tell us your goal and get a starting shortlist.",
+    tab: "Fit check",
+    eyebrow: "Start with your situation",
+    title: "Will an online degree work for me?",
+    description: "Check your qualification, goal and available study time before comparing names.",
     icon: Target,
     to: "/finder" as const,
+    action: "Check my fit",
+  },
+  {
+    tab: "Compare",
+    eyebrow: "See the differences clearly",
+    title: "Which university details should I compare?",
+    description:
+      "Keep up to three profiles together and review course, duration and available fee details.",
+    icon: BarChart3,
+    to: "/compare" as const,
+    action: "Start comparing",
+  },
+  {
+    tab: "Study plan",
+    eyebrow: "Make learning sustainable",
+    title: "Can I build a study routine around work?",
+    description:
+      "Think through your weekly time, preferred pace and support needs before you enrol.",
+    icon: Clock3,
+    to: "/finder" as const,
+    action: "Build my starting plan",
+  },
+] as const;
+
+const preAdmissionTools = [
+  { title: "Course finder", icon: Target, to: "/finder" as const, color: "blue" },
+  { title: "Compare universities", icon: BarChart3, to: "/compare" as const, color: "orange" },
+  { title: "Explore courses", icon: GraduationCap, to: "/programs" as const, color: "green" },
+  { title: "Browse universities", icon: Building2, to: "/universities" as const, color: "violet" },
+  {
+    title: "Choose a specialisation",
+    icon: Lightbulb,
+    to: "/specialisations" as const,
     color: "blue",
   },
   {
-    title: "University compare",
-    description: "Keep up to three options together while you decide.",
-    icon: BarChart3,
-    to: "/compare" as const,
-    color: "orange",
-  },
-  {
-    title: "Specialisation explorer",
-    description: "Connect subjects with the work you want to do.",
-    icon: Lightbulb,
-    to: "/specialisations" as const,
-    color: "green",
-  },
-  {
     title: "Before-you-pay check",
-    description: "Know what to confirm for your exact intake.",
     icon: ShieldCheck,
     to: "/methodology" as const,
-    color: "violet",
+    color: "orange",
   },
+] as const;
+
+const afterAdmissionTools = [
+  { title: "Plan study time", icon: Clock3, to: "/finder" as const, color: "blue" },
+  { title: "Review course details", icon: BookOpenCheck, to: "/programs" as const, color: "green" },
+  { title: "University profiles", icon: Building2, to: "/universities" as const, color: "violet" },
+  { title: "Talk to a counsellor", icon: Users, to: "/contact" as const, color: "orange" },
+  { title: "Compare again", icon: BarChart3, to: "/compare" as const, color: "blue" },
+  { title: "Ask Diya", icon: Sparkles, action: "diya" as const, color: "orange" },
 ] as const;
 
 const guides = [
@@ -221,6 +250,8 @@ export function HomePage() {
   const [heroGoal, setHeroGoal] = useState<(typeof heroGoals)[number]["label"]>("Online degree");
   const [heroRole, setHeroRole] = useState<(typeof heroRoles)[number]>("Student");
   const [courseLevel, setCourseLevel] = useState<CourseTab>("Popular");
+  const [decisionSpotlight, setDecisionSpotlight] = useState(0);
+  const [toolGroup, setToolGroup] = useState<"before" | "after">("before");
 
   const selectedHeroGoal = heroGoals.find((goal) => goal.label === heroGoal) ?? heroGoals[0];
   const visibleCourses = useMemo(() => {
@@ -237,6 +268,8 @@ export function HomePage() {
   }, [courseLevel]);
   const featuredUniversities = useMemo(() => orderedUniversities().slice(0, 12), []);
   const featuredSpecialisations = useMemo(() => getAllSpecialisations().slice(0, 14), []);
+  const activeSpotlight = decisionSpotlights[decisionSpotlight] ?? decisionSpotlights[0];
+  const visibleDecisionTools = toolGroup === "before" ? preAdmissionTools : afterAdmissionTools;
 
   return (
     <div className="overflow-hidden bg-background text-foreground">
@@ -450,39 +483,177 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-[#f6f8fc] py-9 dark:bg-secondary/25 lg:py-14">
+      <section className="border-y border-[#dce5f7] bg-[#edf3ff] py-9 dark:border-border dark:bg-[#172237] lg:py-14">
         <div className="container-page">
-          <SectionIntro
-            eyebrow="Your decision toolkit"
-            title="Everything you need in one place"
-            description="Explore on your own, then ask Diya or a counsellor when you want help."
-          />
-          <div className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
-            {decisionTools.map((tool) => (
-              <ToolCard key={tool.title} {...tool} />
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-[#325dd2] text-white shadow-lift dark:border-[#202a3c] sm:h-24 sm:w-24">
+              <activeSpotlight.icon className="h-9 w-9 sm:h-11 sm:w-11" aria-hidden="true" />
+            </span>
+            <p className="mt-5 text-[10px] font-black uppercase tracking-[0.14em] text-[#2449ad] dark:text-[#9eb8f5]">
+              {activeSpotlight.eyebrow}
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-black tracking-tight text-[#131720] dark:text-white sm:text-4xl">
+              {activeSpotlight.title}
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#4b5a70] dark:text-[#c6cfdd] sm:text-base">
+              {activeSpotlight.description}
+            </p>
+            <Button
+              asChild
+              className="mt-5 min-h-12 rounded-xl bg-[#325dd2] px-6 text-white hover:bg-[#2449ad]"
+            >
+              <Link to={activeSpotlight.to}>
+                {activeSpotlight.action} <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+            <div
+              className="mt-6 flex justify-center gap-2"
+              role="tablist"
+              aria-label="Decision checks"
+            >
+              {decisionSpotlights.map((item, index) => (
+                <button
+                  key={item.tab}
+                  type="button"
+                  role="tab"
+                  aria-selected={decisionSpotlight === index}
+                  onClick={() => setDecisionSpotlight(index)}
+                  className={cn(
+                    "min-h-10 rounded-full border px-3 text-[10px] font-extrabold transition-[background-color,border-color,color,transform] active:scale-[0.98] sm:px-4 sm:text-xs",
+                    decisionSpotlight === index
+                      ? "border-[#325dd2] bg-[#325dd2] text-white"
+                      : "border-[#cbd7ee] bg-white text-[#475569] hover:border-[#86a2e8] hover:text-[#2449ad] dark:border-[#344158] dark:bg-[#1c2739] dark:text-[#d8dfeb]",
+                  )}
+                >
+                  {item.tab}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container-page py-9 lg:py-14">
+        <SectionIntro
+          eyebrow="Decide with clarity"
+          title="Tools, guidance & more — all in one place"
+          description="Use the tools you need now. Everything opens directly, without hiding the result behind a sign-up."
+        />
+        <div className="mt-5 min-w-0 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-5">
+          <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:overflow-visible lg:pb-0">
+            <button
+              type="button"
+              aria-pressed={toolGroup === "before"}
+              onClick={() => setToolGroup("before")}
+              className={cn(
+                "min-h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition-colors lg:min-h-14 lg:w-full lg:text-sm",
+                toolGroup === "before"
+                  ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
+                  : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:text-foreground",
+              )}
+            >
+              Before admission
+            </button>
+            <button
+              type="button"
+              aria-pressed={toolGroup === "after"}
+              onClick={() => setToolGroup("after")}
+              className={cn(
+                "min-h-12 shrink-0 rounded-xl border px-4 text-xs font-extrabold transition-colors lg:min-h-14 lg:w-full lg:text-sm",
+                toolGroup === "after"
+                  ? "border-[#325dd2] bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]"
+                  : "border-border bg-card text-muted-foreground hover:border-[#86a2e8] hover:text-foreground",
+              )}
+            >
+              After admission
+            </button>
+            <p className="hidden px-2 pt-2 text-[10px] font-semibold leading-4 text-muted-foreground lg:block">
+              Choose a group to keep the page simple and relevant.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+            {visibleDecisionTools.map((tool) => (
+              <ToolCard key={tool.title} tool={tool} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-[#f3f7ff] py-9 dark:bg-[#162035] lg:py-14">
+        <div className="container-page grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10">
+          <div className="text-center lg:text-left">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ffad70]">
+              Your always-available course guide
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-black tracking-tight sm:text-4xl">
+              A simpler first step starts with Ask Diya AI.
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground lg:mx-0 sm:text-base">
+              Ask about MBA, MCA, university profiles, specialisations or what to compare. Diya uses
+              the DekhoCampus catalogue and shows where you should confirm details.
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
+              {["Find an MBA", "Compare universities", "Choose a specialisation"].map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+                  className="min-h-10 rounded-full border border-[#b8c8ea] bg-white px-3 text-[11px] font-extrabold text-[#2449ad] shadow-card transition-[transform,border-color,box-shadow] hover:-translate-y-0.5 hover:border-[#325dd2] hover:shadow-lift active:scale-[0.98] dark:border-[#405070] dark:bg-[#1c2739] dark:text-[#b9ceff]"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+            <Button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+              className="mt-5 min-h-12 rounded-xl bg-[#325dd2] px-6 text-white hover:bg-[#2449ad]"
+            >
+              Ask Diya AI <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </Button>
+            <p className="mt-3 text-[10px] font-semibold leading-4 text-muted-foreground">
+              Guidance only. Confirm your exact intake, eligibility, fee and dates on official
+              sources.
+            </p>
           </div>
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
-            className="mt-4 flex min-h-[4.5rem] w-full items-center gap-3 rounded-2xl bg-[#325dd2] p-3 text-left text-white shadow-card transition-[transform,background-color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#2449ad] hover:shadow-lift active:scale-[0.99] motion-reduce:transform-none"
+            className="group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-[1.75rem] border border-[#cbd7ee] bg-white text-left shadow-lift transition-[transform,border-color,box-shadow] hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-xl active:scale-[0.99] dark:border-[#344158] dark:bg-[#1c2739] motion-reduce:transform-none"
+            aria-label="Open Ask Diya AI"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
-              <img
-                src="/diya-ai.webp"
-                alt=""
-                width={90}
-                height={96}
-                className="h-12 w-12 object-cover"
-              />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-display text-base font-extrabold">Hi, I’m Diya</span>
-              <span className="mt-0.5 block text-xs leading-4 text-white/80">
-                Ask me to find a course, university or specialisation.
+            <span className="flex items-center gap-3 bg-[#325dd2] px-5 py-4 text-white">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-white">
+                <img
+                  src="/diya-ai.webp"
+                  alt=""
+                  width={90}
+                  height={96}
+                  className="h-14 w-14 object-cover"
+                />
+              </span>
+              <span>
+                <span className="block font-display text-lg font-black">Diya by DekhoCampus</span>
+                <span className="mt-0.5 block text-xs font-semibold text-white/85">
+                  Online education guide
+                </span>
               </span>
             </span>
-            <ArrowRight className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <span className="space-y-3 p-5">
+              <span className="block max-w-[88%] rounded-2xl rounded-tl-md bg-[#edf2ff] px-4 py-3 text-xs font-semibold leading-5 text-[#263b65] dark:bg-[#263653] dark:text-[#dce7ff]">
+                Tell me what you have studied and what you want to do next.
+              </span>
+              <span className="ml-auto block max-w-[82%] rounded-2xl rounded-br-md bg-[#fff0e6] px-4 py-3 text-xs font-semibold leading-5 text-[#79350c] dark:bg-[#3d281c] dark:text-[#ffd0ad]">
+                I want to compare online MBA options.
+              </span>
+              <span className="flex min-h-11 items-center justify-between rounded-xl border border-border px-3 text-xs font-bold text-muted-foreground">
+                Ask anything about online courses
+                <ArrowRight
+                  className="h-4 w-4 text-[#325dd2] transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </span>
+            </span>
           </button>
         </div>
       </section>
@@ -1014,29 +1185,52 @@ function HeroSection({
   );
 }
 
-function ToolCard({ title, description, icon: Icon, to, color }: (typeof decisionTools)[number]) {
+type DecisionTool = (typeof preAdmissionTools)[number] | (typeof afterAdmissionTools)[number];
+
+function ToolCard({ tool }: { tool: DecisionTool }) {
+  const Icon = tool.icon;
   const colorClass = {
     blue: "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
     orange: "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]",
     green: "bg-[#eaf7f1] text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]",
     violet: "bg-[#f2edff] text-[#6243a8] dark:bg-[#302648] dark:text-[#cab8ff]",
-  }[color];
+  }[tool.color];
 
-  return (
-    <Link
-      to={to}
-      className="group flex min-h-[7.75rem] flex-col rounded-2xl border border-border bg-card p-3 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8.25rem] sm:p-4"
-    >
-      <span className={cn("flex h-10 w-10 items-center justify-center rounded-xl", colorClass)}>
+  const content = (
+    <>
+      <span
+        className={cn(
+          "flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
+          colorClass,
+        )}
+      >
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
-      <span className="mt-3 block text-sm font-extrabold leading-4 sm:text-base sm:leading-5">
-        {title}
+      <span className="mt-3 line-clamp-2 block text-xs font-extrabold leading-4 sm:text-[13px]">
+        {tool.title}
       </span>
-      <span className="mt-1.5 line-clamp-2 text-[10px] leading-4 text-muted-foreground sm:text-xs sm:leading-5">
-        {description}
-      </span>
-      <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-[#2449ad]" />
+      <ArrowRight className="mt-auto h-4 w-4 self-end text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-[#2449ad]" />
+    </>
+  );
+
+  const className =
+    "group flex min-h-[7.5rem] flex-col rounded-xl border border-border bg-card p-3 text-left shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none sm:min-h-[8rem]";
+
+  if ("action" in tool) {
+    return (
+      <button
+        type="button"
+        onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
+        className={className}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <Link to={tool.to} className={className}>
+      {content}
     </Link>
   );
 }
