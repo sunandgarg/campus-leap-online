@@ -15,7 +15,6 @@ import {
   Laptop2,
   Lightbulb,
   Search,
-  Send,
   ShieldCheck,
   Sparkles,
   Target,
@@ -90,6 +89,13 @@ const quickLinks = [
   { label: "Courses", helper: "Choose a degree", to: "/programs" as const, icon: GraduationCap },
   { label: "Find my fit", helper: "3 quick questions", to: "/finder" as const, icon: Sparkles },
   { label: "Compare", helper: "Keep 3 side by side", to: "/compare" as const, icon: BarChart3 },
+] as const;
+
+const heroTrustPoints = [
+  { label: "Browse before enquiring", icon: Search },
+  { label: "Compare without signing up", icon: BarChart3 },
+  { label: "Check your exact intake", icon: ShieldCheck },
+  { label: "Human guidance when needed", icon: Users },
 ] as const;
 
 const decisionTools = [
@@ -235,16 +241,26 @@ export function HomePage() {
         onRoleChange={setHeroRole}
       />
 
-      <section className="container-page -mt-4 relative z-10 pb-8 sm:-mt-6 lg:pb-10">
-        <nav
-          aria-label="Popular ways to start"
-          className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-card p-2 shadow-lift md:grid-cols-4"
-        >
+      <section className="container-page relative z-10 border-b border-border py-5 sm:py-6 lg:py-7">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#a94300] dark:text-[#ffad70]">
+              Start here
+            </p>
+            <h2 className="mt-1 font-display text-lg font-extrabold sm:text-xl">
+              What would you like to do?
+            </h2>
+          </div>
+          <span className="hidden text-xs font-semibold text-muted-foreground sm:block">
+            No sign-up needed
+          </span>
+        </div>
+        <nav aria-label="Popular ways to start" className="grid grid-cols-2 gap-2 md:grid-cols-4">
           {quickLinks.map((item) => (
             <Link
               key={item.label}
               to={item.to}
-              className="group flex min-h-[4.5rem] items-center gap-3 rounded-xl px-3 py-2.5 transition-[transform,background-color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:bg-secondary hover:shadow-card active:scale-[0.985] motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
+              className="group flex min-h-[4.5rem] items-center gap-3 rounded-2xl border border-border bg-card px-3 py-2.5 shadow-card transition-[transform,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-lift active:scale-[0.985] motion-reduce:transform-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2]"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf2ff] text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#263653] dark:text-[#b9ceff]">
                 <item.icon className="h-5 w-5" aria-hidden="true" />
@@ -260,7 +276,7 @@ export function HomePage() {
         </nav>
       </section>
 
-      <section className="container-page py-7 sm:py-9 lg:py-11">
+      <section className="container-page py-9 sm:py-11 lg:py-14">
         <SectionIntro
           eyebrow="Popular courses"
           title="What would you like to study?"
@@ -413,7 +429,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
+      <section className="border-y border-border bg-[#f6f8fc] py-9 dark:bg-secondary/25 lg:py-14">
         <div className="container-page">
           <SectionIntro
             eyebrow="Your decision toolkit"
@@ -450,7 +466,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="container-page py-8 lg:py-12">
+      <section className="container-page py-9 lg:py-14">
         <SectionIntro
           eyebrow="Online universities"
           title="Explore popular university profiles"
@@ -522,7 +538,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-8 dark:bg-secondary/25 lg:py-12">
+      <section className="border-y border-border bg-[#f6f8fc] py-9 dark:bg-secondary/25 lg:py-14">
         <div className="container-page">
           <SectionIntro
             eyebrow="Popular specialisations"
@@ -734,53 +750,65 @@ function HeroSection({
   onRoleChange: (role: (typeof heroRoles)[number]) => void;
 }) {
   return (
-    <section className="relative isolate overflow-hidden border-b border-[#d8e0f1] bg-[#eff4ff] dark:border-border dark:bg-background">
+    <section className="relative isolate overflow-hidden border-b border-[#d8e0f1] bg-white dark:border-border dark:bg-background">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[#f47b25]"
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute -right-40 top-8 h-[30rem] w-[30rem] rounded-full bg-[#dbe7ff] dark:bg-[#1d2c4a]"
-        aria-hidden="true"
-      />
-      <div className="container-page relative grid min-w-0 gap-5 pb-9 pt-7 sm:gap-7 sm:pb-12 sm:pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.72fr)] lg:items-center lg:gap-12 lg:py-14 xl:min-h-[590px]">
+      <div className="container-page relative grid min-w-0 gap-8 pb-9 pt-7 sm:pb-12 sm:pt-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.72fr)] lg:items-center lg:gap-14 lg:py-14 xl:min-h-[570px]">
         <div className="min-w-0 max-w-[760px]">
-          <div className="brand-kicker border-l-4 border-[#f47b25] pl-3">
-            <GraduationCap className="h-4 w-4 text-foreground" aria-hidden="true" />
-            Built for online learners
+          <div className="inline-flex min-h-8 items-center gap-2 rounded-full border border-[#f0d2bc] bg-[#fff8f3] px-3 text-[10px] font-black uppercase tracking-[0.14em] text-[#a94300] dark:border-[#704128] dark:bg-[#2d211a] dark:text-[#ffad70]">
+            <GraduationCap className="h-4 w-4" aria-hidden="true" />
+            Compare · choose · move forward
           </div>
-          <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#536176] dark:text-muted-foreground sm:text-sm">
-            <span className="h-2 w-2 rounded-full bg-[#168258]" />
-            Explore freely. Ask for help only when you want it.
-          </p>
 
-          <h1 className="mt-4 max-w-[740px] font-display text-[2.3rem] font-extrabold leading-[1.02] tracking-[-0.05em] text-[#131720] dark:text-foreground min-[390px]:text-[2.6rem] sm:mt-5 sm:text-[3.65rem] xl:text-[4.45rem]">
-            Discover Your Ideal{" "}
-            <span className="block text-[#325dd2] dark:text-[#8cb0ff]">Path.</span>
+          <h1 className="mt-4 max-w-[740px] font-display text-[2.4rem] font-black leading-[1.04] tracking-[-0.052em] text-[#131720] dark:text-foreground min-[390px]:text-[2.7rem] sm:mt-5 sm:text-[3.65rem] xl:text-[4.15rem]">
+            Discover your ideal{" "}
+            <span className="text-[#325dd2] dark:text-[#8cb0ff]">online path.</span>
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-[#536176] dark:text-muted-foreground sm:mt-5 sm:text-lg sm:leading-8">
-            Find online courses, explore universities and compare your options—without feeling lost.
+            Explore courses, compare universities and understand the next step—all in one calm, easy
+            place.
           </p>
 
           <form action="/search" className="mt-4 max-w-2xl sm:mt-5" role="search">
-            <div className="flex min-h-13 items-center gap-2 rounded-2xl border border-input bg-card p-1 pl-3 shadow-card sm:min-h-16 sm:gap-3 sm:p-1.5 sm:pl-5">
+            <div className="flex min-h-14 items-center gap-2 rounded-2xl border border-input bg-card p-1.5 pl-4 shadow-lift sm:min-h-16 sm:gap-3 sm:pl-5">
               <Search className="h-5 w-5 shrink-0 text-[#667386]" aria-hidden="true" />
               <input
                 name="q"
                 aria-label="Search universities or online courses"
-                placeholder="Search MBA, BBA, university..."
+                placeholder="Search MBA, MCA, BBA, university..."
                 className="h-11 min-w-0 flex-1 rounded-md bg-transparent text-sm text-foreground outline-none placeholder:text-[#667386] placeholder:opacity-100 focus-visible:ring-2 focus-visible:ring-[#325dd2] sm:text-base"
               />
               <button
                 type="submit"
                 aria-label="Search courses and universities"
-                className="inline-flex h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#f47b25] px-3 text-sm font-extrabold text-[#111827] transition-colors hover:bg-[#d85f12] sm:h-12 sm:min-w-28 sm:px-5"
+                className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#325dd2] px-4 text-sm font-extrabold text-white transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-[#2449ad] active:scale-[0.98] sm:h-12 sm:min-w-28 sm:px-5"
               >
-                <Send className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Search</span>
+                <Search className="h-4 w-4" aria-hidden="true" />
+                <span>Search</span>
               </button>
             </div>
           </form>
+
+          <div className="mt-3 grid max-w-2xl gap-2 min-[390px]:grid-cols-2">
+            <Button
+              asChild
+              className="min-h-11 w-full bg-[#102a4c] font-extrabold text-white hover:bg-[#173b68]"
+            >
+              <Link to="/universities">
+                <Building2 className="mr-2 h-4 w-4" /> Explore universities
+              </Link>
+            </Button>
+            <Button
+              asChild
+              className="min-h-11 w-full bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#e56e1e]"
+            >
+              <Link to="/contact">
+                <Users className="mr-2 h-4 w-4" /> Free counselling
+              </Link>
+            </Button>
+          </div>
 
           <div className="mt-3 flex max-w-2xl items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <span className="shrink-0 text-[11px] font-bold text-muted-foreground">Popular:</span>
@@ -800,22 +828,81 @@ function HeroSection({
             ))}
           </div>
 
-          <div className="mt-4 grid max-w-2xl grid-cols-3 gap-2 border-t border-[#cfd9ee] pt-3 dark:border-border sm:mt-5 sm:pt-4">
-            <HeroMetric value={String(universities.length)} label="Universities" />
-            <HeroMetric value={String(programCatalog.length)} label="Courses" />
-            <HeroMetric value={String(getSpecialisationCount())} label="Specialisations" />
+          <div className="mt-4 grid max-w-2xl grid-cols-2 gap-x-3 gap-y-2 border-t border-[#e2e6ee] pt-4 dark:border-border">
+            {heroTrustPoints.map((item) => (
+              <span
+                key={item.label}
+                className="flex min-w-0 items-center gap-2 text-[11px] font-bold leading-4 text-[#344054] dark:text-muted-foreground sm:text-xs"
+              >
+                <item.icon
+                  className="h-4 w-4 shrink-0 text-[#325dd2] dark:text-[#8cb0ff]"
+                  aria-hidden="true"
+                />
+                {item.label}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-5 lg:hidden">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground">
+                Explore university profiles
+              </p>
+              <Link
+                to="/universities"
+                className="text-[11px] font-extrabold text-[#2449ad] dark:text-[#8cb0ff]"
+              >
+                View all
+              </Link>
+            </div>
+            <div className="mt-2 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {orderedUniversities()
+                .slice(0, 6)
+                .map((university, index) => (
+                  <Link
+                    key={university.slug}
+                    to="/universities/$universitySlug"
+                    params={{ universitySlug: university.slug }}
+                    aria-label={`Explore ${university.name}`}
+                    className="flex h-14 w-[4.65rem] shrink-0 items-center justify-center rounded-xl border border-border bg-card p-1.5 shadow-card"
+                  >
+                    <UniversityLogo
+                      university={university}
+                      size="sm"
+                      priority={index < 3}
+                      className="h-10 w-full border-0 bg-white"
+                    />
+                  </Link>
+                ))}
+            </div>
           </div>
         </div>
 
         <aside
-          className="w-full min-w-0 overflow-hidden rounded-3xl border border-[#d4dced] border-t-4 border-t-[#325dd2] bg-card p-3.5 shadow-lift sm:p-6"
+          className="hidden w-full min-w-0 overflow-hidden rounded-[1.75rem] border border-[#d4dced] bg-[#f7f9fd] p-5 shadow-lift dark:bg-card lg:block sm:p-6"
           aria-label="Find a suitable course"
         >
           <div className="flex items-center justify-between gap-3">
-            <span className="inline-flex min-h-8 items-center gap-2 rounded-full bg-[#eaf7f1] px-3 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
-              <Sparkles className="h-3.5 w-3.5" /> Personal starting point
+            <span className="flex items-center gap-2">
+              <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-[#325dd2] shadow-card">
+                <img
+                  src="/diya-ai.webp"
+                  alt=""
+                  width={90}
+                  height={96}
+                  className="h-11 w-11 object-cover"
+                />
+              </span>
+              <span>
+                <span className="block text-sm font-extrabold">Start with Diya</span>
+                <span className="block text-[10px] font-semibold text-muted-foreground">
+                  A simple starting shortlist
+                </span>
+              </span>
             </span>
-            <span className="text-[10px] font-bold text-muted-foreground">About 1 min</span>
+            <span className="rounded-full bg-[#eaf7f1] px-2.5 py-1 text-[10px] font-extrabold text-[#166b4e] dark:bg-[#123b30] dark:text-[#77ddb4]">
+              1 minute
+            </span>
           </div>
           <h2 className="mt-3 font-display text-lg font-extrabold leading-tight sm:mt-4 sm:text-2xl">
             What matters most right now?
@@ -903,19 +990,6 @@ function HeroSection({
         </aside>
       </div>
     </section>
-  );
-}
-
-function HeroMetric({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="min-w-0">
-      <p className="font-display text-xl font-extrabold text-[#131720] dark:text-foreground sm:text-2xl">
-        {value}
-      </p>
-      <p className="mt-0.5 text-[10px] font-bold uppercase leading-3 tracking-[0.04em] text-muted-foreground sm:text-[11px]">
-        {label}
-      </p>
-    </div>
   );
 }
 

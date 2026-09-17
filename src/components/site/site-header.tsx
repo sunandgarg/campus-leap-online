@@ -190,7 +190,7 @@ export function SiteHeader() {
       className="sticky top-0 z-50 border-b border-border bg-background shadow-[0_1px_0_rgba(19,23,32,0.02)]"
     >
       <div className="container-page relative flex h-14 items-center justify-between gap-2 sm:h-16">
-        <div className="flex min-w-0 items-center gap-1.5 lg:gap-0">
+        <div className="flex min-w-0 items-center lg:gap-0">
           <button
             ref={mobileMenuButtonRef}
             type="button"
@@ -198,7 +198,7 @@ export function SiteHeader() {
             aria-expanded={open}
             aria-controls="mobile-navigation-panel"
             onClick={toggleMobileNavigation}
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-foreground transition-colors hover:bg-secondary lg:hidden"
+            className="absolute right-0 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground shadow-card transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-secondary active:scale-95 lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -246,7 +246,7 @@ export function SiteHeader() {
           <Link
             to="/compare"
             aria-label={`Compare universities${comparison.count ? `, ${comparison.count} selected` : ""}`}
-            className="relative inline-flex h-10 items-center gap-1.5 rounded-full border border-[#c8d5f8] bg-[#edf2ff] px-3 text-[11px] font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:border-[#41547d] dark:bg-[#263653] dark:text-[#b9ceff] sm:h-11 sm:text-xs lg:hidden"
+            className="relative mr-12 hidden h-10 items-center gap-1.5 rounded-full border border-[#c8d5f8] bg-[#edf2ff] px-3 text-[11px] font-extrabold text-[#2449ad] transition-colors hover:border-[#325dd2] dark:border-[#41547d] dark:bg-[#263653] dark:text-[#b9ceff] sm:inline-flex sm:h-11 sm:text-xs lg:hidden"
           >
             <GitCompareArrows className="h-4 w-4" aria-hidden="true" />
             <span>Compare</span>
