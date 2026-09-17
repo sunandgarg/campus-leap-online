@@ -20,6 +20,7 @@ import {
   Target,
   Users,
   WalletCards,
+  type LucideIcon,
 } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 
@@ -68,11 +69,58 @@ const popularCourseOrder = [
 
 const popularCourseRank = new Map(popularCourseOrder.map((code, index) => [code, index]));
 
-function courseMark(code: string) {
-  if (code === "MSc Data Science") return "MSc";
-  if (code === "PGD DS") return "PGD";
-  if (code.startsWith("MA ")) return "MA";
-  return code;
+type CourseVisual = {
+  icon: LucideIcon;
+  iconClassName: string;
+  stageClassName: string;
+};
+
+function getCourseVisual(code: string): CourseVisual {
+  if (code === "MBA") {
+    return {
+      icon: BriefcaseBusiness,
+      stageClassName: "border-[#f5c9a8] bg-[#fff6ef] dark:border-[#684124] dark:bg-[#34271e]",
+      iconClassName: "text-[#d85d12] dark:text-[#ffad70]",
+    };
+  }
+
+  if (code === "BBA" || code === "M.Com" || code === "B.Com") {
+    return {
+      icon: code === "BBA" ? BarChart3 : WalletCards,
+      stageClassName: "border-[#bcd8cc] bg-[#f1faf6] dark:border-[#285443] dark:bg-[#17332a]",
+      iconClassName: "text-[#167453] dark:text-[#78d8b5]",
+    };
+  }
+
+  if (code === "MCA" || code === "BCA" || code === "MSc Data Science" || code === "PGD DS") {
+    return {
+      icon: code === "BCA" ? Laptop2 : Code2,
+      stageClassName: "border-[#c7d5f6] bg-[#f2f6ff] dark:border-[#345181] dark:bg-[#1d2d4a]",
+      iconClassName: "text-[#2458d3] dark:text-[#9bb8ff]",
+    };
+  }
+
+  if (code === "MSW") {
+    return {
+      icon: Users,
+      stageClassName: "border-[#f0c5cf] bg-[#fff4f6] dark:border-[#6e3948] dark:bg-[#38232a]",
+      iconClassName: "text-[#b93f5d] dark:text-[#ff9db4]",
+    };
+  }
+
+  if (code === "BA" || code.startsWith("MA ")) {
+    return {
+      icon: BookOpenCheck,
+      stageClassName: "border-[#d7ccf2] bg-[#f8f5ff] dark:border-[#504273] dark:bg-[#2a243b]",
+      iconClassName: "text-[#6e4db7] dark:text-[#bea8f2]",
+    };
+  }
+
+  return {
+    icon: GraduationCap,
+    stageClassName: "border-[#c7d5f6] bg-[#f2f6ff] dark:border-[#345181] dark:bg-[#1d2d4a]",
+    iconClassName: "text-[#2458d3] dark:text-[#9bb8ff]",
+  };
 }
 
 const heroGoals = [
@@ -422,9 +470,11 @@ export function HomePage() {
             className="mt-2 lg:mt-0"
             railClassName="auto-cols-[47%] gap-2.5 sm:auto-cols-[31.5%] lg:auto-cols-[calc((100%-3rem)/7)] lg:gap-2"
           >
-            {visibleCourses.map((program, index) => {
+            {visibleCourses.map((program) => {
               const offers = universitiesOfferingProgram(program.slug);
               const isPriorityCourse = program.code === "MBA" || program.code === "MCA";
+              const courseVisual = getCourseVisual(program.code);
+              const CourseIcon = courseVisual.icon;
 
               return (
                 <Link
@@ -432,40 +482,41 @@ export function HomePage() {
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore Online ${program.code}, ${program.name}`}
-                  className="group flex h-[8.65rem] flex-col overflow-hidden rounded-[0.7rem] border border-border bg-white shadow-[0_3px_12px_rgba(15,23,42,0.12)] transition-[border-color,box-shadow] duration-200 active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 hover:border-[#7699ee] hover:shadow-[0_5px_16px_rgba(37,88,211,0.16)] dark:bg-card"
-                  style={{ animationDelay: `${Math.min(index, 7) * 45}ms` }}
+                  className="group flex h-[8.75rem] flex-col overflow-hidden rounded-[0.65rem] border border-[#e1e6ef] bg-white shadow-[0_3px_10px_rgba(15,23,42,0.1)] transition-[border-color,box-shadow] duration-200 active:scale-[0.985] hover:border-[#9ab1e8] hover:shadow-[0_6px_16px_rgba(15,23,42,0.13)] dark:border-border dark:bg-card"
                 >
-                  <span className="flex min-h-0 flex-1 flex-col items-center px-1.5 pb-1.5 pt-1 text-center">
+                  <span className="flex min-h-0 flex-1 flex-col items-center px-2 pb-1.5 pt-1 text-center">
                     <span
                       className={cn(
-                        "inline-flex min-h-[1.15rem] max-w-full items-center truncate rounded-full px-2 text-[8px] font-black sm:text-[9px]",
+                        "inline-flex min-h-5 max-w-full items-center truncate rounded-full px-2 text-[9px] font-extrabold sm:text-[10px]",
                         isPriorityCourse
                           ? "bg-[#dff8ec] text-[#0f7553] dark:bg-[#123b30] dark:text-[#77ddb4]"
                           : "bg-[#fff0e0] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]",
                       )}
                     >
-                      {isPriorityCourse ? "Popular" : `${program.durationYears} year course`}
+                      {isPriorityCourse ? "Popular choice" : `${program.durationYears} year course`}
                     </span>
                     <span
                       className={cn(
-                        "mt-1 flex h-7 w-7 items-center justify-center rounded-md text-[9px] font-black",
-                        program.code === "MBA" || program.code === "BBA"
-                          ? "bg-[#fff0e6] text-[#a94300] dark:bg-[#3d281c] dark:text-[#ffad70]"
-                          : "bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]",
+                        "relative mt-1 flex h-9 w-9 items-center justify-center rounded-lg border",
+                        courseVisual.stageClassName,
                       )}
                     >
-                      {courseMark(program.code)}
+                      <CourseIcon
+                        className={cn("h-[1.15rem] w-[1.15rem]", courseVisual.iconClassName)}
+                        strokeWidth={1.9}
+                        aria-hidden="true"
+                      />
                     </span>
-                    <span className="mt-1 line-clamp-2 min-h-7 text-[10px] font-extrabold leading-3.5 text-foreground sm:text-[11px]">
+                    <span className="mt-1 line-clamp-2 min-h-7 text-[11px] font-extrabold leading-3.5 text-foreground">
                       Online {program.code}
                     </span>
-                    <span className="mt-auto max-w-full truncate text-[8px] font-semibold text-muted-foreground sm:text-[9px]">
+                    <span className="mt-auto max-w-full truncate text-[9px] font-semibold text-muted-foreground sm:text-[10px]">
                       {offers.length
                         ? `${offers.length} university ${offers.length === 1 ? "profile" : "profiles"}`
                         : program.name}
                     </span>
                   </span>
-                  <span className="flex min-h-7 shrink-0 items-center justify-center gap-1 bg-[#2458d3] px-2 text-[9px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#1746b8] sm:text-[10px]">
+                  <span className="flex min-h-7 shrink-0 items-center justify-center gap-1 bg-[#2458d3] px-2 text-[10px] font-extrabold text-white transition-colors duration-200 group-hover:bg-[#1746b8]">
                     View options
                     <ChevronRight
                       className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1"
