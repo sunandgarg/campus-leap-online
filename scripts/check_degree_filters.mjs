@@ -39,6 +39,17 @@ assert.equal(exports.degreeOptions(programCatalog, "unknown").length, 0);
 assert.equal(exports.degreeOptions([], "online-mba").length, 0);
 assert.ok(source.includes('useState("all")'));
 assert.ok(source.includes('aria-label="Explore by interest"'));
+assert.ok(
+  source.includes("aria-label={name}"),
+  "Short mobile labels must preserve full accessible names",
+);
+assert.ok(source.includes('shortName: "Business & Startups"'));
+assert.ok(source.includes('shortName: "Media & Comms"'));
+const shell = fs.readFileSync("src/components/site/home-shell.tsx", "utf8");
+assert.ok(
+  shell.includes("h-11 min-w-0 rounded-full px-3 text-xs sm:min-w-24"),
+  "Mobile help button must fit a 320px header",
+);
 assert.ok(source.includes("setInterestIndex(index)") && source.includes('setCourse("all")'));
 assert.ok(source.includes('label="Choose an online course"'));
 assert.ok(source.includes("View all courses"));

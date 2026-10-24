@@ -87,7 +87,10 @@ export function HomeHeader() {
             <Search className="h-4 w-4" />
             <span className="hidden xl:inline">Search</span>
           </Link>
-          <Button asChild className="h-11 rounded-full px-3 text-xs sm:px-5 sm:text-sm">
+          <Button
+            asChild
+            className="h-11 min-w-0 rounded-full px-3 text-xs sm:min-w-24 sm:px-5 sm:text-sm"
+          >
             <Link to="/contact">
               <span className="sm:hidden">Get help</span>
               <span className="hidden sm:inline">Free counselling</span>

@@ -37,13 +37,19 @@ const interests = [
   { name: "Marketing & Digital", icon: Megaphone, codes: ["MBA", "MA JMC", "BBA"] },
   {
     name: "Business & Entrepreneurship",
+    shortName: "Business & Startups",
     icon: BriefcaseBusiness,
     codes: ["MBA", "M.Com", "BBA", "B.Com"],
   },
   { name: "Healthcare & Management", icon: HeartPulse, codes: ["MBA", "BBA"] },
   { name: "Operations & Supply Chain", icon: SlidersHorizontal, codes: ["MBA", "BBA"] },
   { name: "HR & People", icon: Users, codes: ["MBA", "MSW", "BBA"] },
-  { name: "Media & Communication", icon: Clapperboard, codes: ["MA JMC", "BA"] },
+  {
+    name: "Media & Communication",
+    shortName: "Media & Comms",
+    icon: Clapperboard,
+    codes: ["MA JMC", "BA"],
+  },
   { name: "Explore all interests", icon: Layers3, codes: [] },
 ];
 
@@ -80,10 +86,11 @@ export function HomeDegreeBrowser() {
       </header>
       <div className="home-interest-browser mt-6">
         <nav className="ambition-interests" aria-label="Explore by interest">
-          {interests.map(({ name, icon: Icon }, index) => (
+          {interests.map(({ name, shortName, icon: Icon }, index) => (
             <button
               key={name}
               type="button"
+              aria-label={name}
               aria-pressed={interestIndex === index}
               onClick={() => {
                 setInterestIndex(index);
@@ -91,7 +98,16 @@ export function HomeDegreeBrowser() {
               }}
             >
               <Icon size={18} className="shrink-0" />
-              <span>{name}</span>
+              <span>
+                {shortName ? (
+                  <>
+                    <span className="md:hidden">{shortName}</span>
+                    <span className="hidden md:inline">{name}</span>
+                  </>
+                ) : (
+                  name
+                )}
+              </span>
               <ArrowRight size={14} className="ml-auto shrink-0" />
             </button>
           ))}
