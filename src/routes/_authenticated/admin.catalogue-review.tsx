@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { catalogueImportSummary } from "@/data/catalogue-import-summary";
 import { universities } from "@/data/universities";
-import { supabase } from "@/integrations/supabase/client";
+import { getResearchBatch, listResearchRecords } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/admin/catalogue-review")({
   component: CatalogueReviewPage,
@@ -86,17 +86,8 @@ function CatalogueReviewPage() {
   const batchQuery = useQuery({
     queryKey: ["admin", "catalogue-import", "latest-ready"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("catalogue_import_batches")
-        .select(
-          "import_id, dataset_id, merged_on, source_file_sha256, import_status, statistics, acceptance_invariants, ready_at",
-        )
-        .eq("import_status", "ready")
-        .order("ready_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (error) throw error;
-      return data as ImportBatch | null;
+      const { batch } = await getResearchBatch<ImportBatch>();
+      return batch;
     },
   });
 
@@ -104,37 +95,16 @@ function CatalogueReviewPage() {
     queryKey: ["admin", "catalogue-import", batchQuery.data?.import_id, search, bucket, page],
     enabled: Boolean(batchQuery.data?.import_id),
     queryFn: async () => {
-      const importId = batchQuery.data?.import_id;
-      if (!importId) return { rows: [] as ResearchRecord[], count: 0 };
-
-      let query = supabase
-        .from("catalogue_research_records")
-        .select(
-          "course_row_id, canonical_university_slug, university_display_name, state_ut, course, specialisation, import_bucket, catalogue_candidate, reference_session, checked_on, evidence_status, publication_ready, catalogue_evidence_url, programme_source_url_current, fee_source_url, full_course_fee_inr, fee_evidence_status",
-          { count: "exact" },
-        )
-        .eq("import_id", importId);
-
-      if (bucket !== "all") query = query.eq("import_bucket", bucket);
       const normalizedSearch = search
         .trim()
         .replace(/[^\p{L}\p{N}\s.-]/gu, " ")
         .replace(/\s+/g, " ")
         .slice(0, 80);
-      if (normalizedSearch) {
-        query = query.textSearch("search_document", normalizedSearch, {
-          config: "simple",
-          type: "websearch",
-        });
-      }
-
-      const start = page * PAGE_SIZE;
-      const { data, error, count } = await query
-        .order("university_display_name", { ascending: true })
-        .order("course", { ascending: true })
-        .range(start, start + PAGE_SIZE - 1);
-      if (error) throw error;
-      return { rows: (data ?? []) as ResearchRecord[], count: count ?? 0 };
+      return listResearchRecords<ResearchRecord>({
+        page,
+        search: normalizedSearch,
+        bucket,
+      });
     },
   });
 
@@ -227,7 +197,7 @@ function CatalogueReviewPage() {
         <QueueStatus
           icon={FileCheck2}
           title="The validated dataset is ready to import"
-          description="The repository includes the complete compressed handoff and importer. Run the import after the Supabase migration is applied."
+          description="The repository includes the complete compressed handoff and importer. Run the import after the D1 migration is applied."
         />
       ) : recordsQuery.isError ? (
         <QueueStatus

@@ -1,85 +1,66 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
-import { isAbsolute, relative, resolve } from "node:path";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, join, resolve } from "node:path";
 
-import { createClient } from "@supabase/supabase-js";
-
-const PROJECT_URL = "https://tzhjdxewkwjftuofaelk.supabase.co";
-const BUCKET = "university-logos";
-const CACHE_SECONDS = "31536000";
-const CONCURRENCY = 8;
-
-function readOption(name) {
+function option(name, fallback) {
   const index = process.argv.indexOf(name);
-  const value = index >= 0 ? process.argv[index + 1] : undefined;
-  if (!value) throw new Error(`Missing required option: ${name}`);
-  return value;
+  return index >= 0 ? process.argv[index + 1] : fallback;
 }
 
-function resolveLocalAsset(root, file) {
-  if (typeof file !== "string" || !file) throw new Error("Manifest logo filename is missing.");
-  const target = resolve(root, file);
-  const pathFromRoot = relative(root, target);
-  if (pathFromRoot.startsWith("..") || isAbsolute(pathFromRoot)) {
-    throw new Error(`Manifest logo filename escapes the asset directory: ${file}`);
-  }
-  return target;
-}
+const bucket = option("--bucket", "dekhocampus-online-assets");
+const profile = option("--profile", "chetan-deploy");
+const manifestPath = resolve(option("--manifest", "data/university-logo-manifest.json"));
+const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+if (!Array.isArray(manifest) || !manifest.length) throw new Error("Logo manifest is empty.");
 
-function storageObjectPath(item) {
-  const path = item.storage_path ?? (item.storage_file ? `v1/${item.storage_file}` : undefined);
-  if (typeof path !== "string" || !path || path.startsWith("/") || path.includes("..")) {
-    throw new Error("Manifest storage path is missing or unsafe.");
-  }
-  return path;
-}
-
-async function main() {
-  const keyFile = resolve(readOption("--key-file"));
-  const manifestFile = resolve(readOption("--manifest"));
-  const logoDirectory = resolve(readOption("--directory"));
-  const serviceKey = (await readFile(keyFile, "utf8")).trim();
-  const manifest = JSON.parse(await readFile(manifestFile, "utf8"));
-
-  if (!serviceKey || !Array.isArray(manifest) || manifest.length === 0) {
-    throw new Error("The service key or logo manifest is empty.");
-  }
-
-  const supabase = createClient(PROJECT_URL, serviceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const failures = [];
+const directory = await mkdtemp(join(tmpdir(), "dekhocampus-r2-"));
+try {
   let uploaded = 0;
-
-  for (let start = 0; start < manifest.length; start += CONCURRENCY) {
-    const batch = manifest.slice(start, start + CONCURRENCY);
-    const results = await Promise.all(
-      batch.map(async (item) => {
-        const localFile = item.local_file ?? item.storage_file;
-        const objectPath = storageObjectPath(item);
-        const contents = await readFile(resolveLocalAsset(logoDirectory, localFile));
-        const { error } = await supabase.storage.from(BUCKET).upload(objectPath, contents, {
-          cacheControl: CACHE_SECONDS,
-          contentType: item.content_type,
-          upsert: true,
-        });
-        return { file: localFile, objectPath, error };
-      }),
-    );
-
-    for (const result of results) {
-      if (result.error) {
-        failures.push(`${result.file} -> ${result.objectPath}: ${result.error.message}`);
-      } else uploaded += 1;
+  for (const item of manifest) {
+    if (
+      typeof item.public_url !== "string" ||
+      typeof item.storage_path !== "string" ||
+      item.storage_path.includes("..")
+    ) {
+      throw new Error(`Unsafe logo manifest entry: ${item.slug ?? "unknown"}`);
     }
+    const response = await fetch(item.public_url);
+    if (!response.ok) throw new Error(`Could not download ${item.public_url}: ${response.status}`);
+    const contents = Buffer.from(await response.arrayBuffer());
+    const digest = createHash("sha256").update(contents).digest("hex");
+    if (item.sha256 && digest !== item.sha256) {
+      throw new Error(`Checksum mismatch for ${item.public_url}`);
+    }
+    const localPath = join(directory, basename(item.storage_path));
+    await writeFile(localPath, contents);
+    execFileSync(
+      "npx",
+      [
+        "wrangler",
+        "r2",
+        "object",
+        "put",
+        `${bucket}/university-logos/${item.storage_path}`,
+        "--remote",
+        "--profile",
+        profile,
+        "--file",
+        localPath,
+        "--content-type",
+        item.content_type || "application/octet-stream",
+        "--cache-control",
+        "public, max-age=31536000, immutable",
+      ],
+      { stdio: "inherit" },
+    );
+    uploaded += 1;
     process.stdout.write(`\rUploaded ${uploaded}/${manifest.length}`);
   }
-
   process.stdout.write("\n");
-  if (failures.length > 0) {
-    throw new Error(`Upload failures:\n${failures.join("\n")}`);
-  }
+} finally {
+  await rm(directory, { recursive: true, force: true });
 }
-
-await main();

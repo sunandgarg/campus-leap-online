@@ -1,0 +1,91 @@
+University and course reference implementation — 24 October 2026
+
+LOCAL PREVIEW
+http://127.0.0.1:8092/
+
+Requested pages implemented:
+/online-universities/amity-university-online-900012
+/online-universities/lpu-online-900011
+/online-universities/amity-university-online-900012/courses-fees/mba-online-in-data-science-1104242
+/online-universities/jiit-online-900015/courses-fees/mba-online-in-marketing-management-1104317
+
+IMPLEMENTED
+Shared compact university/course templates: breadcrumb, logo, framed university
+image, hero actions, Overview / Courses & Fees / Faculty tabs, expandable contents,
+fee and academic tables, curriculum, FAQs, admission checklist and counselling.
+Apply Now opens a focus-managed enquiry dialog. Sidebar enquiry remains available.
+Existing consent, optional university sharing, contact-channel selection, validation
+and anti-bot protections are retained. Course/specialisation context is included in
+the existing lead message, not silently dropped.
+Global compact header: Top Universities, Trending Degrees, Trending Specializations,
+More, Scholarships, search, Course Finder and mobile drawer.
+Global four-column footer and eight degree quick-access columns with real internal
+links and university marks. Diya remains DekhoCampus-branded.
+140 public university URLs, 53 general course URLs and two specialist course URLs.
+Provided numeric identifiers are supported for the three requested universities
+and two specialist courses. Other profiles use our own stable numeric identifiers,
+not a claim to reproduce the competitor's entire identifier database.
+Existing university/course detail URLs redirect permanently to the new format.
+Unreviewed catalogue/intake profiles remain noindex,follow. Sitemap uses the new
+detail URLs only for currently reviewed records. The old course-section anchor works.
+Homepage content and the existing fee calculator / featured-course lead gate remain.
+
+NOT A 100% COPY — INTENTIONAL DIFFERENCES
+DekhoCampus identity, Diya, editorial copy and university-published images remain.
+Competitor authors, counsellor photographs, testimonials, proprietary subscription
+products, social accounts, article text and scholarship countdown are not copied.
+Our form includes consent/security controls, so its fields and height differ.
+Generic course/public IDs beyond the explicitly requested examples differ.
+Footer links serve this online-degree catalogue: offline exam pages, city-based
+college directories, FMC Pass and competitor-owned IntelliCompare are not recreated.
+The existing comparison tool and course finder remain DekhoCampus implementations.
+Responsive interactions and spacing are implemented, not a pixel-diff certification
+of every reference breakpoint or animation frame.
+
+DATA AND CONTENT STILL NEEDED
+JIIT Marketing MBA: official page does not publish a definitive current fee; a
+written university quote is needed. Its official academic-system PDF is linked,
+but a current specialisation-specific semester syllabus still needs review.
+Amity Data Science MBA: INR 225,000 programme / INR 56,300 semester are dated
+published snapshots, not a guaranteed all-inclusive quote. Semester rounding and
+possible extra charges are explained. Snapshot is hidden after 31 October 2026.
+Amity's exact current admission conditions still need confirmation.
+Most general catalogue offerings lack current intake-level fee evidence locally;
+these show a request-current-fee state, not guessed prices.
+Current university/programme entitlement for the intended academic session must
+be reviewed before removing noindex or describing admissions as open.
+Current faculty rosters, course-specific ranking evidence, placement rates/company
+counts and salary figures have not been invented. The appropriate sections state
+what is unavailable and link to official information.
+Amity/university-wide brochure files are not available in this implementation:
+Request Brochure leads to counselling instead of pretending to download a PDF.
+Gallery has one reviewed image for each of Amity, LPU and JIIT, not a full campus
+album/video tour. Other university profiles use their logo rather than stock imagery.
+
+OFFICIAL REFERENCES
+https://amityonline.com/mba-data-science-online
+https://api-otp.amityonline.com/mba-data-science-online
+https://www.jiitonline.com/academics/online-mba-programs/marketing-management/
+https://www.jiitonline.com/wp-content/uploads/2026/03/JIIT-CDOE-Academic-System-MBA.pdf
+https://www.lpuonline.com/
+Image provenance is in public/online-profiles/SOURCES.txt. These photos are
+university-published, not DekhoCampus-owned. Confirm reuse/partner rights before
+public deployment. No competitor staff images were used.
+
+VERIFICATION
+Production build and TypeScript check pass. Targeted ESLint has no errors/warnings.
+Route tests cover unique IDs, 140 universities, 53 general offerings, both exact
+specialist routes, fee expiry/future dates and cross-university isolation.
+HTTP checks cover 193 catalogue detail pages, the four requested pages, tabs,
+old-to-new 301s, invalid-route 404s, canonical URLs and linked internal destinations.
+Existing homepage/navigation/fee-calculator/featured-learning regressions pass.
+Browser checks cover desktop menu opening/closing, mobile navigation, tab changes,
+manual light/dark controls, the enquiry dialog and blank-form validation.
+No personal details were submitted and no real lead was created during these tests.
+
+RELEASE STATUS
+Local implementation only. No production deploy, database migration, commit or
+push was performed in this request. Live D1 persistence, production catalogue data,
+Turnstile credentials/hostname behavior and lead delivery still need a controlled
+end-to-end production/staging test. Local preview can use bundled catalogue data
+when its local D1 catalogue is unavailable; HTTP success is not proof of live DB data.

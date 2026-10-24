@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-import { createHash, randomUUID } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { extname, resolve } from "node:path";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { extname, join, resolve } from "node:path";
 import { gunzipSync } from "node:zlib";
-import { createClient } from "@supabase/supabase-js";
 
 const DEFAULT_INPUT = "data/catalogue-import-2026-09-13.json.gz";
 function argumentValue(name) {
@@ -28,11 +29,8 @@ const importManifestPath = directSourceJson
 const crosswalkPath = directSourceJson
   ? resolve("data/catalogue-import-2026-09-13.university-crosswalk.json")
   : inputPath.replace(/\.json\.gz$/i, ".university-crosswalk.json");
-const supabaseUrl = argumentValue("--url") ?? process.env.SUPABASE_URL;
-const serviceRoleKeyFile = argumentValue("--key-file");
-const serviceRoleKey = serviceRoleKeyFile
-  ? (await readFile(resolve(serviceRoleKeyFile), "utf8")).trim()
-  : process.env.SUPABASE_SERVICE_ROLE_KEY;
+const databaseName = argumentValue("--database") ?? "dekhocampus-online";
+const wranglerProfile = argumentValue("--profile") ?? "chetan-deploy";
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -57,13 +55,11 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-async function insertChunks(client, table, rows, size = 100) {
-  for (let start = 0; start < rows.length; start += size) {
-    const chunk = rows.slice(start, start + size);
-    const { error } = await client.from(table).insert(chunk);
-    if (error)
-      throw new Error(`${table} rows ${start + 1}-${start + chunk.length}: ${error.message}`);
-  }
+function sql(value) {
+  if (value === null || value === undefined || value === "") return "NULL";
+  if (typeof value === "number") return Number.isFinite(value) ? String(value) : "NULL";
+  if (typeof value === "boolean") return value ? "1" : "0";
+  return `'${String(value).replaceAll("'", "''")}'`;
 }
 
 const stored = await readFile(inputPath);
@@ -309,191 +305,77 @@ if (validateOnly) {
   process.exit(0);
 }
 
-if (!supabaseUrl || !serviceRoleKey) {
-  throw new Error(
-    "SUPABASE_URL plus SUPABASE_SERVICE_ROLE_KEY or --key-file are required after validation",
+const importId = sourceFileSha256.slice(0, 32);
+const readyAt = new Date().toISOString();
+const statements = [
+  `INSERT OR IGNORE INTO catalogue_import_batches (
+    import_id,dataset_id,merged_on,source_file_sha256,import_status,statistics,
+    acceptance_invariants,ready_at
+  ) VALUES (${sql(importId)},${sql(payload.dataset_id)},${sql(payload.merged_on)},${sql(sourceFileSha256)},'ready',${sql(JSON.stringify(payload.statistics ?? {}))},${sql(JSON.stringify(payload.acceptance_invariants ?? {}))},${sql(readyAt)});`,
+];
+
+for (const record of payload.records) {
+  const mapping = mappingByUniversityId.get(record.university_id);
+  statements.push(
+    `INSERT OR IGNORE INTO catalogue_research_records (
+      import_id,course_row_id,canonical_university_slug,university_display_name,state_ut,
+      course,specialisation,import_bucket,catalogue_candidate,reference_session,checked_on,
+      evidence_status,publication_ready,catalogue_evidence_url,programme_source_url_current,
+      fee_source_url,full_course_fee_inr,fee_evidence_status,raw_record
+    ) VALUES (${[
+      importId,
+      record.course_row_id,
+      mapping.canonical_slug,
+      record.university_display_name,
+      nullableText(record.state_ut),
+      record.course,
+      nullableText(record.specialisation),
+      record.import_bucket,
+      record.catalogue_candidate,
+      nullableText(record.reference_session),
+      nullableText(record.checked_on),
+      nullableText(record.evidence_status),
+      nullableText(record.publication_ready),
+      nullableText(record.catalogue_evidence_url),
+      nullableText(record.programme_source_url_current),
+      nullableText(record.fee_source_url),
+      nullablePositiveMoney(
+        record.full_course_fee_inr,
+        "full_course_fee_inr",
+        record.course_row_id,
+      ),
+      nullableText(record.fee_evidence_status),
+      {},
+    ]
+      .map((value) => sql(typeof value === "object" ? JSON.stringify(value) : value))
+      .join(",")});`,
   );
 }
-if (!/^https:\/\/[a-z0-9]+\.supabase\.co\/?$/i.test(supabaseUrl)) {
-  throw new Error("SUPABASE_URL must be a hosted Supabase project URL");
-}
 
-const client = createClient(supabaseUrl.replace(/\/$/, ""), serviceRoleKey, {
-  auth: { autoRefreshToken: false, persistSession: false },
-});
-
-const { data: existingBatch, error: existingError } = await client
-  .from("catalogue_import_batches")
-  .select("import_id, dataset_id, import_status, source_file_sha256, ready_at")
-  .eq("dataset_id", payload.dataset_id)
-  .eq("import_status", "ready")
-  .order("ready_at", { ascending: false })
-  .limit(1)
-  .maybeSingle();
-if (existingError) throw new Error(`Could not inspect existing import: ${existingError.message}`);
-
-if (existingBatch) {
-  if (existingBatch.source_file_sha256 !== sourceFileSha256) {
-    throw new Error(
-      `Dataset ${payload.dataset_id} is already ready with a different checksum; publish a new dataset ID instead of replacing it`,
-    );
-  }
-  console.log(
-    JSON.stringify(
-      { ...validationResult, status: "already_ready", import_id: existingBatch.import_id },
-      null,
-      2,
-    ),
-  );
-  process.exit(0);
-}
-
-const importId = randomUUID();
-const batch = {
-  import_id: importId,
-  dataset_id: payload.dataset_id,
-  schema_version: payload.schema_version,
-  merged_on: payload.merged_on,
-  source_file_sha256: sourceFileSha256,
-  import_status: "staging",
-  scope: payload.scope,
-  source_precedence: payload.source_precedence,
-  money_encoding: payload.money_encoding,
-  publication_default: payload.publication_default,
-  statistics: payload.statistics,
-  field_dictionary: payload.field_dictionary,
-  acceptance_invariants: payload.acceptance_invariants,
-  failure_reason: null,
-  ready_at: null,
-};
-const { error: batchError } = await client.from("catalogue_import_batches").insert(batch);
-if (batchError) throw new Error(`Could not create import batch: ${batchError.message}`);
-
+const sqlDirectory = await mkdtemp(join(tmpdir(), "dekhocampus-d1-import-"));
+const sqlFile = join(sqlDirectory, "catalogue-research.sql");
 try {
-  const universities = payload.universities.map((university) => ({
-    import_id: importId,
-    university_id: university.university_id,
-    canonical_slug: mappingByUniversityId.get(university.university_id).canonical_slug,
-    university_display_name: university.university_display_name,
-    legal_university_name: nullableText(university.legal_university_name),
-    state_ut: nullableText(university.state_ut),
-    registry_status: nullableText(university.registry_status),
-    publication_status: university.publication_status,
-    is_published: university.is_published,
-    current_intake_approval_certified: university.current_intake_approval_certified,
-    source_url: nullableText(university.source_url),
-    source_reference_period: nullableText(university.source_reference_period),
-    identity_rechecked_on: nullableText(university.identity_rechecked_on),
-    raw_record: university,
-  }));
-  await insertChunks(client, "catalogue_research_universities", universities);
-
-  const records = payload.records.map((record) => ({
-    import_id: importId,
-    course_row_id: record.course_row_id,
-    university_id: record.university_id,
-    canonical_university_slug: mappingByUniversityId.get(record.university_id).canonical_slug,
-    university_display_name: record.university_display_name,
-    legal_university_name: nullableText(record.legal_university_name),
-    state_ut: nullableText(record.state_ut),
-    course: record.course,
-    specialisation: nullableText(record.specialisation),
-    collaboration_partner: nullableText(record.collaboration_partner),
-    import_bucket: record.import_bucket,
-    record_kind: nullableText(record.record_kind),
-    course_level: nullableText(record.course_level),
-    publication_status: record.publication_status,
-    is_published: record.is_published,
-    catalogue_candidate: record.catalogue_candidate,
-    online_mode_evidence_status: nullableText(record.online_mode_evidence_status),
-    current_intake_approval_status: nullableText(record.current_intake_approval_status),
-    regulatory_session_clearance: nullableText(record.regulatory_session_clearance),
-    audit_disposition: nullableText(record.audit_disposition),
-    audit_reason: nullableText(record.audit_reason),
-    publication_ready: nullableText(record.publication_ready),
-    evidence_status: nullableText(record.evidence_status),
-    evidence_type: nullableText(record.evidence_type),
-    reference_session: nullableText(record.reference_session),
-    checked_on: nullableText(record.checked_on),
-    catalogue_evidence_url: nullableText(record.catalogue_evidence_url),
-    programme_source_url_current: nullableText(record.programme_source_url_current),
-    fee_source_url: nullableText(record.fee_source_url),
-    fee_checked_on: nullableText(record.fee_checked_on),
-    per_semester_fee_inr: nullablePositiveMoney(
-      record.per_semester_fee_inr,
-      "per_semester_fee_inr",
-      record.course_row_id,
-    ),
-    per_year_fee_inr: nullablePositiveMoney(
-      record.per_year_fee_inr,
-      "per_year_fee_inr",
-      record.course_row_id,
-    ),
-    full_course_fee_inr: nullablePositiveMoney(
-      record.full_course_fee_inr,
-      "full_course_fee_inr",
-      record.course_row_id,
-    ),
-    fee_evidence_status: nullableText(record.fee_evidence_status),
-    fee_display_note: nullableText(record.fee_display_note),
-    quality_flags: Array.isArray(record.quality_flags) ? record.quality_flags : [],
-    source_ids: Array.isArray(record.source_ids) ? record.source_ids : [],
-    selected_fee_quote_id: nullableText(record.selected_fee_quote_id),
-    parent_programme_id: nullableText(record.parent_programme_id),
-    parent_programme_title: nullableText(record.parent_programme_title),
-    track_name: nullableText(record.track_name),
-    raw_source_row_sha256: record.raw_source_row_sha256,
-    raw_record: record,
-  }));
-  await insertChunks(client, "catalogue_research_records", records, 75);
-
-  const sources = payload.sources.map((source) => ({
-    import_id: importId,
-    source_id: source.source_id,
-    url: source.url,
-    roles: source.roles ?? [],
-    course_row_ids: source.course_row_ids ?? [],
-    recorded_checked_on_dates: source.recorded_checked_on_dates ?? [],
-    freshly_fetched_in_this_merge: source.freshly_fetched_in_this_merge === true,
-    source_status: source.source_status,
-    raw_record: source,
-  }));
-  await insertChunks(client, "catalogue_research_sources", sources);
-
-  const recordSources = payload.records.flatMap((record) =>
-    record.source_ids.map((sourceId) => ({
-      import_id: importId,
-      course_row_id: record.course_row_id,
-      source_id: sourceId,
-    })),
+  await writeFile(sqlFile, statements.join("\n"));
+  execFileSync(
+    "npx",
+    [
+      "wrangler",
+      "d1",
+      "execute",
+      databaseName,
+      "--remote",
+      "--yes",
+      "--profile",
+      wranglerProfile,
+      "--file",
+      sqlFile,
+    ],
+    { stdio: "inherit" },
   );
-  await insertChunks(client, "catalogue_research_record_sources", recordSources);
-
-  const feeQuotes = payload.historical_fee_quotes.map((quote) => ({
-    import_id: importId,
-    archived_quote_id: quote.archived_quote_id,
-    source_quote_id: nullableText(quote.source_quote_id),
-    source_snapshot: nullableText(quote.source_snapshot),
-    source_id: quote.source_id,
-    usage: quote.usage,
-    raw_record: quote,
-  }));
-  await insertChunks(client, "catalogue_research_fee_quotes", feeQuotes);
-
-  const { data, error } = await client.rpc("finalize_catalogue_research_import", {
-    p_import_id: importId,
-    p_source_file_sha256: sourceFileSha256,
-  });
-  if (error) throw new Error(`Could not finalize import: ${error.message}`);
-  console.log(JSON.stringify(data, null, 2));
-} catch (error) {
-  const message = error instanceof Error ? error.message : "Unknown catalogue import error";
-  const { error: failureError } = await client.rpc("fail_catalogue_research_import", {
-    p_import_id: importId,
-    p_failure_reason: message,
-  });
-  if (failureError) {
-    console.error(`Could not mark catalogue import failed: ${failureError.message}`);
-  }
-  throw error;
+} finally {
+  await rm(sqlDirectory, { recursive: true, force: true });
 }
+
+console.log(
+  JSON.stringify({ ...validationResult, status: "imported_to_d1", import_id: importId }, null, 2),
+);

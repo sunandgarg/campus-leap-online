@@ -6,6 +6,7 @@
   "compatibility_date": "2026-09-13",
   "compatibility_flags": ["nodejs_compat"],
   "no_bundle": true,
+  "workers_dev": false,
   "assets": {
     "binding": "ASSETS",
     "directory": ".output/public",
@@ -22,9 +23,16 @@
       "custom_domain": true,
     },
   ],
+  "d1_databases": [
+    {
+      "binding": "CATALOG_DB",
+      "database_name": "dekhocampus-online",
+      "database_id": "c369d047-e240-4832-baa5-8d80cc266ec4",
+      "migrations_dir": "migrations",
+    },
+  ],
+  // R2 is not enabled in this account. Reviewed media ships as cached static assets.
   "vars": {
-    "SUPABASE_URL": "https://tzhjdxewkwjftuofaelk.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_b57f3cn7YYu3bBTylnO-Qw_L1ZcPhoT",
     "TURNSTILE_ALLOWED_HOSTNAMES": "online.dekhocampus.com",
   },
   "observability": {

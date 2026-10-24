@@ -51,285 +51,250 @@ function createDirectoryUniversity(input: DirectoryUniversityInput): University 
 
 export const universityLogoUrls: Partial<Record<string, string>> = {
   "academy-of-maritime-education-and-training-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/academy-of-maritime-education-and-training-tamil-nadu.webp",
+    "/media/university-logos/v1/academy-of-maritime-education-and-training-tamil-nadu.webp",
   "adichunchanagiri-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/adichunchanagiri-university-karnataka.webp",
+    "/media/university-logos/v1/adichunchanagiri-university-karnataka.webp",
   "ajeenkya-d-y-patil-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/ajeenkya-d-y-patil-university-maharashtra.webp",
+    "/media/university-logos/v1/ajeenkya-d-y-patil-university-maharashtra.webp",
   "alagappa-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/alagappa-university-tamil-nadu.webp",
+    "/media/university-logos/v1/alagappa-university-tamil-nadu.webp",
   "aligarh-muslim-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/aligarh-muslim-university-uttar-pradesh.webp",
-  "alliance-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/alliance-university-karnataka.webp",
+    "/media/university-logos/v1/aligarh-muslim-university-uttar-pradesh.webp",
+  "alliance-university-online": "/media/university-logos/v1/alliance-university-karnataka.webp",
   "amity-university-rajasthan-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/amity-university-rajasthan-rajasthan.webp",
+    "/media/university-logos/v1/amity-university-rajasthan-rajasthan.webp",
   "amity-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/amity-university-uttar-pradesh-uttar-pradesh.webp",
+    "/media/university-logos/v1/amity-university-uttar-pradesh-uttar-pradesh.webp",
   "amrita-vishwa-vidyapeetham-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/amrita-vishwa-vidyapeetham-tamil-nadu.svg",
-  "andhra-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/andhra-university-andhra-pradesh.webp",
-  "anna-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/anna-university-tamil-nadu.webp",
+    "/media/university-logos/v1/amrita-vishwa-vidyapeetham-tamil-nadu.svg",
+  "andhra-university-online": "/media/university-logos/v1/andhra-university-andhra-pradesh.webp",
+  "anna-university-tamil-nadu": "/media/university-logos/v1/anna-university-tamil-nadu.webp",
   "arka-jain-university-jharkhand":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/arka-jain-university-jharkhand.webp",
+    "/media/university-logos/v1/arka-jain-university-jharkhand.webp",
   "assam-don-bosco-university-assam":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/assam-don-bosco-university-assam.webp",
+    "/media/university-logos/v1/assam-don-bosco-university-assam.webp",
   "assam-down-town-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/assam-down-town-university-assam.webp",
+    "/media/university-logos/v1/assam-down-town-university-assam.webp",
   "b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu.webp",
+    "/media/university-logos/v1/b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu.webp",
   "banasthali-vidyapith-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/banasthali-vidyapith-rajasthan.webp",
-  "bangalore-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bangalore-university-karnataka.webp",
+    "/media/university-logos/v1/banasthali-vidyapith-rajasthan.webp",
+  "bangalore-university-online": "/media/university-logos/v1/bangalore-university-karnataka.webp",
   "bennett-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bennett-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/bennett-university-uttar-pradesh.webp",
   "bharath-institute-of-higher-education-and-research-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharath-institute-of-higher-education-and-research-tamil-nadu.svg",
+    "/media/university-logos/v1/bharath-institute-of-higher-education-and-research-tamil-nadu.svg",
   "bharathiar-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharathiar-university-tamil-nadu.webp",
+    "/media/university-logos/v1/bharathiar-university-tamil-nadu.webp",
   "bharathidasan-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharathidasan-university-tamil-nadu.webp",
+    "/media/university-logos/v1/bharathidasan-university-tamil-nadu.webp",
   "bharati-vidyapeeth-deemed-to-be-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharati-vidyapeeth-deemed-to-be-university-maharashtra.svg",
-  "bit-mesra-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/birla-institute-of-technology-jharkhand.webp",
+    "/media/university-logos/v1/bharati-vidyapeeth-deemed-to-be-university-maharashtra.svg",
+  "bit-mesra-online": "/media/university-logos/v1/birla-institute-of-technology-jharkhand.webp",
   "birla-institute-of-technology-and-science-pilani-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/birla-institute-of-technology-and-science-pilani-rajasthan.svg",
-  "bml-munjal-university-haryana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bml-munjal-university-haryana.webp",
+    "/media/university-logos/v1/birla-institute-of-technology-and-science-pilani-rajasthan.svg",
+  "bml-munjal-university-haryana": "/media/university-logos/v1/bml-munjal-university-haryana.webp",
   "central-sanskrit-university-delhi":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-sanskrit-university-delhi.webp",
+    "/media/university-logos/v1/central-sanskrit-university-delhi.webp",
   "central-university-himachal-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-university-of-himachal-pradesh-himachal-pradesh.webp",
+    "/media/university-logos/v1/central-university-of-himachal-pradesh-himachal-pradesh.webp",
   "central-university-of-tamil-nadu-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-university-of-tamil-nadu-tamil-nadu.webp",
+    "/media/university-logos/v1/central-university-of-tamil-nadu-tamil-nadu.webp",
   "centurion-university-of-technology-and-management-odisha":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/centurion-university-of-technology-and-management-odisha.webp",
-  "chandigarh-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chandigarh-university-punjab.webp",
+    "/media/university-logos/v1/centurion-university-of-technology-and-management-odisha.webp",
+  "chandigarh-university-online": "/media/university-logos/v1/chandigarh-university-punjab.webp",
   "charusat-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/charotar-university-of-science-and-technology-gujarat.webp",
+    "/media/university-logos/v1/charotar-university-of-science-and-technology-gujarat.webp",
   "chaudhary-charan-singh-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chaudhary-charan-singh-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/chaudhary-charan-singh-university-uttar-pradesh.webp",
   "chhatrapati-shahu-ji-maharaj-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chhatrapati-shahu-ji-maharaj-university-uttar-pradesh.webp",
-  "chitkara-university-punjab":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chitkara-university-punjab.webp",
+    "/media/university-logos/v1/chhatrapati-shahu-ji-maharaj-university-uttar-pradesh.webp",
+  "chitkara-university-punjab": "/media/university-logos/v1/chitkara-university-punjab.webp",
   "christ-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/christ-deemed-to-be-university-karnataka.webp",
+    "/media/university-logos/v1/christ-deemed-to-be-university-karnataka.webp",
   "d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra.webp",
+    "/media/university-logos/v1/d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra.webp",
   "datta-meghe-institute-of-higher-education-and-research-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/datta-meghe-institute-of-higher-education-and-research-maharashtra.webp",
+    "/media/university-logos/v1/datta-meghe-institute-of-higher-education-and-research-maharashtra.webp",
   "dayalbagh-educational-institute-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dayalbagh-educational-institute-uttar-pradesh.webp",
+    "/media/university-logos/v1/dayalbagh-educational-institute-uttar-pradesh.webp",
   "dayananda-sagar-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dayananda-sagar-university-karnataka.webp",
+    "/media/university-logos/v1/dayananda-sagar-university-karnataka.webp",
   "deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh.webp",
-  "desh-bhagat-university-punjab":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/desh-bhagat-university-punjab.webp",
+    "/media/university-logos/v1/deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh.webp",
+  "desh-bhagat-university-punjab": "/media/university-logos/v1/desh-bhagat-university-punjab.webp",
   "devi-ahilya-vishwavidyalaya-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/devi-ahilya-vishwavidyalaya-madhya-pradesh.webp",
+    "/media/university-logos/v1/devi-ahilya-vishwavidyalaya-madhya-pradesh.webp",
   "dr-b-r-ambedkar-open-university-telangana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-b-r-ambedkar-open-university-telangana.webp",
-  "baou-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-babasaheb-ambedkar-open-university-gujarat.webp",
+    "/media/university-logos/v1/dr-b-r-ambedkar-open-university-telangana.webp",
+  "baou-online": "/media/university-logos/v1/dr-babasaheb-ambedkar-open-university-gujarat.webp",
   "dy-patil-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-d-y-patil-vidyapeeth-pune-maharashtra.webp",
+    "/media/university-logos/v1/dr-d-y-patil-vidyapeeth-pune-maharashtra.webp",
   "dr-m-g-r-educational-and-research-institute-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-m-g-r-educational-and-research-institute-tamil-nadu.webp",
+    "/media/university-logos/v1/dr-m-g-r-educational-and-research-institute-tamil-nadu.webp",
   "galgotias-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/galgotias-university-uttar-pradesh.webp",
-  "ganpat-university-gujarat":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/ganpat-university-gujarat.webp",
-  "gla-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gla-university-uttar-pradesh.webp",
-  "gls-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gls-university-gujarat.webp",
+    "/media/university-logos/v1/galgotias-university-uttar-pradesh.webp",
+  "ganpat-university-gujarat": "/media/university-logos/v1/ganpat-university-gujarat.webp",
+  "gla-university-uttar-pradesh": "/media/university-logos/v1/gla-university-uttar-pradesh.webp",
+  "gls-university-online": "/media/university-logos/v1/gls-university-gujarat.webp",
   "graphic-era-deemed-to-be-university-uttarakhand":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/graphic-era-deemed-to-be-university-uttarakhand.webp",
+    "/media/university-logos/v1/graphic-era-deemed-to-be-university-uttarakhand.webp",
   "gujarat-technological-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gujarat-technological-university-gujarat.webp",
-  "gujarat-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gujarat-university-gujarat.webp",
+    "/media/university-logos/v1/gujarat-technological-university-gujarat.webp",
+  "gujarat-university-online": "/media/university-logos/v1/gujarat-university-gujarat.webp",
   "guru-ghasidas-vishwavidyalaya-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-ghasidas-vishwavidyalaya-chhattisgarh.svg",
+    "/media/university-logos/v1/guru-ghasidas-vishwavidyalaya-chhattisgarh.svg",
   "ggsipu-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-gobind-singh-indraprastha-university-delhi.webp",
+    "/media/university-logos/v1/guru-gobind-singh-indraprastha-university-delhi.webp",
   "gjust-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-jambheshwar-university-of-science-and-technology-haryana.webp",
-  "guru-kashi-university-punjab":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-kashi-university-punjab.webp",
+    "/media/university-logos/v1/guru-jambheshwar-university-of-science-and-technology-haryana.webp",
+  "guru-kashi-university-punjab": "/media/university-logos/v1/guru-kashi-university-punjab.webp",
   "guru-nanak-dev-university-punjab":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-nanak-dev-university-punjab.webp",
+    "/media/university-logos/v1/guru-nanak-dev-university-punjab.webp",
   "hindustan-institute-of-technology-and-science-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/hindustan-institute-of-technology-and-science-tamil-nadu.webp",
+    "/media/university-logos/v1/hindustan-institute-of-technology-and-science-tamil-nadu.webp",
   "icfai-foundation-for-higher-education-telangana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/icfai-foundation-for-higher-education-telangana.svg",
-  "iift-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/indian-institute-of-foreign-trade-delhi.webp",
+    "/media/university-logos/v1/icfai-foundation-for-higher-education-telangana.svg",
+  "iift-online": "/media/university-logos/v1/indian-institute-of-foreign-trade-delhi.webp",
   "indira-gandhi-national-open-university-delhi":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/indira-gandhi-national-open-university-delhi.svg",
+    "/media/university-logos/v1/indira-gandhi-national-open-university-delhi.svg",
   "integral-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/integral-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/integral-university-uttar-pradesh.webp",
   "international-institute-of-information-technology-hyderabad-telangana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/international-institute-of-information-technology-hyderabad-telangana.webp",
-  "jagannath-university-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jagannath-university-rajasthan.svg",
+    "/media/university-logos/v1/international-institute-of-information-technology-hyderabad-telangana.webp",
+  "jagannath-university-rajasthan": "/media/university-logos/v1/jagannath-university-rajasthan.svg",
   "jain-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jain-deemed-to-be-university-karnataka.webp",
+    "/media/university-logos/v1/jain-deemed-to-be-university-karnataka.webp",
   "jaipur-national-university-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jaipur-national-university-rajasthan.webp",
-  "jamia-hamdard-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jamia-hamdard-delhi.svg",
-  "jamia-millia-islamia-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jamia-millia-islamia-delhi.svg",
+    "/media/university-logos/v1/jaipur-national-university-rajasthan.webp",
+  "jamia-hamdard-online": "/media/university-logos/v1/jamia-hamdard-delhi.svg",
+  "jamia-millia-islamia-online": "/media/university-logos/v1/jamia-millia-islamia-delhi.svg",
   "jawaharlal-nehru-university-delhi":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jawaharlal-nehru-university-delhi.svg",
+    "/media/university-logos/v1/jawaharlal-nehru-university-delhi.svg",
   "jaypee-institute-of-information-technology-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jaypee-institute-of-information-technology-uttar-pradesh.svg",
+    "/media/university-logos/v1/jaypee-institute-of-information-technology-uttar-pradesh.svg",
   "jss-academy-of-higher-education-and-research-karnataka":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jss-academy-of-higher-education-and-research-karnataka.webp",
+    "/media/university-logos/v1/jss-academy-of-higher-education-and-research-karnataka.webp",
   "kalasalingam-academy-of-research-and-education-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kalasalingam-academy-of-research-and-education-tamil-nadu.webp",
+    "/media/university-logos/v1/kalasalingam-academy-of-research-and-education-tamil-nadu.webp",
   "kalinga-institute-of-industrial-technology-odisha":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kalinga-institute-of-industrial-technology-odisha.svg",
+    "/media/university-logos/v1/kalinga-institute-of-industrial-technology-odisha.svg",
   "karnataka-state-open-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/karnataka-state-open-university-karnataka.webp",
+    "/media/university-logos/v1/karnataka-state-open-university-karnataka.webp",
   "karunya-institute-of-technology-and-sciences-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/karunya-institute-of-technology-and-sciences-tamil-nadu.svg",
+    "/media/university-logos/v1/karunya-institute-of-technology-and-sciences-tamil-nadu.svg",
   "kl-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/koneru-lakshmaiah-education-foundation-andhra-pradesh.svg",
-  "kurukshetra-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kurukshetra-university-haryana.webp",
-  "lpu-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/lovely-professional-university-punjab.webp",
+    "/media/university-logos/v1/koneru-lakshmaiah-education-foundation-andhra-pradesh.svg",
+  "kurukshetra-university-online": "/media/university-logos/v1/kurukshetra-university-haryana.webp",
+  "lpu-online": "/media/university-logos/v1/lovely-professional-university-punjab.webp",
   "madurai-kamaraj-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/madurai-kamaraj-university-tamil-nadu.webp",
+    "/media/university-logos/v1/madurai-kamaraj-university-tamil-nadu.webp",
   "maharishi-markandeshwar-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/maharishi-markandeshwar-deemed-to-be-university-haryana.webp",
+    "/media/university-logos/v1/maharishi-markandeshwar-deemed-to-be-university-haryana.webp",
   "maharshi-dayanand-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/maharshi-dayanand-university-haryana.webp",
+    "/media/university-logos/v1/maharshi-dayanand-university-haryana.webp",
   "mahatma-gandhi-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mahatma-gandhi-university-kerala.webp",
+    "/media/university-logos/v1/mahatma-gandhi-university-kerala.webp",
   "mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh.webp",
   "manav-rachna-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manav-rachna-international-institute-of-research-and-studies-haryana.webp",
+    "/media/university-logos/v1/manav-rachna-international-institute-of-research-and-studies-haryana.webp",
   "mangalayatan-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mangalayatan-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/mangalayatan-university-uttar-pradesh.webp",
   "manipal-academy-of-higher-education-karnataka":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manipal-academy-of-higher-education-karnataka.svg",
-  "manipal-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manipal-university-jaipur-rajasthan.svg",
+    "/media/university-logos/v1/manipal-academy-of-higher-education-karnataka.svg",
+  "manipal-university-online": "/media/university-logos/v1/manipal-university-jaipur-rajasthan.svg",
   "manonmaniam-sundaranar-university-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manonmaniam-sundaranar-university-tamil-nadu.webp",
-  "marwadi-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/marwadi-university-gujarat.svg",
-  "mats-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mats-university-chhattisgarh.webp",
+    "/media/university-logos/v1/manonmaniam-sundaranar-university-tamil-nadu.webp",
+  "marwadi-university-online": "/media/university-logos/v1/marwadi-university-gujarat.svg",
+  "mats-university-online": "/media/university-logos/v1/mats-university-chhattisgarh.webp",
   "meenakshi-academy-of-higher-education-and-research-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/meenakshi-academy-of-higher-education-and-research-tamil-nadu.webp",
-  "mizoram-university-mizoram":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mizoram-university-mizoram.webp",
+    "/media/university-logos/v1/meenakshi-academy-of-higher-education-and-research-tamil-nadu.webp",
+  "mizoram-university-mizoram": "/media/university-logos/v1/mizoram-university-mizoram.webp",
   "mody-university-of-science-and-technology-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mody-university-of-science-and-technology-rajasthan.webp",
+    "/media/university-logos/v1/mody-university-of-science-and-technology-rajasthan.webp",
   "mohan-babu-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mohan-babu-university-andhra-pradesh.webp",
+    "/media/university-logos/v1/mohan-babu-university-andhra-pradesh.webp",
   "noida-international-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/noida-international-university-uttar-pradesh.svg",
+    "/media/university-logos/v1/noida-international-university-uttar-pradesh.svg",
   "o-p-jindal-global-university-haryana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/o-p-jindal-global-university-haryana.webp",
-  "pp-savani-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/p-p-savani-university-gujarat.webp",
-  "parul-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/parul-university-gujarat.svg",
+    "/media/university-logos/v1/o-p-jindal-global-university-haryana.webp",
+  "pp-savani-university-online": "/media/university-logos/v1/p-p-savani-university-gujarat.webp",
+  "parul-university-online": "/media/university-logos/v1/parul-university-gujarat.svg",
   "pt-sundarlal-sharma-open-university-chhattisgarh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/pt-sundarlal-sharma-open-university-chhattisgarh.webp",
-  "sage-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sage-university-madhya-pradesh.webp",
-  "sandip-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sandip-university-maharashtra.webp",
+    "/media/university-logos/v1/pt-sundarlal-sharma-open-university-chhattisgarh.webp",
+  "sage-university-online": "/media/university-logos/v1/sage-university-madhya-pradesh.webp",
+  "sandip-university-maharashtra": "/media/university-logos/v1/sandip-university-maharashtra.webp",
   "sathyabama-institute-of-science-and-technology-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sathyabama-institute-of-science-and-technology-tamil-nadu.webp",
+    "/media/university-logos/v1/sathyabama-institute-of-science-and-technology-tamil-nadu.webp",
   "savitribai-phule-pune-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/savitribai-phule-pune-university-maharashtra.webp",
+    "/media/university-logos/v1/savitribai-phule-pune-university-maharashtra.webp",
   "shanmugha-arts-science-technology-and-research-academy-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shanmugha-arts-science-technology-and-research-academy-tamil-nadu.webp",
+    "/media/university-logos/v1/shanmugha-arts-science-technology-and-research-academy-tamil-nadu.webp",
   "sharda-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sharda-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/sharda-university-uttar-pradesh.webp",
   "shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh.webp",
   "shivaji-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shivaji-university-maharashtra.webp",
+    "/media/university-logos/v1/shivaji-university-maharashtra.webp",
   "shobhit-institute-of-engineering-and-technology-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shobhit-institute-of-engineering-and-technology-uttar-pradesh.webp",
+    "/media/university-logos/v1/shobhit-institute-of-engineering-and-technology-uttar-pradesh.webp",
   "shoolini-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shoolini-university-of-biotechnology-and-management-sciences-himachal-pradesh.webp",
+    "/media/university-logos/v1/shoolini-university-of-biotechnology-and-management-sciences-himachal-pradesh.webp",
   "sgt-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shree-guru-gobind-singh-tricentenary-university-haryana.svg",
+    "/media/university-logos/v1/shree-guru-gobind-singh-tricentenary-university-haryana.svg",
   "shri-ramasamy-memorial-university-sikkim-sikkim":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shri-ramasamy-memorial-university-sikkim-sikkim.webp",
+    "/media/university-logos/v1/shri-ramasamy-memorial-university-sikkim-sikkim.webp",
   "sikkim-manipal-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sikkim-manipal-university-sikkim.webp",
-  "silver-oak-university-gujarat":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/silver-oak-university-gujarat.webp",
+    "/media/university-logos/v1/sikkim-manipal-university-sikkim.webp",
+  "silver-oak-university-gujarat": "/media/university-logos/v1/silver-oak-university-gujarat.webp",
   "sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu.webp",
+    "/media/university-logos/v1/sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu.webp",
   "sri-siddhartha-academy-of-higher-education-karnataka":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-siddhartha-academy-of-higher-education-karnataka.webp",
+    "/media/university-logos/v1/sri-siddhartha-academy-of-higher-education-karnataka.webp",
   "sri-venkateswara-university-andhra-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-venkateswara-university-andhra-pradesh.webp",
-  "srinivas-university-karnataka":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/srinivas-university-karnataka.webp",
+    "/media/university-logos/v1/sri-venkateswara-university-andhra-pradesh.webp",
+  "srinivas-university-karnataka": "/media/university-logos/v1/srinivas-university-karnataka.webp",
   "srm-institute-of-science-and-technology-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/srm-institute-of-science-and-technology-tamil-nadu.svg",
+    "/media/university-logos/v1/srm-institute-of-science-and-technology-tamil-nadu.svg",
   "svkm-s-narsee-monjee-institute-of-management-studies-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/svkm-s-narsee-monjee-institute-of-management-studies-maharashtra.webp",
+    "/media/university-logos/v1/svkm-s-narsee-monjee-institute-of-management-studies-maharashtra.webp",
   "swami-rama-himalayan-university-uttarakhand":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/swami-rama-himalayan-university-uttarakhand.webp",
+    "/media/university-logos/v1/swami-rama-himalayan-university-uttarakhand.webp",
   "swami-vivekanand-subharti-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/swami-vivekanand-subharti-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/swami-vivekanand-subharti-university-uttar-pradesh.webp",
   "symbiosis-international-deemed-university-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/symbiosis-international-deemed-university-maharashtra.webp",
+    "/media/university-logos/v1/symbiosis-international-deemed-university-maharashtra.webp",
   "teerthanker-mahaveer-university-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/teerthanker-mahaveer-university-uttar-pradesh.webp",
+    "/media/university-logos/v1/teerthanker-mahaveer-university-uttar-pradesh.webp",
   "the-northcap-university-haryana":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/the-northcap-university-haryana.webp",
-  "university-of-calicut-kerala":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-calicut-kerala.webp",
+    "/media/university-logos/v1/the-northcap-university-haryana.webp",
+  "university-of-calicut-kerala": "/media/university-logos/v1/university-of-calicut-kerala.webp",
   "university-of-jammu-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-jammu-jammu-and-kashmir.webp",
-  "university-of-kerala-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-kerala-kerala.svg",
+    "/media/university-logos/v1/university-of-jammu-jammu-and-kashmir.webp",
+  "university-of-kerala-online": "/media/university-logos/v1/university-of-kerala-kerala.svg",
   "university-of-lucknow-uttar-pradesh":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-lucknow-uttar-pradesh.webp",
+    "/media/university-logos/v1/university-of-lucknow-uttar-pradesh.webp",
   "university-of-madras-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-madras-tamil-nadu.svg",
+    "/media/university-logos/v1/university-of-madras-tamil-nadu.svg",
   "university-of-mumbai-maharashtra":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-mumbai-maharashtra.svg",
-  "university-of-mysore-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-mysore-karnataka.webp",
+    "/media/university-logos/v1/university-of-mumbai-maharashtra.svg",
+  "university-of-mysore-online": "/media/university-logos/v1/university-of-mysore-karnataka.webp",
   "university-of-petroleum-and-energy-studies-uttarakhand":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-petroleum-and-energy-studies-uttarakhand.webp",
+    "/media/university-logos/v1/university-of-petroleum-and-energy-studies-uttarakhand.webp",
   "uttaranchal-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/uttaranchal-university-uttarakhand.svg",
+    "/media/university-logos/v1/uttaranchal-university-uttarakhand.svg",
   "vellore-institute-of-technology-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vellore-institute-of-technology-tamil-nadu.webp",
+    "/media/university-logos/v1/vellore-institute-of-technology-tamil-nadu.webp",
   "vels-institute-of-science-technology-and-advanced-studies-tamil-nadu":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vels-institute-of-science-technology-and-advanced-studies-tamil-nadu.webp",
+    "/media/university-logos/v1/vels-institute-of-science-technology-and-advanced-studies-tamil-nadu.webp",
   "vignan-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vignan-s-foundation-for-science-technology-and-research-andhra-pradesh.webp",
-  "vtu-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/visvesvaraya-technological-university-karnataka.webp",
+    "/media/university-logos/v1/vignan-s-foundation-for-science-technology-and-research-andhra-pradesh.webp",
+  "vtu-online": "/media/university-logos/v1/visvesvaraya-technological-university-karnataka.webp",
   "vivekananda-global-university-rajasthan":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vivekananda-global-university-rajasthan.webp",
+    "/media/university-logos/v1/vivekananda-global-university-rajasthan.webp",
   "yenepoya-university-online":
-    "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/yenepoya-deemed-to-be-university-karnataka.webp",
+    "/media/university-logos/v1/yenepoya-deemed-to-be-university-karnataka.webp",
 };
 
 const directoryInputs: DirectoryUniversityInput[] = [
@@ -346,7 +311,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/academy-of-maritime-education-and-training-tamil-nadu.webp",
+      "/media/university-logos/v1/academy-of-maritime-education-and-training-tamil-nadu.webp",
   },
   {
     slug: "adichunchanagiri-university-online",
@@ -359,8 +324,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/adichunchanagiri-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/adichunchanagiri-university-karnataka.webp",
   },
   {
     slug: "ajeenkya-d-y-patil-university-maharashtra",
@@ -374,8 +338,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/ajeenkya-d-y-patil-university-maharashtra.webp",
+    logoUrl: "/media/university-logos/v1/ajeenkya-d-y-patil-university-maharashtra.webp",
   },
   {
     slug: "alagappa-university-tamil-nadu",
@@ -388,8 +351,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/alagappa-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/alagappa-university-tamil-nadu.webp",
   },
   {
     slug: "aligarh-muslim-university-uttar-pradesh",
@@ -402,8 +364,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/aligarh-muslim-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/aligarh-muslim-university-uttar-pradesh.webp",
   },
   {
     slug: "alliance-university-online",
@@ -416,8 +377,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/alliance-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/alliance-university-karnataka.webp",
   },
   {
     slug: "amity-university-rajasthan-rajasthan",
@@ -430,8 +390,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/amity-university-rajasthan-rajasthan.webp",
+    logoUrl: "/media/university-logos/v1/amity-university-rajasthan-rajasthan.webp",
   },
   {
     slug: "amrita-vishwa-vidyapeetham-tamil-nadu",
@@ -444,8 +403,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/amrita-vishwa-vidyapeetham-tamil-nadu.svg",
+    logoUrl: "/media/university-logos/v1/amrita-vishwa-vidyapeetham-tamil-nadu.svg",
   },
   {
     slug: "andhra-university-online",
@@ -458,8 +416,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/andhra-university-andhra-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/andhra-university-andhra-pradesh.webp",
   },
   {
     slug: "anna-university-tamil-nadu",
@@ -472,8 +429,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/anna-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/anna-university-tamil-nadu.webp",
   },
   {
     slug: "arka-jain-university-jharkhand",
@@ -487,8 +443,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/arka-jain-university-jharkhand.webp",
+    logoUrl: "/media/university-logos/v1/arka-jain-university-jharkhand.webp",
   },
   {
     slug: "assam-don-bosco-university-assam",
@@ -502,8 +457,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/assam-don-bosco-university-assam.webp",
+    logoUrl: "/media/university-logos/v1/assam-don-bosco-university-assam.webp",
   },
   {
     slug: "assam-down-town-university-online",
@@ -516,8 +470,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/assam-down-town-university-assam.webp",
+    logoUrl: "/media/university-logos/v1/assam-down-town-university-assam.webp",
   },
   {
     slug: "b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu",
@@ -531,7 +484,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu.webp",
+      "/media/university-logos/v1/b-s-abdur-rahman-crescent-institute-of-science-and-technology-tamil-nadu.webp",
   },
   {
     slug: "banasthali-vidyapith-rajasthan",
@@ -544,8 +497,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/banasthali-vidyapith-rajasthan.webp",
+    logoUrl: "/media/university-logos/v1/banasthali-vidyapith-rajasthan.webp",
   },
   {
     slug: "bangalore-university-online",
@@ -558,8 +510,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bangalore-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/bangalore-university-karnataka.webp",
   },
   {
     slug: "bennett-university-uttar-pradesh",
@@ -572,8 +523,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://shardaonline.ai/assets/sharda/ugc-deb-approval.pdf",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bennett-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/bennett-university-uttar-pradesh.webp",
   },
   {
     slug: "bharath-institute-of-higher-education-and-research-tamil-nadu",
@@ -587,7 +537,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharath-institute-of-higher-education-and-research-tamil-nadu.svg",
+      "/media/university-logos/v1/bharath-institute-of-higher-education-and-research-tamil-nadu.svg",
   },
   {
     slug: "bharathiar-university-tamil-nadu",
@@ -600,8 +550,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharathiar-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/bharathiar-university-tamil-nadu.webp",
   },
   {
     slug: "bharathidasan-university-tamil-nadu",
@@ -614,8 +563,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharathidasan-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/bharathidasan-university-tamil-nadu.webp",
   },
   {
     slug: "bharati-vidyapeeth-deemed-to-be-university-maharashtra",
@@ -629,7 +577,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bharati-vidyapeeth-deemed-to-be-university-maharashtra.svg",
+      "/media/university-logos/v1/bharati-vidyapeeth-deemed-to-be-university-maharashtra.svg",
   },
   {
     slug: "bit-mesra-online",
@@ -642,8 +590,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/birla-institute-of-technology-jharkhand.webp",
+    logoUrl: "/media/university-logos/v1/birla-institute-of-technology-jharkhand.webp",
   },
   {
     slug: "birla-institute-of-technology-and-science-pilani-rajasthan",
@@ -658,7 +605,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/birla-institute-of-technology-and-science-pilani-rajasthan.svg",
+      "/media/university-logos/v1/birla-institute-of-technology-and-science-pilani-rajasthan.svg",
   },
   {
     slug: "bml-munjal-university-haryana",
@@ -672,8 +619,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/bml-munjal-university-haryana.webp",
+    logoUrl: "/media/university-logos/v1/bml-munjal-university-haryana.webp",
   },
   {
     slug: "central-sanskrit-university-delhi",
@@ -686,8 +632,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-sanskrit-university-delhi.webp",
+    logoUrl: "/media/university-logos/v1/central-sanskrit-university-delhi.webp",
   },
   {
     slug: "central-university-himachal-online",
@@ -701,7 +646,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-university-of-himachal-pradesh-himachal-pradesh.webp",
+      "/media/university-logos/v1/central-university-of-himachal-pradesh-himachal-pradesh.webp",
   },
   {
     slug: "central-university-of-tamil-nadu-tamil-nadu",
@@ -714,8 +659,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/central-university-of-tamil-nadu-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/central-university-of-tamil-nadu-tamil-nadu.webp",
   },
   {
     slug: "centurion-university-of-technology-and-management-odisha",
@@ -729,7 +673,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/centurion-university-of-technology-and-management-odisha.webp",
+      "/media/university-logos/v1/centurion-university-of-technology-and-management-odisha.webp",
   },
   {
     slug: "charusat-online",
@@ -743,7 +687,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/charotar-university-of-science-and-technology-gujarat.webp",
+      "/media/university-logos/v1/charotar-university-of-science-and-technology-gujarat.webp",
   },
   {
     slug: "chaudhary-charan-singh-university-uttar-pradesh",
@@ -756,8 +700,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://shardaonline.ai/assets/sharda/ugc-deb-approval.pdf",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chaudhary-charan-singh-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/chaudhary-charan-singh-university-uttar-pradesh.webp",
   },
   {
     slug: "chhatrapati-shahu-ji-maharaj-university-uttar-pradesh",
@@ -771,7 +714,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chhatrapati-shahu-ji-maharaj-university-uttar-pradesh.webp",
+      "/media/university-logos/v1/chhatrapati-shahu-ji-maharaj-university-uttar-pradesh.webp",
   },
   {
     slug: "chitkara-university-punjab",
@@ -784,8 +727,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/chitkara-university-punjab.webp",
+    logoUrl: "/media/university-logos/v1/chitkara-university-punjab.webp",
   },
   {
     slug: "christ-university-online",
@@ -798,8 +740,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/christ-deemed-to-be-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/christ-deemed-to-be-university-karnataka.webp",
   },
   {
     slug: "d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra",
@@ -813,7 +754,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra.webp",
+      "/media/university-logos/v1/d-y-patil-deemed-to-be-university-navi-mumbai-maharashtra.webp",
   },
   {
     slug: "datta-meghe-institute-of-higher-education-and-research-maharashtra",
@@ -827,7 +768,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/datta-meghe-institute-of-higher-education-and-research-maharashtra.webp",
+      "/media/university-logos/v1/datta-meghe-institute-of-higher-education-and-research-maharashtra.webp",
   },
   {
     slug: "dayalbagh-educational-institute-uttar-pradesh",
@@ -840,8 +781,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dayalbagh-educational-institute-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/dayalbagh-educational-institute-uttar-pradesh.webp",
   },
   {
     slug: "dayananda-sagar-university-online",
@@ -854,8 +794,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dayananda-sagar-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/dayananda-sagar-university-karnataka.webp",
   },
   {
     slug: "deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh",
@@ -869,7 +808,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh.webp",
+      "/media/university-logos/v1/deen-dayal-upadhyaya-gorakhpur-university-uttar-pradesh.webp",
   },
   {
     slug: "desh-bhagat-university-punjab",
@@ -882,8 +821,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/desh-bhagat-university-punjab.webp",
+    logoUrl: "/media/university-logos/v1/desh-bhagat-university-punjab.webp",
   },
   {
     slug: "devi-ahilya-vishwavidyalaya-online",
@@ -896,8 +834,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/devi-ahilya-vishwavidyalaya-madhya-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/devi-ahilya-vishwavidyalaya-madhya-pradesh.webp",
   },
   {
     slug: "dr-b-r-ambedkar-open-university-telangana",
@@ -911,8 +848,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-b-r-ambedkar-open-university-telangana.webp",
+    logoUrl: "/media/university-logos/v1/dr-b-r-ambedkar-open-university-telangana.webp",
   },
   {
     slug: "baou-online",
@@ -925,8 +861,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-babasaheb-ambedkar-open-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/dr-babasaheb-ambedkar-open-university-gujarat.webp",
   },
   {
     slug: "dr-m-g-r-educational-and-research-institute-tamil-nadu",
@@ -940,7 +875,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/dr-m-g-r-educational-and-research-institute-tamil-nadu.webp",
+      "/media/university-logos/v1/dr-m-g-r-educational-and-research-institute-tamil-nadu.webp",
   },
   {
     slug: "galgotias-university-uttar-pradesh",
@@ -953,8 +888,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/galgotias-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/galgotias-university-uttar-pradesh.webp",
   },
   {
     slug: "ganpat-university-gujarat",
@@ -968,8 +902,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/ganpat-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/ganpat-university-gujarat.webp",
   },
   {
     slug: "gla-university-uttar-pradesh",
@@ -982,8 +915,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gla-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/gla-university-uttar-pradesh.webp",
   },
   {
     slug: "gls-university-online",
@@ -996,8 +928,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gls-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/gls-university-gujarat.webp",
   },
   {
     slug: "graphic-era-deemed-to-be-university-uttarakhand",
@@ -1010,8 +941,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/graphic-era-deemed-to-be-university-uttarakhand.webp",
+    logoUrl: "/media/university-logos/v1/graphic-era-deemed-to-be-university-uttarakhand.webp",
   },
   {
     slug: "gujarat-technological-university-online",
@@ -1024,8 +954,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gujarat-technological-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/gujarat-technological-university-gujarat.webp",
   },
   {
     slug: "gujarat-university-online",
@@ -1038,8 +967,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/gujarat-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/gujarat-university-gujarat.webp",
   },
   {
     slug: "guru-ghasidas-vishwavidyalaya-online",
@@ -1052,8 +980,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-ghasidas-vishwavidyalaya-chhattisgarh.svg",
+    logoUrl: "/media/university-logos/v1/guru-ghasidas-vishwavidyalaya-chhattisgarh.svg",
   },
   {
     slug: "ggsipu-online",
@@ -1066,8 +993,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-gobind-singh-indraprastha-university-delhi.webp",
+    logoUrl: "/media/university-logos/v1/guru-gobind-singh-indraprastha-university-delhi.webp",
   },
   {
     slug: "gjust-online",
@@ -1081,7 +1007,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-jambheshwar-university-of-science-and-technology-haryana.webp",
+      "/media/university-logos/v1/guru-jambheshwar-university-of-science-and-technology-haryana.webp",
   },
   {
     slug: "guru-kashi-university-punjab",
@@ -1094,8 +1020,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-kashi-university-punjab.webp",
+    logoUrl: "/media/university-logos/v1/guru-kashi-university-punjab.webp",
   },
   {
     slug: "guru-nanak-dev-university-punjab",
@@ -1108,8 +1033,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/guru-nanak-dev-university-punjab.webp",
+    logoUrl: "/media/university-logos/v1/guru-nanak-dev-university-punjab.webp",
   },
   {
     slug: "hindustan-institute-of-technology-and-science-tamil-nadu",
@@ -1123,7 +1047,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/hindustan-institute-of-technology-and-science-tamil-nadu.webp",
+      "/media/university-logos/v1/hindustan-institute-of-technology-and-science-tamil-nadu.webp",
   },
   {
     slug: "icfai-foundation-for-higher-education-telangana",
@@ -1136,8 +1060,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/icfai-foundation-for-higher-education-telangana.svg",
+    logoUrl: "/media/university-logos/v1/icfai-foundation-for-higher-education-telangana.svg",
   },
   {
     slug: "iift-online",
@@ -1150,8 +1073,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/indian-institute-of-foreign-trade-delhi.webp",
+    logoUrl: "/media/university-logos/v1/indian-institute-of-foreign-trade-delhi.webp",
   },
   {
     slug: "indira-gandhi-national-open-university-delhi",
@@ -1164,8 +1086,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://ignouiop.samarth.edu.in/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/indira-gandhi-national-open-university-delhi.svg",
+    logoUrl: "/media/university-logos/v1/indira-gandhi-national-open-university-delhi.svg",
   },
   {
     slug: "integral-university-uttar-pradesh",
@@ -1178,8 +1099,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://shardaonline.ai/assets/sharda/ugc-deb-approval.pdf",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/integral-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/integral-university-uttar-pradesh.webp",
   },
   {
     slug: "international-institute-of-information-technology-hyderabad-telangana",
@@ -1193,7 +1113,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/international-institute-of-information-technology-hyderabad-telangana.webp",
+      "/media/university-logos/v1/international-institute-of-information-technology-hyderabad-telangana.webp",
   },
   {
     slug: "jagannath-university-rajasthan",
@@ -1207,8 +1127,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jagannath-university-rajasthan.svg",
+    logoUrl: "/media/university-logos/v1/jagannath-university-rajasthan.svg",
   },
   {
     slug: "jaipur-national-university-rajasthan",
@@ -1221,8 +1140,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jaipur-national-university-rajasthan.webp",
+    logoUrl: "/media/university-logos/v1/jaipur-national-university-rajasthan.webp",
   },
   {
     slug: "jamia-hamdard-online",
@@ -1235,8 +1153,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jamia-hamdard-delhi.svg",
+    logoUrl: "/media/university-logos/v1/jamia-hamdard-delhi.svg",
   },
   {
     slug: "jamia-millia-islamia-online",
@@ -1249,8 +1166,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jamia-millia-islamia-delhi.svg",
+    logoUrl: "/media/university-logos/v1/jamia-millia-islamia-delhi.svg",
   },
   {
     slug: "jawaharlal-nehru-university-delhi",
@@ -1263,8 +1179,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jawaharlal-nehru-university-delhi.svg",
+    logoUrl: "/media/university-logos/v1/jawaharlal-nehru-university-delhi.svg",
   },
   {
     slug: "jaypee-institute-of-information-technology-uttar-pradesh",
@@ -1279,7 +1194,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jaypee-institute-of-information-technology-uttar-pradesh.svg",
+      "/media/university-logos/v1/jaypee-institute-of-information-technology-uttar-pradesh.svg",
   },
   {
     slug: "jss-academy-of-higher-education-and-research-karnataka",
@@ -1293,7 +1208,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/jss-academy-of-higher-education-and-research-karnataka.webp",
+      "/media/university-logos/v1/jss-academy-of-higher-education-and-research-karnataka.webp",
   },
   {
     slug: "kalasalingam-academy-of-research-and-education-tamil-nadu",
@@ -1307,7 +1222,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kalasalingam-academy-of-research-and-education-tamil-nadu.webp",
+      "/media/university-logos/v1/kalasalingam-academy-of-research-and-education-tamil-nadu.webp",
   },
   {
     slug: "kalinga-institute-of-industrial-technology-odisha",
@@ -1320,8 +1235,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kalinga-institute-of-industrial-technology-odisha.svg",
+    logoUrl: "/media/university-logos/v1/kalinga-institute-of-industrial-technology-odisha.svg",
   },
   {
     slug: "karnataka-state-open-university-online",
@@ -1334,8 +1248,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/karnataka-state-open-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/karnataka-state-open-university-karnataka.webp",
   },
   {
     slug: "karunya-institute-of-technology-and-sciences-tamil-nadu",
@@ -1349,7 +1262,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/karunya-institute-of-technology-and-sciences-tamil-nadu.svg",
+      "/media/university-logos/v1/karunya-institute-of-technology-and-sciences-tamil-nadu.svg",
   },
   {
     slug: "kl-university-online",
@@ -1362,8 +1275,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/koneru-lakshmaiah-education-foundation-andhra-pradesh.svg",
+    logoUrl: "/media/university-logos/v1/koneru-lakshmaiah-education-foundation-andhra-pradesh.svg",
   },
   {
     slug: "kurukshetra-university-online",
@@ -1376,8 +1288,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/kurukshetra-university-haryana.webp",
+    logoUrl: "/media/university-logos/v1/kurukshetra-university-haryana.webp",
   },
   {
     slug: "madurai-kamaraj-university-tamil-nadu",
@@ -1390,8 +1301,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/madurai-kamaraj-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/madurai-kamaraj-university-tamil-nadu.webp",
   },
   {
     slug: "maharishi-markandeshwar-online",
@@ -1405,7 +1315,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/maharishi-markandeshwar-deemed-to-be-university-haryana.webp",
+      "/media/university-logos/v1/maharishi-markandeshwar-deemed-to-be-university-haryana.webp",
   },
   {
     slug: "maharshi-dayanand-university-online",
@@ -1418,8 +1328,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/maharshi-dayanand-university-haryana.webp",
+    logoUrl: "/media/university-logos/v1/maharshi-dayanand-university-haryana.webp",
   },
   {
     slug: "mahatma-gandhi-university-online",
@@ -1432,8 +1341,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mahatma-gandhi-university-kerala.webp",
+    logoUrl: "/media/university-logos/v1/mahatma-gandhi-university-kerala.webp",
   },
   {
     slug: "mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh",
@@ -1447,7 +1355,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh.webp",
+      "/media/university-logos/v1/mahatma-jyotiba-phule-rohilkhand-university-uttar-pradesh.webp",
   },
   {
     slug: "manav-rachna-online",
@@ -1461,7 +1369,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manav-rachna-international-institute-of-research-and-studies-haryana.webp",
+      "/media/university-logos/v1/manav-rachna-international-institute-of-research-and-studies-haryana.webp",
   },
   {
     slug: "mangalayatan-university-uttar-pradesh",
@@ -1474,8 +1382,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://shardaonline.ai/assets/sharda/ugc-deb-approval.pdf",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mangalayatan-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/mangalayatan-university-uttar-pradesh.webp",
   },
   {
     slug: "manipal-academy-of-higher-education-karnataka",
@@ -1488,8 +1395,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manipal-academy-of-higher-education-karnataka.svg",
+    logoUrl: "/media/university-logos/v1/manipal-academy-of-higher-education-karnataka.svg",
   },
   {
     slug: "manonmaniam-sundaranar-university-tamil-nadu",
@@ -1502,8 +1408,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/manonmaniam-sundaranar-university-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/manonmaniam-sundaranar-university-tamil-nadu.webp",
   },
   {
     slug: "marwadi-university-online",
@@ -1516,8 +1421,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/marwadi-university-gujarat.svg",
+    logoUrl: "/media/university-logos/v1/marwadi-university-gujarat.svg",
   },
   {
     slug: "mats-university-online",
@@ -1530,8 +1434,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mats-university-chhattisgarh.webp",
+    logoUrl: "/media/university-logos/v1/mats-university-chhattisgarh.webp",
   },
   {
     slug: "meenakshi-academy-of-higher-education-and-research-tamil-nadu",
@@ -1545,7 +1448,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/meenakshi-academy-of-higher-education-and-research-tamil-nadu.webp",
+      "/media/university-logos/v1/meenakshi-academy-of-higher-education-and-research-tamil-nadu.webp",
   },
   {
     slug: "mizoram-university-mizoram",
@@ -1558,8 +1461,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mizoram-university-mizoram.webp",
+    logoUrl: "/media/university-logos/v1/mizoram-university-mizoram.webp",
   },
   {
     slug: "mody-university-of-science-and-technology-rajasthan",
@@ -1572,8 +1474,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mody-university-of-science-and-technology-rajasthan.webp",
+    logoUrl: "/media/university-logos/v1/mody-university-of-science-and-technology-rajasthan.webp",
   },
   {
     slug: "mohan-babu-university-online",
@@ -1586,8 +1487,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/mohan-babu-university-andhra-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/mohan-babu-university-andhra-pradesh.webp",
   },
   {
     slug: "noida-international-university-uttar-pradesh",
@@ -1600,8 +1500,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/noida-international-university-uttar-pradesh.svg",
+    logoUrl: "/media/university-logos/v1/noida-international-university-uttar-pradesh.svg",
   },
   {
     slug: "o-p-jindal-global-university-haryana",
@@ -1614,8 +1513,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://jgu.edu.in/jgbs/courses?programme=online",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/o-p-jindal-global-university-haryana.webp",
+    logoUrl: "/media/university-logos/v1/o-p-jindal-global-university-haryana.webp",
   },
   {
     slug: "pp-savani-university-online",
@@ -1628,8 +1526,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/p-p-savani-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/p-p-savani-university-gujarat.webp",
   },
   {
     slug: "parul-university-online",
@@ -1642,8 +1539,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/parul-university-gujarat.svg",
+    logoUrl: "/media/university-logos/v1/parul-university-gujarat.svg",
   },
   {
     slug: "pt-sundarlal-sharma-open-university-chhattisgarh",
@@ -1656,8 +1552,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/pt-sundarlal-sharma-open-university-chhattisgarh.webp",
+    logoUrl: "/media/university-logos/v1/pt-sundarlal-sharma-open-university-chhattisgarh.webp",
   },
   {
     slug: "sage-university-online",
@@ -1670,8 +1565,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sage-university-madhya-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/sage-university-madhya-pradesh.webp",
   },
   {
     slug: "sandip-university-maharashtra",
@@ -1685,8 +1579,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sandip-university-maharashtra.webp",
+    logoUrl: "/media/university-logos/v1/sandip-university-maharashtra.webp",
   },
   {
     slug: "sathyabama-institute-of-science-and-technology-tamil-nadu",
@@ -1700,7 +1593,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sathyabama-institute-of-science-and-technology-tamil-nadu.webp",
+      "/media/university-logos/v1/sathyabama-institute-of-science-and-technology-tamil-nadu.webp",
   },
   {
     slug: "savitribai-phule-pune-university-maharashtra",
@@ -1713,8 +1606,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/savitribai-phule-pune-university-maharashtra.webp",
+    logoUrl: "/media/university-logos/v1/savitribai-phule-pune-university-maharashtra.webp",
   },
   {
     slug: "shanmugha-arts-science-technology-and-research-academy-tamil-nadu",
@@ -1728,7 +1620,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shanmugha-arts-science-technology-and-research-academy-tamil-nadu.webp",
+      "/media/university-logos/v1/shanmugha-arts-science-technology-and-research-academy-tamil-nadu.webp",
   },
   {
     slug: "sharda-university-uttar-pradesh",
@@ -1741,8 +1633,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://shardaonline.ai/assets/sharda/ugc-deb-approval.pdf",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sharda-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/sharda-university-uttar-pradesh.webp",
   },
   {
     slug: "shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh",
@@ -1756,7 +1647,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh.webp",
+      "/media/university-logos/v1/shiv-nadar-institution-of-eminence-deemed-to-be-university-uttar-pradesh.webp",
   },
   {
     slug: "shivaji-university-maharashtra",
@@ -1769,8 +1660,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shivaji-university-maharashtra.webp",
+    logoUrl: "/media/university-logos/v1/shivaji-university-maharashtra.webp",
   },
   {
     slug: "shobhit-institute-of-engineering-and-technology-uttar-pradesh",
@@ -1785,7 +1675,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shobhit-institute-of-engineering-and-technology-uttar-pradesh.webp",
+      "/media/university-logos/v1/shobhit-institute-of-engineering-and-technology-uttar-pradesh.webp",
   },
   {
     slug: "sgt-university-online",
@@ -1799,7 +1689,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shree-guru-gobind-singh-tricentenary-university-haryana.svg",
+      "/media/university-logos/v1/shree-guru-gobind-singh-tricentenary-university-haryana.svg",
   },
   {
     slug: "shri-ramasamy-memorial-university-sikkim-sikkim",
@@ -1812,8 +1702,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/shri-ramasamy-memorial-university-sikkim-sikkim.webp",
+    logoUrl: "/media/university-logos/v1/shri-ramasamy-memorial-university-sikkim-sikkim.webp",
   },
   {
     slug: "silver-oak-university-gujarat",
@@ -1827,8 +1716,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/silver-oak-university-gujarat.webp",
+    logoUrl: "/media/university-logos/v1/silver-oak-university-gujarat.webp",
   },
   {
     slug: "sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu",
@@ -1842,7 +1730,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu.webp",
+      "/media/university-logos/v1/sri-ramachandra-institute-of-higher-education-and-research-tamil-nadu.webp",
   },
   {
     slug: "sri-siddhartha-academy-of-higher-education-karnataka",
@@ -1855,8 +1743,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-siddhartha-academy-of-higher-education-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/sri-siddhartha-academy-of-higher-education-karnataka.webp",
   },
   {
     slug: "sri-venkateswara-university-andhra-pradesh",
@@ -1869,8 +1756,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/sri-venkateswara-university-andhra-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/sri-venkateswara-university-andhra-pradesh.webp",
   },
   {
     slug: "srinivas-university-karnataka",
@@ -1884,8 +1770,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/srinivas-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/srinivas-university-karnataka.webp",
   },
   {
     slug: "srm-institute-of-science-and-technology-tamil-nadu",
@@ -1898,8 +1783,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/srm-institute-of-science-and-technology-tamil-nadu.svg",
+    logoUrl: "/media/university-logos/v1/srm-institute-of-science-and-technology-tamil-nadu.svg",
   },
   {
     slug: "svkm-s-narsee-monjee-institute-of-management-studies-maharashtra",
@@ -1913,7 +1797,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/svkm-s-narsee-monjee-institute-of-management-studies-maharashtra.webp",
+      "/media/university-logos/v1/svkm-s-narsee-monjee-institute-of-management-studies-maharashtra.webp",
   },
   {
     slug: "swami-rama-himalayan-university-uttarakhand",
@@ -1926,8 +1810,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/swami-rama-himalayan-university-uttarakhand.webp",
+    logoUrl: "/media/university-logos/v1/swami-rama-himalayan-university-uttarakhand.webp",
   },
   {
     slug: "swami-vivekanand-subharti-university-uttar-pradesh",
@@ -1941,8 +1824,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/swami-vivekanand-subharti-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/swami-vivekanand-subharti-university-uttar-pradesh.webp",
   },
   {
     slug: "symbiosis-international-deemed-university-maharashtra",
@@ -1956,7 +1838,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/symbiosis-international-deemed-university-maharashtra.webp",
+      "/media/university-logos/v1/symbiosis-international-deemed-university-maharashtra.webp",
   },
   {
     slug: "teerthanker-mahaveer-university-uttar-pradesh",
@@ -1970,8 +1852,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/teerthanker-mahaveer-university-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/teerthanker-mahaveer-university-uttar-pradesh.webp",
   },
   {
     slug: "the-northcap-university-haryana",
@@ -1985,8 +1866,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
       "https://www.scribd.com/document/1075897337/140-Upload-RecognitionDetails-20260810153344",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/the-northcap-university-haryana.webp",
+    logoUrl: "/media/university-logos/v1/the-northcap-university-haryana.webp",
   },
   {
     slug: "university-of-calicut-kerala",
@@ -1999,8 +1879,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-calicut-kerala.webp",
+    logoUrl: "/media/university-logos/v1/university-of-calicut-kerala.webp",
   },
   {
     slug: "university-of-jammu-online",
@@ -2013,8 +1892,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-jammu-jammu-and-kashmir.webp",
+    logoUrl: "/media/university-logos/v1/university-of-jammu-jammu-and-kashmir.webp",
   },
   {
     slug: "university-of-kerala-online",
@@ -2027,8 +1905,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-kerala-kerala.svg",
+    logoUrl: "/media/university-logos/v1/university-of-kerala-kerala.svg",
   },
   {
     slug: "university-of-lucknow-uttar-pradesh",
@@ -2041,8 +1918,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-lucknow-uttar-pradesh.webp",
+    logoUrl: "/media/university-logos/v1/university-of-lucknow-uttar-pradesh.webp",
   },
   {
     slug: "university-of-madras-tamil-nadu",
@@ -2055,8 +1931,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-madras-tamil-nadu.svg",
+    logoUrl: "/media/university-logos/v1/university-of-madras-tamil-nadu.svg",
   },
   {
     slug: "university-of-mumbai-maharashtra",
@@ -2069,8 +1944,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-mumbai-maharashtra.svg",
+    logoUrl: "/media/university-logos/v1/university-of-mumbai-maharashtra.svg",
   },
   {
     slug: "university-of-mysore-online",
@@ -2083,8 +1957,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-mysore-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/university-of-mysore-karnataka.webp",
   },
   {
     slug: "university-of-petroleum-and-energy-studies-uttarakhand",
@@ -2098,7 +1971,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/university-of-petroleum-and-energy-studies-uttarakhand.webp",
+      "/media/university-logos/v1/university-of-petroleum-and-energy-studies-uttarakhand.webp",
   },
   {
     slug: "vellore-institute-of-technology-tamil-nadu",
@@ -2111,8 +1984,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vellore-institute-of-technology-tamil-nadu.webp",
+    logoUrl: "/media/university-logos/v1/vellore-institute-of-technology-tamil-nadu.webp",
   },
   {
     slug: "vels-institute-of-science-technology-and-advanced-studies-tamil-nadu",
@@ -2126,7 +1998,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
     logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vels-institute-of-science-technology-and-advanced-studies-tamil-nadu.webp",
+      "/media/university-logos/v1/vels-institute-of-science-technology-and-advanced-studies-tamil-nadu.webp",
   },
   {
     slug: "vtu-online",
@@ -2139,8 +2011,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/visvesvaraya-technological-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/visvesvaraya-technological-university-karnataka.webp",
   },
   {
     slug: "vivekananda-global-university-rajasthan",
@@ -2153,8 +2024,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/vivekananda-global-university-rajasthan.webp",
+    logoUrl: "/media/university-logos/v1/vivekananda-global-university-rajasthan.webp",
   },
   {
     slug: "yenepoya-university-online",
@@ -2167,8 +2037,7 @@ const directoryInputs: DirectoryUniversityInput[] = [
     sourceUrl: "https://careerbracket.com/verify-university/",
     checkedOn: "2026-09-12",
     nextReviewAt: "2026-10-12T23:59:59+05:30",
-    logoUrl:
-      "https://tzhjdxewkwjftuofaelk.supabase.co/storage/v1/object/public/university-logos/v1/yenepoya-deemed-to-be-university-karnataka.webp",
+    logoUrl: "/media/university-logos/v1/yenepoya-deemed-to-be-university-karnataka.webp",
   },
 ];
 

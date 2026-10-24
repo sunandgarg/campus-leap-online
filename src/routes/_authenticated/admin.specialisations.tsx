@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { EntityManager, type FieldDef } from "@/components/admin/entity-manager";
+import { listAllAdminRows } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/admin/specialisations")({
   component: AdminSpecialisations,
@@ -34,9 +34,14 @@ function AdminSpecialisations() {
   const programs = useQuery({
     queryKey: ["admin", "specialisation-programs"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("programs").select("slug,name").order("name");
-      if (error) throw error;
-      return (data ?? []).map((program) => ({ value: program.slug, label: program.name }));
+      const { rows } = await listAllAdminRows("programs", {
+        columns: ["slug", "name"],
+        orderBy: "name",
+      });
+      return rows.map((program) => ({
+        value: String(program["slug"]),
+        label: String(program["name"]),
+      }));
     },
   });
 

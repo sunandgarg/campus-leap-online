@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
-
-/** Untyped view of the client so one component can manage several tables. */
-const db = supabase as unknown as SupabaseClient;
+import { deleteAdminRow, listAdminRows, saveAdminRow } from "@/lib/admin-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -100,27 +96,12 @@ export function EntityManager({
 
   const rowsQuery = useQuery({
     queryKey: ["admin", table, page, orderBy, orderAscending],
-    queryFn: async () => {
-      const start = page * PAGE_SIZE;
-      const { data, error, count } = await db
-        .from(table)
-        .select("*", { count: "exact" })
-        .order(orderBy, { ascending: orderAscending })
-        .range(start, start + PAGE_SIZE - 1);
-      if (error) throw error;
-      return { rows: (data ?? []) as Row[], count: count ?? 0 };
-    },
+    queryFn: () => listAdminRows(table, { page, orderBy, ascending: orderAscending }),
   });
 
   const save = useMutation({
     mutationFn: async (payload: Row) => {
-      if (editingId) {
-        const { error } = await db.from(table).update(payload).eq(idColumn, editingId);
-        if (error) throw error;
-      } else {
-        const { error } = await db.from(table).insert(payload);
-        if (error) throw error;
-      }
+      await saveAdminRow(table, payload, editingId ?? undefined);
     },
     onSuccess: () => {
       toast.success("Saved.");
@@ -135,8 +116,7 @@ export function EntityManager({
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await db.from(table).delete().eq(idColumn, id);
-      if (error) throw error;
+      await deleteAdminRow(table, id);
     },
     onSuccess: () => {
       toast.success("Deleted.");

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { EntityManager, type FieldDef } from "@/components/admin/entity-manager";
+import { listAllAdminRows } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/admin/offerings")({
   component: AdminOfferings,
@@ -206,12 +206,12 @@ function AdminOfferings() {
     queryKey: ["admin", "slugs"],
     queryFn: async () => {
       const [u, p] = await Promise.all([
-        supabase.from("universities").select("slug").order("name"),
-        supabase.from("programs").select("slug").order("name"),
+        listAllAdminRows("universities", { columns: ["slug"], orderBy: "name" }),
+        listAllAdminRows("programs", { columns: ["slug"], orderBy: "name" }),
       ]);
       return {
-        university_slug: (u.data ?? []).map((r) => r.slug),
-        program_slug: (p.data ?? []).map((r) => r.slug),
+        university_slug: u.rows.map((row) => String(row["slug"])),
+        program_slug: p.rows.map((row) => String(row["slug"])),
       };
     },
   });

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { universityLogoUrls } from "@/data/directory-universities";
+import { getDatabase, parseDatabaseRow } from "@/lib/db.server";
 import type {
   Catalog,
   CatalogSpecialisation,
@@ -243,7 +244,6 @@ function toOfficialUniversityUrl(
 
 const DATABASE_CATALOG_TTL_MS = 60_000;
 const FALLBACK_CATALOG_TTL_MS = 10_000;
-const CATALOG_REQUEST_TIMEOUT_MS = 6_000;
 const loggedCatalogFailures = new Set<string>();
 let catalogCache: { catalog: Catalog; expiresAt: number } | undefined;
 let catalogRequest: Promise<Catalog> | undefined;
@@ -258,479 +258,432 @@ function logCatalogFailure(stage: string, codes: Array<string | undefined>) {
 }
 
 async function loadCatalogFromDatabase(): Promise<Catalog> {
-  const url = process.env["SUPABASE_URL"];
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"];
-  if (!url || !key) {
-    logCatalogFailure("configuration", [
-      !url ? "missing_url" : undefined,
-      !key ? "missing_key" : undefined,
-    ]);
-    return { universities: [], programs: [], settings: {}, source: "fallback" };
-  }
-
-  // Keep the database SDK behind the server-function boundary. A module-level
-  // import pulls Supabase auth, storage and realtime into the universal client
-  // entry even though the browser only ever calls the generated RPC stub.
-  const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const headers = new Headers(init?.headers);
-        if (key.startsWith("sb_") && headers.get("Authorization") === `Bearer ${key}`) {
-          headers.delete("Authorization");
-        }
-        headers.set("apikey", key);
-        return fetch(input, { ...init, headers });
-      },
-    },
-  });
-
   const nowIso = new Date().toISOString();
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), CATALOG_REQUEST_TIMEOUT_MS);
-  const responses = await Promise.all([
-    supabase
-      .from("universities")
-      .select(
-        "slug,name,legal_name,hei_id,short_name,city,state,established,domain,logo_url,hero_image_url,accent_color,highlights,about,profile_depth,verification_source_url,verification_academic_session,verified_at,next_review_at",
-      )
-      .eq("published", true)
-      .order("sort_order")
-      .abortSignal(controller.signal),
-    supabase
-      .from("programs")
-      .select(
-        "slug,code,name,level,duration_years,semesters,eligibility,overview,hero_image_url,specialisations,curriculum,careers",
-      )
-      .eq("published", true)
-      .order("sort_order")
-      .abortSignal(controller.signal),
-    supabase
-      .from("university_programs")
-      .select(
-        "id,university_slug,program_slug,total_fee,per_semester_fee,emi_per_month,official_programme_name,delivery_mode,academic_session,entitlement_status,entitlement_source_url,university_programme_url,official_application_url,verified_at,next_review_at,fees_verified,per_semester_fee_verified,emi_per_month_verified,fee_source_url,fee_verified_at,fee_next_review_at,refund_policy_url,duration_years,semesters,eligibility,exam_mode,curriculum,updated_at,sort_order",
-      )
-      .eq("published", true)
-      .order("sort_order")
-      .abortSignal(controller.signal),
-    supabase
-      .from("offering_specialisations")
-      .select(
-        "offering_id,specialisation_id,university_label,availability_status,academic_session,source_url,verified_at,next_review_at,specialisations(name)",
-      )
-      .eq("published", true)
-      .eq("availability_status", "verified")
-      .abortSignal(controller.signal),
-    supabase
-      .from("specialisations")
-      .select("id,slug,name,program_slug,category,summary,skills,career_directions,sort_order")
-      .eq("published", true)
-      .order("sort_order")
-      .order("name")
-      .abortSignal(controller.signal),
-    supabase
-      .from("claim_evidence")
-      .select(
-        "id,rendered_claim,claim_type,university_slug,program_slug,offering_id,source_url,source_date,academic_session,methodology,verified_at,expires_at,published",
-      )
-      .eq("published", true)
-      .lte("verified_at", nowIso)
-      .gt("expires_at", nowIso)
-      .order("verified_at", { ascending: false })
-      .abortSignal(controller.signal),
-    supabase.from("site_settings").select("key,value").abortSignal(controller.signal),
-  ])
-    .catch((error: unknown) => {
-      logCatalogFailure("request", [error instanceof Error ? error.name : "unknown"]);
-      return null;
-    })
-    .finally(() => clearTimeout(timeout));
-
-  if (!responses) return { universities: [], programs: [], settings: {}, source: "fallback" };
-
-  const [
-    uniRes,
-    progRes,
-    offerRes,
-    offeringSpecialisationRes,
-    specialisationRes,
-    claimRes,
-    settingsRes,
-  ] = responses;
-
-  if (uniRes.error || progRes.error || offerRes.error || settingsRes.error) {
-    logCatalogFailure("core_schema", [
-      uniRes.error?.code,
-      progRes.error?.code,
-      offerRes.error?.code,
-      settingsRes.error?.code,
-    ]);
+  let database: D1Database;
+  try {
+    database = await getDatabase();
+  } catch (error) {
+    logCatalogFailure("configuration", [error instanceof Error ? error.name : "missing_binding"]);
     return { universities: [], programs: [], settings: {}, source: "fallback" };
   }
 
-  if (offeringSpecialisationRes.error || specialisationRes.error || claimRes.error) {
-    logCatalogFailure("optional_schema", [
-      offeringSpecialisationRes.error?.code,
-      specialisationRes.error?.code,
-      claimRes.error?.code,
+  try {
+    const [
+      universitiesResult,
+      programsResult,
+      offeringsResult,
+      specialisationsResult,
+      mappingsResult,
+      claimsResult,
+      settingsResult,
+    ] = await Promise.all([
+      database
+        .prepare(
+          "SELECT slug,name,legal_name,hei_id,short_name,city,state,established,domain,logo_url,hero_image_url,accent_color,highlights,about,profile_depth,verification_source_url,verification_academic_session,verified_at,next_review_at FROM universities WHERE published = 1 ORDER BY sort_order",
+        )
+        .all<DbUniversity>(),
+      database
+        .prepare(
+          "SELECT slug,code,name,level,duration_years,semesters,eligibility,overview,hero_image_url,specialisations,curriculum,careers FROM programs WHERE published = 1 ORDER BY sort_order",
+        )
+        .all<DbProgram>(),
+      database
+        .prepare(
+          "SELECT id,university_slug,program_slug,total_fee,per_semester_fee,emi_per_month,official_programme_name,delivery_mode,academic_session,entitlement_status,entitlement_source_url,university_programme_url,official_application_url,verified_at,next_review_at,fees_verified,per_semester_fee_verified,emi_per_month_verified,fee_source_url,fee_verified_at,fee_next_review_at,refund_policy_url,duration_years,semesters,eligibility,exam_mode,curriculum,updated_at,sort_order FROM university_programs WHERE published = 1 ORDER BY sort_order",
+        )
+        .all<DbOffering>(),
+      database
+        .prepare(
+          "SELECT id,slug,name,program_slug,category,summary,skills,career_directions,sort_order FROM specialisations WHERE published = 1 ORDER BY sort_order,name",
+        )
+        .all<DbSpecialisation>(),
+      database
+        .prepare(
+          "SELECT os.offering_id,os.specialisation_id,os.university_label,os.availability_status,os.academic_session,os.source_url,os.verified_at,os.next_review_at,s.name AS specialisation_name FROM offering_specialisations os LEFT JOIN specialisations s ON s.id = os.specialisation_id WHERE os.published = 1 AND os.availability_status = 'verified'",
+        )
+        .all<DbOfferingSpecialisation & { specialisation_name: string | null }>(),
+      database
+        .prepare(
+          "SELECT id,rendered_claim,claim_type,university_slug,program_slug,offering_id,source_url,source_date,academic_session,methodology,verified_at,expires_at,published FROM claim_evidence WHERE published = 1 AND verified_at <= ? AND expires_at > ? ORDER BY verified_at DESC",
+        )
+        .bind(nowIso, nowIso)
+        .all<DbClaimEvidence>(),
+      database
+        .prepare("SELECT key,value FROM site_settings WHERE key = 'announcement'")
+        .all<{ key: string; value: string }>(),
     ]);
-  }
 
-  const dbUniversities = (uniRes.data ?? []) as unknown as DbUniversity[];
-  const dbPrograms = (progRes.data ?? []) as unknown as DbProgram[];
-  const dbOfferings = (offerRes.data ?? []) as unknown as DbOffering[];
-  const dbOfferingSpecialisations = offeringSpecialisationRes.error
-    ? []
-    : ((offeringSpecialisationRes.data ?? []) as unknown as DbOfferingSpecialisation[]);
-  const dbSpecialisations = specialisationRes.error
-    ? []
-    : ((specialisationRes.data ?? []) as unknown as DbSpecialisation[]);
-  const dbClaims = claimRes.error ? [] : ((claimRes.data ?? []) as unknown as DbClaimEvidence[]);
-  const specialisationDataAvailable = !specialisationRes.error;
-  const now = Date.now();
-  const offeringStatus = (offering: DbOffering) => {
-    if (
-      offering.entitlement_status === "verified" &&
-      offering.entitlement_source_url &&
-      isPublicSourceUrl(offering.entitlement_source_url) &&
-      offering.verified_at &&
-      Date.parse(offering.verified_at) <= now &&
-      offering.next_review_at &&
-      Date.parse(offering.next_review_at) > now
-    ) {
-      return "verified" as const;
-    }
-    return offering.entitlement_status === "verified"
-      ? ("expired" as const)
-      : offering.entitlement_status;
-  };
-  const statusRank = (offering: DbOffering) => {
-    const status = offeringStatus(offering);
-    if (status === "verified") return 0;
-    if (status === "unverified") return 1;
-    if (status === "expired") return 2;
-    if (status === "no-admission") return 3;
-    return 4;
-  };
-  const preferredOfferings = [...dbOfferings]
-    .sort((a, b) => {
-      const byStatus = statusRank(a) - statusRank(b);
-      if (byStatus) return byStatus;
-      const bySession = (b.academic_session ?? "").localeCompare(a.academic_session ?? "");
-      if (bySession) return bySession;
-      return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-    })
-    .filter(
-      (offering, index, rows) =>
-        rows.findIndex(
-          (candidate) =>
-            candidate.university_slug === offering.university_slug &&
-            candidate.program_slug === offering.program_slug,
-        ) === index,
+    const dbUniversities = universitiesResult.results.map((row) =>
+      parseDatabaseRow("universities", row),
+    ) as unknown as DbUniversity[];
+    const dbPrograms = programsResult.results.map((row) =>
+      parseDatabaseRow("programs", row),
+    ) as unknown as DbProgram[];
+    const dbOfferings = offeringsResult.results.map((row) =>
+      parseDatabaseRow("university_programs", row),
+    ) as unknown as DbOffering[];
+    const dbSpecialisations = specialisationsResult.results.map((row) =>
+      parseDatabaseRow("specialisations", row),
+    ) as unknown as DbSpecialisation[];
+    const dbOfferingSpecialisations = mappingsResult.results.map((row) => ({
+      ...row,
+      specialisations: row.specialisation_name ? { name: row.specialisation_name } : null,
+    })) as unknown as DbOfferingSpecialisation[];
+    const dbClaims = claimsResult.results.map((row) =>
+      parseDatabaseRow("claim_evidence", row),
+    ) as unknown as DbClaimEvidence[];
+    const settingsRows = settingsResult.results.map((row) =>
+      parseDatabaseRow("site_settings", row),
     );
-
-  const claimEvidence: ClaimEvidence[] = dbClaims
-    .filter(
-      (claim) =>
-        claim.published &&
-        isPublicSourceUrl(claim.source_url) &&
-        Date.parse(claim.verified_at) <= now &&
-        Date.parse(claim.expires_at) > now,
-    )
-    .map((claim) => ({
-      id: claim.id,
-      renderedClaim: claim.rendered_claim,
-      claimType: claim.claim_type,
-      universitySlug: claim.university_slug ?? undefined,
-      programSlug: claim.program_slug ?? undefined,
-      offeringId: claim.offering_id ?? undefined,
-      sourceUrl: toPublicHttpUrl(claim.source_url)!,
-      sourceDate: claim.source_date ?? undefined,
-      academicSession: claim.academic_session ?? undefined,
-      methodology: claim.methodology ?? undefined,
-      verifiedAt: claim.verified_at,
-      expiresAt: claim.expires_at,
-      published: claim.published,
-    }));
-
-  const preferredOfferingById = new Map(
-    preferredOfferings.map((offering) => [offering.id, offering]),
-  );
-  const specialisationById = new Map(
-    dbSpecialisations.map((specialisation) => [specialisation.id, specialisation]),
-  );
-  const currentOfferingSpecialisations = dbOfferingSpecialisations.flatMap((mapping) => {
-    const offering = preferredOfferingById.get(mapping.offering_id);
-    if (
-      !offering ||
-      offeringStatus(offering) !== "verified" ||
-      mapping.availability_status !== "verified" ||
-      !mapping.academic_session?.trim() ||
-      !offering.academic_session ||
-      mapping.academic_session !== offering.academic_session ||
-      !mapping.source_url ||
-      !isPublicSourceUrl(mapping.source_url) ||
-      !mapping.verified_at ||
-      !mapping.next_review_at ||
-      Date.parse(mapping.verified_at) > now ||
-      Date.parse(mapping.next_review_at) <= now
-    ) {
-      return [];
-    }
-
-    const taxonomy = specialisationById.get(mapping.specialisation_id);
-    const joinedName = Array.isArray(mapping.specialisations)
-      ? mapping.specialisations[0]?.name
-      : mapping.specialisations?.name;
-    const label = mapping.university_label?.trim() || taxonomy?.name || joinedName;
-    if ((specialisationDataAvailable && !taxonomy) || !label) return [];
-    return [
-      {
-        offeringId: mapping.offering_id,
-        specialisationId: mapping.specialisation_id,
-        programSlug: offering.program_slug,
-        label,
-      },
-    ];
-  });
-
-  const normalize = (value: string) =>
-    value
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-");
-  const basePrograms: ProgramTemplate[] = dbPrograms.map((p) => ({
-    slug: p.slug,
-    code: p.code,
-    name: p.name,
-    level: toLevel(p.level),
-    durationYears: Number(p.duration_years),
-    semesters: p.semesters,
-    eligibility: p.eligibility,
-    overview: p.overview,
-    specialisations: p.specialisations ?? [],
-    curriculum: toCurriculum(p.curriculum),
-    careers: p.careers ?? [],
-    heroImageUrl: toPublicHttpUrl(p.hero_image_url),
-  }));
-
-  const specialisations: CatalogSpecialisation[] = dbSpecialisations.map((specialisation) => {
-    const mappings = currentOfferingSpecialisations.filter(
-      (mapping) => mapping.specialisationId === specialisation.id,
-    );
-    const legacyProgramSlugs = basePrograms
-      .filter((program) => {
-        const category = normalize(specialisation.category ?? "");
-        return (
-          program.specialisations.some(
-            (name) =>
-              normalize(name) === normalize(specialisation.name) ||
-              normalize(name) === normalize(specialisation.slug),
-          ) ||
-          Boolean(
-            category &&
-            [normalize(program.slug), normalize(program.code), normalize(program.name)].includes(
-              category,
-            ),
-          )
-        );
-      })
-      .map((program) => program.slug);
-    const programLabels = mappings.filter(
-      (mapping, index, rows) =>
-        rows.findIndex(
-          (candidate) =>
-            candidate.programSlug === mapping.programSlug && candidate.label === mapping.label,
-        ) === index,
-    );
-
-    return {
-      id: specialisation.id,
-      slug: specialisation.slug,
-      name: specialisation.name,
-      category: specialisation.category ?? undefined,
-      summary: specialisation.summary ?? undefined,
-      skills: specialisation.skills ?? [],
-      careerDirections: specialisation.career_directions ?? [],
-      sortOrder: specialisation.sort_order,
-      programSlugs: [
-        ...new Set([
-          ...(specialisation.program_slug ? [specialisation.program_slug] : []),
-          ...legacyProgramSlugs,
-          ...mappings.map((m) => m.programSlug),
-        ]),
-      ],
-      programLabels: programLabels.map(({ programSlug, label }) => ({ programSlug, label })),
+    const specialisationDataAvailable = true;
+    const now = Date.now();
+    const offeringStatus = (offering: DbOffering) => {
+      if (
+        offering.entitlement_status === "verified" &&
+        offering.entitlement_source_url &&
+        isPublicSourceUrl(offering.entitlement_source_url) &&
+        offering.verified_at &&
+        Date.parse(offering.verified_at) <= now &&
+        offering.next_review_at &&
+        Date.parse(offering.next_review_at) > now
+      ) {
+        return "verified" as const;
+      }
+      return offering.entitlement_status === "verified"
+        ? ("expired" as const)
+        : offering.entitlement_status;
     };
-  });
+    const statusRank = (offering: DbOffering) => {
+      const status = offeringStatus(offering);
+      if (status === "verified") return 0;
+      if (status === "unverified") return 1;
+      if (status === "expired") return 2;
+      if (status === "no-admission") return 3;
+      return 4;
+    };
+    const preferredOfferings = [...dbOfferings]
+      .sort((a, b) => {
+        const byStatus = statusRank(a) - statusRank(b);
+        if (byStatus) return byStatus;
+        const bySession = (b.academic_session ?? "").localeCompare(a.academic_session ?? "");
+        if (bySession) return bySession;
+        return Date.parse(b.updated_at) - Date.parse(a.updated_at);
+      })
+      .filter(
+        (offering, index, rows) =>
+          rows.findIndex(
+            (candidate) =>
+              candidate.university_slug === offering.university_slug &&
+              candidate.program_slug === offering.program_slug,
+          ) === index,
+      );
 
-  const programs: ProgramTemplate[] = basePrograms.map((program) => ({
-    ...program,
-    specialisations: [
-      ...new Set([
-        ...program.specialisations,
-        ...currentOfferingSpecialisations
-          .filter((mapping) => mapping.programSlug === program.slug)
-          .map((mapping) => mapping.label),
-      ]),
-    ],
-  }));
-
-  const universities: University[] = dbUniversities.map((u) => {
-    const universityClaims = claimEvidence.filter((claim) => claim.universitySlug === u.slug);
-    const supportedApprovals = universityClaims
+    const claimEvidence: ClaimEvidence[] = dbClaims
       .filter(
         (claim) =>
-          !claim.programSlug &&
-          !claim.offeringId &&
-          (claim.claimType === "recognition" || claim.claimType === "accreditation"),
+          claim.published &&
+          isPublicSourceUrl(claim.source_url) &&
+          Date.parse(claim.verified_at) <= now &&
+          Date.parse(claim.expires_at) > now,
       )
-      .map((claim) => claim.renderedClaim);
-    const domain = toOfficialDomain(u.domain);
-    const verificationSourceUrl = toPublicHttpUrl(u.verification_source_url);
+      .map((claim) => ({
+        id: claim.id,
+        renderedClaim: claim.rendered_claim,
+        claimType: claim.claim_type,
+        universitySlug: claim.university_slug ?? undefined,
+        programSlug: claim.program_slug ?? undefined,
+        offeringId: claim.offering_id ?? undefined,
+        sourceUrl: toPublicHttpUrl(claim.source_url)!,
+        sourceDate: claim.source_date ?? undefined,
+        academicSession: claim.academic_session ?? undefined,
+        methodology: claim.methodology ?? undefined,
+        verifiedAt: claim.verified_at,
+        expiresAt: claim.expires_at,
+        published: claim.published,
+      }));
+
+    const preferredOfferingById = new Map(
+      preferredOfferings.map((offering) => [offering.id, offering]),
+    );
+    const specialisationById = new Map(
+      dbSpecialisations.map((specialisation) => [specialisation.id, specialisation]),
+    );
+    const currentOfferingSpecialisations = dbOfferingSpecialisations.flatMap((mapping) => {
+      const offering = preferredOfferingById.get(mapping.offering_id);
+      if (
+        !offering ||
+        offeringStatus(offering) !== "verified" ||
+        mapping.availability_status !== "verified" ||
+        !mapping.academic_session?.trim() ||
+        !offering.academic_session ||
+        mapping.academic_session !== offering.academic_session ||
+        !mapping.source_url ||
+        !isPublicSourceUrl(mapping.source_url) ||
+        !mapping.verified_at ||
+        !mapping.next_review_at ||
+        Date.parse(mapping.verified_at) > now ||
+        Date.parse(mapping.next_review_at) <= now
+      ) {
+        return [];
+      }
+
+      const taxonomy = specialisationById.get(mapping.specialisation_id);
+      const joinedName = Array.isArray(mapping.specialisations)
+        ? mapping.specialisations[0]?.name
+        : mapping.specialisations?.name;
+      const label = mapping.university_label?.trim() || taxonomy?.name || joinedName;
+      if ((specialisationDataAvailable && !taxonomy) || !label) return [];
+      return [
+        {
+          offeringId: mapping.offering_id,
+          specialisationId: mapping.specialisation_id,
+          programSlug: offering.program_slug,
+          label,
+        },
+      ];
+    });
+
+    const normalize = (value: string) =>
+      value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-");
+    const basePrograms: ProgramTemplate[] = dbPrograms.map((p) => ({
+      slug: p.slug,
+      code: p.code,
+      name: p.name,
+      level: toLevel(p.level),
+      durationYears: Number(p.duration_years),
+      semesters: p.semesters,
+      eligibility: p.eligibility,
+      overview: p.overview,
+      specialisations: p.specialisations ?? [],
+      curriculum: toCurriculum(p.curriculum),
+      careers: p.careers ?? [],
+      heroImageUrl: toPublicHttpUrl(p.hero_image_url),
+    }));
+
+    const specialisations: CatalogSpecialisation[] = dbSpecialisations.map((specialisation) => {
+      const mappings = currentOfferingSpecialisations.filter(
+        (mapping) => mapping.specialisationId === specialisation.id,
+      );
+      const legacyProgramSlugs = basePrograms
+        .filter((program) => {
+          const category = normalize(specialisation.category ?? "");
+          return (
+            program.specialisations.some(
+              (name) =>
+                normalize(name) === normalize(specialisation.name) ||
+                normalize(name) === normalize(specialisation.slug),
+            ) ||
+            Boolean(
+              category &&
+              [normalize(program.slug), normalize(program.code), normalize(program.name)].includes(
+                category,
+              ),
+            )
+          );
+        })
+        .map((program) => program.slug);
+      const programLabels = mappings.filter(
+        (mapping, index, rows) =>
+          rows.findIndex(
+            (candidate) =>
+              candidate.programSlug === mapping.programSlug && candidate.label === mapping.label,
+          ) === index,
+      );
+
+      return {
+        id: specialisation.id,
+        slug: specialisation.slug,
+        name: specialisation.name,
+        category: specialisation.category ?? undefined,
+        summary: specialisation.summary ?? undefined,
+        skills: specialisation.skills ?? [],
+        careerDirections: specialisation.career_directions ?? [],
+        sortOrder: specialisation.sort_order,
+        programSlugs: [
+          ...new Set([
+            ...(specialisation.program_slug ? [specialisation.program_slug] : []),
+            ...legacyProgramSlugs,
+            ...mappings.map((m) => m.programSlug),
+          ]),
+        ],
+        programLabels: programLabels.map(({ programSlug, label }) => ({ programSlug, label })),
+      };
+    });
+
+    const programs: ProgramTemplate[] = basePrograms.map((program) => ({
+      ...program,
+      specialisations: [
+        ...new Set([
+          ...program.specialisations,
+          ...currentOfferingSpecialisations
+            .filter((mapping) => mapping.programSlug === program.slug)
+            .map((mapping) => mapping.label),
+        ]),
+      ],
+    }));
+
+    const universities: University[] = dbUniversities.map((u) => {
+      const universityClaims = claimEvidence.filter((claim) => claim.universitySlug === u.slug);
+      const supportedApprovals = universityClaims
+        .filter(
+          (claim) =>
+            !claim.programSlug &&
+            !claim.offeringId &&
+            (claim.claimType === "recognition" || claim.claimType === "accreditation"),
+        )
+        .map((claim) => claim.renderedClaim);
+      const domain = toOfficialDomain(u.domain);
+      const verificationSourceUrl = toPublicHttpUrl(u.verification_source_url);
+
+      return {
+        slug: u.slug,
+        name: u.name,
+        shortName: u.short_name || u.name,
+        city: u.city,
+        state: u.state,
+        established: u.established ?? 0,
+        domain,
+        accentColor: u.accent_color,
+        naacGrade: "",
+        approvals: [],
+        claimEvidence: universityClaims,
+        supportedApprovals,
+        rating: 0,
+        reviews: 0,
+        studentsEnrolled: "Not independently verified",
+        placementPartners: [],
+        highlights: u.highlights ?? [],
+        about: u.about,
+        logoUrl: toUniversityLogoUrl(u.slug, u.logo_url),
+        heroImageUrl: toPublicHttpUrl(u.hero_image_url),
+        hiringPartnerCount: undefined,
+        legalName: u.legal_name ?? undefined,
+        heiId: u.hei_id ?? undefined,
+        profileDepth: u.profile_depth,
+        verificationAcademicYear: u.verification_academic_session ?? undefined,
+        verificationSourceUrl,
+        lastVerified: u.verified_at ? u.verified_at.slice(0, 10) : undefined,
+        verificationNextReviewAt: u.next_review_at ?? undefined,
+        verificationCurrent: Boolean(
+          verificationSourceUrl &&
+          u.verified_at &&
+          Date.parse(u.verified_at) <= now &&
+          u.next_review_at &&
+          Date.parse(u.next_review_at) > now,
+        ),
+        metricsVerified: false,
+        programs: preferredOfferings
+          .filter((o) => o.university_slug === u.slug)
+          .map((o) => {
+            const specialisations = currentOfferingSpecialisations
+              .filter((mapping) => mapping.offeringId === o.id)
+              .map((mapping) => mapping.label);
+            const entitlementStatus = offeringStatus(o);
+            const feeSourceUrl = toPublicHttpUrl(o.fee_source_url);
+            const feesVerified = Boolean(
+              entitlementStatus === "verified" &&
+              o.total_fee !== null &&
+              o.total_fee > 0 &&
+              o.fees_verified &&
+              feeSourceUrl &&
+              o.fee_verified_at &&
+              Date.parse(o.fee_verified_at) <= now &&
+              o.fee_next_review_at &&
+              Date.parse(o.fee_next_review_at) > now,
+            );
+            const perSemesterFeeVerified = Boolean(
+              entitlementStatus === "verified" &&
+              o.per_semester_fee_verified &&
+              o.per_semester_fee !== null &&
+              o.per_semester_fee > 0 &&
+              feeSourceUrl &&
+              o.fee_verified_at &&
+              Date.parse(o.fee_verified_at) <= now &&
+              o.fee_next_review_at &&
+              Date.parse(o.fee_next_review_at) > now,
+            );
+            const emiPerMonthVerified = Boolean(
+              entitlementStatus === "verified" &&
+              o.emi_per_month_verified &&
+              o.emi_per_month !== null &&
+              o.emi_per_month > 0 &&
+              feeSourceUrl &&
+              o.fee_verified_at &&
+              Date.parse(o.fee_verified_at) <= now &&
+              o.fee_next_review_at &&
+              Date.parse(o.fee_next_review_at) > now,
+            );
+            const feeGuideAvailable = feesVerified || perSemesterFeeVerified || emiPerMonthVerified;
+
+            return {
+              slug: o.program_slug,
+              offeringId: o.id,
+              totalFee: feesVerified ? Number(o.total_fee) : undefined,
+              perSemesterFee: perSemesterFeeVerified ? Number(o.per_semester_fee) : undefined,
+              emiPerMonth: emiPerMonthVerified ? Number(o.emi_per_month) : undefined,
+              feeGuideAvailable,
+              feesVerified,
+              perSemesterFeeVerified,
+              emiPerMonthVerified,
+              specialisations: specialisations.length ? specialisations : undefined,
+              specialisationsVerified:
+                entitlementStatus === "verified" && specialisations.length > 0,
+              entitlementStatus,
+              academicSession: o.academic_session ?? undefined,
+              entitlementSourceUrl: toPublicHttpUrl(o.entitlement_source_url),
+              universityProgramUrl: toOfficialUniversityUrl(o.university_programme_url, domain),
+              officialApplicationUrl: toOfficialUniversityUrl(o.official_application_url, domain),
+              verifiedAt: o.verified_at ?? undefined,
+              officialProgrammeName: o.official_programme_name ?? undefined,
+              deliveryMode: o.delivery_mode,
+              durationYears: o.duration_years === null ? undefined : Number(o.duration_years),
+              semesters: o.semesters ?? undefined,
+              eligibility: o.eligibility ?? undefined,
+              curriculum: toCurriculum(o.curriculum),
+              examMode: o.exam_mode ?? undefined,
+              scholarshipSummary: undefined,
+              refundPolicyUrl: toOfficialUniversityUrl(o.refund_policy_url, domain),
+              feeSourceUrl:
+                feesVerified || perSemesterFeeVerified || emiPerMonthVerified
+                  ? feeSourceUrl
+                  : undefined,
+              feeVerifiedAt:
+                feesVerified || perSemesterFeeVerified || emiPerMonthVerified
+                  ? (o.fee_verified_at ?? undefined)
+                  : undefined,
+              feeNextReviewAt:
+                feesVerified || perSemesterFeeVerified || emiPerMonthVerified
+                  ? (o.fee_next_review_at ?? undefined)
+                  : undefined,
+              // Component-level amounts need their own scoped evidence model.
+              // Keep the CMS field internal until that provenance exists.
+              feeComponents: undefined,
+              seatsFilledPercent: undefined,
+            };
+          }),
+      };
+    });
+
+    const settings: SiteSettings = {};
+    for (const row of settingsRows as { key: string; value: SettingsValue }[]) {
+      settings[row.key] = row.value;
+    }
 
     return {
-      slug: u.slug,
-      name: u.name,
-      shortName: u.short_name || u.name,
-      city: u.city,
-      state: u.state,
-      established: u.established ?? 0,
-      domain,
-      accentColor: u.accent_color,
-      naacGrade: "",
-      approvals: [],
-      claimEvidence: universityClaims,
-      supportedApprovals,
-      rating: 0,
-      reviews: 0,
-      studentsEnrolled: "Not independently verified",
-      placementPartners: [],
-      highlights: u.highlights ?? [],
-      about: u.about,
-      logoUrl: toUniversityLogoUrl(u.slug, u.logo_url),
-      heroImageUrl: toPublicHttpUrl(u.hero_image_url),
-      hiringPartnerCount: undefined,
-      legalName: u.legal_name ?? undefined,
-      heiId: u.hei_id ?? undefined,
-      profileDepth: u.profile_depth,
-      verificationAcademicYear: u.verification_academic_session ?? undefined,
-      verificationSourceUrl,
-      lastVerified: u.verified_at ? u.verified_at.slice(0, 10) : undefined,
-      verificationNextReviewAt: u.next_review_at ?? undefined,
-      verificationCurrent: Boolean(
-        verificationSourceUrl &&
-        u.verified_at &&
-        Date.parse(u.verified_at) <= now &&
-        u.next_review_at &&
-        Date.parse(u.next_review_at) > now,
-      ),
-      metricsVerified: false,
-      programs: preferredOfferings
-        .filter((o) => o.university_slug === u.slug)
-        .map((o) => {
-          const specialisations = currentOfferingSpecialisations
-            .filter((mapping) => mapping.offeringId === o.id)
-            .map((mapping) => mapping.label);
-          const entitlementStatus = offeringStatus(o);
-          const feeSourceUrl = toPublicHttpUrl(o.fee_source_url);
-          const feesVerified = Boolean(
-            entitlementStatus === "verified" &&
-            o.total_fee !== null &&
-            o.total_fee > 0 &&
-            o.fees_verified &&
-            feeSourceUrl &&
-            o.fee_verified_at &&
-            Date.parse(o.fee_verified_at) <= now &&
-            o.fee_next_review_at &&
-            Date.parse(o.fee_next_review_at) > now,
-          );
-          const perSemesterFeeVerified = Boolean(
-            entitlementStatus === "verified" &&
-            o.per_semester_fee_verified &&
-            o.per_semester_fee !== null &&
-            o.per_semester_fee > 0 &&
-            feeSourceUrl &&
-            o.fee_verified_at &&
-            Date.parse(o.fee_verified_at) <= now &&
-            o.fee_next_review_at &&
-            Date.parse(o.fee_next_review_at) > now,
-          );
-          const emiPerMonthVerified = Boolean(
-            entitlementStatus === "verified" &&
-            o.emi_per_month_verified &&
-            o.emi_per_month !== null &&
-            o.emi_per_month > 0 &&
-            feeSourceUrl &&
-            o.fee_verified_at &&
-            Date.parse(o.fee_verified_at) <= now &&
-            o.fee_next_review_at &&
-            Date.parse(o.fee_next_review_at) > now,
-          );
-          const feeGuideAvailable = feesVerified || perSemesterFeeVerified || emiPerMonthVerified;
-
-          return {
-            slug: o.program_slug,
-            offeringId: o.id,
-            totalFee: feesVerified ? Number(o.total_fee) : undefined,
-            perSemesterFee: perSemesterFeeVerified ? Number(o.per_semester_fee) : undefined,
-            emiPerMonth: emiPerMonthVerified ? Number(o.emi_per_month) : undefined,
-            feeGuideAvailable,
-            feesVerified,
-            perSemesterFeeVerified,
-            emiPerMonthVerified,
-            specialisations: specialisations.length ? specialisations : undefined,
-            specialisationsVerified: entitlementStatus === "verified" && specialisations.length > 0,
-            entitlementStatus,
-            academicSession: o.academic_session ?? undefined,
-            entitlementSourceUrl: toPublicHttpUrl(o.entitlement_source_url),
-            universityProgramUrl: toOfficialUniversityUrl(o.university_programme_url, domain),
-            officialApplicationUrl: toOfficialUniversityUrl(o.official_application_url, domain),
-            verifiedAt: o.verified_at ?? undefined,
-            officialProgrammeName: o.official_programme_name ?? undefined,
-            deliveryMode: o.delivery_mode,
-            durationYears: o.duration_years === null ? undefined : Number(o.duration_years),
-            semesters: o.semesters ?? undefined,
-            eligibility: o.eligibility ?? undefined,
-            curriculum: toCurriculum(o.curriculum),
-            examMode: o.exam_mode ?? undefined,
-            scholarshipSummary: undefined,
-            refundPolicyUrl: toOfficialUniversityUrl(o.refund_policy_url, domain),
-            feeSourceUrl:
-              feesVerified || perSemesterFeeVerified || emiPerMonthVerified
-                ? feeSourceUrl
-                : undefined,
-            feeVerifiedAt:
-              feesVerified || perSemesterFeeVerified || emiPerMonthVerified
-                ? (o.fee_verified_at ?? undefined)
-                : undefined,
-            feeNextReviewAt:
-              feesVerified || perSemesterFeeVerified || emiPerMonthVerified
-                ? (o.fee_next_review_at ?? undefined)
-                : undefined,
-            // Component-level amounts need their own scoped evidence model.
-            // Keep the CMS field internal until that provenance exists.
-            feeComponents: undefined,
-            seatsFilledPercent: undefined,
-          };
-        }),
+      universities,
+      programs,
+      claimEvidence,
+      specialisations,
+      settings,
+      source: "database",
     };
-  });
-
-  const settings: SiteSettings = {};
-  for (const row of (settingsRes.data ?? []) as { key: string; value: SettingsValue }[]) {
-    settings[row.key] = row.value;
+  } catch (error) {
+    logCatalogFailure("request", [error instanceof Error ? error.name : "unknown"]);
+    return { universities: [], programs: [], settings: {}, source: "fallback" };
   }
-
-  return {
-    universities,
-    programs,
-    claimEvidence,
-    specialisations,
-    settings,
-    source: "database",
-  };
 }
 
 export const getCatalog = createServerFn({ method: "GET" }).handler(async (): Promise<Catalog> => {

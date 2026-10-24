@@ -1,11 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { getDatabase } from "@/lib/db.server";
+import { getLearningCourse } from "@/lib/featured-learning";
 
 const contactChannelSchema = z.enum(["call", "whatsapp", "email"]);
 
 const leadSchema = z
   .object({
     fullName: z.string().trim().min(2).max(100),
+    externalCourseId: z
+      .string()
+      .max(100)
+      .refine((id) => Boolean(getLearningCourse(id)))
+      .optional(),
     phone: z.string().regex(/^[6-9]\d{9}$/),
     email: z.union([z.string().trim().email().max(254), z.literal("")]).optional(),
     universitySlug: z
@@ -61,7 +68,7 @@ const leadSchema = z
   });
 
 type IntakeResult =
-  | { ok: true }
+  | { ok: true; continueUrl?: string }
   | {
       ok: false;
       reason: "duplicate" | "rate_limited" | "unavailable" | "verification_failed" | "invalid";
@@ -268,12 +275,102 @@ async function verifyTurnstile(request: Request, token: string | null) {
   }
 }
 
-function mapRpcFailure(message: string): IntakeFailure {
-  if (message.includes("duplicate_recent_enquiry")) return { ok: false, reason: "duplicate" };
-  if (message.includes("rate_limit") || message.includes("intake_temporarily_busy")) {
-    return { ok: false, reason: "rate_limited" };
+const COUNSELLING_CONSENT_TEXT =
+  "Use my submitted details to provide the counselling response I requested. I can withdraw permission at any time.";
+
+async function storeLead(
+  lead: z.infer<typeof leadSchema>,
+  clientBucket: string,
+): Promise<IntakeResult> {
+  if (lead.consentText !== COUNSELLING_CONSENT_TEXT) return { ok: false, reason: "invalid" };
+
+  const database = await getDatabase();
+  if (lead.shareWithUniversity) {
+    const university = await database
+      .prepare("SELECT name FROM universities WHERE slug = ? AND published = 1")
+      .bind(lead.universitySlug)
+      .first<{ name: string }>();
+    const expectedText = university
+      ? `You may share these enquiry details only with ${university.name} for this request. This is optional and is not selected by default.`
+      : null;
+    if (!expectedText || lead.universityShareConsentText !== expectedText) {
+      return { ok: false, reason: "invalid" };
+    }
   }
-  return { ok: false, reason: "unavailable" };
+
+  const now = new Date().toISOString();
+  const rateStatement = database
+    .prepare(
+      `INSERT INTO lead_intake_rate_limits (bucket_hash, window_started_at, attempts, last_attempt_at)
+       VALUES (?, unixepoch(), 1, unixepoch())
+       ON CONFLICT(bucket_hash) DO UPDATE SET
+         window_started_at = CASE WHEN window_started_at <= unixepoch() - 600 THEN unixepoch() ELSE window_started_at END,
+         attempts = CASE WHEN window_started_at <= unixepoch() - 600 THEN 1 ELSE attempts + 1 END,
+         last_attempt_at = unixepoch()`,
+    )
+    .bind(clientBucket);
+  const insertStatement = database
+    .prepare(
+      `INSERT INTO leads (
+        id, full_name, phone, email, university_slug, program_slug, source_path, message,
+        contact_channels, consent_given, consent_version, consent_text, consent_at,
+        share_with_university, university_share_consent_at, university_share_consent_version,
+        university_share_consent_text, qualification, goal, utm_source, utm_medium, utm_campaign,
+        referrer, status, created_at
+      )
+      SELECT ?,?,?,?,?,?,?,?, ?,1,?,?,?, ?,?,?,?, ?,?,?,?,?,?, 'new', ?
+      WHERE (SELECT attempts FROM lead_intake_rate_limits WHERE bucket_hash = ?) <= 5
+        AND (SELECT count(*) FROM leads WHERE unixepoch(created_at) > unixepoch() - 60) < 60
+        AND NOT EXISTS (
+          SELECT 1 FROM leads WHERE phone = ? AND unixepoch(created_at) > unixepoch() - 120
+        )`,
+    )
+    .bind(
+      crypto.randomUUID(),
+      lead.fullName,
+      lead.phone,
+      lead.email?.trim() || null,
+      lead.universitySlug,
+      lead.programSlug,
+      lead.sourcePath,
+      lead.message,
+      JSON.stringify([lead.contactChannel]),
+      lead.consentVersion,
+      lead.consentText,
+      now,
+      lead.shareWithUniversity ? 1 : 0,
+      lead.shareWithUniversity ? now : null,
+      lead.universityShareConsentVersion,
+      lead.universityShareConsentText,
+      lead.qualification,
+      lead.goal,
+      lead.utmSource,
+      lead.utmMedium,
+      lead.utmCampaign,
+      lead.referrer,
+      now,
+      clientBucket,
+      lead.phone,
+    );
+
+  const [, insertResult] = await database.batch([rateStatement, insertStatement]);
+  if ((insertResult?.meta.changes ?? 0) > 0) return { ok: true };
+
+  const [rate, duplicate] = await Promise.all([
+    database
+      .prepare("SELECT attempts FROM lead_intake_rate_limits WHERE bucket_hash = ?")
+      .bind(clientBucket)
+      .first<{ attempts: number }>(),
+    database
+      .prepare(
+        "SELECT 1 AS found FROM leads WHERE phone = ? AND unixepoch(created_at) > unixepoch() - 120 LIMIT 1",
+      )
+      .bind(lead.phone)
+      .first<{ found: number }>(),
+  ]);
+  if ((rate?.attempts ?? 0) > 5) return { ok: false, reason: "rate_limited" };
+  if (duplicate) return { ok: false, reason: "duplicate" };
+  return { ok: false, reason: "rate_limited" };
 }
 
 export const Route = createFileRoute("/api/leads")({
@@ -321,45 +418,40 @@ export const Route = createFileRoute("/api/leads")({
         const clientBucket = await createDatabaseClientBucket(request);
         if (!clientBucket) return json({ ok: false, reason: "unavailable" }, 503);
 
+        const course = getLearningCourse(parsed.data.externalCourseId);
         try {
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const { error } = await supabaseAdmin.rpc("submit_counselling_lead_from_server", {
-            p_client_bucket: clientBucket,
-            p_full_name: parsed.data.fullName,
-            p_phone: parsed.data.phone,
-            p_email: parsed.data.email || null,
-            p_university_slug: parsed.data.universitySlug,
-            p_program_slug: parsed.data.programSlug,
-            p_source_path: parsed.data.sourcePath,
-            p_message: parsed.data.message,
-            p_contact_channels: [parsed.data.contactChannel],
-            p_consent_given: parsed.data.consentGiven,
-            p_consent_text: parsed.data.consentText,
-            p_consent_version: parsed.data.consentVersion,
-            p_share_with_university: parsed.data.shareWithUniversity,
-            p_university_share_consent_version: parsed.data.universityShareConsentVersion,
-            p_university_share_consent_text: parsed.data.universityShareConsentText,
-            p_qualification: parsed.data.qualification,
-            p_goal: parsed.data.goal,
-            p_utm_source: parsed.data.utmSource,
-            p_utm_medium: parsed.data.utmMedium,
-            p_utm_campaign: parsed.data.utmCampaign,
-            p_referrer: parsed.data.referrer,
-          });
-
-          if (error) {
-            const failure = mapRpcFailure(error.message);
-            if (failure.reason === "unavailable") logIntakeFailure(request, "rpc_rejected");
+          const result = await storeLead(
+            course
+              ? {
+                  ...parsed.data,
+                  goal: course.title,
+                  message: JSON.stringify({
+                    externalCourseId: course.id,
+                    provider: course.provider,
+                    course: course.title,
+                    requestedChannel: parsed.data.contactChannel,
+                  }),
+                }
+              : parsed.data,
+            clientBucket,
+          );
+          if (!result.ok) {
             const status =
-              failure.reason === "rate_limited" ? 429 : failure.reason === "duplicate" ? 409 : 503;
-            return json(failure, status);
+              result.reason === "rate_limited"
+                ? 429
+                : result.reason === "duplicate"
+                  ? 409
+                  : result.reason === "invalid"
+                    ? 400
+                    : 503;
+            return json(result, status);
           }
         } catch {
-          logIntakeFailure(request, "rpc_unreachable");
+          logIntakeFailure(request, "d1_unreachable");
           return json({ ok: false, reason: "unavailable" }, 503);
         }
 
-        return json({ ok: true });
+        return json({ ok: true, ...(course ? { continueUrl: course.href } : {}) });
       },
     },
   },

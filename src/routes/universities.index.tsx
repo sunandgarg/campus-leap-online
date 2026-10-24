@@ -44,7 +44,7 @@ export const Route = createFileRoute("/universities/")({
 type SortKey = "feeLow" | "feeHigh" | "name";
 const DIRECTORY_PAGE_SIZE = 24;
 
-function UniversitiesPage() {
+export function UniversitiesPage() {
   const stateOptions = useMemo(
     () => [...new Set(universities.map((university) => university.state))].sort(),
     [],
@@ -245,7 +245,7 @@ function UniversitiesPage() {
       </section>
 
       <section className="container-page py-4 pb-8 lg:py-7">
-        <div className="sticky top-16 z-30 min-w-0 rounded-xl border border-border bg-background/95 p-2.5 shadow-card backdrop-blur sm:p-3">
+        <div className="sticky top-16 z-30 min-w-0 p-2.5 backdrop-blur sm:p-3 border-b border-border">
           <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -379,7 +379,7 @@ function UniversitiesPage() {
         </div>
 
         {list.length === 0 ? (
-          <div className="mt-5 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+          <div className="mt-5 p-8 text-center border-b border-border">
             <Building2 className="mx-auto h-7 w-7 text-muted-foreground" />
             <p className="mt-3 font-display text-lg font-bold">No university matches yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -393,7 +393,7 @@ function UniversitiesPage() {
           <div
             key={`university-page-${safePage}`}
             aria-label="Online university options"
-            className="mt-3 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
+            className="mt-3 grid min-w-0 grid-cols-1 gap-x-8 md:grid-cols-2 xl:grid-cols-3"
           >
             {pagedList.map((university, index) => (
               <UniversityCard key={university.slug} university={university} priority={index < 12} />
@@ -435,7 +435,7 @@ function UniversitiesPage() {
           </nav>
         ) : null}
 
-        <div className="mt-8 grid gap-4 rounded-2xl border border-border bg-[#f6f8fc] p-4 dark:bg-[#151b26] sm:p-5 lg:grid-cols-[1fr_0.85fr] lg:items-center">
+        <div className="mt-8 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1fr_0.85fr] lg:items-center border-b border-border">
           <div>
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#1768cc] shadow-sm dark:bg-[#202938] dark:text-[#78b9ff]">
               <GitCompareArrows className="h-4 w-4" />

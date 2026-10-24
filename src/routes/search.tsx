@@ -201,7 +201,7 @@ function SearchPage() {
         </div>
 
         {totalResults === 0 ? (
-          <div className="rounded-[2rem] border border-dashed border-border bg-card px-6 py-20 text-center">
+          <div className="px-6 py-20 text-center border-b border-border">
             <SlidersHorizontal className="mx-auto h-8 w-8 text-muted-foreground" />
             <h2 className="mt-5 font-display text-2xl font-extrabold">No exact match yet</h2>
             <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
@@ -230,7 +230,7 @@ function SearchPage() {
                         key={program.slug}
                         to="/programs/$programSlug"
                         params={{ programSlug: program.slug }}
-                        className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#325dd2]"
+                        className="group p-5 transition-colors border-b border-border"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div>
@@ -294,7 +294,7 @@ function SearchPage() {
                       params={{
                         specialisationSlug: `${program.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
                       }}
-                      className="group flex min-h-24 items-center gap-4 rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                      className="group flex min-h-24 items-center gap-4 p-4 transition-colors border-b border-border"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
                         <GraduationCap className="h-4.5 w-4.5" />

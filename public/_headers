@@ -3,3 +3,12 @@
 
 /authorities/*
   cache-control: public, max-age=31536000, immutable
+
+/university-logos/*
+  cache-control: public, max-age=31536000, immutable
+
+/online-profiles/*
+  cache-control: public, max-age=86400, stale-while-revalidate=604800
+
+/news/*.jpg
+  cache-control: public, max-age=86400, stale-while-revalidate=604800

@@ -5,7 +5,6 @@ import {
   BookOpenCheck,
   BrainCircuit,
   BriefcaseBusiness,
-  Check,
   ChevronRight,
   CircleHelp,
   ShieldCheck,
@@ -120,7 +119,7 @@ function SpecialisationPage() {
               </div>
             </div>
 
-            <aside className="rounded-2xl border border-border bg-card p-6 shadow-card sm:p-7">
+            <aside className="p-6 sm:p-7 border-b border-border">
               <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#a94300] dark:text-[#ff9a5b]">
                 Decision snapshot
               </p>
@@ -164,10 +163,10 @@ function SpecialisationPage() {
               {specialisation.skills.map((skill) => (
                 <div
                   key={skill}
-                  className="flex min-h-20 items-center gap-3 rounded-xl border border-border bg-card p-4"
+                  className="flex min-h-20 items-center gap-3 p-4 border-b border-border"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#eaf8f1] text-[#187a55] dark:bg-[#123329] dark:text-[#77ddb2]">
-                    <Check className="h-4 w-4" />
+                    <BadgeCheck className="h-4 w-4" />
                   </span>
                   <span className="text-sm font-bold">{skill}</span>
                 </div>
@@ -260,7 +259,7 @@ function SpecialisationPage() {
                   key={university.slug}
                   to="/universities/$universitySlug/$programSlug"
                   params={{ universitySlug: university.slug, programSlug: program.slug }}
-                  className="group rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                  className="group p-4 transition-colors border-b border-border"
                 >
                   <div className="flex items-start gap-3">
                     <UniversityLogo university={university} size="sm" />
@@ -292,7 +291,7 @@ function SpecialisationPage() {
               ))}
             </CompactRail>
             {offers.length === 0 ? (
-              <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-6">
+              <div className="mt-6 p-6 border-b border-border">
                 <p className="font-display text-lg font-extrabold">
                   No university-specific mapping yet
                 </p>
@@ -352,7 +351,7 @@ function SpecialisationPage() {
             title={`Check your ${specialisation.name} fit`}
             description="Get curriculum questions, current university options and an eligibility check."
           />
-          <div className="mt-4 rounded-2xl border border-border bg-card p-4 text-xs leading-5 text-muted-foreground">
+          <div className="mt-4 p-4 text-xs leading-5 text-muted-foreground border-b border-border">
             <p className="flex items-center gap-2 font-extrabold text-foreground">
               <BadgeCheck className="h-4 w-4 text-[#187a55]" /> No paid admission on DekhoCampus
             </p>

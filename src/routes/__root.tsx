@@ -13,13 +13,14 @@ import { useEffect, useState, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
+import { HomeHeader, HomeFooter } from "@/components/site/home-shell";
+import { NewsHeader } from "@/components/site/news-header";
+import { SITE_ORIGIN } from "@/lib/site-origin";
 import { MobileBottomNav } from "@/components/site/mobile-bottom-nav";
 import { DekhoAICopilot } from "@/components/site/dekho-ai-copilot";
 import { Toaster } from "@/components/ui/sonner";
 import { getCatalog } from "@/lib/catalog.functions";
 import { setCatalog, siteSettings, universities } from "@/data/universities";
-
-const SITE_ORIGIN = "https://online.dekhocampus.com";
 
 function NotFoundComponent() {
   return (
@@ -50,7 +51,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: { error: unknown; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   return (
@@ -109,12 +110,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "icon", href: "/dekhocampus-logo.png", type: "image/png" },
         { rel: "apple-touch-icon", href: "/dekhocampus-logo.png" },
         ...(includeCanonical ? [{ rel: "canonical", href: `${SITE_ORIGIN}${canonicalPath}` }] : []),
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "preload",
+          href: "/fonts/noto-sans-devanagari-latin.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous",
+        },
         { rel: "preconnect", href: "https://challenges.cloudflare.com" },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap",
+          href: "/fonts/site-font.css",
         },
       ],
     };
@@ -137,7 +143,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('dekhocampus-theme');document.documentElement.classList.toggle('dark',t==='dark')}catch(e){document.documentElement.classList.remove('dark')}})();`,
+            __html: `document.documentElement.classList.remove('dark');`,
           }}
         />
       </head>
@@ -251,14 +257,20 @@ function RootComponent() {
       </a>
       <div className="flex min-h-screen flex-col pb-24 lg:pb-0">
         <AnnouncementBar />
-        <SiteHeader />
+        {pathname === "/" ? (
+          <HomeHeader />
+        ) : pathname === "/news" || pathname.startsWith("/news/") ? (
+          <NewsHeader />
+        ) : (
+          <SiteHeader />
+        )}
         <main id="main-content" className="flex-1" tabIndex={-1}>
           {/* Required: nested routes render here. */}
           <div key={pathname} className="route-stage min-h-full">
             <Outlet />
           </div>
         </main>
-        <SiteFooter />
+        {pathname === "/" ? <HomeFooter /> : <SiteFooter />}
       </div>
       <MobileBottomNav />
       <DekhoAICopilot catalogueUniversities={universities} />

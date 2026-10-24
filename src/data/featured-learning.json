@@ -1,0 +1,68 @@
+[
+  {
+    "id": "google-digital-marketing-free",
+    "provider": "Google",
+    "title": "Fundamentals of Digital Marketing",
+    "category": "Marketing",
+    "detail": "Beginner · 40 hours · self-paced",
+    "pricing": "Free",
+    "href": "https://skillshop.exceedlms.com/student/collection/1830706-fundamentals-of-digital-marketing",
+    "logo": "/providers/google.svg",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "id": "upgrad-management-essentials",
+    "provider": "upGrad",
+    "title": "Management Essentials",
+    "category": "Management",
+    "detail": "3 months · self-paced business foundations",
+    "pricing": "Paid",
+    "href": "https://www.upgrad.com/management-essentials-online-program/",
+    "logo": "/providers/upgrad.svg",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "id": "upgrad-project-management",
+    "provider": "upGrad KnowledgeHut",
+    "title": "Project Management Techniques",
+    "category": "Project management",
+    "detail": "8 hours · live instructor-led training",
+    "pricing": "Paid",
+    "href": "https://www.upgrad.com/certification/project-management-techniques-training/",
+    "logo": "/providers/upgrad.svg",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "id": "scaler-software-ai",
+    "provider": "Scaler",
+    "title": "Software & AI Engineering",
+    "category": "Technology",
+    "detail": "12 months · engineering & system design",
+    "pricing": "Paid",
+    "href": "https://www.scaler.com/academy/",
+    "logo": "/providers/scaler.svg",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "id": "google-data-analytics",
+    "provider": "Google",
+    "title": "Data Analytics Certificate",
+    "category": "Data & analytics",
+    "detail": "Beginner · SQL, Python & Tableau",
+    "pricing": "Paid",
+    "href": "https://grow.google/certificates/data-analytics/",
+    "logo": "/providers/google.svg",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "id": "google-digital-marketing",
+    "provider": "Google",
+    "title": "Digital Marketing & E-commerce Certificate",
+    "category": "Marketing",
+    "detail": "Beginner · campaigns & online retail",
+    "pricing": "Paid",
+    "href": "https://grow.google/certificates/digital-marketing-ecommerce/",
+    "logo": "/providers/google.svg",
+    "checkedAt": "2026-10-24"
+  }
+]

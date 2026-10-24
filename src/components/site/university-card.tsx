@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { UniversityLogo } from "./university-logo";
 import {
   formatUniversityLocation,
@@ -15,68 +15,40 @@ export function UniversityCard({
   priority?: boolean;
 }) {
   const programs = getUniversityPrograms(university);
-  const currentPrograms = programs.filter(
+  const current = programs.filter(
     (program) =>
       university.profileDepth !== "directory" &&
       university.verificationCurrent === true &&
       program.entitlementStatus === "verified",
   );
-  const location = formatUniversityLocation(university);
-  const courseSummary = currentPrograms.length
-    ? `${currentPrograms.length} current ${currentPrograms.length === 1 ? "course" : "courses"}`
+  const summary = current.length
+    ? `${current.length} current courses`
     : programs.length
-      ? `${programs.length} ${programs.length === 1 ? "course profile" : "course profiles"}`
-      : "University details";
-
+      ? `${programs.length} course profiles`
+      : "Explore university";
   return (
     <Link
       to="/universities/$universitySlug"
       params={{ universitySlug: university.slug }}
-      aria-label={
-        currentPrograms.length
-          ? `Explore ${university.name} and its current online courses`
-          : `Explore ${university.name} profile and check course availability`
-      }
-      className="group flex h-[12rem] min-w-0 flex-col overflow-hidden rounded-xl border border-t-2 border-border bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-[0_18px_38px_-24px_rgba(50,93,210,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
-      style={{ borderTopColor: university.accentColor }}
+      aria-label={`Explore ${university.name} profile and check course availability`}
+      className="university-list-row group flex min-h-28 min-w-0 items-center gap-4 border-b border-border py-5 text-left transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
     >
-      <div className="flex min-h-8 items-center justify-between gap-2 px-3 pt-2.5">
-        <p className="line-clamp-1 text-[10px] font-extrabold text-[#2449ad] dark:text-[#a9c0ff]">
-          {courseSummary}
-        </p>
-        <span
-          aria-hidden="true"
-          className="h-2 w-2 shrink-0 rounded-full"
-          style={{ backgroundColor: university.accentColor }}
-        />
-      </div>
-
-      <div className="flex h-[4.4rem] shrink-0 items-center justify-center px-3 py-1">
-        <UniversityLogo
-          university={university}
-          size="md"
-          priority={priority}
-          className="h-14 w-[94%] max-w-[8.6rem] rounded-lg border-0 bg-white transition-transform duration-300 ease-out group-hover:scale-[1.04] motion-reduce:transform-none"
-        />
-      </div>
-
-      <div className="flex min-h-0 flex-1 flex-col px-3 pb-2.5 pt-1">
-        <h3 className="line-clamp-2 min-h-9 text-center font-display text-xs font-extrabold leading-[1.1rem] tracking-[-0.015em] sm:text-sm">
+      <UniversityLogo
+        university={university}
+        priority={priority}
+        className="h-14 w-20 rounded-none border-0 bg-transparent"
+      />
+      <div className="min-w-0 flex-1">
+        <h3 className="text-sm font-semibold leading-6 group-hover:text-primary">
           {university.name}
         </h3>
-        <p className="mt-1 flex min-w-0 items-center justify-center gap-1 text-center text-[10px] font-semibold leading-4 text-muted-foreground sm:text-[11px]">
-          <MapPin className="h-3 w-3 shrink-0 text-[#f47b25]" aria-hidden="true" />
-          <span className="line-clamp-1">{location}</span>
+        <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+          <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
+          {formatUniversityLocation(university)}
         </p>
+        <p className="mt-1 text-xs text-muted-foreground">{summary}</p>
       </div>
-
-      <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 border-t border-border bg-[#f7f9ff] px-3 text-[11px] font-extrabold text-[#2449ad] transition-colors group-hover:bg-[#325dd2] group-hover:text-white dark:bg-[#1b2230] dark:text-[#b9ceff]">
-        View university
-        <ArrowRight
-          className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
-          aria-hidden="true"
-        />
-      </span>
+      <ArrowUpRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
     </Link>
   );
 }

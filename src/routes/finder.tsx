@@ -339,7 +339,7 @@ function DegreeFinderPage() {
               </p>
             ) : null}
           </div>
-          <div className="rounded-xl border border-white/15 bg-[#252b36] p-4 text-sm text-white/85 lg:max-w-xs">
+          <div className="p-4 text-sm text-white/85 lg:max-w-xs border-b border-border">
             <p className="flex items-center gap-2 font-bold text-white">
               <ShieldCheck className="h-4 w-4 text-[#78ddb3]" /> Private by design
             </p>
@@ -497,7 +497,7 @@ function DegreeFinderPage() {
                       </button>
                     ))}
                     {visibleCourseChoices.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-border bg-background p-5 text-center sm:col-span-2">
+                      <div className="p-5 text-center sm:col-span-2 border-b border-border">
                         <p className="text-sm font-extrabold">No course found</p>
                         <button
                           type="button"
@@ -537,7 +537,7 @@ function DegreeFinderPage() {
             </div>
           ) : (
             <div className="mt-7">
-              <div className="flex flex-col gap-5 rounded-xl border border-[#b9dfca] bg-[#effbf5] p-5 dark:border-[#285f4c] dark:bg-[#0f2b23] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 border-b border-border">
                 <div>
                   <p className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.13em] text-[#168258] dark:text-[#75dcb4]">
                     <BadgeCheck className="h-4 w-4" /> Your shortlist is ready
@@ -561,7 +561,7 @@ function DegreeFinderPage() {
               </div>
 
               {initialGoal || audience ? (
-                <div className="mt-5 rounded-xl border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
+                <div className="mt-5 p-4 text-sm leading-6 text-muted-foreground border-b border-border">
                   <p className="font-extrabold text-foreground">Keep in mind</p>
                   {initialGoal ? (
                     <p className="mt-1">{finderGoalDetails[initialGoal].guidance}</p>
@@ -598,7 +598,7 @@ function DegreeFinderPage() {
                         {program.overview}
                       </p>
 
-                      <div className="mt-5 grid grid-cols-3 divide-x divide-border rounded-2xl bg-secondary/60 py-4 text-center">
+                      <div className="mt-5 grid grid-cols-3 divide-x divide-border py-4 text-center border-b border-border">
                         <div className="px-2">
                           <p className="font-display font-extrabold">{offers.length}</p>
                           <p className="mt-1 text-[10px] font-bold uppercase text-muted-foreground">
@@ -621,7 +621,7 @@ function DegreeFinderPage() {
                         </div>
                       </div>
 
-                      <div className="mt-5 flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+                      <div className="mt-5 flex items-center gap-3 p-3 border-b border-border">
                         <div className="flex -space-x-2">
                           {offers.slice(0, 3).map(({ university }) => (
                             <span

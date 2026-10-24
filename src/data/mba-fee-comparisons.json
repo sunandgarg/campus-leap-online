@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-10-24",
+  "reviewBy": "2027-01-22",
+  "universities": [
+    {
+      "slug": "amity-university-online",
+      "label": "Amity",
+      "region": "North",
+      "location": "Noida, Uttar Pradesh",
+      "campusProgramme": "Amity Noida MBA",
+      "campusFee": null,
+      "campusBasis": "The prospectus publishes first-semester charges, not a confirmed full-course total. Request the complete two-year schedule.",
+      "campusSource": "https://www.amity.edu/pdf/Admission-Prospectus-2026.pdf",
+      "onlineFee": 225000,
+      "onlineBasis": "Published standard two-year fee. The page also lists conditional payment benefits; confirm eligibility and extra charges.",
+      "onlineSource": "https://amityonline.com/noida/mba"
+    },
+    {
+      "slug": "gla-university-uttar-pradesh",
+      "label": "GLA",
+      "region": "North",
+      "location": "Mathura, Uttar Pradesh",
+      "campusProgramme": "GLA MBA (Hons.), Mathura",
+      "campusFee": 590000,
+      "campusBasis": "Academic fee: ₹2,90,000 in year one + ₹3,00,000 in year two. Accommodation and other charges are not included.",
+      "campusSource": "https://www.gla.ac.in/courses/post-graduate/mba-hons",
+      "onlineFee": 97000,
+      "onlineBasis": "Two-year course fee. Add ₹500 registration, ₹1,800 alumni and ₹6,000 examination fees. Payment discounts are conditional.",
+      "onlineSource": "https://glaonline.com/admission/fee-structure"
+    },
+    {
+      "slug": "manipal-university-online",
+      "label": "Manipal Jaipur",
+      "region": "North",
+      "location": "Jaipur, Rajasthan",
+      "campusProgramme": "Manipal University Jaipur MBA",
+      "campusFee": 1020000,
+      "campusBasis": "Calculated tuition: ₹5,10,000 per year × 2 years. Add ₹10,000 registration; ₹15,000 refundable caution deposit is separate. Hostel is excluded.",
+      "campusSource": "https://jaipur.manipal.edu/fomca/tapmi-mba-general.php",
+      "onlineFee": 184000,
+      "onlineBasis": "Standard full-course fee for four semesters, inclusive of taxes. Conditional scholarships may change the payable amount; confirm application charges.",
+      "onlineSource": "https://www.onlinemanipal.com/online-mba"
+    },
+    {
+      "slug": "svkm-s-narsee-monjee-institute-of-management-studies-maharashtra",
+      "label": "NMIMS",
+      "region": "West",
+      "location": "Mumbai, Maharashtra",
+      "campusProgramme": "NMIMS SBM Mumbai MBA",
+      "campusFee": null,
+      "campusBasis": "A current full-course campus fee was not confirmed on the reviewed programme page. Request a written fee schedule.",
+      "campusSource": "https://sbm.nmims.edu/mba-program",
+      "onlineFee": 196000,
+      "onlineBasis": "Full-programme payment option. Add ₹1,200 admission processing, ₹800 per subject per examination attempt and applicable project fees.",
+      "onlineSource": "https://online.nmims.edu/admission-process/mba-online-process"
+    },
+    {
+      "slug": "srm-institute-of-science-and-technology-tamil-nadu",
+      "label": "SRMIST",
+      "region": "South",
+      "location": "Tamil Nadu",
+      "campusProgramme": "SRMIST campus MBA",
+      "campusFee": null,
+      "campusBasis": "Campus and specialisation change the fee. Confirm the exact campus and complete two-year amount before comparing.",
+      "campusSource": "https://www.srmist.edu.in/",
+      "onlineFee": 189000,
+      "onlineBasis": "One-time tuition payment. Semester examination and certificate charges are separate; instalment totals and financing charges can differ.",
+      "onlineSource": "https://www.srmonline.in/course/master-of-business-administration"
+    },
+    {
+      "slug": "vellore-institute-of-technology-tamil-nadu",
+      "label": "VIT",
+      "region": "South",
+      "location": "Tamil Nadu",
+      "campusProgramme": "VIT Business School MBA",
+      "campusFee": 697000,
+      "campusBasis": "Tuition: ₹3,48,500 in each of two years. ₹3,000 refundable caution deposit and ₹5,500 alumni/mark-sheet charges are separate.",
+      "campusSource": "https://vit.ac.in/all-courses/pg/master-of-business-administration",
+      "onlineFee": 180000,
+      "onlineBasis": "Published programme fee. A conditional pay-in-full offer is also listed; ₹1,200 application processing is additional. Confirm the current payment plan.",
+      "onlineSource": "https://registration.vitonline.in/master_of_business_administration"
+    },
+    {
+      "slug": "mats-university-online",
+      "label": "MATS",
+      "region": "Central",
+      "location": "Raipur, Chhattisgarh",
+      "campusProgramme": "MATS University campus MBA",
+      "campusFee": null,
+      "campusBasis": "A current complete campus fee is still to be confirmed. Ask the university for its fee schedule.",
+      "campusSource": "https://matsuniversity.ac.in/",
+      "onlineFee": null,
+      "onlineBasis": "The reviewed official brochure is labelled 2025–26. A current 2026–27 fee quote is needed before displaying a comparison.",
+      "onlineSource": "https://matsuniversityonline.com/"
+    },
+    {
+      "slug": "sikkim-manipal-university-online",
+      "label": "Sikkim Manipal",
+      "region": "East & Northeast",
+      "location": "Sikkim",
+      "campusProgramme": "SMIT campus MBA, Sikkim",
+      "campusFee": null,
+      "campusBasis": "The reviewed official pages list different campus fee figures and category concessions. Confirm the applicable two-year total before calculating a difference.",
+      "campusSource": "https://www.smu.edu.in/smit/fee-structure.php",
+      "onlineFee": 120000,
+      "onlineBasis": "Published two-year online MBA course fee. Scholarships and category concessions are conditional; check additional charges and intake availability.",
+      "onlineSource": "https://www.onlinemanipal.com/online-mba-courses"
+    }
+  ]
+}

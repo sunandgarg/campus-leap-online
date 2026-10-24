@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { University } from "@/data/universities";
+import bundledLogos from "@/data/bundled-university-logos.json";
 
 const SIZES = {
   sm: { box: "h-9 w-9 rounded-lg", text: "text-xs", px: 64 },
@@ -41,14 +42,18 @@ export function UniversityLogo({
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
   const s = SIZES[size];
-  const logoUrl = university.logoUrl;
+  const localLogo = (bundledLogos as Record<string, string>)[university.slug];
+  const logoUrl = localLogo ?? university.logoUrl;
   const failed = !logoUrl || failedUrl === logoUrl;
   const loaded = loadedUrl === logoUrl;
   const imageRef = useRef<HTMLImageElement>(null);
   // The supplied Amity crest is a square canvas with substantial baked-in
   // whitespace. Zoom only that audited asset so the mark remains legible in
   // compact mobile cards; other wordmarks keep their natural fit.
-  const needsWhitespaceCrop = university.slug.startsWith("amity-university-");
+  const needsWhitespaceCrop = !localLogo && university.slug.startsWith("amity-university-");
+  // This audited JIIT asset is a wide lockup. Fit its left-hand crest in the
+  // square tile rather than shrinking the entire wordmark to an unreadable line.
+  const needsCrestFit = localLogo?.includes("460772f8f098") === true;
 
   const syncCompletedImage = useCallback(
     (image: HTMLImageElement | null) => {
@@ -99,9 +104,9 @@ export function UniversityLogo({
         data-university-logo="fallback"
         className={cn(tile, s.text)}
         style={{
-          color: `color-mix(in oklab, ${university.accentColor} 55%, #101923)`,
-          backgroundColor: `color-mix(in oklab, ${university.accentColor} 12%, white)`,
-          borderColor: `color-mix(in oklab, ${university.accentColor} 25%, transparent)`,
+          color: "var(--muted-foreground)",
+          backgroundColor: "transparent",
+          borderColor: "transparent",
         }}
       >
         {initialsOf(university.name)}
@@ -120,7 +125,7 @@ export function UniversityLogo({
         <span
           aria-hidden="true"
           className={cn(
-            "absolute inset-0 flex items-center justify-center bg-[#f4f6fa] font-display font-bold text-[#536176]",
+            "absolute inset-0 flex items-center justify-center font-display font-bold text-muted-foreground",
             s.text,
           )}
         >
@@ -140,7 +145,8 @@ export function UniversityLogo({
         draggable={false}
         style={needsWhitespaceCrop ? { transform: "scale(2.15)" } : undefined}
         className={cn(
-          "relative block h-full w-full object-contain p-[8%] transition-opacity duration-200",
+          "relative block h-full w-full p-1.5 transition-opacity duration-200",
+          needsCrestFit ? "object-cover object-left" : "object-contain",
           loaded ? "opacity-100" : "opacity-0",
         )}
         onError={() => setFailedUrl(logoUrl)}

@@ -197,8 +197,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
             </p>
           </div>
 
-          <aside className="overflow-hidden rounded-2xl border border-border bg-card shadow-card">
-            <div className="h-1.5 bg-[#325dd2]" />
+          <aside className="overflow-hidden border-t border-border lg:border-l lg:border-t-0 lg:pl-6">
             <div className="p-4 sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -216,7 +215,7 @@ export function ProgramHero({ university: u, program: p }: ProgramHeroProps) {
                 {quickFacts.map((fact) => (
                   <div
                     key={fact.label}
-                    className="min-w-0 rounded-lg bg-secondary/65 p-3 sm:grid sm:grid-cols-[1fr_minmax(0,1.2fr)] sm:gap-3 sm:rounded-none sm:bg-transparent sm:px-0 sm:py-3.5"
+                    className="min-w-0 border-b border-border py-3 sm:grid sm:grid-cols-[1fr_minmax(0,1.2fr)] sm:gap-3 sm:py-3.5"
                   >
                     <dt className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground sm:text-xs">
                       <fact.icon className="h-4 w-4 shrink-0" />

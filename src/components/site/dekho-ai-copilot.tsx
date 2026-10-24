@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -546,32 +546,38 @@ export function DekhoAICopilot({
     welcomeAnswer(currentCatalogueUniversities.length),
   );
 
+  const ask = useCallback(
+    (nextQuery: string) => {
+      const cleanedQuery = nextQuery.trim().slice(0, 180);
+      if (!cleanedQuery) {
+        inputRef.current?.focus();
+        return;
+      }
+      setQuery(cleanedQuery);
+      setAskedQuery(cleanedQuery);
+      setAnswer(buildAnswer(cleanedQuery, currentCatalogueUniversities));
+    },
+    [currentCatalogueUniversities],
+  );
+
   useEffect(() => {
     if (!askedQuery) setAnswer(welcomeAnswer(currentCatalogueUniversities.length));
   }, [askedQuery, currentCatalogueUniversities.length]);
 
   useEffect(() => {
-    const openDiya = () => {
+    const openDiya = (event: Event) => {
       returnFocusRef.current =
         document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setOpen(true);
+      if (event instanceof CustomEvent && typeof event.detail?.query === "string") {
+        ask(event.detail.query);
+      }
     };
     window.addEventListener("dekhocampus:open-diya", openDiya);
     return () => window.removeEventListener("dekhocampus:open-diya", openDiya);
-  }, []);
+  }, [ask]);
 
   if (pathname.startsWith("/admin") || pathname === "/auth") return null;
-
-  function ask(nextQuery: string) {
-    const cleanedQuery = nextQuery.trim().slice(0, 180);
-    if (!cleanedQuery) {
-      inputRef.current?.focus();
-      return;
-    }
-    setQuery(cleanedQuery);
-    setAskedQuery(cleanedQuery);
-    setAnswer(buildAnswer(cleanedQuery, currentCatalogueUniversities));
-  }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

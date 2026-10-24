@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/accordion";
 import { UniversityLogo } from "@/components/site/university-logo";
 import { ProgramDecisionStudio } from "@/components/site/program-decision-studio";
+import { LeadForm } from "@/components/site/lead-form";
 import { CompactRail } from "@/components/site/compact-rail";
 import { useComparison } from "@/hooks/use-comparison";
 import { slugifySpecialisation } from "@/data/specialisations";
@@ -282,6 +283,42 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 </Button>
               </div>
 
+              {offers.length > 0 && (
+                <nav
+                  aria-label="Open a university course profile"
+                  className="mt-5 border-t border-border pt-4"
+                >
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    Choose a university for course details, total fees and eligibility
+                  </p>
+                  <div className="mt-2 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+                    {offers.map(({ university, program }) => (
+                      <Link
+                        key={university.slug}
+                        to="/universities/$universitySlug/$programSlug"
+                        params={{ universitySlug: university.slug, programSlug: p.slug }}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-border bg-card px-2.5 py-1 text-xs font-semibold transition-colors hover:border-primary hover:text-primary"
+                      >
+                        <UniversityLogo
+                          university={university}
+                          size="sm"
+                          className="h-7 w-7 border-0"
+                        />
+                        <span className="min-w-0">
+                          <span className="block truncate">{university.shortName}</span>
+                          <span className="mt-0.5 block text-[10px] font-normal text-muted-foreground">
+                            {isComparableProgramOffer({ university, program })
+                              ? `${formatINR(program.totalFee)} total`
+                              : "Check current fee"}
+                          </span>
+                        </span>
+                        <ArrowRight className="ml-auto h-3 w-3 shrink-0" aria-hidden="true" />
+                      </Link>
+                    ))}
+                  </div>
+                </nav>
+              )}
+
               <dl className="mt-5 grid max-w-2xl grid-cols-2 gap-3 border-t border-border pt-4 sm:grid-cols-4">
                 {[
                   [offers.length.toString(), "University profiles"],
@@ -300,91 +337,12 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             </div>
 
             <aside className="relative mx-auto w-full min-w-0 max-w-[440px]">
-              <div className="rounded-2xl border border-border bg-card p-4 shadow-card sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a94300] dark:text-[#ff9a5b]">
-                      A practical checklist
-                    </p>
-                    <h2 className="mt-2 font-display text-xl font-extrabold tracking-[-0.04em] text-foreground sm:text-2xl">
-                      Compare before you commit.
-                    </h2>
-                  </div>
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e6] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ff9a5b]">
-                    <ShieldCheck className="h-5 w-5" />
-                  </span>
-                </div>
-
-                <p className="mt-3 hidden text-sm leading-6 text-muted-foreground sm:block">
-                  Compare budget, current details, learning format and fit at your own pace, without
-                  sales pressure.
-                </p>
-
-                <div className="mt-5 hidden space-y-2.5 sm:block">
-                  {[
-                    `${offers.length} university profiles to explore`,
-                    "Compare up to three without signing in",
-                    "Free human guidance when you need it",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-3 rounded-lg border border-border bg-background px-3.5 py-3 text-sm font-semibold"
-                    >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#e8f7ef] text-[#148055] dark:bg-[#113d30] dark:text-[#67d6a7]">
-                        <Check className="h-3.5 w-3.5" />
-                      </span>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-3">
-                  <div className="rounded-lg bg-secondary p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Typical duration
-                    </p>
-                    <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {p.durationYears} years
-                    </p>
-                  </div>
-                  <div className="rounded-lg bg-secondary p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      Study pathways
-                    </p>
-                    <p className="mt-1.5 font-display text-xl font-extrabold">
-                      {p.specialisations.length}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-5 hidden items-center justify-between gap-4 border-t border-border pt-5 sm:flex">
-                  <div className="flex -space-x-2">
-                    {comparableOffers.slice(0, 3).map(({ university }) => (
-                      <span
-                        key={university.slug}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-card bg-background shadow-sm"
-                      >
-                        <UniversityLogo university={university} size="sm" />
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-right text-[10px] font-semibold leading-4 text-muted-foreground">
-                    No payment required
-                    <br />
-                    Used only for your requested response
-                  </p>
-                </div>
-
-                <Button
-                  asChild
-                  size="lg"
-                  className="mt-5 hidden w-full rounded-lg bg-[#f47b25] font-extrabold text-[#111827] hover:bg-[#d85f12] sm:inline-flex"
-                >
-                  <Link to="/contact">
-                    Get free counselling <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+              <LeadForm
+                compact
+                defaultProgramSlug={p.slug}
+                title="Your next degree starts here."
+                description="Get help with fees, eligibility and university options."
+              />
             </aside>
           </div>
         </div>
@@ -469,7 +427,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             {learningFeatures.map((feature) => (
               <article
                 key={feature.title}
-                className="rounded-xl border border-border bg-card p-6 transition-colors hover:border-[#aebff0] dark:hover:border-[#56698c]"
+                className="p-6 transition-colors dark:hover:border-[#56698c] border-b border-border"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <feature.icon className="h-5 w-5" />
@@ -494,7 +452,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             description="A good decision starts with fit—not urgency. Use these signals before comparing universities."
           />
           <CompactRail label={`Online ${p.code} fit checks`} columns={2}>
-            <article className="rounded-xl border border-border bg-card p-5 md:p-7">
+            <article className="p-5 md:p-7 border-b border-border">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#edf2ff] text-[#325dd2] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <Check className="h-5 w-5" />
@@ -509,14 +467,14 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   "Can manage your time and study with consistent self-discipline",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <Check className="mt-1 h-4 w-4 shrink-0 text-[#325dd2] dark:text-[#7da2ff]" />
+                    <BadgeCheck className="mt-1 h-4 w-4 shrink-0" />
                     {item}
                   </li>
                 ))}
               </ul>
             </article>
 
-            <article className="rounded-xl border border-border bg-card p-5 md:p-7">
+            <article className="p-5 md:p-7 border-b border-border">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#fff1e7] text-[#a94300] dark:bg-[#3a2518] dark:text-[#ffad70]">
                   <Target className="h-5 w-5" />
@@ -549,7 +507,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           className="scroll-mt-32 border-b border-border bg-background py-10 lg:py-12"
         >
           <div className="container-page">
-            <div className="grid gap-5 rounded-2xl border border-border bg-card p-5 sm:p-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div className="grid gap-5 p-5 sm:p-6 md:grid-cols-[1fr_auto] md:items-center border-b border-border">
               <div>
                 <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#1768cc] dark:text-[#78b9ff]">
                   Free comparison tool
@@ -593,7 +551,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
           {comparableOffers.length ? (
             <>
-              <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-7 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between border-b border-border">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e7f1ff] text-[#1768cc] dark:bg-[#153a5e] dark:text-[#70b3ff]">
                     <GitCompareArrows className="h-4.5 w-4.5" />
@@ -696,7 +654,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               ) : null}
 
               {comparableOffers.length ? (
-                <div className="mt-6 grid gap-5 rounded-[1.5rem] border border-border bg-card p-5 md:grid-cols-[1fr_240px] md:items-end">
+                <div className="mt-6 grid gap-5 p-5 md:grid-cols-[1fr_240px] md:items-end border-b border-border">
                   <div>
                     <div className="flex items-center justify-between gap-4">
                       <label htmlFor="fee-ceiling" className="text-sm font-extrabold">
@@ -744,7 +702,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                   return (
                     <article
                       key={university.slug}
-                      className="group rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0] sm:p-6"
+                      className="group p-5 transition-colors sm:p-6 border-b border-border"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-center gap-4">
@@ -853,7 +811,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 })}
               </CompactRail>
               {displayedOffers.length === 0 ? (
-                <div className="mt-10 rounded-[1.5rem] border border-dashed border-border bg-card p-10 text-center">
+                <div className="mt-10 p-10 text-center border-b border-border">
                   <WalletCards className="mx-auto h-7 w-7 text-muted-foreground" />
                   <h3 className="mt-4 font-display text-lg font-extrabold">
                     {comparableOffers.length
@@ -900,7 +858,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                       key={university.slug}
                       to="/universities/$universitySlug/$programSlug"
                       params={{ universitySlug: university.slug, programSlug: p.slug }}
-                      className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition hover:border-[#d09b5d]"
+                      className="group flex items-center gap-3 p-4 transition border-b border-border"
                     >
                       <UniversityLogo university={university} size="sm" />
                       <span className="min-w-0 flex-1">
@@ -977,7 +935,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                           key={subject}
                           className="flex items-start gap-2 rounded-xl bg-background px-3 py-2.5 text-sm text-muted-foreground"
                         >
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#16865b]" />
+                          <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0" />
                           {subject}
                         </li>
                       ))}
@@ -1053,7 +1011,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
                 params={{
                   specialisationSlug: `${p.slug.replace(/^online-/, "")}-${slugifySpecialisation(specialisation)}`,
                 }}
-                className="group flex min-h-32 items-end justify-between rounded-xl border border-[#3b4350] bg-[#252b36] p-5 transition-colors hover:border-[#f47b25]"
+                className="group flex min-h-32 items-end justify-between p-5 transition-colors border-b border-border"
               >
                 <div>
                   <span className="text-xs font-extrabold text-[#ff9a50]">0{index + 1}</span>
@@ -1065,7 +1023,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
               </Link>
             ))}
           </CompactRail>
-          <div className="mt-8 flex flex-col gap-5 rounded-xl border border-[#3b4350] bg-[#252b36] p-6 md:flex-row md:items-center md:justify-between">
+          <div className="mt-8 flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between border-b border-border">
             <div>
               <h3 className="font-display text-xl font-extrabold">
                 Not sure which specialisation fits you?
@@ -1086,7 +1044,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
 
       <section id="eligibility" className="scroll-mt-32 bg-background py-9 lg:py-12">
         <div className="container-page grid gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-border bg-card p-6">
+          <div className="p-6 border-b border-border">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf3ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
               <GraduationCap className="h-5 w-5" />
             </span>
@@ -1144,10 +1102,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
           />
           <CompactRail label={`Online ${p.code} admission steps`} columns={4}>
             {admissionSteps.map(([number, title, description], index) => (
-              <article
-                key={number}
-                className="relative rounded-[1.4rem] border border-border bg-card p-5"
-              >
+              <article key={number} className="relative p-5 border-b border-border">
                 <span className="font-display text-3xl font-extrabold text-[#c7d9ee]">
                   {number}
                 </span>
@@ -1187,7 +1142,7 @@ function ProgramComparePageContent({ data }: { data: ProgramComparePageData }) {
             {p.careers.map((career, index) => (
               <article
                 key={career}
-                className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 transition-colors hover:border-[#aebff0]"
+                className="flex items-center gap-4 p-5 transition-colors border-b border-border"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-[#155cb6] dark:bg-[#153a5e] dark:text-[#70b3ff]">
                   <BriefcaseBusiness className="h-5 w-5" />

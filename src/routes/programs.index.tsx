@@ -107,7 +107,7 @@ function ProgramsPage() {
       </section>
 
       <section className="container-page py-4 pb-8 lg:py-7">
-        <div className="sticky top-16 z-30 min-w-0 rounded-xl border border-border bg-background/95 p-2.5 shadow-card backdrop-blur sm:p-3">
+        <div className="sticky top-16 z-30 min-w-0 p-2.5 backdrop-blur sm:p-3 border-b border-border">
           <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -181,89 +181,55 @@ function ProgramsPage() {
         {programs.length > 0 ? (
           <div
             aria-label="Online course options"
-            className="mt-3 grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            className="mt-3 grid min-w-0 grid-cols-1 gap-x-10 md:grid-cols-2"
           >
             {programs.map((program) => {
-              const offers = universitiesOfferingProgram(program.slug);
-              const verifiedOffers = verifiedUniversitiesOfferingProgram(program.slug);
-              const lowest = verifiedOffers.length
-                ? Math.min(...verifiedOffers.map(({ program: offer }) => offer.totalFee))
+              const offers = universitiesOfferingProgram(program.slug),
+                verified = verifiedUniversitiesOfferingProgram(program.slug);
+              const lowest = verified.length
+                ? Math.min(...verified.map(({ program: offer }) => offer.totalFee))
                 : null;
-              const logoUniversities = offers.slice(0, 3).map(({ university }) => university);
-
               return (
                 <Link
                   key={program.slug}
                   to="/programs/$programSlug"
                   params={{ programSlug: program.slug }}
                   aria-label={`Explore ${program.name}`}
-                  className="group flex h-[12.25rem] min-w-0 flex-col overflow-hidden rounded-xl border border-t-2 border-border border-t-[#325dd2] bg-card shadow-[0_10px_28px_-26px_rgba(19,23,32,0.72)] transition-[border-color,box-shadow,transform] duration-300 ease-out active:scale-[0.985] motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 hover:-translate-y-1 hover:border-[#86a2e8] hover:shadow-[0_18px_38px_-24px_rgba(50,93,210,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#325dd2] focus-visible:ring-offset-2"
+                  className="course-list-row group flex min-h-36 items-center gap-4 border-b border-border py-5 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
                 >
-                  <div className="flex min-h-9 items-center justify-between gap-1.5 px-2.5 pt-2">
-                    <span className="rounded-full bg-[#edf2ff] px-2 py-1 text-[10px] font-extrabold text-[#2449ad] dark:bg-[#243352] dark:text-[#b9ceff]">
-                      {program.level}
-                    </span>
-                    <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold text-muted-foreground">
-                      <Clock3 className="h-3 w-3" aria-hidden="true" /> {program.durationYears} yr
-                    </span>
-                  </div>
-
-                  <div className="flex min-h-0 flex-1 flex-col px-2.5 pb-2 pt-1.5">
-                    <div className="flex min-w-0 items-center gap-2">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#325dd2] text-[11px] font-black text-white transition-transform duration-300 ease-out group-hover:scale-105 motion-reduce:transform-none">
-                        {program.code.slice(0, 4)}
-                      </span>
-                      <h3 className="line-clamp-3 min-h-10 min-w-0 font-display text-xs font-extrabold leading-4 tracking-[-0.015em] sm:text-[0.82rem]">
-                        {program.name}
-                      </h3>
-                    </div>
-
-                    <div className="mt-2.5 flex min-w-0 items-center gap-2 border-t border-border pt-2">
-                      <div className="flex shrink-0 -space-x-1.5" aria-hidden="true">
-                        {logoUniversities.length ? (
-                          logoUniversities.map((university, index) => (
-                            <UniversityLogo
-                              key={university.slug}
-                              university={university}
-                              size="sm"
-                              priority={index === 0}
-                              className="h-6 w-6 rounded-full border-2 border-white dark:border-[#171d28]"
-                            />
-                          ))
-                        ) : (
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary">
-                            <Layers3 className="h-3 w-3" />
-                          </span>
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-[10px] font-extrabold text-foreground">
-                          {offers.length} {offers.length === 1 ? "university" : "universities"}
-                        </p>
-                        <p className="truncate text-[10px] font-semibold text-muted-foreground">
-                          {program.specialisations.length} pathways
-                        </p>
-                      </div>
-                    </div>
-
-                    <p className="mt-auto truncate text-[10px] font-semibold text-muted-foreground">
-                      {lowest !== null ? `Fee from ${formatINR(lowest)}` : "Check the current fee"}
-                    </p>
-                  </div>
-
-                  <span className="flex min-h-9 shrink-0 items-center justify-center gap-1.5 bg-[#325dd2] px-3 text-[11px] font-extrabold text-white transition-colors group-hover:bg-[#2449ad]">
-                    View course options
-                    <ArrowRight
-                      className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1"
-                      aria-hidden="true"
-                    />
+                  <span className="w-16 shrink-0 text-lg font-semibold text-primary">
+                    {program.code}
                   </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-semibold leading-6 group-hover:text-primary">
+                      {program.name}
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      {program.durationYears} years · {offers.length} university profiles
+                    </p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="flex -space-x-1">
+                        {offers.slice(0, 3).map(({ university }) => (
+                          <UniversityLogo
+                            key={university.slug}
+                            university={university}
+                            size="sm"
+                            className="h-6 w-6 rounded-full border-0"
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[11px] text-muted-foreground">
+                        {lowest !== null ? `Fee from ${formatINR(lowest)}` : "Check current fee"}
+                      </span>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                 </Link>
               );
-            })}
+            })}{" "}
           </div>
         ) : (
-          <div className="mt-5 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+          <div className="mt-5 p-8 text-center border-b border-border">
             <Sparkles className="mx-auto h-7 w-7 text-muted-foreground" />
             <h2 className="mt-3 font-display text-xl font-extrabold">No matching course yet</h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -282,7 +248,7 @@ function ProgramsPage() {
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 rounded-2xl border border-border bg-[#f6f8fc] p-4 dark:bg-[#151b26] sm:p-5 lg:grid-cols-[1fr_390px] lg:items-center">
+        <div className="mt-8 grid gap-4 p-4 sm:p-5 lg:grid-cols-[1fr_390px] lg:items-center border-b border-border">
           <div>
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#1768cc] shadow-sm dark:bg-[#202938] dark:text-[#78b9ff]">
               <GraduationCap className="h-4 w-4" />

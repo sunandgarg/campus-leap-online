@@ -163,7 +163,7 @@ function ComparePage() {
   if (!program) {
     return (
       <div className="container-page flex min-h-[65vh] items-center justify-center py-20 text-center">
-        <div className="max-w-xl rounded-[1.75rem] border border-border bg-card p-8">
+        <div className="max-w-xl p-8 border-b border-border">
           <CircleAlert className="mx-auto h-8 w-8 text-[#a94300] dark:text-[#ff9a5b]" />
           <h1 className="mt-5 font-display text-3xl font-extrabold">No published course yet</h1>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
@@ -194,7 +194,7 @@ function ComparePage() {
               and anything that still needs confirmation is clearly marked.
             </p>
           </div>
-          <div className="rounded-xl border border-white/25 bg-white/10 p-5 sm:p-6">
+          <div className="p-5 sm:p-6 border-b border-border">
             <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-white/85">
               Current shortlist
             </p>
@@ -290,7 +290,7 @@ function ComparePage() {
           </span>
         </div>
 
-        <div className="mt-6 grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+        <div className="mt-6 grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center border-b border-border">
           <label className="relative block" htmlFor="university-search">
             <span className="sr-only">Search universities available for {program.code}</span>
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -351,7 +351,7 @@ function ComparePage() {
         </CompactRail>
 
         {offers.length > 0 && filteredOffers.length === 0 ? (
-          <div className="mt-5 rounded-xl border border-dashed border-border bg-card p-6 text-center">
+          <div className="mt-5 p-6 text-center border-b border-border">
             <p className="font-display text-base font-extrabold">No university found</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Try a shorter name or search by city or state.
@@ -371,7 +371,7 @@ function ComparePage() {
         </p>
 
         {selectedOffers.length > 0 ? (
-          <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-30 mt-5 rounded-xl border border-[#aebff0] bg-card p-3 shadow-[0_14px_40px_rgba(20,42,87,0.2)] md:bottom-4 md:p-4">
+          <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-30 mt-5 p-3 md:bottom-4 md:p-4 border-b border-border">
             <div className="flex items-center gap-3">
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#1768cc] dark:text-[#78b9ff]">
@@ -418,7 +418,7 @@ function ComparePage() {
         ) : null}
 
         {offers.length === 0 ? (
-          <div className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+          <div className="mt-6 p-8 text-center border-b border-border">
             <p className="font-display text-lg font-extrabold">
               No university option is available for this course yet
             </p>
@@ -443,7 +443,7 @@ function ComparePage() {
           </div>
 
           {selectedOffers.length === 0 ? (
-            <div className="mt-6 rounded-[1.75rem] border border-dashed border-border bg-card p-12 text-center">
+            <div className="mt-6 p-12 text-center border-b border-border">
               <GitCompareArrows className="mx-auto h-8 w-8 text-muted-foreground" />
               <h3 className="mt-4 font-display text-xl font-extrabold">
                 Choose at least one university
@@ -458,7 +458,7 @@ function ComparePage() {
         </div>
 
         <div className="mt-10 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_390px]">
-          <div className="min-w-0 rounded-xl border border-[#bfdaf4] bg-[#f3f8ff] p-6 dark:border-[#295a85] dark:bg-[#0e263b]">
+          <div className="min-w-0 p-6 border-b border-border">
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-6 w-6 text-[#1768cc] dark:text-[#78b9ff]" />
               <h2 className="font-display text-xl font-extrabold">How to use this comparison</h2>

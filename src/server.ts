@@ -1,6 +1,17 @@
 import "./lib/error-capture";
 
+import { env, waitUntil } from "cloudflare:workers";
 import { renderErrorPage } from "./lib/error-page";
+import { hasAdminAccess, isProtectedAdminPath } from "./lib/admin-access";
+import { universityLogoUrls } from "./data/directory-universities";
+import bundledLogos from "./data/bundled-university-logos.json";
+
+const bundledMedia = new Map(
+  Object.entries(universityLogoUrls).flatMap(([slug, url]) => {
+    const asset = (bundledLogos as Record<string, string>)[slug];
+    return asset ? [[url, asset] as const] : [];
+  }),
+);
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -11,7 +22,7 @@ let serverEntryPromise: Promise<ServerEntry> | undefined;
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "base-uri 'self'",
-  "connect-src 'self' https://tzhjdxewkwjftuofaelk.supabase.co wss://tzhjdxewkwjftuofaelk.supabase.co https://challenges.cloudflare.com",
+  "connect-src 'self' https://challenges.cloudflare.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "form-action 'self'",
   "frame-ancestors 'none'",
@@ -84,11 +95,63 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function assetContentType(key: string) {
+  if (key.endsWith(".svg")) return "image/svg+xml";
+  if (key.endsWith(".webp")) return "image/webp";
+  if (key.endsWith(".png")) return "image/png";
+  if (key.endsWith(".jpg") || key.endsWith(".jpeg")) return "image/jpeg";
+  if (key.endsWith(".pdf")) return "application/pdf";
+  return "application/octet-stream";
+}
+
+async function serveR2Asset(request: Request): Promise<Response> {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method not allowed", { status: 405 });
+  }
+  const pathname = new URL(request.url).pathname;
+  const key = decodeURIComponent(pathname.slice("/media/".length));
+  if (!key || key.includes("..") || !/^[a-zA-Z0-9][a-zA-Z0-9/_.-]*$/.test(key)) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  const bundled = bundledMedia.get(pathname);
+  if (bundled) return Response.redirect(new URL(bundled, request.url), 308);
+  if (!env.ASSET_BUCKET) return new Response("Not found", { status: 404 });
+  const cached = await caches.default.match(request);
+  if (cached) return cached;
+  const object = await env.ASSET_BUCKET.get(key);
+  if (!object) return new Response("Not found", { status: 404 });
+
+  const response = new Response(request.method === "HEAD" ? null : object.body, {
+    headers: {
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "Content-Type": object.httpMetadata?.contentType || assetContentType(key),
+      ETag: object.httpEtag,
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+  if (request.method === "GET") waitUntil(caches.default.put(request, response.clone()));
+  return response;
+}
+
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
+  async fetch(request: Request) {
     try {
+      const url = new URL(request.url);
+      const pathname = url.pathname;
+      const localDevelopment =
+        import.meta.env.DEV && (url.hostname === "localhost" || url.hostname === "127.0.0.1");
+      if (
+        isProtectedAdminPath(pathname) &&
+        !localDevelopment &&
+        !(await hasAdminAccess(request, env))
+      ) {
+        return withSecurityHeaders(new Response("Cloudflare Access is required.", { status: 403 }));
+      }
+      if (pathname.startsWith("/media/")) return serveR2Asset(request);
+
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
+      const response = await handler.fetch(request, undefined, undefined);
       return withSecurityHeaders(await normalizeCatastrophicSsrResponse(request, response));
     } catch (error) {
       console.error(error);

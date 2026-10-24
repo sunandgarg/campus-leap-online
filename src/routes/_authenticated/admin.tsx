@@ -1,5 +1,4 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Building2,
@@ -8,12 +7,10 @@ import {
   GraduationCap,
   IndianRupee,
   Inbox,
-  Loader2,
   LogOut,
   Shapes,
   Settings,
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/site/brand-logo";
 
@@ -45,29 +42,10 @@ const nav = [
 ] as const;
 
 function AdminLayout() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const roleQuery = useQuery({
-    queryKey: ["admin", "is-admin"],
-    queryFn: async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
-      const { data, error } = await supabase.rpc("has_role", {
-        _user_id: userData.user.id,
-        _role: "admin",
-      });
-      if (error) throw error;
-      return Boolean(data);
-    },
-  });
-
-  async function signOut() {
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await supabase.auth.signOut();
-    navigate({ to: "/auth", replace: true });
+  function signOut() {
+    window.location.assign("/cdn-cgi/access/logout");
   }
 
   return (
@@ -102,30 +80,7 @@ function AdminLayout() {
         </nav>
 
         <div className="min-w-0">
-          {roleQuery.isPending ? (
-            <div
-              role="status"
-              className="flex min-h-52 items-center justify-center rounded-2xl border border-border bg-card p-8 text-sm text-muted-foreground"
-            >
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying admin access…
-            </div>
-          ) : roleQuery.isError ? (
-            <div className="rounded-2xl border border-border bg-card p-8 text-center">
-              <h2 className="font-display text-lg font-bold">Could not verify admin access</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Sign in again or check the Supabase connection before retrying.
-              </p>
-            </div>
-          ) : roleQuery.data === false ? (
-            <div className="rounded-2xl border border-border bg-card p-8 text-center">
-              <h2 className="font-display text-lg font-bold">Admin access required</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                This account does not have admin rights. Ask an existing admin to grant access.
-              </p>
-            </div>
-          ) : roleQuery.data === true ? (
-            <Outlet />
-          ) : null}
+          <Outlet />
         </div>
       </div>
     </div>

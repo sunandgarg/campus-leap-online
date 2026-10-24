@@ -216,7 +216,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
                 />
               </div>
 
-              <div className="rounded-xl border border-[#aebff0] bg-[#f6f8ff] p-4 dark:border-[#56698c] dark:bg-[#1b2942]">
+              <div className="p-4 border-b border-border">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-display text-lg font-extrabold">Your readiness: {readiness}</p>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wide text-[#168258] dark:bg-[#153d30] dark:text-[#69d7a9]">
@@ -335,7 +335,7 @@ export function ProgramDecisionStudio({ program, offers }: ProgramDecisionStudio
 
         <CompactRail label="Decision-tool safeguards" columns={4}>
           {trustNotes.map(([title, description, Icon]) => (
-            <div key={String(title)} className="rounded-xl border border-border bg-card p-4">
+            <div key={String(title)} className="p-4 border-b border-border">
               <Icon className="h-5 w-5 text-[#1768cc] dark:text-[#78b9ff]" />
               <h3 className="mt-4 text-sm font-extrabold">{String(title)}</h3>
               <p className="mt-1.5 text-xs leading-5 text-muted-foreground">

@@ -10,8 +10,7 @@ import json
 from pathlib import Path
 
 
-PROJECT_URL = "https://tzhjdxewkwjftuofaelk.supabase.co"
-BUCKET = "university-logos"
+ASSET_PREFIX = "/media/university-logos"
 ASSET_VERSION = "v1"
 
 # Existing public URLs are preserved for backwards compatibility and SEO.
@@ -125,7 +124,7 @@ def main() -> None:
         storage_file = logo.get("storage_file", "")
         storage_path = f"{ASSET_VERSION}/{storage_file}" if extension else None
         logo_url = (
-            f"{PROJECT_URL}/storage/v1/object/public/{BUCKET}/{storage_path}"
+            f"{ASSET_PREFIX}/{storage_path}"
             if storage_path
             else None
         )

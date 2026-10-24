@@ -25,8 +25,9 @@ cp .env.example .env
 npm run dev -- --host 127.0.0.1 --port 8086
 ```
 
-The browser-safe Supabase URL and publishable key need `VITE_` prefixes. The service-role key is
-server-only and must never use a `VITE_` prefix.
+Cloudflare D1 and R2 are supplied through Wrangler bindings, so no database or storage credentials
+belong in the browser environment. Copy `.env.example` only for the public Turnstile key and local
+server-secret placeholders.
 
 To preview the built Cloudflare Worker locally, build first and then start the Worker-compatible
 preview (the standard Vite preview server cannot run this Nitro output):
@@ -58,8 +59,10 @@ build-time values live in `.env.production`; sensitive values are encrypted Work
 
 ```sh
 npm ci
+npm run db:migrate
+npm run catalogue:import
+npm run assets:migrate
 npm run deploy:dry
-npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
 npx wrangler secret put TURNSTILE_SECRET_KEY
 npx wrangler secret put LEAD_BUCKET_SECRET
 npm run deploy
@@ -87,61 +90,73 @@ Bundled directory profiles keep the local discovery experience useful while the 
 populated. They are clearly labelled, excluded from rankings and exact-price comparisons, and their
 thin programme pages are kept out of search indexing until intake-level evidence exists.
 
-## Database migrations
+## Cloudflare data and media
 
-Apply migrations in timestamp order:
+- `CATALOG_DB` is the D1 database for universities, courses, offerings, specialisations, leads,
+  catalogue research and site settings. Apply `migrations/0001_cloudflare.sql` with
+  `npm run db:migrate`.
+- `ASSET_BUCKET` is the private R2 bucket. Public media is served through `/media/*` by the Worker
+  with immutable browser and edge caching; the browser never receives an R2 credential.
+- `npm run catalogue:import` validates and imports the reviewed catalogue handoff into D1.
+- `npm run assets:migrate` verifies each bundled logo checksum before uploading it to R2.
+- Protect `/admin*` and `/api/admin*` with a Cloudflare Access self-hosted application. Allow only
+  verified staff identities; the Worker also requires the Access assertion header in production.
 
-- `20260912090000_lead_intake_hardening.sql` replaces anonymous table inserts with a validated,
-  consent-aware RPC and duplicate protection.
-- `20260912093000_lead_fail_closed.sql` revokes the browser RPC before the administrator review
-  gate, so a partially completed migration push fails closed.
-- `20260912100000_admin_invite_only.sql` removes first-registrant admin promotion.
-- `20260912110000_catalog_verification_model.sql` adds offering evidence, specialisation mappings
-  and a claim-evidence ledger.
-- `20260912120000_lead_server_proxy_only.sql` revokes direct public execution of lead intake; only
-  the trusted application server may call the RPC after Turnstile verification.
-- `20260912230000_university_directory_import.sql` imports the reviewed directory without
-  overwriting curated conflicts.
-- `20260913183000_release_safety_fixes.sql` applies additive ACL, review-expiry and staff-note
-  safeguards to databases that received an earlier September migration revision.
+The old Supabase project is not used at runtime. Keep it read-only until historical leads and media
+have been reconciled, then retire it separately.
 
-Provision administrators only through trusted service-role tooling after identity verification.
-Public sign-in never grants an administrative role.
+## Reference release — October 2026
+
+The current release serves the reviewed bundled catalogue and 22 editorial guides at `/news` and
+`/news/:articleSlug`. Category pages include the full education taxonomy; topics without published
+articles show an explicit empty state. A WordPress/news publishing integration is not connected.
+
+Production lead intake uses the dedicated `dekhocampus-online` D1 database. Historical Supabase
+records are not deleted or imported automatically. Keep that project available until reconciliation.
+
+R2 is disabled in the current Cloudflare account. With the owner's approval, university logos,
+photographs and guides ship as cached Worker static assets. Known legacy logo media URLs redirect
+to their bundled equivalents. R2 upload/migration commands are deferred until the account enables R2.
+
+Admin routes fail closed unless `ACCESS_TEAM_DOMAIN` and `ACCESS_POLICY_AUD` identify a staff-only
+Cloudflare Access application. The Worker verifies the JWT signature, issuer, audience and expiry;
+merely sending a `Cf-Access-Jwt-Assertion` header does not grant access.
+
+## Free-tier operating envelope
+
+This deployment can have zero additional monthly platform cost while it remains inside the
+Cloudflare Free-plan quotas. The existing Lightsail instance, domain registration, email/SMS/CRM and
+any paid WordPress plugins are separate costs. Free plans are hard capacity limits, not a guarantee
+that a traffic spike will continue to be served, so monitor Worker, D1 and R2 usage before campaigns.
 
 ## Release gates
 
 Before production launch:
 
-1. Inventory existing privileged accounts before the invite-only migration:
-   `SELECT user_id, role FROM public.user_roles WHERE role = 'admin';`. Revoke legacy bootstrap
-   grants, apply the migrations, then re-provision only identity-verified administrators with
-   trusted service-role tooling. The migration deliberately stops if an old admin grant remains.
-2. Disable unrestricted new-user creation in the hosted Supabase Auth settings. The application
-   exposes password sign-in only and does not expose sign-up or OAuth account creation; provision
-   every admin identity through a trusted workflow.
+1. Create the D1 database and R2 bucket in the production Cloudflare account, replace the temporary
+   D1 database identifier in `wrangler.jsonc`, then apply and import the data before deployment.
+2. Configure Cloudflare Access for `/admin*` and `/api/admin*`, allowing only verified staff email
+   addresses. Public sign-in never grants administrative access.
 3. Complete an intake-by-intake editorial backfill. Legacy universities and offerings are
    unpublished and hidden by
-   row-level security until their exact current evidence is added.
+   the public catalogue until their exact current evidence is added.
 4. Verify the exact university, programme, delivery mode and session on the official UGC-DEB source;
    verify fees separately on the university's official source.
 5. Configure a hostname-restricted Cloudflare Turnstile widget and set
    `VITE_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `TURNSTILE_ALLOWED_HOSTNAMES` and a separate
    random `LEAD_BUCKET_SECRET` of at least 32 characters. The
    same-origin `/api/leads` endpoint rate-limits before parsing, validates every production token,
-   sends only an HMAC-derived client bucket to the database, and calls Supabase with the service
-   role; the final migration revokes direct anonymous RPC access.
+   sends only an HMAC-derived client bucket to D1, and never exposes a direct database API.
    Also configure a Cloudflare rate-limiting rule for `/api/leads` because the in-process limiter is
    intentionally only a first line of defence across distributed edge isolates. Configure OTP/DLT
    consent where applicable, CRM assignment, communication suppression and withdrawal handling
    before outbound campaigns.
 6. Replace catalogue monograms only with reviewed university-owned logo assets.
-7. Apply and smoke-test the migrations in a staging Supabase project, then run `npm run check` and
+7. Apply and smoke-test the D1 migration in a staging Worker, then run `npm run check` and
    manually test keyboard navigation, 320 px reflow, light/dark mode,
    reduced motion and lead delivery in a staging project.
-8. Review the Supabase migration ledger before production. If an older revision of a migration is
-   already recorded as applied, use a new forward-only migration; editing the old local file does
-   not change that database. Refresh directory evidence before its 12 October 2026 review expiry,
-   and validate the deferred legacy constraints after the cleanup is complete.
+8. Refresh directory evidence before its review expiry and use forward-only D1 migrations after the
+   first production deployment; editing an already-applied migration does not change that database.
 
 Programme entitlement, fees, dates, scholarships and outcomes can change. DekhoCampus is a discovery
 and counselling platform; admission and payment remain with the relevant university.

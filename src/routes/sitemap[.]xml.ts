@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { resolveCatalog } from "@/data/universities";
 import { slugifySpecialisation } from "@/data/specialisations";
 import { getCatalog } from "@/lib/catalog.functions";
-
-const ORIGIN = "https://online.dekhocampus.com";
+import { universityPath, coursePath } from "@/lib/online-paths";
+import { SITE_ORIGIN } from "@/lib/site-origin";
+import { newsItems, newsPath } from "@/data/news";
 
 function pathSegment(value: string) {
   return encodeURIComponent(value);
@@ -26,6 +27,10 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls: string[] = [
           "/",
           "/universities",
+          "/online-universities",
+          "/scholarships",
+          "/news",
+          ...newsItems.map(newsPath),
           "/programs",
           "/finder",
           "/specialisations",
@@ -64,13 +69,11 @@ export const Route = createFileRoute("/sitemap.xml")({
             u.profileDepth === "directory" || !u.verificationCurrent
               ? []
               : [
-                  `/universities/${pathSegment(u.slug)}`,
+                  universityPath(u),
+                  `${universityPath(u)}/courses-fees`,
                   ...u.programs
                     .filter((program) => program.entitlementStatus === "verified")
-                    .map(
-                      (program) =>
-                        `/universities/${pathSegment(u.slug)}/${pathSegment(program.slug)}`,
-                    ),
+                    .map((program) => coursePath(u, program.slug)),
                 ],
           ),
         ];
@@ -80,7 +83,7 @@ export const Route = createFileRoute("/sitemap.xml")({
 ${urls
   .map(
     (u) =>
-      `  <url><loc>${escapeXml(`${ORIGIN}${u}`)}</loc><changefreq>weekly</changefreq><priority>${u === "/" ? "1.0" : "0.8"}</priority></url>`,
+      `  <url><loc>${escapeXml(`${SITE_ORIGIN}${u}`)}</loc><changefreq>weekly</changefreq><priority>${u === "/" ? "1.0" : "0.8"}</priority></url>`,
   )
   .join("\n")}
 </urlset>`;

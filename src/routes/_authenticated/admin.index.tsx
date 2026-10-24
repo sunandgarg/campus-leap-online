@@ -1,9 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
-
-const db = supabase as unknown as SupabaseClient;
+import { listAdminRows } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminDashboard,
@@ -14,27 +11,18 @@ function AdminDashboard() {
     queryKey: ["admin", "stats"],
     queryFn: async () => {
       const [universities, programs, offerings, specialisations, leads] = await Promise.all([
-        db.from("universities").select("id", { count: "exact", head: true }),
-        db.from("programs").select("id", { count: "exact", head: true }),
-        db.from("university_programs").select("id", { count: "exact", head: true }),
-        db.from("specialisations").select("id", { count: "exact", head: true }),
-        db.from("leads").select("id", { count: "exact", head: true }),
+        listAdminRows("universities", { columns: ["id"] }),
+        listAdminRows("programs", { columns: ["id"] }),
+        listAdminRows("university_programs", { columns: ["id"] }),
+        listAdminRows("specialisations", { columns: ["id"] }),
+        listAdminRows("leads", { columns: ["id"] }),
       ]);
-      if (
-        universities.error ||
-        programs.error ||
-        offerings.error ||
-        specialisations.error ||
-        leads.error
-      ) {
-        throw new Error("Admin catalogue statistics are unavailable.");
-      }
       return {
-        universities: universities.count ?? 0,
-        programs: programs.count ?? 0,
-        offerings: offerings.count ?? 0,
-        specialisations: specialisations.count ?? 0,
-        leads: leads.count ?? 0,
+        universities: universities.count,
+        programs: programs.count,
+        offerings: offerings.count,
+        specialisations: specialisations.count,
+        leads: leads.count,
       };
     },
   });

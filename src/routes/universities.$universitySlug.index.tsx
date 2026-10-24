@@ -1,4 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import { universityPath } from "@/lib/online-paths";
 import {
   ArrowRight,
   Award,
@@ -51,6 +52,10 @@ function hasCurrentCourse(university: University, program: UniversityProgram) {
 }
 
 export const Route = createFileRoute("/universities/$universitySlug/")({
+  beforeLoad: ({ params }) => {
+    const university = getUniversity(params.universitySlug);
+    if (university) throw redirect({ href: universityPath(university), statusCode: 301 });
+  },
   loader: ({ params }): { university: University; programs: UniversityProgram[] } => {
     const university = getUniversity(params.universitySlug);
     if (!university) throw notFound();
@@ -178,7 +183,7 @@ function UniversityPage() {
           </nav>
 
           <div className="mt-4 grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_300px] md:items-stretch lg:gap-6">
-            <div className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
+            <div className="min-w-0 p-4 sm:p-5 border-b border-border">
               <div className="flex min-w-0 items-start gap-4 sm:gap-5">
                 <UniversityLogo
                   university={u}
@@ -260,7 +265,7 @@ function UniversityPage() {
               </div>
             </div>
             {isDirectoryProfile ? (
-              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
+              <div className="h-full p-4 sm:p-5 border-b border-border">
                 <p className="flex items-center gap-2 font-display text-base font-bold text-[#126f4b] dark:text-[#8de3bd]">
                   <ShieldCheck className="h-5 w-5" />
                   {hasDirectorySource ? "University details available" : "University profile added"}
@@ -273,7 +278,7 @@ function UniversityPage() {
                 </p>
               </div>
             ) : u.metricsVerified ? (
-              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
+              <div className="h-full p-4 sm:p-5 border-b border-border">
                 <p className="flex items-center gap-1.5 font-display text-2xl font-bold text-[#2449ad] dark:text-[#b9ceff]">
                   <Star className="h-5 w-5 fill-[#f47b25] text-[#f47b25]" />
                   {u.rating}
@@ -287,7 +292,7 @@ function UniversityPage() {
                 </p>
               </div>
             ) : (
-              <div className="h-full rounded-2xl border border-border bg-card p-4 sm:p-5">
+              <div className="h-full p-4 sm:p-5 border-b border-border">
                 <p className="font-display text-base font-bold">Quick check before you apply</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">
                   Ratings and learner totals are hidden until they can be checked. Use the course
@@ -300,6 +305,41 @@ function UniversityPage() {
       </section>
 
       <UniversitySectionNav />
+
+      <nav
+        aria-label="Open a course at this university"
+        className="container-page border-b border-border py-4"
+      >
+        <p className="text-xs font-bold">
+          Choose a {u.shortName} course to see fees and eligibility
+        </p>
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+          {programs.map((program) => (
+            <Link
+              key={program.slug}
+              to="/universities/$universitySlug/$programSlug"
+              params={{ universitySlug: u.slug, programSlug: program.slug }}
+              className="flex min-h-16 min-w-36 shrink-0 items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-2 text-xs hover:border-primary"
+            >
+              <span>
+                <strong className="block">Online {program.code}</strong>
+                <span className="mt-1 block text-[10px] text-muted-foreground">
+                  {hasCurrentCourse(u, program) && program.feesVerified && program.totalFeeAvailable
+                    ? `${formatINR(program.totalFee)} total`
+                    : "Check current fee"}
+                </span>
+              </span>
+              <ArrowRight className="h-3.5 w-3.5 shrink-0 text-primary" />
+            </Link>
+          ))}
+          {!programs.length && (
+            <p className="text-xs leading-6 text-muted-foreground">
+              Course details are still being reviewed. Use the university guide below or ask for
+              guidance.
+            </p>
+          )}
+        </div>
+      </nav>
 
       {isDirectoryProfile ? (
         <section className="border-b border-[#bcdaca] bg-[#eefaf4] dark:border-[#265b48] dark:bg-[#0e2b22]">
@@ -324,7 +364,7 @@ function UniversityPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${evidenceSourceLinkLabel(verificationSourceKind)} (opens in new tab)`}
-                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#73aa91] bg-white px-4 text-xs font-extrabold text-[#115f41] transition hover:bg-[#f7fffa] dark:border-[#39755e] dark:bg-[#12392c] dark:text-[#8ae5bd]"
+                className="inline-flex h-10 shrink-0 items-center justify-center gap-2 px-4 text-xs font-extrabold text-[#115f41] transition dark:text-[#8ae5bd] border-b border-border"
               >
                 {evidenceSourceLinkLabel(verificationSourceKind)}
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -406,7 +446,7 @@ function UniversityPage() {
                   key={p.slug}
                   to="/universities/$universitySlug/$programSlug"
                   params={{ universitySlug: u.slug, programSlug: p.slug }}
-                  className="group block rounded-xl border border-border bg-card p-4 transition-colors hover:border-[#325dd2]"
+                  className="group block p-4 transition-colors border-b border-border"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -475,10 +515,7 @@ function UniversityPage() {
           </p>
           <CompactRail label={`${u.shortName} decision notes`} rows={2} columns={2}>
             {u.highlights.map((h) => (
-              <article
-                key={h}
-                className="flex gap-3 rounded-xl border border-border bg-card p-4 text-sm"
-              >
+              <article key={h} className="flex gap-3 p-4 text-sm border-b border-border">
                 <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
                 {h}
               </article>
@@ -523,7 +560,7 @@ function UniversityPage() {
                   "Recheck entitlement, refund rules and the full fee schedule.",
                 ],
               ].map(([number, title, description]) => (
-                <article key={number} className="rounded-xl border border-border bg-card p-4">
+                <article key={number} className="p-4 border-b border-border">
                   <span className="text-xs font-extrabold text-[#a94300] dark:text-[#ff9a5b]">
                     STEP {number}
                   </span>
@@ -533,7 +570,7 @@ function UniversityPage() {
               ))}
             </CompactRail>
 
-            <div className="mt-5 rounded-[1.5rem] border border-[#f0d8c5] bg-[#fff8f1] p-6 dark:border-[#5a3b28] dark:bg-[#2b2119]">
+            <div className="mt-5 p-6 border-b border-border">
               <div className="flex items-start gap-4">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[#df651b] shadow-sm dark:bg-[#3a2b20] dark:text-[#ffad70]">
                   <WalletCards className="h-5 w-5" />
@@ -603,7 +640,7 @@ function UniversityPage() {
                   ]
                 : []),
             ].map((s) => (
-              <div key={s.k} className="rounded-xl border border-border bg-card p-5">
+              <div key={s.k} className="p-5 border-b border-border">
                 <s.icon className="h-4 w-4 text-muted-foreground" />
                 <p className="mt-3 text-xs uppercase tracking-wide text-muted-foreground">{s.k}</p>
                 <p className="mt-1 font-semibold">{s.v}</p>
@@ -700,7 +737,7 @@ function UniversityPage() {
           />
           <Link
             to="/finder"
-            className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 text-sm font-bold transition hover:border-[#80ace0] hover:bg-secondary/55"
+            className="mt-4 flex items-center gap-3 p-4 text-sm font-bold transition border-b border-border"
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#edf5ff] text-[#1768cc] dark:bg-[#102a42] dark:text-[#78b9ff]">
               <Laptop2 className="h-4 w-4" />

@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { EntityManager, type FieldDef, type SelectOption } from "@/components/admin/entity-manager";
-import { supabase } from "@/integrations/supabase/client";
-
-const db = supabase as unknown as SupabaseClient;
+import { listAllAdminRows } from "@/lib/admin-client";
 
 export const Route = createFileRoute("/_authenticated/admin/offering-specialisations")({
   component: AdminOfferingSpecialisations,
@@ -40,23 +37,24 @@ function AdminOfferingSpecialisations() {
     queryKey: ["admin", "offering-specialisation-options"],
     queryFn: async (): Promise<Record<string, SelectOption[]>> => {
       const [offerings, specialisations] = await Promise.all([
-        db
-          .from("university_programs")
-          .select("id,university_slug,program_slug,academic_session")
-          .order("university_slug"),
-        db.from("specialisations").select("id,name").order("name"),
+        listAllAdminRows("university_programs", {
+          columns: ["id", "university_slug", "program_slug", "academic_session"],
+          orderBy: "university_slug",
+        }),
+        listAllAdminRows("specialisations", {
+          columns: ["id", "name"],
+          orderBy: "name",
+        }),
       ]);
-      if (offerings.error) throw offerings.error;
-      if (specialisations.error) throw specialisations.error;
 
       return {
-        offering_id: (offerings.data ?? []).map((row) => ({
-          value: String(row.id),
-          label: `${row.university_slug} · ${row.program_slug}${row.academic_session ? ` · ${row.academic_session}` : ""}`,
+        offering_id: offerings.rows.map((row) => ({
+          value: String(row["id"]),
+          label: `${row["university_slug"]} · ${row["program_slug"]}${row["academic_session"] ? ` · ${row["academic_session"]}` : ""}`,
         })),
-        specialisation_id: (specialisations.data ?? []).map((row) => ({
-          value: String(row.id),
-          label: String(row.name),
+        specialisation_id: specialisations.rows.map((row) => ({
+          value: String(row["id"]),
+          label: String(row["name"]),
         })),
       };
     },

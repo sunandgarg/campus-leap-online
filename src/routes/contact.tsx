@@ -36,7 +36,13 @@ function ContactPage() {
         </div>
       </section>
 
-      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:py-12">
+      <section className="container-page grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 py-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:py-12">
+        <LeadForm
+          compact
+          title="Request free counselling"
+          description="Tell us which degree you are exploring. We’ll respond on the channel you choose."
+          className="min-w-0"
+        />
         <div className="min-w-0 space-y-4">
           <a
             href="mailto:online@dekhocampus.com"
@@ -73,12 +79,6 @@ function ContactPage() {
             </Link>
           </div>
         </div>
-
-        <LeadForm
-          title="Request free counselling"
-          description="Tell us what you are exploring. Program and university preferences are optional."
-          className="min-w-0"
-        />
       </section>
     </>
   );

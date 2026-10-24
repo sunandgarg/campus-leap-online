@@ -18,8 +18,16 @@ export default defineConfig(({ command }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    rolldownOptions: {
+      external: ["cloudflare:workers"],
+    },
+  },
   resolve: {
     tsconfigPaths: true,
     dedupe: ["react", "react-dom", "@tanstack/react-query", "@tanstack/query-core"],
+  },
+  ssr: {
+    external: ["cloudflare:workers"],
   },
 }));

@@ -1,4 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import { coursePath } from "@/lib/online-paths";
 import {
   ArrowRight,
   BadgeCheck,
@@ -55,6 +56,11 @@ function serializeJsonLd(value: unknown) {
 }
 
 export const Route = createFileRoute("/universities/$universitySlug/$programSlug")({
+  beforeLoad: ({ params }) => {
+    const match = getUniversityProgram(params.universitySlug, params.programSlug);
+    if (match)
+      throw redirect({ href: coursePath(match.university, match.program.slug), statusCode: 301 });
+  },
   loader: ({ params }): ProgramPageData => {
     const match = getUniversityProgram(params.universitySlug, params.programSlug);
     if (!match) throw notFound();
@@ -357,7 +363,7 @@ function ProgramPage() {
 
           <dl className="mt-5 grid grid-cols-2 gap-2.5 lg:grid-cols-4 lg:gap-3">
             {facts.map((f) => (
-              <div key={f.k} className="min-w-0 rounded-xl border border-border bg-card p-4">
+              <div key={f.k} className="min-w-0 p-4 border-b border-border">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#edf2ff] text-[#2449ad] dark:bg-[#263653] dark:text-[#b9ceff]">
                   <f.icon className="h-4 w-4" />
                 </span>
@@ -407,10 +413,7 @@ function ProgramPage() {
       <section className="bg-surface py-8 lg:py-10">
         <div className="container-page grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
           <div className="min-w-0 space-y-6">
-            <article
-              id="curriculum"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-            >
+            <article id="curriculum" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
               <SectionHeading
                 eyebrow="Curriculum"
                 title={
@@ -460,7 +463,7 @@ function ProgramPage() {
                   ))}
                 </Accordion>
               ) : (
-                <div className="mt-5 rounded-xl border border-dashed border-border bg-secondary/35 p-5 text-sm leading-6 text-muted-foreground">
+                <div className="mt-5 p-5 text-sm leading-6 text-muted-foreground border-b border-border">
                   No university-specific curriculum has been added here yet. Use the current
                   official prospectus before comparing subjects or credits.
                 </div>
@@ -469,7 +472,7 @@ function ProgramPage() {
 
             <article
               id="specialisations"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
+              className="scroll-mt-32 p-4 sm:p-6 border-b border-border"
             >
               <SectionHeading
                 eyebrow="Pathways"
@@ -500,10 +503,7 @@ function ProgramPage() {
               </div>
             </article>
 
-            <article
-              id="fees"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-            >
+            <article id="fees" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
               <SectionHeading
                 eyebrow="Fees"
                 title="Fees and payment structure"
@@ -513,10 +513,7 @@ function ProgramPage() {
               {feeRows.length ? (
                 <dl className="mt-5 grid gap-3 sm:grid-cols-3">
                   {feeRows.map((row) => (
-                    <div
-                      key={row.label}
-                      className="rounded-xl border border-border bg-background p-4"
-                    >
+                    <div key={row.label} className="p-4 border-b border-border">
                       <dt className="text-[10px] font-extrabold uppercase tracking-[0.08em] text-muted-foreground">
                         {row.label}
                       </dt>
@@ -527,7 +524,7 @@ function ProgramPage() {
                   ))}
                 </dl>
               ) : (
-                <div className="mt-5 rounded-xl border border-[#c9d8e8] bg-[#f4f8fd] p-5 dark:border-[#284760] dark:bg-[#0e2435]">
+                <div className="mt-5 p-5 border-b border-border">
                   <p className="font-display text-lg font-extrabold">
                     Current fee is not available here yet
                   </p>
@@ -564,10 +561,7 @@ function ProgramPage() {
               </div>
             </article>
 
-            <article
-              id="eligibility"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-            >
+            <article id="eligibility" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
               <SectionHeading
                 eyebrow="Eligibility"
                 title="Who can apply?"
@@ -625,10 +619,7 @@ function ProgramPage() {
               <AuthorityVerification compact className="mt-5 border-t border-border pt-5" />
             </article>
 
-            <article
-              id="careers"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-            >
+            <article id="careers" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
               <SectionHeading
                 eyebrow="Career directions"
                 title={`Career paths after an online ${p.code}`}
@@ -669,10 +660,7 @@ function ProgramPage() {
               ) : null}
             </article>
 
-            <article
-              id="faqs"
-              className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-            >
+            <article id="faqs" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
               <SectionHeading
                 eyebrow="Questions families ask"
                 title="Frequently asked questions"
@@ -694,10 +682,7 @@ function ProgramPage() {
             </article>
 
             {alternatives.length > 0 ? (
-              <article
-                id="compare"
-                className="scroll-mt-32 rounded-2xl border border-border bg-card p-4 sm:p-6"
-              >
+              <article id="compare" className="scroll-mt-32 p-4 sm:p-6 border-b border-border">
                 <SectionHeading
                   eyebrow="Compare"
                   title={`Compare current ${p.code} course profiles`}
@@ -710,7 +695,7 @@ function ProgramPage() {
                       key={university.slug}
                       to="/universities/$universitySlug/$programSlug"
                       params={{ universitySlug: university.slug, programSlug: program.slug }}
-                      className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-background p-3.5 transition-colors hover:border-[#325dd2]"
+                      className="group grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-3.5 transition-colors border-b border-border"
                     >
                       <UniversityLogo university={university} size="sm" />
                       <div className="min-w-0">
@@ -808,7 +793,7 @@ function ProgramPage() {
                 { icon: ShieldCheck, title: "Consent-led", copy: "You control what is shared" },
                 { icon: BadgeCheck, title: "No-pressure", copy: "No payment is requested" },
               ].map((item) => (
-                <div key={item.title} className="rounded-xl border border-border bg-card p-4">
+                <div key={item.title} className="p-4 border-b border-border">
                   <item.icon className="h-5 w-5 text-[#325dd2] dark:text-[#7da2ff]" />
                   <p className="mt-3 text-sm font-extrabold">{item.title}</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.copy}</p>

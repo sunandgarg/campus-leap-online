@@ -106,7 +106,7 @@ function SpecialisationsPage() {
       </section>
 
       <section className="container-page py-4 pb-8 lg:py-7">
-        <div className="sticky top-16 z-30 min-w-0 rounded-xl border border-border bg-background/95 p-2.5 shadow-card backdrop-blur sm:p-3">
+        <div className="sticky top-16 z-30 min-w-0 p-2.5 backdrop-blur sm:p-3 border-b border-border">
           <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2">
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -246,7 +246,7 @@ function SpecialisationsPage() {
             ))}
           </div>
         ) : (
-          <div className="mt-5 rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+          <div className="mt-5 p-8 text-center border-b border-border">
             <GraduationCap className="mx-auto h-7 w-7 text-muted-foreground" />
             <h2 className="mt-3 font-display text-xl font-extrabold">No exact pathway found</h2>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -299,7 +299,7 @@ function SpecialisationsPage() {
           </nav>
         ) : null}
 
-        <div className="mt-8 grid gap-4 rounded-2xl border border-border bg-[#f6f8fc] p-4 dark:bg-[#151b26] sm:p-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <div className="mt-8 grid gap-4 p-4 sm:p-5 lg:grid-cols-[0.8fr_1.2fr] lg:items-center border-b border-border">
           <div>
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#1768cc] shadow-sm dark:bg-[#202938] dark:text-[#78b9ff]">
               <BriefcaseBusiness className="h-4 w-4" />

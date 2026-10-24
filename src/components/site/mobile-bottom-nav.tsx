@@ -36,7 +36,7 @@ export function MobileBottomNav() {
           onClick={() => window.dispatchEvent(new Event("dekhocampus:open-diya"))}
           className="group -mt-5 flex min-h-[3.75rem] min-w-0 flex-col items-center justify-end gap-0.5 rounded-xl px-1 text-[10px] font-extrabold text-[#2449ad] dark:text-[#b9ceff]"
         >
-          <span className="relative flex h-13 w-13 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-[#325dd2] shadow-lift transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[0_12px_28px_-12px_rgba(50,93,210,0.65)] group-active:scale-95 motion-safe:animate-[diya-breathe_3.6s_ease-in-out_infinite]">
+          <span className="relative flex h-13 w-13 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-[#325dd2] shadow-sm">
             <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white">
               <img
                 src="/diya-ai.webp"
@@ -76,7 +76,12 @@ function BottomNavLink({
   pathname: string;
   badge?: number;
 }) {
-  const active = to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+  const active =
+    to === "/"
+      ? pathname === "/"
+      : pathname === to ||
+        pathname.startsWith(`${to}/`) ||
+        (to === "/universities" && pathname.startsWith("/online-universities"));
 
   return (
     <Link

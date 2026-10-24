@@ -18,12 +18,16 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FinderRouteImport } from './routes/finder'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as NewsRouteImport } from './routes/news'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ScholarshipsRouteImport } from './routes/scholarships'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiLeadsRouteImport } from './routes/api.leads'
+import { Route as NewsArticleSlugRouteImport } from './routes/news_.$articleSlug'
+import { Route as OnlineUniversitiesIndexRouteImport } from './routes/online-universities.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsProgramSlugRouteImport } from './routes/programs.$programSlug'
 import { Route as SpecialisationsIndexRouteImport } from './routes/specialisations.index'
@@ -39,8 +43,15 @@ import { Route as AuthenticatedAdminProgramsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSpecialisationsRouteImport } from './routes/_authenticated/admin.specialisations'
 import { Route as AuthenticatedAdminUniversitiesRouteImport } from './routes/_authenticated/admin.universities'
+import { Route as ApiAdminBootstrapRouteImport } from './routes/api.admin.bootstrap'
+import { Route as ApiAdminDataRouteImport } from './routes/api.admin.data'
+import { Route as ApiAdminResearchRouteImport } from './routes/api.admin.research'
+import { Route as OnlineUniversitiesUniversitySlugIndexRouteImport } from './routes/online-universities.$universitySlug.index'
+import { Route as OnlineUniversitiesUniversitySlugFacultyRouteImport } from './routes/online-universities.$universitySlug.faculty'
 import { Route as UniversitiesUniversitySlugIndexRouteImport } from './routes/universities.$universitySlug.index'
 import { Route as UniversitiesUniversitySlugProgramSlugRouteImport } from './routes/universities.$universitySlug.$programSlug'
+import { Route as OnlineUniversitiesUniversitySlugCoursesFeesIndexRouteImport } from './routes/online-universities.$universitySlug.courses-fees.index'
+import { Route as OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRouteImport } from './routes/online-universities.$universitySlug.courses-fees.$courseSlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -86,9 +97,19 @@ const MethodologyRoute = MethodologyRouteImport.update({
   path: '/methodology',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScholarshipsRoute = ScholarshipsRouteImport.update({
+  id: '/scholarships',
+  path: '/scholarships',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -114,6 +135,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
 const ApiLeadsRoute = ApiLeadsRouteImport.update({
   id: '/api/leads',
   path: '/api/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsArticleSlugRoute = NewsArticleSlugRouteImport.update({
+  id: '/news_/$articleSlug',
+  path: '/news/$articleSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnlineUniversitiesIndexRoute = OnlineUniversitiesIndexRouteImport.update({
+  id: '/online-universities/',
+  path: '/online-universities/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
@@ -200,6 +231,33 @@ const AuthenticatedAdminUniversitiesRoute =
     path: '/universities',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const ApiAdminBootstrapRoute = ApiAdminBootstrapRouteImport.update({
+  id: '/api/admin/bootstrap',
+  path: '/api/admin/bootstrap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminDataRoute = ApiAdminDataRouteImport.update({
+  id: '/api/admin/data',
+  path: '/api/admin/data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAdminResearchRoute = ApiAdminResearchRouteImport.update({
+  id: '/api/admin/research',
+  path: '/api/admin/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnlineUniversitiesUniversitySlugIndexRoute =
+  OnlineUniversitiesUniversitySlugIndexRouteImport.update({
+    id: '/online-universities/$universitySlug/',
+    path: '/online-universities/$universitySlug/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OnlineUniversitiesUniversitySlugFacultyRoute =
+  OnlineUniversitiesUniversitySlugFacultyRouteImport.update({
+    id: '/online-universities/$universitySlug/faculty',
+    path: '/online-universities/$universitySlug/faculty',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const UniversitiesUniversitySlugIndexRoute =
   UniversitiesUniversitySlugIndexRouteImport.update({
     id: '/universities/$universitySlug/',
@@ -212,6 +270,18 @@ const UniversitiesUniversitySlugProgramSlugRoute =
     path: '/universities/$universitySlug/$programSlug',
     getParentRoute: () => rootRouteImport,
   } as any)
+const OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute =
+  OnlineUniversitiesUniversitySlugCoursesFeesIndexRouteImport.update({
+    id: '/online-universities/$universitySlug/courses-fees/',
+    path: '/online-universities/$universitySlug/courses-fees/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute =
+  OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRouteImport.update({
+    id: '/online-universities/$universitySlug/courses-fees/$courseSlug',
+    path: '/online-universities/$universitySlug/courses-fees/$courseSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,14 +292,18 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
+  '/scholarships': typeof ScholarshipsRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/leads': typeof ApiLeadsRoute
+  '/news/$articleSlug': typeof NewsArticleSlugRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
+  '/online-universities/': typeof OnlineUniversitiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
@@ -242,9 +316,16 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
+  '/api/admin/bootstrap': typeof ApiAdminBootstrapRoute
+  '/api/admin/data': typeof ApiAdminDataRoute
+  '/api/admin/research': typeof ApiAdminResearchRoute
+  '/online-universities/$universitySlug/faculty': typeof OnlineUniversitiesUniversitySlugFacultyRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/online-universities/$universitySlug/': typeof OnlineUniversitiesUniversitySlugIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
+  '/online-universities/$universitySlug/courses-fees/$courseSlug': typeof OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute
+  '/online-universities/$universitySlug/courses-fees/': typeof OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -255,13 +336,17 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
+  '/scholarships': typeof ScholarshipsRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/api/leads': typeof ApiLeadsRoute
+  '/news/$articleSlug': typeof NewsArticleSlugRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
+  '/online-universities': typeof OnlineUniversitiesIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/specialisations': typeof SpecialisationsIndexRoute
   '/universities': typeof UniversitiesIndexRoute
@@ -274,9 +359,16 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
+  '/api/admin/bootstrap': typeof ApiAdminBootstrapRoute
+  '/api/admin/data': typeof ApiAdminDataRoute
+  '/api/admin/research': typeof ApiAdminResearchRoute
+  '/online-universities/$universitySlug/faculty': typeof OnlineUniversitiesUniversitySlugFacultyRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/online-universities/$universitySlug': typeof OnlineUniversitiesUniversitySlugIndexRoute
   '/universities/$universitySlug': typeof UniversitiesUniversitySlugIndexRoute
+  '/online-universities/$universitySlug/courses-fees/$courseSlug': typeof OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute
+  '/online-universities/$universitySlug/courses-fees': typeof OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -289,14 +381,18 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/finder': typeof FinderRoute
   '/methodology': typeof MethodologyRoute
+  '/news': typeof NewsRoute
   '/privacy': typeof PrivacyRoute
+  '/scholarships': typeof ScholarshipsRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/leads': typeof ApiLeadsRoute
+  '/news_/$articleSlug': typeof NewsArticleSlugRoute
   '/programs/$programSlug': typeof ProgramsProgramSlugRoute
   '/specialisations/$specialisationSlug': typeof SpecialisationsSpecialisationSlugRoute
+  '/online-universities/': typeof OnlineUniversitiesIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/specialisations/': typeof SpecialisationsIndexRoute
   '/universities/': typeof UniversitiesIndexRoute
@@ -309,9 +405,16 @@ export interface FileRoutesById {
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/specialisations': typeof AuthenticatedAdminSpecialisationsRoute
   '/_authenticated/admin/universities': typeof AuthenticatedAdminUniversitiesRoute
+  '/api/admin/bootstrap': typeof ApiAdminBootstrapRoute
+  '/api/admin/data': typeof ApiAdminDataRoute
+  '/api/admin/research': typeof ApiAdminResearchRoute
+  '/online-universities/$universitySlug/faculty': typeof OnlineUniversitiesUniversitySlugFacultyRoute
   '/universities/$universitySlug/$programSlug': typeof UniversitiesUniversitySlugProgramSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/online-universities/$universitySlug/': typeof OnlineUniversitiesUniversitySlugIndexRoute
   '/universities/$universitySlug/': typeof UniversitiesUniversitySlugIndexRoute
+  '/online-universities/$universitySlug/courses-fees/$courseSlug': typeof OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute
+  '/online-universities/$universitySlug/courses-fees/': typeof OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -324,14 +427,18 @@ export interface FileRouteTypes {
     | '/contact'
     | '/finder'
     | '/methodology'
+    | '/news'
     | '/privacy'
+    | '/scholarships'
     | '/search'
     | '/sitemap.xml'
     | '/terms'
     | '/admin'
     | '/api/leads'
+    | '/news/$articleSlug'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
+    | '/online-universities/'
     | '/programs/'
     | '/specialisations/'
     | '/universities/'
@@ -344,9 +451,16 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/specialisations'
     | '/admin/universities'
+    | '/api/admin/bootstrap'
+    | '/api/admin/data'
+    | '/api/admin/research'
+    | '/online-universities/$universitySlug/faculty'
     | '/universities/$universitySlug/$programSlug'
     | '/admin/'
+    | '/online-universities/$universitySlug/'
     | '/universities/$universitySlug/'
+    | '/online-universities/$universitySlug/courses-fees/$courseSlug'
+    | '/online-universities/$universitySlug/courses-fees/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -357,13 +471,17 @@ export interface FileRouteTypes {
     | '/contact'
     | '/finder'
     | '/methodology'
+    | '/news'
     | '/privacy'
+    | '/scholarships'
     | '/search'
     | '/sitemap.xml'
     | '/terms'
     | '/api/leads'
+    | '/news/$articleSlug'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
+    | '/online-universities'
     | '/programs'
     | '/specialisations'
     | '/universities'
@@ -376,9 +494,16 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/specialisations'
     | '/admin/universities'
+    | '/api/admin/bootstrap'
+    | '/api/admin/data'
+    | '/api/admin/research'
+    | '/online-universities/$universitySlug/faculty'
     | '/universities/$universitySlug/$programSlug'
     | '/admin'
+    | '/online-universities/$universitySlug'
     | '/universities/$universitySlug'
+    | '/online-universities/$universitySlug/courses-fees/$courseSlug'
+    | '/online-universities/$universitySlug/courses-fees'
   id:
     | '__root__'
     | '/'
@@ -390,14 +515,18 @@ export interface FileRouteTypes {
     | '/contact'
     | '/finder'
     | '/methodology'
+    | '/news'
     | '/privacy'
+    | '/scholarships'
     | '/search'
     | '/sitemap.xml'
     | '/terms'
     | '/_authenticated/admin'
     | '/api/leads'
+    | '/news_/$articleSlug'
     | '/programs/$programSlug'
     | '/specialisations/$specialisationSlug'
+    | '/online-universities/'
     | '/programs/'
     | '/specialisations/'
     | '/universities/'
@@ -410,9 +539,16 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/specialisations'
     | '/_authenticated/admin/universities'
+    | '/api/admin/bootstrap'
+    | '/api/admin/data'
+    | '/api/admin/research'
+    | '/online-universities/$universitySlug/faculty'
     | '/universities/$universitySlug/$programSlug'
     | '/_authenticated/admin/'
+    | '/online-universities/$universitySlug/'
     | '/universities/$universitySlug/'
+    | '/online-universities/$universitySlug/courses-fees/$courseSlug'
+    | '/online-universities/$universitySlug/courses-fees/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -425,18 +561,29 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   FinderRoute: typeof FinderRoute
   MethodologyRoute: typeof MethodologyRoute
+  NewsRoute: typeof NewsRoute
   PrivacyRoute: typeof PrivacyRoute
+  ScholarshipsRoute: typeof ScholarshipsRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ApiLeadsRoute: typeof ApiLeadsRoute
+  NewsArticleSlugRoute: typeof NewsArticleSlugRoute
   ProgramsProgramSlugRoute: typeof ProgramsProgramSlugRoute
   SpecialisationsSpecialisationSlugRoute: typeof SpecialisationsSpecialisationSlugRoute
+  OnlineUniversitiesIndexRoute: typeof OnlineUniversitiesIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   SpecialisationsIndexRoute: typeof SpecialisationsIndexRoute
   UniversitiesIndexRoute: typeof UniversitiesIndexRoute
+  ApiAdminBootstrapRoute: typeof ApiAdminBootstrapRoute
+  ApiAdminDataRoute: typeof ApiAdminDataRoute
+  ApiAdminResearchRoute: typeof ApiAdminResearchRoute
+  OnlineUniversitiesUniversitySlugFacultyRoute: typeof OnlineUniversitiesUniversitySlugFacultyRoute
   UniversitiesUniversitySlugProgramSlugRoute: typeof UniversitiesUniversitySlugProgramSlugRoute
+  OnlineUniversitiesUniversitySlugIndexRoute: typeof OnlineUniversitiesUniversitySlugIndexRoute
   UniversitiesUniversitySlugIndexRoute: typeof UniversitiesUniversitySlugIndexRoute
+  OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute: typeof OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute
+  OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute: typeof OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -504,11 +651,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MethodologyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scholarships': {
+      id: '/scholarships'
+      path: '/scholarships'
+      fullPath: '/scholarships'
+      preLoaderRoute: typeof ScholarshipsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -544,6 +705,20 @@ declare module '@tanstack/react-router' {
       path: '/api/leads'
       fullPath: '/api/leads'
       preLoaderRoute: typeof ApiLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news_/$articleSlug': {
+      id: '/news_/$articleSlug'
+      path: '/news/$articleSlug'
+      fullPath: '/news/$articleSlug'
+      preLoaderRoute: typeof NewsArticleSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/online-universities/': {
+      id: '/online-universities/'
+      path: '/online-universities'
+      fullPath: '/online-universities/'
+      preLoaderRoute: typeof OnlineUniversitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/programs/': {
@@ -651,6 +826,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUniversitiesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/admin/bootstrap': {
+      id: '/api/admin/bootstrap'
+      path: '/api/admin/bootstrap'
+      fullPath: '/api/admin/bootstrap'
+      preLoaderRoute: typeof ApiAdminBootstrapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/data': {
+      id: '/api/admin/data'
+      path: '/api/admin/data'
+      fullPath: '/api/admin/data'
+      preLoaderRoute: typeof ApiAdminDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/admin/research': {
+      id: '/api/admin/research'
+      path: '/api/admin/research'
+      fullPath: '/api/admin/research'
+      preLoaderRoute: typeof ApiAdminResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/online-universities/$universitySlug/': {
+      id: '/online-universities/$universitySlug/'
+      path: '/online-universities/$universitySlug'
+      fullPath: '/online-universities/$universitySlug/'
+      preLoaderRoute: typeof OnlineUniversitiesUniversitySlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/online-universities/$universitySlug/faculty': {
+      id: '/online-universities/$universitySlug/faculty'
+      path: '/online-universities/$universitySlug/faculty'
+      fullPath: '/online-universities/$universitySlug/faculty'
+      preLoaderRoute: typeof OnlineUniversitiesUniversitySlugFacultyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/universities/$universitySlug/': {
       id: '/universities/$universitySlug/'
       path: '/universities/$universitySlug'
@@ -663,6 +873,20 @@ declare module '@tanstack/react-router' {
       path: '/universities/$universitySlug/$programSlug'
       fullPath: '/universities/$universitySlug/$programSlug'
       preLoaderRoute: typeof UniversitiesUniversitySlugProgramSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/online-universities/$universitySlug/courses-fees/': {
+      id: '/online-universities/$universitySlug/courses-fees/'
+      path: '/online-universities/$universitySlug/courses-fees'
+      fullPath: '/online-universities/$universitySlug/courses-fees/'
+      preLoaderRoute: typeof OnlineUniversitiesUniversitySlugCoursesFeesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/online-universities/$universitySlug/courses-fees/$courseSlug': {
+      id: '/online-universities/$universitySlug/courses-fees/$courseSlug'
+      path: '/online-universities/$universitySlug/courses-fees/$courseSlug'
+      fullPath: '/online-universities/$universitySlug/courses-fees/$courseSlug'
+      preLoaderRoute: typeof OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -721,20 +945,35 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   FinderRoute: FinderRoute,
   MethodologyRoute: MethodologyRoute,
+  NewsRoute: NewsRoute,
   PrivacyRoute: PrivacyRoute,
+  ScholarshipsRoute: ScholarshipsRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ApiLeadsRoute: ApiLeadsRoute,
+  NewsArticleSlugRoute: NewsArticleSlugRoute,
   ProgramsProgramSlugRoute: ProgramsProgramSlugRoute,
   SpecialisationsSpecialisationSlugRoute:
     SpecialisationsSpecialisationSlugRoute,
+  OnlineUniversitiesIndexRoute: OnlineUniversitiesIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   SpecialisationsIndexRoute: SpecialisationsIndexRoute,
   UniversitiesIndexRoute: UniversitiesIndexRoute,
+  ApiAdminBootstrapRoute: ApiAdminBootstrapRoute,
+  ApiAdminDataRoute: ApiAdminDataRoute,
+  ApiAdminResearchRoute: ApiAdminResearchRoute,
+  OnlineUniversitiesUniversitySlugFacultyRoute:
+    OnlineUniversitiesUniversitySlugFacultyRoute,
   UniversitiesUniversitySlugProgramSlugRoute:
     UniversitiesUniversitySlugProgramSlugRoute,
+  OnlineUniversitiesUniversitySlugIndexRoute:
+    OnlineUniversitiesUniversitySlugIndexRoute,
   UniversitiesUniversitySlugIndexRoute: UniversitiesUniversitySlugIndexRoute,
+  OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute:
+    OnlineUniversitiesUniversitySlugCoursesFeesCourseSlugRoute,
+  OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute:
+    OnlineUniversitiesUniversitySlugCoursesFeesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
