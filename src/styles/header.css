@@ -1,0 +1,112 @@
+.mega-header.reference-header { --nav-height: 76px; z-index: 40; background: var(--card); }
+.mega-header .reference-nav-inner { width: min(1440px, calc(100% - 64px)); min-height: var(--nav-height); gap: 20px; }
+.mega-header .reference-brand img { width: 166px; }
+.mega-header .reference-desktop-nav { gap: 19px; }
+.mega-header .mega-trigger, .mega-header .reference-scholarships { display: flex; align-items: center; min-height: 52px; position: relative; font-size: 15px; font-weight: 500; white-space: nowrap; }
+.mega-header .mega-trigger::after { content: ""; position: absolute; bottom: 5px; left: 0; right: 0; height: 2px; background: var(--primary); transform: scaleX(0); transition: transform 150ms ease; }
+.mega-header .mega-trigger:hover, .mega-header .mega-trigger[aria-expanded="true"] { color: var(--primary); }
+.mega-header .mega-trigger[aria-expanded="true"]::after { transform: scaleX(1); }
+.mega-header .reference-header-search { flex: 1; width: auto; max-width: 330px; min-width: 160px; height: 48px; border-radius: 9px; padding-left: 14px; }
+.mega-header .reference-header-search > svg { flex-shrink: 0; }
+.mega-header .reference-header-search input { font-size: 14px; padding: 10px 8px; }
+.mega-header .reference-header-search button { min-width: 36px; min-height: 44px; }
+.mega-header .reference-course-finder { min-height: 48px; padding: 9px 20px; gap: 9px; color: var(--primary); border-color: var(--primary); font-size: 15px; font-weight: 650; }
+.mega-header .reference-menu-toggle { display: none; }
+.mega-header button:focus-visible, .mega-header a:focus-visible, .mega-header summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.mega-scrim { position: fixed; inset: var(--nav-height) 0 0; width: 100%; background: #16181d66; backdrop-filter: blur(3px); cursor: default; z-index: 1; }
+.mega-panel { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; background: var(--card); border-top: 1px solid var(--border); box-shadow: 0 15px 30px #1317200d; animation: profile-menu-in 160ms ease-out; max-height: calc(100dvh - var(--nav-height) - 12px); overflow-y: auto; }
+.mega-panel-inner { width: min(1440px, calc(100% - 64px)); margin-inline: auto; display: flex; gap: 48px; padding: 24px 0 26px; align-items: stretch; }
+.mega-main { min-width: 0; flex: 1; }
+.mega-heading { display: flex; align-items: center; gap: 13px; margin: 0 0 22px; font-size: 14px; font-weight: 750; line-height: 1.5; text-transform: uppercase; letter-spacing: 1.6px; color: #7142aa; }
+.mega-heading::before { content: ""; width: 9px; height: 9px; margin: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 7px color-mix(in srgb, currentColor 10%, transparent); }
+.mega-heading-1 { color: #267a97; }
+.mega-heading-2 { color: #a52d64; }
+.mega-heading-3 { color: #267a46; }
+.mega-university-list, .mega-degree-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 24px; max-height: 292px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 2px 8px 2px 0; align-content: start; }
+.mega-university-list a, .mega-degree-list a { display: flex; align-items: center; gap: 10px; min-height: 46px; min-width: 0; font-size: 15px; color: var(--foreground); border-radius: 6px; padding: 4px 6px; }
+.mega-university-list a:hover, .mega-degree-list a:hover, .mega-resource-links a:hover { color: var(--primary); background: var(--secondary); }
+.mega-university-list a > span:first-child, .mega-degree-list a > span:first-child, .mega-specialisation-list a > div > span:first-child { width: 27px; height: 27px; border-radius: 4px; flex-shrink: 0; }
+.mega-university-list a > span:last-child, .mega-degree-list a > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mega-view-all { display: inline-flex; min-height: 42px; align-items: center; gap: 12px; color: var(--primary); font-size: 13px; font-weight: 650; margin-top: 8px; }
+.mega-browser { display: grid; grid-template-columns: 204px minmax(0, 1fr); gap: 36px; }
+.mega-categories { max-height: 338px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 2px 8px 4px 0; }
+.mega-categories button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; min-height: 46px; text-align: left; font-size: 15px; line-height: 1.5; border-radius: 14px; }
+.mega-categories button > svg { flex-shrink: 0; color: var(--muted-foreground); }
+.mega-categories button:hover, .mega-categories button[aria-pressed="true"] { background: #fcf1e4; color: #9b481f; font-weight: 650; }
+.mega-categories button[aria-pressed="true"] > svg { color: inherit; }
+.mega-results { min-width: 0; }
+.mega-degree-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mega-feature { width: 275px; flex-shrink: 0; border-radius: 17px; padding: 62px 23px 25px; position: relative; background: #f8e8d4; color: #793b19; min-height: 340px; align-self: flex-start; }
+.mega-feature-degree { background: #d8edf8; color: #274dd4; }
+.mega-feature-tag { position: absolute; top: 0; left: 34px; right: 34px; padding: 4px 12px; text-align: center; border-radius: 0 0 12px 12px; background: #9b481f; color: #fff; font-size: 12px; text-transform: uppercase; letter-spacing: .8px; font-weight: 750; }
+.mega-feature-degree .mega-feature-tag { background: #2d36bd; }
+.mega-feature .mega-feature-logo { display: inline-flex; width: 160px; height: 64px; background: transparent; border: 0; border-radius: 0; margin-bottom: 14px; }
+.mega-feature h3 { font-size: 25px; line-height: 1.25; font-weight: 750; margin: 8px 0 13px; }
+.mega-feature p { font-size: 14px; line-height: 1.7; color: #383638; margin-bottom: 19px; }
+.mega-feature > a { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--primary); padding: 9px 15px; min-height: 44px; border-radius: 13px; color: #294dc9; background: #fff; font-size: 13px; font-weight: 650; }
+.mega-specialisation-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-height: 292px; overflow-y: auto; overscroll-behavior: contain; padding: 2px 8px 3px 0; scrollbar-width: thin; }
+.mega-specialisation-list > a { border: 1px solid var(--border); border-radius: 9px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.mega-specialisation-list > a:hover { border-color: var(--primary); }
+.mega-specialisation-list a > div { display: flex; gap: 8px; padding: 7px 9px; align-items: center; font-size: 12px; background: var(--secondary); }
+.mega-specialisation-list a > div > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mega-specialisation-list a > div > svg:last-child { margin-left: auto; flex-shrink: 0; }
+.mega-specialisation-list strong { display: block; padding: 13px; font-size: 14px; line-height: 1.6; font-weight: 600; }
+.mega-resource-browser { grid-template-columns: 240px minmax(0, 1fr); }
+.mega-resource-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; align-content: start; border-left: 1px solid var(--border); padding-left: 36px; }
+.mega-resource-links a { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 50px; padding: 8px 10px; border-radius: 6px; font-size: 16px; }
+.mega-empty { font-size: 14px; line-height: 1.8; color: var(--muted-foreground); padding: 15px 6px; }
+.reference-promo.mega-promo { min-height: 52px; background: #291405; gap: 26px; padding: 10px 20px; font-size: 16px; }
+.mega-promo strong { color: #efc969; font-weight: 650; }
+.reference-promo.mega-promo a { border-left: 1px solid #a69777; padding-left: 26px; font-size: 16px; text-decoration: none; }
+.reference-mobile-nav .mega-mobile-degree { margin-left: 12px; }
+.reference-mobile-nav .mega-mobile-degree summary { font-size: 14px; font-weight: 600; }
+.reference-mobile-nav .mega-mobile-label { margin: 18px 0 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted-foreground); }
+.reference-mobile-nav details > div > a { display: flex; min-height: 44px; gap: 10px; align-items: center; padding: 8px 0; font-size: 14px; }
+.reference-mobile-nav a > span:not([role="img"]) { min-width: 0; }
+.dark .mega-categories button:hover, .dark .mega-categories button[aria-pressed="true"] { background: #3b2a20; color: #ffbd8e; }
+.dark .mega-heading { color: #cba3ff; }
+.dark .mega-heading-1 { color: #87d5ec; }
+.dark .mega-heading-2 { color: #f5a9d0; }
+.dark .mega-heading-3 { color: #91d3a7; }
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .mega-header .reference-nav-inner { width: calc(100% - 40px); gap: 14px; }
+  .mega-header .reference-brand img { width: 145px; }
+  .mega-header .reference-desktop-nav { gap: 14px; }
+  .mega-header .mega-trigger, .mega-header .reference-scholarships { font-size: 13px; }
+  .mega-header .reference-header-search input { font-size: 12px; }
+  .mega-header .reference-course-finder { padding-inline: 14px; font-size: 13px; }
+  .mega-panel-inner { gap: 30px; width: calc(100% - 48px); }
+  .mega-browser { grid-template-columns: 182px minmax(0, 1fr); gap: 24px; }
+  .mega-feature { width: 245px; }
+  .mega-university-list, .mega-degree-list { column-gap: 12px; }
+  .mega-university-list a, .mega-degree-list a, .mega-categories button { font-size: 14px; }
+}
+@media (max-width: 1199px) {
+  .mega-header.reference-header { --nav-height: 68px; }
+  .mega-header .reference-nav-inner { width: calc(100% - 40px); gap: 16px; }
+  .mega-header .reference-desktop-nav, .mega-panel, .mega-scrim { display: none; }
+  .mega-header .reference-menu-toggle { display: inline-flex; width: 44px; min-height: 44px; flex-shrink: 0; }
+  .mega-header .reference-header-search { margin-left: auto; }
+  .reference-promo.mega-promo, .reference-promo.mega-promo a { font-size: 13px; }
+}
+@media (max-width: 767px) {
+  .mega-header.reference-header { --nav-height: 64px; }
+  .mega-header .reference-nav-inner { width: calc(100% - 28px); gap: 8px; }
+  .mega-header .reference-brand img { width: 124px; }
+  .mega-header .reference-header-search { display: none; }
+  .mega-header .reference-course-finder { margin-left: auto; min-height: 44px; padding: 7px 10px; font-size: 12px; gap: 6px; }
+  .mega-header .reference-mobile-search-link { min-width: 36px; min-height: 44px; }
+  .mega-header .reference-menu-toggle { width: 36px; }
+  .reference-promo.mega-promo { min-height: 48px; gap: 12px; padding: 9px 14px; font-size: 11px; line-height: 1.7; }
+  .mega-promo > span { max-width: 70%; }
+  .mega-promo strong { display: block; }
+  .reference-promo.mega-promo a { padding-left: 12px; font-size: 11px; white-space: nowrap; }
+}
+@media (max-width: 480px) {
+  .mega-header .reference-course-finder span { display: none; }
+  .mega-header .reference-course-finder { width: 44px; padding: 8px; }
+}
+@media (max-width: 370px) {
+  .mega-header .reference-brand img { width: 112px; }
+}
+@media (prefers-reduced-motion: reduce) { .mega-panel { animation: none; } .mega-header .mega-trigger::after { transition: none; } }

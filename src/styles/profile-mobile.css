@@ -1,0 +1,74 @@
+.profile-mobile-banner, .profile-mobile-university, .profile-mobile-action { display: none; }
+@media (max-width: 767px) {
+  .mega-header.reference-header.profile-site-header { --nav-height: 60px; }
+  .mega-header.profile-site-header .reference-nav-inner { gap: 12px; }
+  .mega-header.profile-site-header .reference-brand { margin-right: auto; }
+  .mega-header.profile-site-header .reference-brand img { width: 128px; }
+  .mega-header.profile-site-header .reference-mobile-search-link { order: 2; min-width: 36px; }
+  .mega-header.profile-site-header .reference-course-finder { order: 3; width: auto; min-height: 44px; margin-left: 0; padding: 5px 12px; font-size: 12px; }
+  .mega-header.profile-site-header .reference-course-finder span { display: inline; }
+  .mega-header.profile-site-header .reference-course-finder > svg { display: none; }
+  .mega-header.profile-site-header .reference-menu-toggle { display: none; }
+  .reference-promo.mega-promo.profile-promo { min-height: 40px; padding-block: 6px; gap: 10px; }
+  .profile-promo .mega-promo-intro { display: none; }
+  .profile-promo > span { max-width: none; }
+  .profile-promo strong { display: inline; font-size: 10px; }
+  .reference-promo.mega-promo.profile-promo a { padding-left: 10px; font-size: 10px; }
+  .online-profile.profile-refined .profile-hero { position: relative; padding: 0; }
+  .online-profile.profile-refined .profile-container { width: calc(100% - 40px); }
+  .online-profile.profile-refined .profile-mobile-banner { display: flex; align-items: center; justify-content: center; height: 104px; overflow: hidden; background: #e2e8ee; }
+  .online-profile.profile-refined .profile-mobile-banner > img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+  .online-profile.profile-refined .profile-mobile-banner > span { opacity: .5; }
+  .online-profile.profile-refined .profile-breadcrumb { position: absolute; top: 8px; left: 14px; right: 14px; z-index: 1; flex-wrap: nowrap; gap: 5px; overflow: hidden; margin: 0; padding: 4px 6px; border-radius: 3px; color: #fff; background: #14223880; font-size: 10px; line-height: 1.5; }
+  .online-profile.profile-refined .profile-breadcrumb a { flex-shrink: 0; }
+  .online-profile.profile-refined .profile-breadcrumb a:last-of-type { flex-shrink: 1; min-width: 0; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+  .online-profile.profile-refined .profile-breadcrumb > span { display: none; }
+  .online-profile.profile-refined .profile-hero[data-profile-kind="course"] .profile-breadcrumb > svg:last-of-type { display: none; }
+  .online-profile.profile-refined .profile-hero-grid { display: block; padding-bottom: 12px; }
+  .online-profile.profile-refined .profile-kicker, .online-profile.profile-refined .profile-university-name,
+  .online-profile.profile-refined .profile-hero-intro, .online-profile.profile-refined .profile-hero-disclaimer,
+  .online-profile.profile-refined .profile-photo, .online-profile.profile-refined .profile-quick-facts { display: none; }
+  .online-profile.profile-refined .profile-heading { display: block; position: relative; margin-top: -28px; }
+  .online-profile.profile-refined .profile-heading > span { display: flex; width: 52px; height: 52px; padding: 3px; border: 1px solid var(--border); border-radius: 7px; box-shadow: 0 2px 6px #192e500f; background: #fff; margin-bottom: 9px; }
+  .online-profile.profile-refined .profile-heading h1 { font-size: 28px; line-height: 1.22; font-weight: 750; letter-spacing: -.45px; color: #743b19; text-wrap: pretty; }
+  .online-profile.profile-refined .profile-mobile-university, .online-profile.profile-refined .profile-mobile-action { display: inline; }
+  .online-profile.profile-refined .profile-heading > div > p { margin-top: 8px; font-size: 15px; line-height: 1.5; color: #4b4a47; font-weight: 550; }
+  .online-profile.profile-refined .profile-location { margin-top: 16px; font-size: 13px; gap: 10px; line-height: 1.6; }
+  .online-profile.profile-refined .profile-location > span > svg { display: none; }
+  .online-profile.profile-refined .profile-location .profile-source { font-size: 12px; }
+  .online-profile.profile-refined .profile-byline { font-size: 12px; line-height: 1.6; gap: 6px; margin: 10px 0 4px; }
+  .online-profile.profile-refined .profile-byline > img { display: none; }
+  .online-profile.profile-refined .profile-author { font-weight: 600; color: var(--primary); }
+  .online-profile.profile-refined .profile-checked { flex-basis: 100%; color: var(--muted-foreground); font-size: 11px; }
+  .online-profile.profile-refined .profile-hero-actions { gap: 18px; margin-top: 4px; }
+  .online-profile.profile-refined .profile-hero-actions .profile-button { flex: none; min-width: 0; min-height: 44px; padding: 6px 0; gap: 5px; border: 0; border-radius: 0; background: transparent; box-shadow: none; color: var(--primary); font-size: 13px; font-weight: 650; }
+  .online-profile.profile-refined .profile-hero-actions .profile-button:hover { transform: none; box-shadow: none; }
+  .online-profile.profile-refined .profile-hero-actions > button { order: 2; }
+  .online-profile.profile-refined .profile-hero-actions > a { order: 1; }
+  .online-profile.profile-refined .profile-desktop-action { display: none; }
+  .online-profile.profile-refined .profile-hero[data-profile-kind="university"] .profile-button-outline { display: none; }
+  .online-profile.profile-refined .profile-tabs { position: sticky; top: 60px; z-index: 30; background: #f5e5d8; border: 0; }
+  .online-profile.profile-refined .profile-tabs > div { justify-content: flex-start; gap: 24px; scrollbar-width: none; }
+  .online-profile.profile-refined .profile-tabs a { min-height: 48px; padding-block: 10px; font-size: 14px; line-height: 1.5; color: #66615b; }
+  .online-profile.profile-refined .profile-tabs a[aria-current="page"] { color: #342a24; font-weight: 700; }
+  .online-profile.profile-refined .profile-tabs a[aria-current="page"]::after { height: 3px; border-radius: 3px 3px 0 0; background: #f07930; bottom: 0; }
+  .online-profile.profile-refined .profile-content { padding-top: 24px; }
+  .online-profile.profile-refined .profile-content article > .profile-toc:first-child { margin-top: 0; }
+  .online-profile.profile-refined .profile-toc { border: 0; border-radius: 9px; background: #f3f1f8; }
+  .online-profile.profile-refined .profile-toc summary { padding: 15px; font-size: 11px; color: #4b4651; letter-spacing: 1px; }
+  .online-profile.profile-refined .profile-toc nav { grid-template-columns: 1fr; padding: 8px 15px 12px; }
+  .online-profile.profile-refined .profile-section, .online-profile.profile-refined #apply { scroll-margin-top: 125px; }
+  .dark .online-profile.profile-refined .profile-heading h1 { color: #ffbd8e; }
+  .dark .online-profile.profile-refined .profile-heading > div > p { color: #cbd4e1; }
+  .dark .online-profile.profile-refined .profile-tabs, .dark .online-profile.profile-refined .profile-toc { background: #202f49; }
+  .dark .online-profile.profile-refined .profile-tabs a, .dark .online-profile.profile-refined .profile-toc summary { color: #cbd4e1; }
+  .dark .online-profile.profile-refined .profile-tabs a[aria-current="page"] { color: #fff; }
+}
+@media (max-width: 359px) {
+  .mega-header.profile-site-header .reference-nav-inner { gap: 8px; }
+  .mega-header.profile-site-header .reference-brand img { width: 112px; }
+  .mega-header.profile-site-header .reference-course-finder { padding-inline: 9px; font-size: 11px; }
+  .online-profile.profile-refined .profile-heading h1 { font-size: 26px; }
+  .online-profile.profile-refined .profile-tabs > div { gap: 18px; }
+  .online-profile.profile-refined .profile-tabs a { font-size: 13px; }
+}

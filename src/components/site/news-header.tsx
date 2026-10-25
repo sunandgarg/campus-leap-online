@@ -18,7 +18,7 @@ export function NewsHeader() {
           ))}
           <details>
             <summary>
-              More <ChevronDown size={14} />
+              All topics <ChevronDown size={14} />
             </summary>
             <div>
               {newsCategories.slice(4).map((category) => (

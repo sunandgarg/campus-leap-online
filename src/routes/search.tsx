@@ -23,8 +23,9 @@ import {
   verifiedUniversitiesOfferingProgram,
 } from "@/data/universities";
 import { slugifySpecialisation } from "@/data/specialisations";
+import { filterNews, newsPath } from "@/data/news";
 
-type ResultType = "all" | "programs" | "universities" | "specialisations";
+type ResultType = "all" | "programs" | "universities" | "specialisations" | "articles";
 
 export const Route = createFileRoute("/search")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -113,14 +114,23 @@ function SearchPage() {
         .map((specialisation) => ({ specialisation, program })),
     );
 
-    return { programs, universities: matchedUniversities, specialisations };
+    return {
+      programs,
+      universities: matchedUniversities,
+      specialisations,
+      articles: filterNews("", normalizedQuery),
+    };
   }, [normalizedQuery]);
 
   const totalResults =
-    results.programs.length + results.universities.length + results.specialisations.length;
+    results.programs.length +
+    results.universities.length +
+    results.specialisations.length +
+    results.articles.length;
   const showPrograms = resultType === "all" || resultType === "programs";
   const showUniversities = resultType === "all" || resultType === "universities";
   const showSpecialisations = resultType === "all" || resultType === "specialisations";
+  const showArticles = resultType === "all" || resultType === "articles";
 
   return (
     <div className="bg-background">
@@ -130,7 +140,7 @@ function SearchPage() {
             <Search className="h-4 w-4" /> Search the whole catalogue
           </span>
           <h1 className="mt-4 max-w-3xl font-display text-4xl font-extrabold tracking-[-0.055em] sm:text-5xl lg:text-6xl">
-            Find courses, universities and specialisations.
+            Find courses, universities and helpful guides.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
             Search by course, career, specialisation, university, location or accreditation.
@@ -182,6 +192,7 @@ function SearchPage() {
               ["programs", `Courses (${results.programs.length})`],
               ["universities", `Universities (${results.universities.length})`],
               ["specialisations", `Specialisations (${results.specialisations.length})`],
+              ["articles", `Articles (${results.articles.length})`],
             ].map(([value, label]) => (
               <button
                 key={value}
@@ -309,6 +320,37 @@ function SearchPage() {
                     </Link>
                   ))}
                 </CompactRail>
+              </section>
+            ) : null}
+            {showArticles && results.articles.length > 0 ? (
+              <section aria-label="Matching articles and guides">
+                <SectionTitle
+                  icon={BookOpenCheck}
+                  title="Articles & guides"
+                  count={results.articles.length}
+                />
+                <div className="mt-4 divide-y divide-border">
+                  {results.articles.map((item) => (
+                    <a
+                      key={item.slug}
+                      href={newsPath(item)}
+                      className="group flex items-start justify-between gap-5 py-5"
+                    >
+                      <div>
+                        <span className="text-xs font-semibold text-primary">
+                          {item.categories[0]} · {item.label}
+                        </span>
+                        <h3 className="mt-1 text-lg font-bold group-hover:text-primary">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 line-clamp-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+                          {item.summary}
+                        </p>
+                      </div>
+                      <ArrowRight className="mt-4 h-5 w-5 shrink-0 text-primary" />
+                    </a>
+                  ))}
+                </div>
               </section>
             ) : null}
           </div>

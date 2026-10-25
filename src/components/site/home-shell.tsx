@@ -4,26 +4,12 @@ import {
   BookOpenCheck,
   Building2,
   GitCompareArrows,
-  Menu,
-  Moon,
-  Search,
   ShieldCheck,
-  Sun,
   Target,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/site/brand-logo";
 import { UniversityLogo } from "@/components/site/university-logo";
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { programCatalog, universities, universitiesOfferingProgram } from "@/data/universities";
-import { useComparison } from "@/hooks/use-comparison";
+import { universities, universitiesOfferingProgram } from "@/data/universities";
 import { coursePath, universityPath } from "@/lib/online-paths";
 
 const mainLinks = [
@@ -38,140 +24,6 @@ const helpLinks = [
   { to: "/methodology", label: "Check recognition & fees", icon: ShieldCheck },
   { to: "/about", label: "About DekhoCampus", icon: Building2 },
 ] as const;
-
-// Keep the established homepage shell independent of the editorial profile pages.
-export function HomeHeader() {
-  const [open, setOpen] = useState(false);
-  const [dark, setDark] = useState(false);
-  const { count } = useComparison();
-  useEffect(() => setDark(document.documentElement.classList.contains("dark")), []);
-  function toggleTheme() {
-    const next = !dark;
-    document.documentElement.classList.toggle("dark", next);
-    setDark(next);
-  }
-  return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
-      <div className="container-page flex h-16 items-center justify-between gap-2 sm:h-[72px]">
-        <Link
-          to="/"
-          aria-label="DekhoCampus home"
-          className="inline-flex min-h-11 shrink-0 items-center rounded-lg focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <BrandLogo size="sm" className="sm:hidden [&>img]:w-[100px]" />
-          <BrandLogo size="md" className="hidden sm:inline-flex" />
-        </Link>
-        <nav aria-label="Main navigation" className="hidden items-center gap-1 lg:flex">
-          {mainLinks.map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-            >
-              {label}
-              {to === "/compare" && count > 0 && (
-                <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                  {count}
-                </span>
-              )}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <Link
-            to="/search"
-            search={{ q: "" }}
-            aria-label="Search courses and universities"
-            className="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-3 text-sm text-muted-foreground hover:bg-secondary"
-          >
-            <Search className="h-4 w-4" />
-            <span className="hidden xl:inline">Search</span>
-          </Link>
-          <Button
-            asChild
-            className="h-11 min-w-0 rounded-full px-3 text-xs sm:min-w-24 sm:px-5 sm:text-sm"
-          >
-            <Link to="/contact">
-              <span className="sm:hidden">Get help</span>
-              <span className="hidden sm:inline">Free counselling</span>
-            </Link>
-          </Button>
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                aria-label="Open navigation menu"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card"
-              >
-                <Menu className="h-5 w-5" />
-              </button>
-            </SheetTrigger>
-            <SheetContent className="w-[min(100%,400px)] overflow-y-auto pb-24 [&>button]:h-11 [&>button]:w-11">
-              <SheetTitle className="pr-12 text-xl">Where would you like to go?</SheetTitle>
-              <SheetDescription className="mt-2 text-sm">
-                Courses, universities and help. No sign-up to explore.
-              </SheetDescription>
-              <nav aria-label="All pages" className="mt-6" onClick={() => setOpen(false)}>
-                {mainLinks.map(({ to, label, icon: Icon }) => (
-                  <Link
-                    key={to}
-                    to={to}
-                    className="flex min-h-12 items-center gap-3 rounded-xl px-3 text-sm font-semibold hover:bg-secondary"
-                  >
-                    <Icon className="h-5 w-5" />
-                    {label}
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Link>
-                ))}
-                <p className="mb-2 mt-6 text-xs font-semibold text-muted-foreground">
-                  Go straight to a course
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {programCatalog.slice(0, 4).map((p) => (
-                    <Link
-                      key={p.slug}
-                      to="/programs/$programSlug"
-                      params={{ programSlug: p.slug }}
-                      className="flex min-h-11 items-center justify-between rounded-xl border border-border px-3 text-sm font-semibold"
-                    >
-                      {p.code}
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  ))}
-                </div>
-                <div className="mt-6 border-t border-border pt-3">
-                  {helpLinks.map(({ to, label, icon: Icon }) => (
-                    <Link
-                      key={to}
-                      to={to}
-                      className="flex min-h-12 items-center gap-3 rounded-xl px-3 text-sm hover:bg-secondary"
-                    >
-                      <Icon className="h-5 w-5 text-muted-foreground" />
-                      {label}
-                    </Link>
-                  ))}
-                </div>
-              </nav>
-              <Button asChild className="mt-5 h-12 w-full rounded-full">
-                <Link to="/contact">
-                  Free counselling <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-border text-sm"
-              >
-                {dark ? <Sun size={16} /> : <Moon size={16} />}
-                {dark ? "Switch to light mode" : "Switch to dark mode"}
-              </button>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 export function HomeFooter() {
   const courseColumns = ["online-mba", "online-bba"].map((slug) => {

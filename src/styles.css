@@ -2,6 +2,8 @@
 @source "../src";
 @import "tw-animate-css";
 @import "./styles/news.css";
+@import "./styles/header.css";
+@import "./styles/profile-mobile.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -1644,7 +1646,7 @@
 .home-interest-browser .ambition-course-filters button { font-size: 14px; min-height: 46px; }
 .home-interest-browser .ambition-filter-label { font-size: 12px; }
 .home-interest-browser .ambition-card h3 { font-size: 22px; }
-.home-interest-browser .ambition-card-university { font-size: 14px; }
+.home-interest-browser .ambition-card-university { font-size: 17px; font-weight: 750; color: var(--primary); background: color-mix(in srgb, var(--primary) 5%, var(--card)); }
 .home-interest-browser .ambition-course-name { font-size: 13px; line-height: 1.7; min-height: 44px; }
 .home-interest-browser .ambition-card-level { font-size: 10px; }
 .home-interest-browser .ambition-card-facts span, .home-interest-browser .ambition-card-facts strong,
@@ -1699,7 +1701,7 @@
   .home-interest-browser .ambition-cards { grid-auto-columns: 100%; }
   .home-interest-browser .ambition-course-filters button { min-height: 44px; padding-inline: 12px; font-size: 12px; }
   .home-interest-browser .ambition-card h3 { font-size: 18px; line-height: 1.4; }
-  .home-interest-browser .ambition-card-university { font-size: 12px; padding: 10px; gap: 8px; }
+  .home-interest-browser .ambition-card-university { font-size: 15px; padding: 10px; gap: 8px; }
   .home-interest-browser .ambition-card-body { padding: 13px 11px; }
   .home-interest-browser .ambition-course-name { font-size: 11px; min-height: 47px; line-height: 1.65; }
   .home-interest-browser .ambition-card-level { font-size: 8px; letter-spacing: .6px; }

@@ -13,7 +13,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
-import { HomeHeader, HomeFooter } from "@/components/site/home-shell";
+import { HomeFooter } from "@/components/site/home-shell";
 import { NewsHeader } from "@/components/site/news-header";
 import { SITE_ORIGIN } from "@/lib/site-origin";
 import { MobileBottomNav } from "@/components/site/mobile-bottom-nav";
@@ -257,13 +257,7 @@ function RootComponent() {
       </a>
       <div className="flex min-h-screen flex-col pb-24 lg:pb-0">
         <AnnouncementBar />
-        {pathname === "/" ? (
-          <HomeHeader />
-        ) : pathname === "/news" || pathname.startsWith("/news/") ? (
-          <NewsHeader />
-        ) : (
-          <SiteHeader />
-        )}
+        {pathname === "/news" || pathname.startsWith("/news/") ? <NewsHeader /> : <SiteHeader />}
         <main id="main-content" className="flex-1" tabIndex={-1}>
           {/* Required: nested routes render here. */}
           <div key={pathname} className="route-stage min-h-full">

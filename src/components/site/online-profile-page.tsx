@@ -166,7 +166,14 @@ function Hero({
   const fee = course ? publishedCourseFee(course) : null;
   return (
     <>
-      <div className="profile-hero">
+      <div className="profile-hero" data-profile-kind={course ? "course" : "university"}>
+        <div className="profile-mobile-banner" aria-hidden="true">
+          {photo ? (
+            <img src={photo.src} alt="" width="780" height="220" fetchPriority="high" />
+          ) : (
+            <UniversityLogo university={u} size="lg" />
+          )}
+        </div>
         <div className="profile-container">
           <nav className="profile-breadcrumb" aria-label="Breadcrumb">
             <a href="/">Home</a>
@@ -194,8 +201,19 @@ function Hero({
                       {name} <ArrowRight size={14} />
                     </a>
                   )}
-                  <h1>{course ? courseName : name}</h1>
-                  {!course && <p>Find the online degree that fits your next step.</p>}
+                  <h1>
+                    {course ? (
+                      <>
+                        {courseName}
+                        <span className="profile-mobile-university"> at {name}</span>
+                      </>
+                    ) : tab === "faculty" ? (
+                      `${name} Faculty`
+                    ) : (
+                      name
+                    )}
+                  </h1>
+                  {!course && tab !== "faculty" && <p>Courses, fees and online study options.</p>}
                 </div>
               </div>
               {course && (
@@ -217,17 +235,22 @@ function Hero({
                 ))}
               </div>
               <p className="profile-byline">
-                <img src="/dekhocampus-logo.png" width="18" height="18" alt="" /> By DekhoCampus
-                Editorial <span>•</span>
-                {course?.specialist
-                  ? `Programme information checked ${course.specialist.checkedAt}`
-                  : "Check the current intake before applying"}
+                <img src="/dekhocampus-logo.png" width="18" height="18" alt="" />{" "}
+                <span className="profile-author">DekhoCampus Editorial</span> <span>•</span>
+                <span className="profile-checked">
+                  {course?.specialist
+                    ? `Programme information checked ${course.specialist.checkedAt}`
+                    : "Check the current intake before applying"}
+                </span>
               </p>
               <div className="profile-hero-actions">
                 <Dialog>
                   <DialogTrigger asChild>
                     <button type="button" className="profile-button">
-                      {course ? "Get course guidance" : "Explore admission options"}{" "}
+                      <span className="profile-desktop-action">
+                        {course ? "Get course guidance" : "Explore admission options"}
+                      </span>
+                      <span className="profile-mobile-action">Enquire Now</span>{" "}
                       <ArrowRight size={16} />
                     </button>
                   </DialogTrigger>
@@ -259,7 +282,7 @@ function Hero({
                   {...(brochure ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
                   <ArrowDownToLine size={14} />
-                  {brochure ? "Brochure" : "Request Brochure"}
+                  {brochure ? "Download Brochure" : "Request Brochure"}
                 </a>
               </div>
               <p className="profile-hero-disclaimer">Free counselling · Explore at your own pace</p>
@@ -325,30 +348,17 @@ function Hero({
       </div>
       <nav className="profile-tabs" aria-label={course ? "Course sections" : "University sections"}>
         <div className="profile-container">
-          {course
-            ? [
-                ["about-course", "Overview"],
-                ["fees", "Fees"],
-                ["eligibility", "Eligibility"],
-                ["curriculum", "Syllabus"],
-                ["admission", "Admission"],
-                ["faqs", "FAQs"],
-              ].map(([id, label]) => (
-                <a href={`#${id}`} key={id}>
-                  {label}
-                </a>
-              ))
-            : (
-                [
-                  ["overview", "Overview", path],
-                  ["courses", "Courses & Fees", `${path}/courses-fees`],
-                  ["faculty", "Faculty", `${path}/faculty`],
-                ] as const
-              ).map(([key, label, href]) => (
-                <a key={key} href={href} aria-current={tab === key ? "page" : undefined}>
-                  {label}
-                </a>
-              ))}
+          {(
+            [
+              ["overview", "Overview", path],
+              ["courses", "Courses & Fees", `${path}/courses-fees`],
+              ["faculty", "Faculty", `${path}/faculty`],
+            ] as const
+          ).map(([key, label, href]) => (
+            <a key={key} href={href} aria-current={tab === key ? "page" : undefined}>
+              {label}
+            </a>
+          ))}
         </div>
       </nav>
     </>
@@ -500,7 +510,7 @@ function UniversityContent({ university: u, tab }: { university: University; tab
   if (tab === "faculty")
     return (
       <>
-        <Section id="faculty" title={`${name} Faculty`}>
+        <Section id="faculty" title="Faculty">
           <p>
             Faculty can differ by programme, semester and intake. We do not have a current verified
             faculty roster to publish here.
@@ -764,13 +774,10 @@ function CourseContent({ course }: { course: Course }) {
       : "Confirm the current entry requirements, marks and required documents with the university.");
   return (
     <>
-      <Section id="about-course" title="A closer look at your course">
-        <p>{s?.description ?? p.overview}</p>
-        <Source href={source} />
-      </Section>
       <TableOfContents
         items={[
           ["highlights", "Course Highlights"],
+          ["about-course", "About this course"],
           ["fees", "Fee Structure"],
           ["rankings", "Rankings & Recognition"],
           ["placements", "Career Support"],
@@ -799,6 +806,10 @@ function CourseContent({ course }: { course: Course }) {
             ],
           ]}
         />
+      </Section>
+      <Section id="about-course" title="A closer look at your course">
+        <p>{s?.description ?? p.overview}</p>
+        <Source href={source} />
       </Section>
       <Section id="fees" title="Understand your investment">
         <DataTable

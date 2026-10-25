@@ -128,6 +128,29 @@ if (process.argv.includes("--http")) {
       ),
     );
     assert.ok(html.includes('id="apply"'));
+    assert.ok(html.includes('class="profile-mobile-banner"'));
+    const tabs = html.match(/<nav class="profile-tabs"[\s\S]*?<\/nav>/)?.[0];
+    assert.ok(tabs, "Shared profile tabs missing");
+    const tabLinks = [...tabs.matchAll(/<a href="([^"]+)"([^>]*)>/g)];
+    const universityUrl = path.split("/courses-fees")[0];
+    assert.equal(
+      tabLinks.length,
+      3,
+      "Course and university pages must have the same three page tabs",
+    );
+    assert.equal(
+      tabLinks.map((item) => item[1]).join(","),
+      [universityUrl, `${universityUrl}/courses-fees`, `${universityUrl}/faculty`].join(","),
+    );
+    const activeTab = coursePaths.includes(path) ? 1 : 0;
+    assert.ok(tabLinks[activeTab][2].includes('aria-current="page"'));
+    if (coursePaths.includes(path)) {
+      assert.ok(
+        html.indexOf('class="profile-toc"') < html.indexOf('id="highlights"'),
+        "Course contents must be reachable before the details",
+      );
+      assert.ok(html.indexOf('id="highlights"') < html.indexOf('id="about-course"'));
+    }
     assert.ok(
       html.includes('name="robots" content="noindex,follow"'),
       "Unreviewed entitlement must not be indexed",
@@ -137,10 +160,18 @@ if (process.argv.includes("--http")) {
     assert.ok(html.includes(`rel="canonical" href="https://online.dekhocampus.com${path}"`));
   }
   for (const tab of ["courses-fees", "faculty"]) {
-    assert.equal(
-      (await fetch(`${origin}/online-universities/amity-university-online-900012/${tab}`)).status,
-      200,
+    const response = await fetch(
+      `${origin}/online-universities/amity-university-online-900012/${tab}`,
     );
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.ok(
+      html.includes(
+        `href="/online-universities/amity-university-online-900012/${tab}" aria-current="page"`,
+      ),
+      `${tab} must highlight its active tab`,
+    );
+    if (tab === "faculty") assert.match(html, /<h1>Amity University Online Faculty<\/h1>/);
   }
   for (const path of [
     "/online-universities/not-real-900012",
